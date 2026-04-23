@@ -90,7 +90,7 @@ test("status view model distinguishes requested paused from worker paused", () =
   assert.equal(vm.workerStateLabel, "Paused");
   assert.equal(vm.activityStateLabel, "Paused");
   assert.equal(vm.statusBadgeLabel, "Paused");
-  assert.equal(vm.primaryActionLabel, "Resume pipeline");
+  assert.equal(vm.primaryActionLabel, "Start pipeline");
   assert.equal(vm.statusHero.headline, "Pipeline paused…");
   assert.equal(vm.statusHero.primaryActionRecommended, true);
   assert.match(vm.statusHero.supportingLine, /paused until you resume/i);
@@ -150,7 +150,7 @@ test("status view model exposes starting transition separately from activity", (
   assert.equal(vm.workerStateLabel, "Starting");
   assert.equal(vm.activityStateLabel, "Starting");
   assert.equal(vm.statusBadgeLabel, "Starting");
-  assert.equal(vm.primaryActionLabel, "Pause pipeline");
+  assert.equal(vm.primaryActionLabel, "Starting pipeline…");
   assert.equal(vm.statusHero.headline, "Starting intake…");
   assert.equal(vm.currentQuestionLabel, "Question 3 of 15");
   assert.match(vm.liveEntityTicker, /Starting — waiting for fresh heartbeat/);
@@ -333,6 +333,60 @@ test("status view model advances elapsed time as wall clock time moves", () => {
   } finally {
     Date.now = realNow;
   }
+});
+
+test("status view model surfaces a stale freshness checkpoint separately from worker state", () => {
+  const vm = buildOperationalStatusViewModel({
+    drilldown: {
+      freshness_state: "stale",
+      last_activity_at: new Date(Date.now() - 11 * 60_000).toISOString(),
+      snapshot_at: new Date(Date.now() - 2_000).toISOString(),
+      control: {
+        is_paused: false,
+        requested_state: "running",
+        observed_state: "running",
+        transition_state: "running",
+      },
+      operational_state: "running",
+      loop_status: {
+        total_scheduled: 4,
+        completed: 1,
+        quality_counts: { blocked: 0, partial: 0 },
+        runtime_counts: { running: 1, stalled: 0, retryable: 0, resume_needed: 0 },
+      },
+      queue: {
+        in_progress_entity: {
+          entity_id: "fifa",
+          entity_name: "FIFA",
+          entity_type: "governing_body",
+          summary: "Processing current question.",
+          generated_at: new Date(Date.now() - 12 * 60_000).toISOString(),
+          started_at: new Date(Date.now() - 12 * 60_000).toISOString(),
+          heartbeat_at: new Date(Date.now() - 11 * 60_000).toISOString(),
+          current_question_id: "q3_owner",
+          active_question_id: "q3_owner",
+          current_action: "question enrichment",
+          run_phase: "running",
+        },
+        running_entities: [],
+        stale_active_rows: [],
+        completed_entities: [],
+        resume_needed_entities: [],
+        upcoming_entities: [],
+      },
+      dossier_quality: {
+        incomplete_entities: [],
+      },
+    },
+    controlState: {
+      is_paused: false,
+      requested_state: "running",
+      observed_state: "running",
+      transition_state: "running",
+    },
+  });
+
+  assert.match(vm.statusHero.issueSummary || "", /snapshot/i);
 });
 
 test("status view model marks stale-only rows as stale and uses latest completion fallback", () => {

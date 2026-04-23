@@ -1,0 +1,87 @@
+{
+  "entity_id": "arsenal-fc",
+  "entity_name": "Arsenal FC",
+  "entity_type": "SPORT_CLUB",
+  "preset": "canonical-two-question-parity-smoke",
+  "question_source_label": "canonical_two_question_parity_smoke",
+  "questions": [
+    {
+      "question_id": "q1_foundation",
+      "question_family": "foundation",
+      "question_type": "foundation",
+      "question": "When was {entity} founded?",
+      "query": "\"{entity}\" official website founded year",
+      "hop_budget": 1,
+      "evidence_extension_budget": 1,
+      "source_priority": [
+        "google_serp",
+        "official_site",
+        "wikipedia"
+      ],
+      "search_strategy": {
+        "mode": "direct_lookup",
+        "search_queries": [
+          "\"{entity}\" official website founded year"
+        ]
+      },
+      "evidence_focus": "founding_date",
+      "promotion_target": "identity",
+      "answer_kind": "fact",
+      "question_shape": "atomic",
+      "question_timeout_ms": 45000,
+      "hop_timeout_ms": 15000,
+      "evidence_extension_confidence_threshold": 0.72,
+      "pack_role": "core",
+      "execution_class": "atomic_retrieval",
+      "rollout_phase": "phase_1_core",
+      "commercial_output_enabled": false,
+      "conditional_on": [],
+      "depends_on": [],
+      "structured_output_schema": "foundation_v1",
+      "graph_write_targets": [
+        "entity.identity.foundation"
+      ]
+    },
+    {
+      "question_id": "q7_procurement_signal",
+      "question_family": "procurement_signal",
+      "question_type": "procurement_signal",
+      "question": "Is there evidence {entity} is buying, reshaping vendors, or changing its ecosystem?",
+      "query": "\"{entity}\" platform migration provider partnership",
+      "hop_budget": 2,
+      "evidence_extension_budget": 2,
+      "source_priority": [
+        "google_serp",
+        "news",
+        "press_release",
+        "linkedin_posts",
+        "official_site"
+      ],
+      "search_strategy": {
+        "mode": "broad_signal_discovery",
+        "search_queries": [
+          "\"{entity}\" platform migration provider partnership"
+        ]
+      },
+      "evidence_focus": "vendor_and_platform_change",
+      "promotion_target": "strategic_opportunities",
+      "answer_kind": "signal",
+      "question_shape": "atomic",
+      "question_timeout_ms": 90000,
+      "hop_timeout_ms": 30000,
+      "evidence_extension_confidence_threshold": 0.68,
+      "pack_role": "core",
+      "execution_class": "commercial_signal",
+      "rollout_phase": "phase_1_core",
+      "commercial_output_enabled": true,
+      "conditional_on": [],
+      "depends_on": [
+        "q1_foundation"
+      ],
+      "structured_output_schema": "procurement_signal_v1",
+      "graph_write_targets": [
+        "entity.procurement.signals"
+      ]
+    }
+  ]
+}

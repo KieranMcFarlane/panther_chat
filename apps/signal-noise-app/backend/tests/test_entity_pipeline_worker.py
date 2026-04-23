@@ -7,6 +7,7 @@ import time
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
+import entity_pipeline_worker as worker_module
 from entity_pipeline_worker import (
     build_batch_claim_metadata,
     build_batch_heartbeat_metadata,
@@ -31,6 +32,28 @@ from entity_pipeline_worker import (
     should_process_in_process,
     EntityPipelineWorker,
 )
+
+
+def test_entity_pipeline_worker_prefers_local_postgres_when_database_url_is_set(monkeypatch):
+    fake_client = SimpleNamespace(source="local-postgres")
+    remote_calls = []
+
+    monkeypatch.setenv("DATABASE_URL", "postgresql://localhost/signal_noise_app")
+    monkeypatch.setenv("SUPABASE_URL", "https://hosted.supabase.co")
+    monkeypatch.setenv("SUPABASE_ANON_KEY", "remote-anon")
+    monkeypatch.delenv("PYTHON_PERSISTENCE_BACKEND", raising=False)
+    monkeypatch.setattr(worker_module, "create_local_pg_client", lambda: fake_client, raising=False)
+    monkeypatch.setattr(
+        worker_module,
+        "create_client",
+        lambda *_args, **_kwargs: remote_calls.append(_args) or SimpleNamespace(source="remote"),
+        raising=False,
+    )
+
+    worker = EntityPipelineWorker()
+
+    assert worker.supabase is fake_client
+    assert remote_calls == []
 
 
 def test_should_process_in_process_defaults_to_durable_worker_mode():
@@ -63,6 +86,54 @@ def test_merge_cached_entity_properties_persists_pipeline_status_fields():
     assert merged["rfp_count"] == 2
     assert merged["sales_readiness"] == "MONITOR"
     assert merged["dossier_data"] is not None
+
+
+def test_sync_cached_entity_uses_source_lookup_when_entity_id_is_not_uuid(monkeypatch):
+    calls = []
+
+    class _FakeQuery:
+        def __init__(self):
+            self.action = None
+
+        def select(self, *_args, **_kwargs):
+            calls.append(("select", _args))
+            return self
+
+        def eq(self, column, value):
+            calls.append(("eq", column, value))
+            if value == "arsenal-fc":
+                raise AssertionError("sync_cached_entity should not query canonical_entities.id with a slug entity_id")
+            return self
+
+        def contains(self, column, value):
+            calls.append(("contains", column, value))
+            return self
+
+        def limit(self, *_args, **_kwargs):
+            return self
+
+        def execute(self):
+            if calls and calls[-1][0] == "contains":
+                return SimpleNamespace(data=[{"id": "11111111-1111-1111-1111-111111111111", "properties": {}}])
+            return SimpleNamespace(data=[])
+
+        def update(self, *_args, **_kwargs):
+            calls.append(("update", _args))
+            return self
+
+    worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
+    worker.supabase = SimpleNamespace(table=lambda _name: _FakeQuery())
+    worker._safe_execute = lambda operation, context: operation() or True
+
+    worker.sync_cached_entity(
+        "batch-1",
+        {"entity_id": "arsenal-fc", "metadata": {}},
+        {"sales_readiness": "MONITOR", "rfp_count": 0, "artifacts": {"dossier": {"entity_id": "arsenal-fc"}}},
+        "completed",
+    )
+
+    assert any(call[0] == "contains" for call in calls)
+    assert not any(call[0] == "eq" and call[2] == "arsenal-fc" for call in calls)
 
 
 def test_choose_supabase_key_prefers_anon_key_when_service_role_missing():

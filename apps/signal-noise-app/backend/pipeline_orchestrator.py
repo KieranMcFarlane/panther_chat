@@ -13,6 +13,7 @@ This is the single backend entry point intended to run an entity through:
 from __future__ import annotations
 
 import asyncio
+import inspect
 import logging
 import os
 import re
@@ -25,9 +26,17 @@ from typing import Any, Awaitable, Callable, Dict, List, Optional
 from urllib.parse import urlparse
 
 try:
-    from backend.pipeline_run_metadata import canonicalize_phase_details_by_phase, build_phase_status_map
+    from backend.pipeline_run_metadata import canonicalize_phase_details_by_phase, build_phase_status_map, normalize_phase_callback_payload
 except ImportError:
-    from pipeline_run_metadata import canonicalize_phase_details_by_phase, build_phase_status_map
+    from pipeline_run_metadata import canonicalize_phase_details_by_phase, build_phase_status_map, normalize_phase_callback_payload
+try:
+    from backend.question_progress_framework import build_question_checkpoint_fields, build_question_preparation_fields
+except ImportError:
+    from question_progress_framework import build_question_checkpoint_fields, build_question_preparation_fields
+try:
+    from backend.universal_atomic_matrix import build_universal_atomic_question_source
+except ImportError:
+    from universal_atomic_matrix import build_universal_atomic_question_source
 try:
     from backend.persistence_coordinator import DualWritePersistenceCoordinator
 except ImportError:
@@ -38,6 +47,7 @@ except ImportError:
     from objective_profiles import DEFAULT_PIPELINE_OBJECTIVE, normalize_run_objective
 
 logger = logging.getLogger(__name__)
+DEFAULT_OPENCODE_MODEL = "zai-api/glm-5.1"
 
 
 @dataclass
@@ -81,15 +91,77 @@ class PipelineOrchestrator:
         self.question_first_persist_reports = os.getenv("PIPELINE_QUESTION_FIRST_PERSIST_REPORTS", "true").lower() in {"1", "true", "yes"}
         self.question_first_output_dir = os.getenv("PIPELINE_QUESTION_FIRST_OUTPUT_DIR", "backend/data/question_first_dossiers")
         self.question_first_max_questions = int(os.getenv("PIPELINE_QUESTION_FIRST_MAX_QUESTIONS", "0") or 0)
-        self.question_first_opencode_timeout = float(
+        self.question_first_opencode_timeout_seconds = float(
             os.getenv(
                 "PIPELINE_QUESTION_FIRST_OPENCODE_TIMEOUT_SECONDS",
-                os.getenv("PIPELINE_QUESTION_FIRST_BRIGHTDATA_TIMEOUT_SECONDS", "60"),
+                os.getenv("PIPELINE_QUESTION_FIRST_BRIGHTDATA_TIMEOUT_SECONDS", "300"),
             )
         )
-        self.question_first_brightdata_timeout = self.question_first_opencode_timeout  # legacy alias
+        self.question_first_opencode_timeout = int(self.question_first_opencode_timeout_seconds * 1000)
+        self.question_first_brightdata_timeout = self.question_first_opencode_timeout_seconds  # legacy alias
+        self.question_first_backend = str(os.getenv("PIPELINE_QUESTION_FIRST_BACKEND", "opencode") or "opencode").strip().lower()
         self._last_question_first_report: Dict[str, Any] | None = None
         self.persistence_coordinator = persistence_coordinator or self._build_default_persistence_coordinator()
+
+    def _resolve_question_first_backend(self, request_metadata: Optional[Dict[str, Any]] = None) -> str:
+        metadata_backend = str((request_metadata or {}).get("question_first_backend") or "").strip().lower()
+        backend = metadata_backend or self.question_first_backend or "opencode"
+        return backend if backend in {"opencode", "python_direct"} else "opencode"
+
+    def _question_first_runtime_metadata(self, *, request_metadata: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        backend = self._resolve_question_first_backend(request_metadata)
+        phase0_mode = str((request_metadata or {}).get("phase0_mode") or "").strip().lower() or (
+            "opencode_first" if backend == "opencode" else "legacy_python"
+        )
+        metadata: Dict[str, Any] = {
+            "phase0_mode": phase0_mode,
+            "question_first_backend": backend,
+            "legacy_phase0_used": bool((request_metadata or {}).get("legacy_phase0_used", phase0_mode == "legacy_python")),
+        }
+        if backend == "opencode":
+            metadata.update(
+                {
+                    "execution_backend": "OpenCode",
+                    "execution_model": DEFAULT_OPENCODE_MODEL,
+                    "execution_provider": "z.ai",
+                    "brightdata_transport": "stdio",
+                    "opencode_model": DEFAULT_OPENCODE_MODEL,
+                    "opencode_provider": "z.ai",
+                }
+            )
+        elif backend == "python_direct":
+            metadata.update(
+                {
+                    "execution_backend": "Python",
+                    "brightdata_transport": "python_client",
+                }
+            )
+        return metadata
+
+    def _build_question_first_seed_dossier(
+        self,
+        *,
+        entity_id: str,
+        entity_name: str,
+        entity_type: str,
+        request_metadata: Optional[Dict[str, Any]] = None,
+    ) -> Dict[str, Any]:
+        source_payload = build_universal_atomic_question_source(
+            entity_type=entity_type,
+            entity_name=entity_name,
+            entity_id=entity_id,
+            preset=(request_metadata or {}).get("preset"),
+            question_source_label=f"{entity_id}::question-first",
+        )
+        source_payload["metadata"] = {
+            **(source_payload.get("metadata") if isinstance(source_payload.get("metadata"), dict) else {}),
+            "entity_id": entity_id,
+            "entity_name": entity_name,
+            "entity_type": entity_type,
+            "generation_mode": "question_first_seed",
+            **self._question_first_runtime_metadata(request_metadata=request_metadata),
+        }
+        return source_payload
 
     def _build_canonical_publication_dossier(
         self,
@@ -202,24 +274,31 @@ class PipelineOrchestrator:
         }
         step_artifacts: List[Dict[str, Any]] = []
         dossier = initial_dossier
+        question_first_runtime_metadata = self._question_first_runtime_metadata(request_metadata=request_metadata)
         if dossier is None:
-            await self._emit_phase_update(phase_callback, "dossier_generation", {"status": "running"})
-            dossier = await self._run_dossier_generation(
-                entity_id=entity_id,
-                entity_name=entity_name,
-                entity_type=entity_type,
-                priority_score=priority_score,
-                run_objective=phase_objectives["dossier_generation"],
-            )
-            dossier = self._coerce_dossier_payload(dossier)
-            if self.question_first_enabled:
+            if self.question_first_enabled and self._resolve_question_first_backend(request_metadata) == "opencode":
+                dossier = self._build_question_first_seed_dossier(
+                    entity_id=entity_id,
+                    entity_name=entity_name,
+                    entity_type=entity_type,
+                    request_metadata=request_metadata,
+                )
+                await self._emit_phase_update(
+                    phase_callback,
+                    "dossier_generation",
+                    {
+                        "status": "question_first_running",
+                        **question_first_runtime_metadata,
+                        **build_question_preparation_fields(dossier.get("questions") or []),
+                    },
+                )
                 logger.warning("🚦 Pipeline boundary: question_first_enrichment:start")
-                await self._emit_phase_update(phase_callback, "dossier_generation", {"status": "question_first_running"})
-                dossier = await self._run_question_first_enrichment(
+                dossier = await self._invoke_question_first_enrichment(
                     dossier=dossier,
                     entity_id=entity_id,
                     entity_name=entity_name,
                     request_metadata=request_metadata,
+                    phase_callback=phase_callback,
                 )
                 question_first_meta = (dossier.get("question_first") or {}) if isinstance(dossier, dict) else {}
                 self._last_question_first_report = question_first_meta.get("report") if isinstance(question_first_meta, dict) else None
@@ -228,6 +307,7 @@ class PipelineOrchestrator:
                     "dossier_generation",
                     {
                         "status": "question_first_completed",
+                        **question_first_runtime_metadata,
                         "questions_answered": int(question_first_meta.get("questions_answered") or 0),
                         "category_count": len(question_first_meta.get("categories") or []),
                         "connections_graph_enrichment_enabled": bool(question_first_meta.get("connections_graph_enrichment_enabled")),
@@ -237,11 +317,55 @@ class PipelineOrchestrator:
                     },
                 )
                 logger.warning("🚦 Pipeline boundary: question_first_enrichment:complete")
+            else:
+                await self._emit_phase_update(phase_callback, "dossier_generation", {"status": "running", "current_substep": "dossier_generation_running"})
+                dossier = await self._run_dossier_generation(
+                    entity_id=entity_id,
+                    entity_name=entity_name,
+                    entity_type=entity_type,
+                    priority_score=priority_score,
+                    run_objective=phase_objectives["dossier_generation"],
+                )
+                dossier = self._coerce_dossier_payload(dossier)
+                if self.question_first_enabled:
+                    logger.warning("🚦 Pipeline boundary: question_first_enrichment:start")
+                    await self._emit_phase_update(
+                        phase_callback,
+                        "dossier_generation",
+                        {"status": "question_first_running", **question_first_runtime_metadata},
+                    )
+                    dossier = await self._invoke_question_first_enrichment(
+                        dossier=dossier,
+                        entity_id=entity_id,
+                        entity_name=entity_name,
+                        request_metadata=request_metadata,
+                        phase_callback=phase_callback,
+                    )
+                    question_first_meta = (dossier.get("question_first") or {}) if isinstance(dossier, dict) else {}
+                    self._last_question_first_report = question_first_meta.get("report") if isinstance(question_first_meta, dict) else None
+                    await self._emit_phase_update(
+                        phase_callback,
+                        "dossier_generation",
+                        {
+                            "status": "question_first_completed",
+                            **question_first_runtime_metadata,
+                            "questions_answered": int(question_first_meta.get("questions_answered") or 0),
+                            "category_count": len(question_first_meta.get("categories") or []),
+                            "connections_graph_enrichment_enabled": bool(question_first_meta.get("connections_graph_enrichment_enabled")),
+                            "connections_graph_enrichment_status": str(
+                                question_first_meta.get("connections_graph_enrichment_status") or ("optional")
+                            ),
+                        },
+                    )
+                    logger.warning("🚦 Pipeline boundary: question_first_enrichment:complete")
+            dossier = self._coerce_dossier_payload(dossier)
             await self._emit_phase_update(
                 phase_callback,
                 "dossier_generation",
                 {
                     "status": "completed",
+                    "current_substep": "dossier_generation_completed",
+                    **(question_first_runtime_metadata if self.question_first_enabled else {}),
                     "hypothesis_count": dossier.get("metadata", {}).get("hypothesis_count", 0),
                     "signal_count": dossier.get("metadata", {}).get("signal_count", 0),
                 },
@@ -260,12 +384,17 @@ class PipelineOrchestrator:
                 has_question_first_answers = isinstance(question_first_meta.get("answers"), list) and len(question_first_meta.get("answers") or []) > 0
                 if is_question_repair or not has_question_first_answers:
                     logger.warning("🚦 Pipeline boundary: question_first_enrichment:start")
-                    await self._emit_phase_update(phase_callback, "dossier_generation", {"status": "question_first_running"})
-                    dossier = await self._run_question_first_enrichment(
+                    await self._emit_phase_update(
+                        phase_callback,
+                        "dossier_generation",
+                        {"status": "question_first_running", **question_first_runtime_metadata},
+                    )
+                    dossier = await self._invoke_question_first_enrichment(
                         dossier=dossier,
                         entity_id=entity_id,
                         entity_name=entity_name,
                         request_metadata=request_metadata,
+                        phase_callback=phase_callback,
                     )
                     question_first_meta = (dossier.get("question_first") or {}) if isinstance(dossier, dict) else {}
                     self._last_question_first_report = question_first_meta.get("report") if isinstance(question_first_meta, dict) else None
@@ -274,6 +403,7 @@ class PipelineOrchestrator:
                         "dossier_generation",
                         {
                             "status": "question_first_completed",
+                            **question_first_runtime_metadata,
                             "questions_answered": int(question_first_meta.get("questions_answered") or 0),
                             "category_count": len(question_first_meta.get("categories") or []),
                             "connections_graph_enrichment_enabled": bool(question_first_meta.get("connections_graph_enrichment_enabled")),
@@ -293,18 +423,28 @@ class PipelineOrchestrator:
         capability_signals: List[Dict[str, Any]] = []
         validated_rfps: List[Dict[str, Any]] = []
         episodes: List[Dict[str, Any]] = []
+        use_question_first_downstream_fallback = self._use_question_first_downstream_fallback(
+            dossier=dossier,
+            request_metadata=request_metadata,
+        )
 
         try:
             logger.warning("🚦 Pipeline boundary: discovery:start")
-            await self._emit_phase_update(phase_callback, "discovery", {"status": "running"})
-            discovery_result = await self._run_discovery(
-                entity_id=entity_id,
-                entity_name=entity_name,
-                entity_type=entity_type,
-                dossier=dossier,
-                phase_callback=phase_callback,
-                run_objective=phase_objectives["discovery"],
-            )
+            await self._emit_phase_update(phase_callback, "discovery", {"status": "running", "current_substep": "discovery_running"})
+            if use_question_first_downstream_fallback:
+                discovery_result = self._build_question_first_discovery_result(
+                    entity_id=entity_id,
+                    dossier=dossier,
+                )
+            else:
+                discovery_result = await self._run_discovery(
+                    entity_id=entity_id,
+                    entity_name=entity_name,
+                    entity_type=entity_type,
+                    dossier=dossier,
+                    phase_callback=phase_callback,
+                    run_objective=phase_objectives["discovery"],
+                )
             discovery_budget = getattr(self, "_last_discovery_budget", {})
             raw_signals = self._extract_raw_signals(discovery_result)
             phase_results["discovery"] = {
@@ -319,7 +459,7 @@ class PipelineOrchestrator:
         except Exception as exc:
             error_message = "Discovery timed out" if isinstance(exc, TimeoutError) else str(exc)
             logger.exception("Discovery phase failed for %s: %s", entity_id, error_message)
-            phase_results["discovery"] = {"status": "failed", "error": error_message}
+            phase_results["discovery"] = {"status": "failed", "error": error_message, "current_substep": "discovery_failed"}
             phase_results["ralph_validation"] = {"status": "skipped", "reason": "discovery_failed"}
             phase_results["temporal_persistence"] = {"status": "skipped", "reason": "discovery_failed"}
             await self._emit_phase_update(phase_callback, "discovery", phase_results["discovery"])
@@ -327,17 +467,24 @@ class PipelineOrchestrator:
             await self._emit_phase_update(phase_callback, "temporal_persistence", phase_results["temporal_persistence"])
         else:
             try:
-                await self._emit_phase_update(phase_callback, "ralph_validation", {"status": "running"})
-                raw_ralph_result = await self._run_ralph_validation(
-                    entity_id=entity_id,
-                    raw_signals=raw_signals,
-                )
+                await self._emit_phase_update(phase_callback, "ralph_validation", {"status": "running", "current_substep": "ralph_validation_running"})
+                if use_question_first_downstream_fallback:
+                    raw_ralph_result = self._build_question_first_ralph_result(
+                        entity_id=entity_id,
+                        raw_signals=raw_signals,
+                    )
+                else:
+                    raw_ralph_result = await self._run_ralph_validation(
+                        entity_id=entity_id,
+                        raw_signals=raw_signals,
+                    )
                 ralph_result = self._coerce_ralph_result(raw_ralph_result)
                 validated_signals = self._normalize_validated_signals(ralph_result.get("validated_signals", []))
                 capability_signals = self._normalize_validated_signals(ralph_result.get("capability_signals", []))
                 validated_rfps = [signal for signal in validated_signals if self._is_rfp_signal(signal)]
                 phase_results["ralph_validation"] = {
                     "status": "completed",
+                    "current_substep": "ralph_validation_completed",
                     "validated_signal_count": len(validated_signals),
                     "capability_signal_count": len(capability_signals),
                     "rfp_count": len(validated_rfps),
@@ -347,13 +494,13 @@ class PipelineOrchestrator:
             except Exception as exc:
                 error_message = "Ralph validation timed out" if isinstance(exc, TimeoutError) else str(exc)
                 logger.exception("Ralph validation failed for %s: %s", entity_id, error_message)
-                phase_results["ralph_validation"] = {"status": "failed", "error": error_message}
+                phase_results["ralph_validation"] = {"status": "failed", "error": error_message, "current_substep": "ralph_validation_failed"}
                 phase_results["temporal_persistence"] = {"status": "skipped", "reason": "ralph_validation_failed"}
                 await self._emit_phase_update(phase_callback, "ralph_validation", phase_results["ralph_validation"])
                 await self._emit_phase_update(phase_callback, "temporal_persistence", phase_results["temporal_persistence"])
             else:
                 try:
-                    await self._emit_phase_update(phase_callback, "temporal_persistence", {"status": "running"})
+                    await self._emit_phase_update(phase_callback, "temporal_persistence", {"status": "running", "current_substep": "temporal_persistence_running"})
                     episodes = await self._run_temporal_persistence(
                         entity_id=entity_id,
                         entity_name=entity_name,
@@ -361,16 +508,17 @@ class PipelineOrchestrator:
                     )
                     phase_results["temporal_persistence"] = {
                         "status": "completed",
+                        "current_substep": "temporal_persistence_completed",
                         "episode_count": len(episodes),
                     }
                     await self._emit_phase_update(phase_callback, "temporal_persistence", phase_results["temporal_persistence"])
                 except Exception as exc:
                     error_message = "Temporal persistence timed out" if isinstance(exc, TimeoutError) else str(exc)
                     logger.exception("Temporal persistence failed for %s: %s", entity_id, error_message)
-                    phase_results["temporal_persistence"] = {"status": "failed", "error": error_message}
+                    phase_results["temporal_persistence"] = {"status": "failed", "error": error_message, "current_substep": "temporal_persistence_failed"}
                     await self._emit_phase_update(phase_callback, "temporal_persistence", phase_results["temporal_persistence"])
 
-        await self._emit_phase_update(phase_callback, "dashboard_scoring", {"status": "running"})
+        await self._emit_phase_update(phase_callback, "dashboard_scoring", {"status": "running", "current_substep": "dashboard_scoring_running"})
         logger.warning("🚦 Pipeline boundary: dashboard_scoring:start")
         scores = await self._run_dashboard_scoring(
             entity_id=entity_id,
@@ -385,6 +533,7 @@ class PipelineOrchestrator:
             "dashboard_scoring",
             {
                 "status": "completed",
+                "current_substep": "dashboard_scoring_completed",
                 "sales_readiness": scores.get("sales_readiness"),
                 "active_probability": scores.get("active_probability"),
                 "procurement_maturity": scores.get("procurement_maturity"),
@@ -867,11 +1016,26 @@ class PipelineOrchestrator:
         entity_id: str,
         entity_name: str,
         request_metadata: Optional[Dict[str, Any]] = None,
+        phase_callback: Optional[Any] = None,
     ) -> Dict[str, Any]:
         questions = dossier.get("questions")
         if not isinstance(questions, list) or not questions:
             logger.info("Question-first enrichment skipped for %s: no questions on dossier", entity_id)
             return dossier
+        runtime_metadata = self._question_first_runtime_metadata(request_metadata=request_metadata)
+        question_first_backend = self._resolve_question_first_backend(request_metadata)
+
+        initial_checkpoint = build_question_preparation_fields(questions)
+        if initial_checkpoint:
+            await self._emit_phase_update(
+                phase_callback,
+                "dossier_generation",
+                {
+                    "status": "question_first_running",
+                    **runtime_metadata,
+                    **initial_checkpoint,
+                },
+            )
 
         source_payload = dict(dossier)
         if isinstance(request_metadata, dict) and request_metadata:
@@ -888,6 +1052,60 @@ class PipelineOrchestrator:
                 "question_first_repair": repair_meta,
             }
 
+        brightdata_client = getattr(self, "brightdata_client", None)
+        claude_client = getattr(self, "claude_client", None)
+
+        if question_first_backend == "python_direct" and brightdata_client and claude_client:
+            try:
+                from backend import question_first_dossier_runner as question_first_runner
+            except ImportError:
+                import question_first_dossier_runner as question_first_runner  # type: ignore
+
+            orchestrator_ref = self
+
+            async def _question_progress_callback(question_id: str, question_text: str, index: int, total: int) -> None:
+                checkpoint = build_question_checkpoint_fields(
+                    question_id=question_id,
+                    execution_state="searching sources",
+                )
+                await orchestrator_ref._emit_phase_update(
+                    phase_callback,
+                    "dossier_generation",
+                    {
+                        "status": "question_first_running",
+                        **runtime_metadata,
+                        "current_question_id": question_id,
+                        "current_question_text": question_text,
+                        "questions_answered": index,
+                        "questions_total": total,
+                        **checkpoint,
+                    },
+                )
+
+            merged_dossier = await question_first_runner.run_question_first_direct(
+                source_payload=source_payload,
+                brightdata_client=brightdata_client,
+                claude_client=claude_client,
+                progress_callback=_question_progress_callback,
+                max_questions=self.question_first_max_questions,
+            )
+            final_dossier = merged_dossier if isinstance(merged_dossier, dict) else dossier
+            if isinstance(final_dossier, dict):
+                final_dossier["metadata"] = {
+                    **(final_dossier.get("metadata") if isinstance(final_dossier.get("metadata"), dict) else {}),
+                    **runtime_metadata,
+                }
+            return final_dossier
+
+        # Fallback to OpenCode batch runner when clients are not available
+        logger.info(
+            "Question-first enrichment: backend=%s entity=%s questions=%d brightdata=%s claude=%s",
+            question_first_backend,
+            entity_id,
+            len(questions),
+            bool(brightdata_client),
+            bool(claude_client),
+        )
         try:
             from backend import question_first_dossier_runner as question_first_runner
             from backend.question_first_repair import (
@@ -917,6 +1135,50 @@ class PipelineOrchestrator:
                 source_payload=source_payload,
                 question_ids=repaired_question_ids,
             )
+        elif self.question_first_max_questions > 0 and len(questions) > self.question_first_max_questions:
+            capped_question_ids = [
+                str(question.get("question_id") or "").strip()
+                for question in questions[: self.question_first_max_questions]
+                if isinstance(question, dict) and str(question.get("question_id") or "").strip()
+            ]
+            if capped_question_ids:
+                launch_source_payload = build_filtered_question_source_payload(
+                    source_payload=source_payload,
+                    question_ids=capped_question_ids,
+                )
+        async def _opencode_progress_callback(event: Dict[str, Any]) -> None:
+            if not isinstance(event, dict):
+                return
+            questions_answered = event.get("questions_answered")
+            questions_total = event.get("questions_total")
+            checkpoint = build_question_checkpoint_fields(
+                question_id=str(event.get("current_question_id") or "").strip() or None,
+                execution_state=event.get("current_execution_state") or "searching sources",
+                current_substep=str(event.get("current_substep") or "").strip() or None,
+                source_order=event.get("current_source_order"),
+            )
+            await self._emit_phase_update(
+                phase_callback,
+                "dossier_generation",
+                {
+                    "status": "question_first_running",
+                    **runtime_metadata,
+                    "current_substep": str(event.get("current_substep") or "question_first_running"),
+                    "current_substep_label": event.get("current_substep_label") or "Question-first running",
+                    "current_question_id": event.get("current_question_id"),
+                    "current_question_text": event.get("current_question_text"),
+                    "questions_answered": questions_answered,
+                    "questions_total": questions_total,
+                    "current_substep_progress": event.get("current_substep_progress")
+                    or (
+                        f"{questions_answered}/{questions_total} questions"
+                        if questions_answered is not None and questions_total is not None
+                        else None
+                    ),
+                    **checkpoint,
+                },
+            )
+
         merged_dossier = await question_first_runner.run_question_first_dossier_from_payload(
             source_payload=source_payload,
             launch_source_payload=launch_source_payload,
@@ -925,8 +1187,39 @@ class PipelineOrchestrator:
             opencode_timeout_ms=self.question_first_opencode_timeout,
             preset=source_payload.get("preset"),
             question_source_label=f"{entity_id}::question-first",
+            progress_callback=_opencode_progress_callback,
         )
-        return merged_dossier if isinstance(merged_dossier, dict) else dossier
+        final_dossier = merged_dossier if isinstance(merged_dossier, dict) else dossier
+        if isinstance(final_dossier, dict):
+            final_dossier["metadata"] = {
+                **(final_dossier.get("metadata") if isinstance(final_dossier.get("metadata"), dict) else {}),
+                **runtime_metadata,
+            }
+        return final_dossier
+
+    async def _invoke_question_first_enrichment(
+        self,
+        *,
+        dossier: Dict[str, Any],
+        entity_id: str,
+        entity_name: str,
+        request_metadata: Optional[Dict[str, Any]] = None,
+        phase_callback: Optional[Any] = None,
+    ) -> Dict[str, Any]:
+        enrichment = self._run_question_first_enrichment
+        kwargs = {
+            "dossier": dossier,
+            "entity_id": entity_id,
+            "entity_name": entity_name,
+            "request_metadata": request_metadata,
+        }
+        try:
+            signature = inspect.signature(enrichment)
+            if "phase_callback" in signature.parameters:
+                kwargs["phase_callback"] = phase_callback
+        except (TypeError, ValueError):
+            kwargs["phase_callback"] = phase_callback
+        return await enrichment(**kwargs)
 
     def _extract_raw_signals(self, discovery_result: Any) -> List[Dict[str, Any]]:
         if isinstance(discovery_result, dict):
@@ -956,7 +1249,7 @@ class PipelineOrchestrator:
         payload: Dict[str, Any],
     ) -> None:
         if callback is not None:
-            await callback(phase, payload)
+            await callback(phase, normalize_phase_callback_payload(phase, payload))
 
     def _coerce_ralph_result(self, result: Any) -> Dict[str, Any]:
         if isinstance(result, dict):
@@ -1008,6 +1301,153 @@ class PipelineOrchestrator:
                     canonical_sources.setdefault("official_site", section_host)
 
         return payload
+
+    def _legacy_llm_disabled_reason(self) -> Optional[str]:
+        getter = getattr(self.claude_client, "_get_disabled_reason", None)
+        if not callable(getter):
+            return None
+        reason = str(getter() or "").strip()
+        return reason or None
+
+    def _use_question_first_downstream_fallback(
+        self,
+        *,
+        dossier: Dict[str, Any],
+        request_metadata: Optional[Dict[str, Any]] = None,
+    ) -> bool:
+        if not self.question_first_enabled:
+            return False
+        if self._resolve_question_first_backend(request_metadata) != "opencode":
+            return False
+        if str(os.getenv("PIPELINE_DISABLE_LEGACY_CLAUDE_FOR_OPENCODE", "true")).strip().lower() not in {
+            "1",
+            "true",
+            "yes",
+            "on",
+        }:
+            return False
+        if self._legacy_llm_disabled_reason() != "legacy_llm_disabled_for_opencode":
+            return False
+        return len(self._extract_question_first_answers(dossier)) > 0
+
+    @staticmethod
+    def _extract_question_first_answers(dossier: Dict[str, Any]) -> List[Dict[str, Any]]:
+        question_first = dossier.get("question_first") if isinstance(dossier.get("question_first"), dict) else {}
+        answers = question_first.get("answers") if isinstance(question_first.get("answers"), list) else dossier.get("answers")
+        if not isinstance(answers, list):
+            return []
+        return [answer for answer in answers if isinstance(answer, dict)]
+
+    @staticmethod
+    def _infer_question_first_signal_type(answer: Dict[str, Any]) -> str:
+        explicit = str(answer.get("signal_type") or answer.get("type") or "").strip()
+        if explicit:
+            return explicit
+        question_id = str(answer.get("question_id") or "").strip().lower()
+        question_text = str(answer.get("question_text") or "").strip().lower()
+        combined = f"{question_id} {question_text}"
+        if any(token in combined for token in ("rfp", "tender", "procurement")):
+            return "PROCUREMENT_INDICATOR"
+        if any(token in combined for token in ("hiring", "leadership", "technology", "digital", "platform", "vendor")):
+            return "CAPABILITY_SIGNAL"
+        return "DISCOVERY_SIGNAL"
+
+    def _build_question_first_raw_signals(self, *, entity_id: str, dossier: Dict[str, Any]) -> List[Dict[str, Any]]:
+        raw_signals: List[Dict[str, Any]] = []
+        for answer in self._extract_question_first_answers(dossier):
+            validation_state = str(answer.get("validation_state") or "").strip().lower()
+            if validation_state not in {"validated", "provisional"}:
+                continue
+            evidence_url = str(answer.get("evidence_url") or answer.get("scrape_url") or "").strip()
+            answer_text = str(answer.get("answer") or "").strip()
+            if not evidence_url or not answer_text:
+                continue
+            question_id = str(answer.get("question_id") or "").strip() or "question-first"
+            signal_type = self._infer_question_first_signal_type(answer)
+            confidence = float(answer.get("confidence") or 0.0)
+            raw_signals.append(
+                {
+                    "id": f"{entity_id}:{question_id}",
+                    "type": signal_type,
+                    "signal_type": signal_type,
+                    "confidence": confidence,
+                    "statement": answer_text,
+                    "text": answer_text,
+                    "url": evidence_url,
+                    "entity_id": entity_id,
+                    "validation_state": validation_state,
+                    "metadata": {
+                        "source": "question_first",
+                        "question_id": question_id,
+                        "question_text": str(answer.get("question_text") or "").strip(),
+                        "category": str(answer.get("category") or "").strip() or None,
+                        "evidence_pointer_ids": [f"qf:{question_id}"],
+                    },
+                }
+            )
+        return raw_signals
+
+    def _build_question_first_discovery_result(self, *, entity_id: str, dossier: Dict[str, Any]) -> Dict[str, Any]:
+        raw_signals = self._build_question_first_raw_signals(entity_id=entity_id, dossier=dossier)
+        provisional_signals = [
+            signal for signal in raw_signals if str(signal.get("validation_state") or "").strip().lower() == "provisional"
+        ]
+        hypotheses = [
+            {
+                "statement": signal.get("statement"),
+                "confidence": signal.get("confidence"),
+                "category": signal.get("type"),
+                "source": "question_first",
+            }
+            for signal in raw_signals
+        ]
+        return {
+            "final_confidence": max((float(signal.get("confidence") or 0.0) for signal in raw_signals), default=0.0),
+            "iterations_completed": 0,
+            "signals_discovered": list(raw_signals),
+            "provisional_signals": provisional_signals,
+            "raw_signals": raw_signals,
+            "hypotheses": hypotheses,
+            "performance_summary": {
+                "llm_call_count": 0,
+                "llm_fallback_count": 0,
+                "length_stop_count": 0,
+                "schema_fail_count": 0,
+                "question_first_downstream_fallback": 1,
+            },
+            "parse_path": "question_first_downstream_fallback",
+            "llm_last_status": "legacy_llm_disabled",
+            "controller_health_reasons": ["question_first_downstream_fallback"],
+        }
+
+    def _build_question_first_ralph_result(
+        self,
+        *,
+        entity_id: str,
+        raw_signals: List[Dict[str, Any]],
+    ) -> Dict[str, Any]:
+        validated_signals: List[Dict[str, Any]] = []
+        capability_signals: List[Dict[str, Any]] = []
+        for signal in raw_signals:
+            if str(signal.get("validation_state") or "").strip().lower() != "validated":
+                continue
+            normalized_signal = {
+                **signal,
+                "id": signal.get("id") or f"{entity_id}:validated",
+                "accept_guard_passed": True,
+                "evidence_pointer_ids": list(
+                    ((signal.get("metadata") or {}).get("evidence_pointer_ids") if isinstance(signal.get("metadata"), dict) else [])
+                    or [f"qf:{entity_id}"]
+                ),
+            }
+            validated_signals.append(normalized_signal)
+            if not self._is_rfp_signal(normalized_signal):
+                capability_signals.append(normalized_signal)
+        return {
+            "validated_signals": validated_signals,
+            "capability_signals": capability_signals,
+            "hypothesis_states": {},
+        }
 
     @staticmethod
     def _extract_website_from_core_section(payload: Dict[str, Any]) -> Optional[str]:

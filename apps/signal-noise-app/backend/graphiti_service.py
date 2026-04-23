@@ -70,6 +70,14 @@ except ImportError:
     SUPABASE_AVAILABLE = False
     logging.warning("⚠️  Supabase client not available - temporal features will use native Cypher")
 
+try:
+    from local_pg_client import create_local_pg_client, should_use_local_pg
+except ImportError:  # pragma: no cover - keeps legacy import contexts working
+    create_local_pg_client = None
+
+    def should_use_local_pg() -> bool:
+        return False
+
 # Try to import Graphiti (optional - graceful degradation if not available)
 try:
     from graphiti_core import Graphiti
@@ -165,13 +173,16 @@ class GraphitiService:
 
     def __init__(self):
         # Database configuration - backend writes must prefer service-role credentials.
+        self.use_local_pg = should_use_local_pg()
         self.supabase_url = os.getenv("SUPABASE_URL") or os.getenv("NEXT_PUBLIC_SUPABASE_URL")
         self.supabase_key = (
             os.getenv("SUPABASE_SERVICE_ROLE_KEY")
             or os.getenv("SUPABASE_ANON_KEY")
             or os.getenv("NEXT_PUBLIC_SUPABASE_ANON_KEY")
         )
-        self.use_supabase = bool(self.supabase_url and self.supabase_key and SUPABASE_AVAILABLE)
+        self.use_supabase = bool(
+            self.use_local_pg or (self.supabase_url and self.supabase_key and SUPABASE_AVAILABLE)
+        )
 
         # FalkorDB configuration (optional - for graph queries)
         self.falkordb_uri = os.getenv("FALKORDB_URI") or os.getenv("NEO4J_URI")
@@ -180,7 +191,11 @@ class GraphitiService:
 
         # Supabase client
         self.supabase_client = None
-        if self.use_supabase:
+        if self.use_local_pg:
+            if create_local_pg_client is None:
+                raise RuntimeError("local Postgres persistence client is not available")
+            self.supabase_client = create_local_pg_client()
+        elif self.use_supabase:
             self.supabase_client = create_client(self.supabase_url, self.supabase_key)
 
         # Neo4j/FalkorDB driver

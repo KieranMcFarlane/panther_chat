@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { cachedEntitiesSupabase as supabase } from '@/lib/cached-entities-supabase'
 import { upsertImportedEntityIntoFalkor } from '@/lib/entity-import-falkor-writer'
 import { normalizeImportedEntityRow, REQUIRED_ENTITY_IMPORT_COLUMNS } from '@/lib/entity-import-schema'
-import { mapImportedEntityRowToCachedEntity } from '@/lib/entity-import-mapper'
+import { mapImportedEntityRowToCanonicalEntity } from '@/lib/entity-import-mapper'
 import {
   createEntityImportBatch,
   createEntityPipelineRuns,
@@ -61,8 +61,8 @@ export async function POST(request: NextRequest) {
     await storeFallbackEntityImportState(batch, pipelineRuns)
 
     await supabase
-      .from('cached_entities')
-      .upsert([mapImportedEntityRowToCachedEntity(row)], { onConflict: 'neo4j_id' })
+      .from('canonical_entities')
+      .upsert([mapImportedEntityRowToCanonicalEntity(row)], { onConflict: 'id' })
 
     let falkor_sync_error: string | null = null
     try {

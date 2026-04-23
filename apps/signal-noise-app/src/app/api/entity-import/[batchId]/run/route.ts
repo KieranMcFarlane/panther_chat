@@ -31,14 +31,17 @@ async function syncEntityPipelineArtifacts(
   rfpCount: number,
   dossier: Record<string, unknown> | null | undefined,
 ) {
-  const { data: cachedEntity } = await supabase
-    .from('cached_entities')
-    .select('properties')
-    .eq('neo4j_id', entityId)
+  const { data: canonicalEntity } = await supabase
+    .from('canonical_entities')
+    .select('id, properties')
+    .contains('source_neo4j_ids', [entityId])
+    .limit(1)
     .maybeSingle()
 
-  const properties = typeof cachedEntity?.properties === 'object' && cachedEntity.properties !== null
-    ? { ...cachedEntity.properties }
+  if (!canonicalEntity) return
+
+  const properties = typeof canonicalEntity.properties === 'object' && canonicalEntity.properties !== null
+    ? { ...canonicalEntity.properties }
     : {}
 
   properties.dossier_data = dossier ? JSON.stringify(dossier) : properties.dossier_data ?? null
@@ -50,9 +53,9 @@ async function syncEntityPipelineArtifacts(
   properties.last_pipeline_run_at = new Date().toISOString()
 
   await supabase
-    .from('cached_entities')
+    .from('canonical_entities')
     .update({ properties })
-    .eq('neo4j_id', entityId)
+    .eq('id', canonicalEntity.id)
 }
 
 async function processBatch(batchId: string) {

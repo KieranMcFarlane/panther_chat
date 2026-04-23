@@ -1,12 +1,16 @@
 import { NextResponse } from 'next/server'
 import { getCanonicalEntitiesSnapshot } from '@/lib/canonical-entities-snapshot'
-import { cachedEntitiesSupabase as supabase } from '@/lib/cached-entities-supabase'
 import { matchesEntityUuid, resolveEntityUuid } from '@/lib/entity-public-id'
 import { deriveEntityPipelineLifecycle } from '@/lib/entity-pipeline-lifecycle'
 import { resolveOperationalHeartbeatDetails, type OperationalHeartbeatFreshness } from '@/lib/operational-heartbeat'
 import { getNormalizedUniverseCount } from '@/lib/normalized-universe-count'
-import { loadPipelineRuntimeSnapshot } from '@/lib/pipeline-runtime'
-import { readPipelineControlState } from '@/lib/pipeline-control-state'
+import {
+  buildPipelineRuntimeSnapshot,
+  loadPipelineRuntimeReadSet,
+  type PipelineDossierRow,
+  type PipelineRuntimeSnapshot,
+} from '@/lib/pipeline-runtime'
+import { deriveOperationalFreshnessCheckpoint } from '@/lib/operational-freshness'
 import { normalizeTerminalFollowOnMetadata } from '@/lib/queue-drilldown-normalization'
 import { loadQuestionFirstScaleManifest } from '@/lib/question-first-manifest'
 import { resolveQuestionTextFromDossierData } from '@/lib/question-text-resolver'
@@ -44,6 +48,22 @@ type QueueEntityRecord = {
   active_question_id?: string | null
   current_question_id?: string | null
   current_question_text?: string | null
+  current_section_id?: string | null
+  current_section_label?: string | null
+  current_section_index?: number | null
+  current_section_total?: number | null
+  current_question_index?: number | null
+  current_question_total?: number | null
+  current_strategy_label?: string | null
+  current_execution_state?: string | null
+  current_source_order?: string[] | null
+  execution_backend?: string | null
+  execution_model?: string | null
+  execution_provider?: string | null
+  brightdata_transport?: string | null
+  current_substep?: string | null
+  current_substep_label?: string | null
+  current_substep_progress?: string | null
   current_action?: string | null
   run_phase?: string | null
   current_stage?: string | null
@@ -61,14 +81,7 @@ type QueueEntityRecord = {
   movement_state?: string | null
 }
 
-type DossierRecord = {
-  entity_id: string
-  canonical_entity_id?: string | null
-  entity_name: string
-  entity_type: string
-  generated_at: string | null
-  dossier_data?: Record<string, unknown> | null
-}
+type DossierRecord = PipelineDossierRow
 
 type OperationalState = 'starting' | 'running' | 'retrying' | 'skipping' | 'stopping' | 'paused' | 'stopped' | 'waiting'
 
@@ -269,7 +282,12 @@ function toQueueRecord(row: Record<string, unknown>): QueueEntityRecord {
     entity_id: toText(row.entity_id),
     entity_name: toText(row.entity_name) || 'Unknown entity',
     entity_type: toText(metadata.entity_type) || 'entity',
-    summary: toText(metadata.summary) || toText(metadata.quality_summary) || (toText(metadata.active_question_id) ? `Running ${toText(metadata.active_question_id)}` : null),
+    summary: toText(metadata.summary)
+      || toText(metadata.current_question_text)
+      || toText(metadata.current_execution_state)
+      || toText(metadata.current_substep_label)
+      || toText(metadata.quality_summary)
+      || (toText(metadata.active_question_id) ? `Running ${toText(metadata.active_question_id)}` : null),
     generated_at: toText(row.completed_at ?? row.started_at) || null,
     started_at: toText(row.started_at) || null,
     heartbeat_at: heartbeat.heartbeat_at,
@@ -293,7 +311,25 @@ function toQueueRecord(row: Record<string, unknown>): QueueEntityRecord {
       || metadata.next_repair_question_id
       || metadata.last_completed_question
     ) || null,
-    current_action: toText(metadata.current_action) || toText(metadata.next_action) || toText(metadata.run_phase) || null,
+    current_section_id: toText(metadata.current_section_id) || null,
+    current_section_label: toText(metadata.current_section_label) || null,
+    current_section_index: Number.isFinite(Number(metadata.current_section_index)) ? Number(metadata.current_section_index) : null,
+    current_section_total: Number.isFinite(Number(metadata.current_section_total)) ? Number(metadata.current_section_total) : null,
+    current_question_index: Number.isFinite(Number(metadata.current_question_index)) ? Number(metadata.current_question_index) : null,
+    current_question_total: Number.isFinite(Number(metadata.current_question_total)) ? Number(metadata.current_question_total) : null,
+    current_strategy_label: toText(metadata.current_strategy_label) || null,
+    current_execution_state: toText(metadata.current_execution_state) || null,
+    current_source_order: Array.isArray(metadata.current_source_order)
+      ? metadata.current_source_order.map((item) => toText(item)).filter(Boolean)
+      : null,
+    execution_backend: toText(metadata.execution_backend || metadata.question_first_backend) || null,
+    execution_model: toText(metadata.execution_model || metadata.opencode_model) || null,
+    execution_provider: toText(metadata.execution_provider || metadata.opencode_provider) || null,
+    brightdata_transport: toText(metadata.brightdata_transport) || null,
+    current_substep: toText(metadata.current_substep) || null,
+    current_substep_label: toText(metadata.current_substep_label) || null,
+    current_substep_progress: toText(metadata.current_substep_progress) || null,
+    current_action: toText(metadata.current_execution_state) || toText(metadata.current_action) || toText(metadata.next_action) || toText(metadata.run_phase) || null,
     run_phase: toText(row.phase ?? metadata.run_phase ?? row.status) || null,
     current_stage: toText(metadata.current_stage || metadata.run_phase || row.phase || row.status) || null,
     publication_status: toText(metadata.publication_status) || null,
@@ -375,6 +411,23 @@ function enrichQuestionTextFields<T extends QueueEntityRecord>(
     current_question_id: currentQuestionId,
     current_question_text: currentQuestionText,
     active_question_id: item.active_question_id || currentQuestionId,
+    current_section_id: item.current_section_id || toText(extractQuestionFirstState(dossierData).current_section_id) || null,
+    current_section_label: item.current_section_label || toText(extractQuestionFirstState(dossierData).current_section_label) || null,
+    current_section_index: item.current_section_index ?? (Number.isFinite(Number(extractQuestionFirstState(dossierData).current_section_index)) ? Number(extractQuestionFirstState(dossierData).current_section_index) : null),
+    current_section_total: item.current_section_total ?? (Number.isFinite(Number(extractQuestionFirstState(dossierData).current_section_total)) ? Number(extractQuestionFirstState(dossierData).current_section_total) : null),
+    current_question_index: item.current_question_index ?? (Number.isFinite(Number(extractQuestionFirstState(dossierData).current_question_index)) ? Number(extractQuestionFirstState(dossierData).current_question_index) : null),
+    current_question_total: item.current_question_total ?? (Number.isFinite(Number(extractQuestionFirstState(dossierData).current_question_total)) ? Number(extractQuestionFirstState(dossierData).current_question_total) : null),
+    current_strategy_label: item.current_strategy_label || toText(extractQuestionFirstState(dossierData).current_strategy_label) || null,
+    current_execution_state: item.current_execution_state || toText(extractQuestionFirstState(dossierData).current_execution_state) || null,
+    current_source_order: item.current_source_order || (Array.isArray(extractQuestionFirstState(dossierData).current_source_order)
+      ? (extractQuestionFirstState(dossierData).current_source_order as unknown[]).map((entry) => toText(entry)).filter(Boolean)
+      : null),
+    execution_backend: item.execution_backend || toText(extractQuestionFirstState(dossierData).execution_backend) || null,
+    execution_model: item.execution_model || toText(extractQuestionFirstState(dossierData).execution_model) || null,
+    execution_provider: item.execution_provider || toText(extractQuestionFirstState(dossierData).execution_provider) || null,
+    brightdata_transport: item.brightdata_transport || toText(extractQuestionFirstState(dossierData).brightdata_transport) || null,
+    current_substep_label: item.current_substep_label || null,
+    current_substep_progress: item.current_substep_progress || null,
     next_repair_question_text: nextRepairQuestionText,
     last_completed_question_text: lastCompletedQuestionText,
     current_action: item.current_action || currentQuestionText || (currentQuestionId ? `Question ${currentQuestionId}` : null),
@@ -388,12 +441,13 @@ function enrichQuestionTextFields<T extends QueueEntityRecord>(
       || currentQuestionText
       || nextRepairQuestionText
       || lastCompletedQuestionText
+      || item.current_execution_state
       || null,
   }
 }
 
 function buildQueueEntityFromRuntimeRun(
-  runtimeRun: NonNullable<Awaited<ReturnType<typeof loadPipelineRuntimeSnapshot>>['current_run']>,
+  runtimeRun: NonNullable<PipelineRuntimeSnapshot['current_live_run'] | PipelineRuntimeSnapshot['latest_noteworthy_run']>,
 ): QueueEntityRecord {
   return {
     batch_id: runtimeRun.batch_id,
@@ -401,7 +455,7 @@ function buildQueueEntityFromRuntimeRun(
     entity_id: runtimeRun.canonical_entity_id || runtimeRun.entity_id,
     entity_name: runtimeRun.entity_name,
     entity_type: 'Entity',
-    summary: runtimeRun.current_question_text || runtimeRun.current_action || runtimeRun.phase || null,
+    summary: runtimeRun.current_question_text || runtimeRun.current_substep_label || runtimeRun.current_action || runtimeRun.phase || null,
     generated_at: runtimeRun.heartbeat_at || null,
     started_at: runtimeRun.heartbeat_at || null,
     heartbeat_at: runtimeRun.heartbeat_at || null,
@@ -414,6 +468,22 @@ function buildQueueEntityFromRuntimeRun(
     active_question_id: runtimeRun.current_question_id || null,
     current_question_id: runtimeRun.current_question_id || null,
     current_question_text: runtimeRun.current_question_text || null,
+    current_section_id: runtimeRun.current_section_id || null,
+    current_section_label: runtimeRun.current_section_label || null,
+    current_section_index: runtimeRun.current_section_index ?? null,
+    current_section_total: runtimeRun.current_section_total ?? null,
+    current_question_index: runtimeRun.current_question_index ?? null,
+    current_question_total: runtimeRun.current_question_total ?? null,
+    current_strategy_label: runtimeRun.current_strategy_label || null,
+    current_execution_state: runtimeRun.current_execution_state || null,
+    current_source_order: runtimeRun.current_source_order || null,
+    execution_backend: runtimeRun.execution_backend || null,
+    execution_model: runtimeRun.execution_model || null,
+    execution_provider: runtimeRun.execution_provider || null,
+    brightdata_transport: runtimeRun.brightdata_transport || null,
+    current_substep: runtimeRun.current_substep || null,
+    current_substep_label: runtimeRun.current_substep_label || null,
+    current_substep_progress: runtimeRun.current_substep_progress || null,
     current_action: runtimeRun.current_action || runtimeRun.phase || null,
     run_phase: runtimeRun.phase || null,
     current_stage: runtimeRun.current_stage || runtimeRun.phase || null,
@@ -428,7 +498,7 @@ function buildQueueEntityFromRuntimeRun(
   }
 }
 
-function buildBacklogHealth(runtime: Awaited<ReturnType<typeof loadPipelineRuntimeSnapshot>>, staleActiveRows: QueueEntityRecord[]) {
+function buildBacklogHealth(runtime: PipelineRuntimeSnapshot, staleActiveRows: QueueEntityRecord[]) {
   const failureBuckets = runtime.failure_buckets
   return {
     stale_active_count: staleActiveRows.length,
@@ -447,11 +517,11 @@ function buildBacklogHealth(runtime: Awaited<ReturnType<typeof loadPipelineRunti
 }
 
 function deriveLiveState(
-  runtime: Awaited<ReturnType<typeof loadPipelineRuntimeSnapshot>>,
-  control: Awaited<ReturnType<typeof readPipelineControlState>>,
+  runtime: PipelineRuntimeSnapshot,
+  control: PipelineRuntimeSnapshot['control'],
 ): LiveOperationalState {
   const workerState = runtime.worker.worker_process_state
-  const queueState = runtime.current_run?.queue_state
+  const queueState = runtime.current_live_run?.queue_state
 
   if (control?.observed_state === 'starting' || control?.transition_state === 'starting' || workerState === 'starting') {
     return 'starting'
@@ -481,33 +551,18 @@ export async function GET() {
   const normalizedUniverseCount = await getNormalizedUniverseCount()
   const universeCount = normalizedUniverseCount ?? manifestEntities.length
 
-  const [control, runtime, activeRunsResponse, completedRunsResponse, dossiersResponse] = await Promise.all([
-    readPipelineControlState(),
-    loadPipelineRuntimeSnapshot(),
-    supabase
-      .from('entity_pipeline_runs')
-      .select('batch_id, entity_id, canonical_entity_id, entity_name, started_at, completed_at, metadata, phase, status')
-      .in('status', ['queued', 'claiming', 'running', 'retrying'])
-      .order('started_at', { ascending: false })
-      .limit(8),
-    supabase
-      .from('entity_pipeline_runs')
-      .select('batch_id, entity_id, canonical_entity_id, entity_name, started_at, completed_at, metadata, phase, status')
-      .eq('status', 'completed')
-      .order('completed_at', { ascending: false })
-      .limit(8),
-    supabase
-      .from('entity_dossiers')
-      .select('entity_id, canonical_entity_id, entity_name, entity_type, generated_at, dossier_data')
-      .order('generated_at', { ascending: false })
-      .limit(40),
-  ])
-
-  const activeRuns = Array.isArray(activeRunsResponse.data) ? activeRunsResponse.data as Record<string, unknown>[] : []
-  const completedRuns = Array.isArray(completedRunsResponse.data) ? completedRunsResponse.data as Record<string, unknown>[] : []
-  const dossierRows = Array.isArray(dossiersResponse.data) ? dossiersResponse.data as DossierRecord[] : []
+  const runtimeReadSet = await loadPipelineRuntimeReadSet()
+  const runtimeSnapshot = buildPipelineRuntimeSnapshot(runtimeReadSet)
+  const control = runtimeSnapshot.control
+  const activeRuns = runtimeReadSet.rows
+    .filter((row) => ['queued', 'claiming', 'running', 'retrying'].includes(toText(row.status).toLowerCase()))
+    .slice(0, 8) as Record<string, unknown>[]
+  const completedRuns = runtimeReadSet.rows
+    .filter((row) => toText(row.status).toLowerCase() === 'completed')
+    .slice(0, 8) as Record<string, unknown>[]
+  const dossierRows = runtimeReadSet.dossiers as DossierRecord[]
   const dossierLookup = buildDossierLookup(dossierRows)
-  const workerProcessState = runtime.worker.worker_process_state
+  const workerProcessState = runtimeSnapshot.worker.worker_process_state
   const workerRunning = workerProcessState === 'running'
   const workerStarting = workerProcessState === 'starting'
   const workerStopping = workerProcessState === 'stopping'
@@ -640,28 +695,45 @@ export async function GET() {
   )
   const dedupedBlockedEntities = dedupeByEntityId(blockedEntities)
     .slice(0, 8)
-  const backlogHealth = buildBacklogHealth(runtime, staleActiveRows)
-  const liveState = deriveLiveState(runtime, control)
-  const runtimeCurrentRun = runtime.current_run
-  const liveEntityFromActiveRuns = runtimeCurrentRun
+  const backlogHealth = buildBacklogHealth(runtimeSnapshot, staleActiveRows)
+  const liveState = deriveLiveState(runtimeSnapshot, control)
+  const runtimeCurrentLiveRun = runtimeSnapshot.current_live_run
+  const runtimeLatestNoteworthyRun = runtimeSnapshot.latest_noteworthy_run
+  const liveEntityFromActiveRuns = runtimeCurrentLiveRun
     ? activeEntities.find((item) => (
-      (runtimeCurrentRun.batch_id && toText(item.batch_id) === toText(runtimeCurrentRun.batch_id))
-      || toText(item.entity_id) === toText(runtimeCurrentRun.canonical_entity_id || runtimeCurrentRun.entity_id)
+      (runtimeCurrentLiveRun.batch_id && toText(item.batch_id) === toText(runtimeCurrentLiveRun.batch_id))
+      || toText(item.entity_id) === toText(runtimeCurrentLiveRun.canonical_entity_id || runtimeCurrentLiveRun.entity_id)
     )) || null
     : null
-  const liveInProgressEntity = runtimeCurrentRun
-    ? {
-        ...(liveEntityFromActiveRuns || buildQueueEntityFromRuntimeRun(runtimeCurrentRun)),
+  const liveInProgressEntity = runtimeCurrentLiveRun
+      ? {
+        ...(liveEntityFromActiveRuns || buildQueueEntityFromRuntimeRun(runtimeCurrentLiveRun)),
+        current_section_id: runtimeCurrentLiveRun.current_section_id || liveEntityFromActiveRuns?.current_section_id || null,
+        current_section_label: runtimeCurrentLiveRun.current_section_label || liveEntityFromActiveRuns?.current_section_label || null,
+        current_section_index: runtimeCurrentLiveRun.current_section_index ?? liveEntityFromActiveRuns?.current_section_index ?? null,
+        current_section_total: runtimeCurrentLiveRun.current_section_total ?? liveEntityFromActiveRuns?.current_section_total ?? null,
+        current_question_index: runtimeCurrentLiveRun.current_question_index ?? liveEntityFromActiveRuns?.current_question_index ?? null,
+        current_question_total: runtimeCurrentLiveRun.current_question_total ?? liveEntityFromActiveRuns?.current_question_total ?? null,
+        current_strategy_label: runtimeCurrentLiveRun.current_strategy_label || liveEntityFromActiveRuns?.current_strategy_label || null,
+        current_execution_state: runtimeCurrentLiveRun.current_execution_state || liveEntityFromActiveRuns?.current_execution_state || null,
+        current_source_order: runtimeCurrentLiveRun.current_source_order || liveEntityFromActiveRuns?.current_source_order || null,
+        execution_backend: runtimeCurrentLiveRun.execution_backend || liveEntityFromActiveRuns?.execution_backend || null,
+        execution_model: runtimeCurrentLiveRun.execution_model || liveEntityFromActiveRuns?.execution_model || null,
+        execution_provider: runtimeCurrentLiveRun.execution_provider || liveEntityFromActiveRuns?.execution_provider || null,
+        brightdata_transport: runtimeCurrentLiveRun.brightdata_transport || liveEntityFromActiveRuns?.brightdata_transport || null,
+        current_substep: runtimeCurrentLiveRun.current_substep || liveEntityFromActiveRuns?.current_substep || null,
+        current_substep_label: runtimeCurrentLiveRun.current_substep_label || liveEntityFromActiveRuns?.current_substep_label || null,
+        current_substep_progress: runtimeCurrentLiveRun.current_substep_progress || liveEntityFromActiveRuns?.current_substep_progress || null,
+        current_action: runtimeCurrentLiveRun.current_execution_state || runtimeCurrentLiveRun.current_substep_label || runtimeCurrentLiveRun.current_action || liveEntityFromActiveRuns?.current_action || null,
         freshness_state: 'fresh' as const,
       }
     : null
-
   const controlRecord = (control && typeof control === 'object') ? control as Record<string, unknown> : null
   const controlStopReason = toText(controlRecord?.stop_reason)
   const controlStopDetails = controlRecord?.stop_details && typeof controlRecord.stop_details === 'object'
     ? controlRecord.stop_details as Record<string, unknown>
     : null
-  const hasFreshRunningEntities = liveState === 'running' || liveState === 'retrying' || liveState === 'reconciling' || liveState === 'published_degraded'
+  const hasFreshRunningEntities = Boolean(runtimeCurrentLiveRun)
   const hasStaleOnlyActiveRows = visibleStaleActiveRows.length > 0 && !hasFreshRunningEntities
   const requestedPaused = control?.requested_state === 'paused' || control?.is_paused === true
   const observedStarting = control?.observed_state === 'starting' || control?.transition_state === 'starting' || workerStarting
@@ -675,14 +747,16 @@ export async function GET() {
     : observedStopping
       ? 'stopping'
       : requestedPaused || observedPaused
-        ? 'paused'
-        : skippingEntity
+      ? 'paused'
+      : skippingEntity
           ? 'skipping'
           : liveState === 'retrying' || retryingEntity
             ? 'retrying'
-            : liveState === 'running' || liveState === 'reconciling' || liveState === 'published_degraded' || hasFreshRunningEntities
+            : liveState === 'running' || liveState === 'reconciling' || hasFreshRunningEntities
               ? 'running'
-                : hasStaleOnlyActiveRows
+                : workerStopped
+                  ? 'stopped'
+                  : hasStaleOnlyActiveRows
                   ? 'stopped'
                   : 'waiting'
   const stopDetails = controlStopDetails || (
@@ -705,22 +779,70 @@ export async function GET() {
       : []
   const visibleRetryingEntity = hasFreshRunningEntities ? retryingEntity : null
   const visibleInProgressEntity = liveInProgressEntity || (hasFreshRunningEntities ? inProgressEntity : null)
+  const latestNoteworthyEntityFromCompleted = runtimeLatestNoteworthyRun
+    ? completedEntities.find((item) => (
+      (runtimeLatestNoteworthyRun.batch_id && toText(item.batch_id) === toText(runtimeLatestNoteworthyRun.batch_id))
+      || toText(item.entity_id) === toText(runtimeLatestNoteworthyRun.canonical_entity_id || runtimeLatestNoteworthyRun.entity_id)
+    )) || visibleStaleActiveRows.find((item) => (
+      (runtimeLatestNoteworthyRun.batch_id && toText(item.batch_id) === toText(runtimeLatestNoteworthyRun.batch_id))
+      || toText(item.entity_id) === toText(runtimeLatestNoteworthyRun.canonical_entity_id || runtimeLatestNoteworthyRun.entity_id)
+    )) || null
+    : null
+  const latestNoteworthyEntity = runtimeLatestNoteworthyRun
+    ? {
+      ...(latestNoteworthyEntityFromCompleted || buildQueueEntityFromRuntimeRun(runtimeLatestNoteworthyRun)),
+      current_section_id: runtimeLatestNoteworthyRun.current_section_id || latestNoteworthyEntityFromCompleted?.current_section_id || null,
+      current_section_label: runtimeLatestNoteworthyRun.current_section_label || latestNoteworthyEntityFromCompleted?.current_section_label || null,
+      current_section_index: runtimeLatestNoteworthyRun.current_section_index ?? latestNoteworthyEntityFromCompleted?.current_section_index ?? null,
+      current_section_total: runtimeLatestNoteworthyRun.current_section_total ?? latestNoteworthyEntityFromCompleted?.current_section_total ?? null,
+      current_question_index: runtimeLatestNoteworthyRun.current_question_index ?? latestNoteworthyEntityFromCompleted?.current_question_index ?? null,
+      current_question_total: runtimeLatestNoteworthyRun.current_question_total ?? latestNoteworthyEntityFromCompleted?.current_question_total ?? null,
+      current_strategy_label: runtimeLatestNoteworthyRun.current_strategy_label || latestNoteworthyEntityFromCompleted?.current_strategy_label || null,
+      current_execution_state: runtimeLatestNoteworthyRun.current_execution_state || latestNoteworthyEntityFromCompleted?.current_execution_state || null,
+      current_source_order: runtimeLatestNoteworthyRun.current_source_order || latestNoteworthyEntityFromCompleted?.current_source_order || null,
+      execution_backend: runtimeLatestNoteworthyRun.execution_backend || latestNoteworthyEntityFromCompleted?.execution_backend || null,
+      execution_model: runtimeLatestNoteworthyRun.execution_model || latestNoteworthyEntityFromCompleted?.execution_model || null,
+      execution_provider: runtimeLatestNoteworthyRun.execution_provider || latestNoteworthyEntityFromCompleted?.execution_provider || null,
+      brightdata_transport: runtimeLatestNoteworthyRun.brightdata_transport || latestNoteworthyEntityFromCompleted?.brightdata_transport || null,
+      current_substep: runtimeLatestNoteworthyRun.current_substep || latestNoteworthyEntityFromCompleted?.current_substep || null,
+      current_substep_label: runtimeLatestNoteworthyRun.current_substep_label || latestNoteworthyEntityFromCompleted?.current_substep_label || null,
+      current_substep_progress: runtimeLatestNoteworthyRun.current_substep_progress || latestNoteworthyEntityFromCompleted?.current_substep_progress || null,
+      current_action: runtimeLatestNoteworthyRun.current_execution_state || runtimeLatestNoteworthyRun.current_substep_label || runtimeLatestNoteworthyRun.current_action || latestNoteworthyEntityFromCompleted?.current_action || null,
+      freshness_state: runtimeLatestNoteworthyRun.queue_state === 'worker_stale' ? 'stale' as const : 'fresh' as const,
+    }
+    : null
+  const freshnessThresholdSeconds = 5 * 60
+  const freshnessCheckpoint = deriveOperationalFreshnessCheckpoint({
+    snapshotAt: runtimeSnapshot.snapshot_at,
+    freshnessThresholdSeconds,
+    currentRun: visibleInProgressEntity,
+    runningEntities: visibleRunningEntities,
+    staleActiveRows: latestNoteworthyEntity ? [latestNoteworthyEntity, ...visibleStaleActiveRows] : visibleStaleActiveRows,
+    completedEntities,
+  })
 
   return NextResponse.json({
+    snapshot_at: runtimeSnapshot.snapshot_at,
+    last_activity_at: freshnessCheckpoint.last_activity_at,
+    freshness_state: freshnessCheckpoint.freshness_state,
     control,
     runtime: {
-      generated_at: runtime.generated_at,
-      worker: runtime.worker,
-      fastmcp: runtime.fastmcp,
-      queue_depth: runtime.queue_depth,
-      current_run: runtime.current_run,
-      recent_failures: runtime.recent_failures,
-      failure_buckets: runtime.failure_buckets,
+      snapshot_at: runtimeSnapshot.snapshot_at,
+      generated_at: runtimeSnapshot.generated_at,
+      worker: runtimeSnapshot.worker,
+      fastmcp: runtimeSnapshot.fastmcp,
+      queue_depth: runtimeSnapshot.queue_depth,
+      current_run: runtimeSnapshot.current_run,
+      current_live_run: runtimeSnapshot.current_live_run,
+      latest_noteworthy_run: runtimeSnapshot.latest_noteworthy_run,
+      recent_failures: runtimeSnapshot.recent_failures,
+      failure_buckets: runtimeSnapshot.failure_buckets,
     },
     live_state: {
       operational_state: liveState,
-      worker_process_state: runtime.worker.worker_process_state,
-      current_run: runtime.current_run,
+      worker_process_state: runtimeSnapshot.worker.worker_process_state,
+      current_run: runtimeSnapshot.current_live_run,
+      current_live_run: runtimeSnapshot.current_live_run,
       in_progress_entity: visibleInProgressEntity,
       running_entities: visibleRunningEntities,
     },
@@ -728,7 +850,7 @@ export async function GET() {
     operational_state: operationalState,
     stop_reason: stopReason,
     stop_details: stopDetails,
-    freshness_threshold_seconds: 5 * 60,
+    freshness_threshold_seconds: freshnessThresholdSeconds,
     playlist_sort_key: manifestSortKey.length > 0
       ? manifestSortKey
       : ['priority_score DESC', 'entity_type ASC', 'entity_name ASC', 'entity_id ASC'],
@@ -755,6 +877,7 @@ export async function GET() {
       in_progress_entity: visibleInProgressEntity,
       running_entities: visibleRunningEntities,
       stale_active_rows: visibleStaleActiveRows,
+      latest_noteworthy_entity: latestNoteworthyEntity,
       completed_entities: completedEntities,
       resume_needed_entities: [],
       upcoming_entities: upcomingEntities,

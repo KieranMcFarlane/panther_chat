@@ -71,45 +71,80 @@ async def search_engine(
     num_results: int = 10,
     cursor: Optional[str] = None,
 ) -> Dict[str, Any]:
+    logger.info(
+        "🔧 FastMCP tool call search_engine(query=%r, engine=%s, country=%s, num_results=%s, cursor=%r)",
+        query,
+        engine,
+        country,
+        num_results,
+        cursor,
+    )
     client = await _get_pipeline_client()
     if _resolve_fastmcp_backend() == "sdk" or isinstance(client, BrightDataSDKClient):
-        return await client.search_engine(
+        result = await client.search_engine(
             query=query,
             engine=engine,
             country=country,
             num_results=num_results,
         )
-    return await client.search_engine(
+    else:
+        result = await client.search_engine(
         query=query,
         engine=engine,
         country=country,
         num_results=num_results,
         cursor=cursor,
     )
+    logger.info(
+        "🔧 FastMCP tool result search_engine(status=%s, result_count=%s)",
+        result.get("status"),
+        len(result.get("results", []) or []),
+    )
+    return result
 
 
 @mcp.tool
 async def scrape_as_markdown(url: str) -> Dict[str, Any]:
+    logger.info("🔧 FastMCP tool call scrape_as_markdown(url=%r)", url)
     client = await _get_pipeline_client()
-    return await client.scrape_as_markdown(url)
+    result = await client.scrape_as_markdown(url)
+    logger.info(
+        "🔧 FastMCP tool result scrape_as_markdown(status=%s, content_present=%s)",
+        result.get("status"),
+        bool(result.get("content") or result.get("markdown") or result.get("text")),
+    )
+    return result
 
 
 @mcp.tool
 async def scrape_batch(urls: List[str]) -> Dict[str, Any]:
+    logger.info("🔧 FastMCP tool call scrape_batch(url_count=%s)", len(urls))
     client = await _get_pipeline_client()
-    return await client.scrape_batch(urls)
+    result = await client.scrape_batch(urls)
+    logger.info(
+        "🔧 FastMCP tool result scrape_batch(status=%s, results_count=%s)",
+        result.get("status"),
+        len(result.get("results", []) or []),
+    )
+    return result
 
 
 @mcp.tool
 async def scrape_jobs_board(entity_name: str, keywords: List[str]) -> Dict[str, Any]:
+    logger.info("🔧 FastMCP tool call scrape_jobs_board(entity_name=%r, keyword_count=%s)", entity_name, len(keywords))
     client = await _get_pipeline_client()
-    return await client.scrape_jobs_board(entity_name, keywords)
+    result = await client.scrape_jobs_board(entity_name, keywords)
+    logger.info("🔧 FastMCP tool result scrape_jobs_board(status=%s)", result.get("status"))
+    return result
 
 
 @mcp.tool
 async def scrape_press_release(entity_name: str) -> Dict[str, Any]:
+    logger.info("🔧 FastMCP tool call scrape_press_release(entity_name=%r)", entity_name)
     client = await _get_pipeline_client()
-    return await client.scrape_press_release(entity_name)
+    result = await client.scrape_press_release(entity_name)
+    logger.info("🔧 FastMCP tool result scrape_press_release(status=%s)", result.get("status"))
+    return result
 
 
 @mcp.custom_route("/health", methods=["GET"])

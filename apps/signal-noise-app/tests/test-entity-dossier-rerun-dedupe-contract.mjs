@@ -43,3 +43,10 @@ test('question repair dedupe can collapse slug and uuid requests onto the same c
   assert.match(queueSource, /findActivePipelineRunByEntityId\(/)
   assert.match(rerunRouteSource, /resolveEntityForDossierQueue/)
 })
+
+test('new reruns return the authoritative post-queue batch status instead of a hardcoded queued projection', () => {
+  assert.match(queueSource, /const queuedStatus = await queueEntityImportBatch\(/)
+  assert.match(queueSource, /queuedStatus\.pipeline_runs\[0\]/)
+  assert.match(queueSource, /queuedStatus\.batch\?\.status/)
+  assert.doesNotMatch(queueSource, /status:\s*'queued'\s+as const/)
+})

@@ -275,11 +275,28 @@ function _normalizeQuestionSpec(question, entityMeta = {}) {
     pack_role: String(normalized.pack_role || 'discovery').trim(),
     execution_class: String(normalized.execution_class || 'atomic_retrieval').trim(),
     rollout_phase: String(normalized.rollout_phase || 'phase_1_core').trim(),
+    commercial_output_enabled: Boolean(normalized.commercial_output_enabled),
     conditional_on: Array.isArray(normalized.conditional_on) ? _clone(normalized.conditional_on) : [],
     depends_on: Array.isArray(normalized.depends_on) ? [...normalized.depends_on] : [],
     structured_output_schema: String(normalized.structured_output_schema || '').trim(),
     graph_write_targets: Array.isArray(normalized.graph_write_targets) ? [...normalized.graph_write_targets] : [],
   };
+}
+
+function _normalizeEvidenceGrade(value) {
+  const normalized = String(value || '').trim().toLowerCase();
+  return ['weak', 'moderate', 'strong'].includes(normalized) ? normalized : null;
+}
+
+function _normalizeProcurementModel(value) {
+  const normalized = String(value || '').trim().toLowerCase();
+  return ['private_direct', 'partner_led', 'agency_led', 'unknown'].includes(normalized) ? normalized : null;
+}
+
+function _normalizeSignalDensity(value) {
+  const number = Number(value);
+  if (!Number.isFinite(number)) return null;
+  return Math.max(0, Math.min(1, number));
 }
 
 function _normalizeAnswerRecord(answer, questionTiming, questionSpec) {
@@ -305,6 +322,12 @@ function _normalizeAnswerRecord(answer, questionTiming, questionSpec) {
     trace_ref: normalized.trace_ref ?? null,
     recommended_next_query: normalized.recommended_next_query ?? null,
     notes: normalized.notes ?? null,
+    prompt_trace: normalized.prompt_trace && typeof normalized.prompt_trace === 'object' ? _clone(normalized.prompt_trace) : null,
+    evidence_grade: _normalizeEvidenceGrade(normalized.evidence_grade),
+    structured_signal: normalized.structured_signal && typeof normalized.structured_signal === 'object' ? _clone(normalized.structured_signal) : null,
+    procurement_model: _normalizeProcurementModel(normalized.procurement_model),
+    commercial_implication: typeof normalized.commercial_implication === 'string' ? normalized.commercial_implication : null,
+    signal_density: _normalizeSignalDensity(normalized.signal_density),
     ...(normalized.timeout_salvage ? { timeout_salvage: _clone(normalized.timeout_salvage) } : {}),
     started_at: normalized.started_at || timing.started_at || null,
     completed_at: normalized.completed_at || timing.completed_at || null,
@@ -519,6 +542,11 @@ export function buildQuestionFirstRunMergePatch({
         validation_state: answer.validation_state,
         confidence: answer.confidence,
         signal_type: answer.signal_type,
+        evidence_grade: answer.evidence_grade ?? null,
+        structured_signal: _clone(answer.structured_signal) ?? null,
+        procurement_model: answer.procurement_model ?? null,
+        commercial_implication: answer.commercial_implication ?? null,
+        signal_density: answer.signal_density ?? null,
         answer: _clone(answer.answer),
       })),
     },

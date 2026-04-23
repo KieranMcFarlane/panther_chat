@@ -102,7 +102,7 @@ backend_pid=$!
 wait_for_backend
 start_worker
 
-npm run dev &
+npm run dev:frontend &
 frontend_pid=$!
 
 wait_for_frontend

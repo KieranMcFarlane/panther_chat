@@ -2,34 +2,43 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase-client';
 import { loadUnifiedRfpOpportunities } from '@/lib/rfp-unified-store';
 
-export const dynamic = 'force-dynamic';
+// Cache metrics for 60 seconds to avoid redundant heavy queries on every page load
+let metricsCache: { data: any; expiresAt: number } | null = null;
+const METRICS_TTL_MS = 60_000;
 
 /**
  * Home Page Metrics API
  * Aggregates metrics from all platform sources for the home page dashboard
  */
 export async function GET(request: NextRequest) {
-  try {
-    const { searchParams } = new URL(request.url);
-    const type = searchParams.get('type') || 'all';
+  // Return cached metrics if still fresh
+  if (metricsCache && metricsCache.expiresAt > Date.now()) {
+    return NextResponse.json(metricsCache.data);
+  }
 
-    // Fetch metrics in parallel for better performance
-    const [entitiesMetrics, rfpsMetrics, conventionsMetrics, graphMetrics, activityFeed] = await Promise.all([
+  try {
+    // Load RFP data ONCE and share across metrics + activity feed
+    const rfpData = await loadUnifiedRfpOpportunities()
+
+    const [entitiesMetrics, conventionsMetrics, edgesMetrics] = await Promise.all([
       getEntitiesMetrics(),
-      getRFPsMetrics(),
       getConventionsMetrics(),
-      getGraphMetrics(),
-      getActivityFeed()
+      getEdgeCount(),
     ]);
+
+    const rfpsMetrics = getRFPsMetrics(rfpData);
+    const activityFeed = getActivityFeed(rfpData);
 
     const metrics = {
       entities: entitiesMetrics,
       rfps: rfpsMetrics,
       conventions: conventionsMetrics,
-      graph: graphMetrics,
+      graph: { nodes: entitiesMetrics.total, edges: edgesMetrics, cached: true },
       activity: activityFeed,
       timestamp: new Date().toISOString()
     };
+
+    metricsCache = { data: metrics, expiresAt: Date.now() + METRICS_TTL_MS };
 
     return NextResponse.json(metrics);
   } catch (error) {
@@ -53,16 +62,16 @@ async function getEntitiesMetrics() {
   try {
     const supabase = getSupabaseAdmin();
     const { count, error } = await supabase
-      .from('cached_entities')
-      .select('*', { count: 'exact', head: true });
+      .from('canonical_entities')
+      .select('id', { count: 'exact', head: true });
 
     if (error) {
       throw error;
     }
-    
+
     return {
       total: count || 4422,
-      recent: 0, // Would need to calculate from timestamps if available
+      recent: 0,
       cached: true
     };
   } catch (error) {
@@ -76,12 +85,11 @@ async function getEntitiesMetrics() {
 }
 
 /**
- * Get RFPs metrics
+ * Get RFPs metrics from pre-loaded data
  */
-async function getRFPsMetrics() {
+function getRFPsMetrics(rfpData: Awaited<ReturnType<typeof loadUnifiedRfpOpportunities>>) {
   try {
-    const canonical = await loadUnifiedRfpOpportunities()
-    const opportunities = canonical.opportunities
+    const opportunities = rfpData.opportunities
     const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
     const recentCount = opportunities.filter((opportunity) => {
       const detectedAt = opportunity.detected_at || opportunity.created_at
@@ -93,14 +101,14 @@ async function getRFPsMetrics() {
     return {
       total: opportunities.length,
       pipeline_value: pipelineValue,
-      pipeline_value_formatted: pipelineValue > 1000000 
+      pipeline_value_formatted: pipelineValue > 1000000
         ? `£${Math.round(pipelineValue / 1000000)}M+`
         : `£${Math.round(pipelineValue / 1000)}K+`,
       high_fit: highFitCount,
       recent: recentCount
     };
   } catch (error) {
-    console.error('Error fetching RFPs metrics:', error);
+    console.error('Error computing RFPs metrics:', error);
     return {
       total: 40,
       pipeline_value: 21000000,
@@ -119,44 +127,25 @@ async function getConventionsMetrics() {
     const supabase = getSupabaseAdmin();
     const now = new Date().toISOString();
 
-    // Get upcoming count
-    const { count: upcomingCount, error: upcomingError } = await supabase
-      .from('conventions')
-      .select('*', { count: 'exact', head: true })
-      .gte('start_date', now);
+    const [upcomingResult, highValueResult] = await Promise.all([
+      supabase
+        .from('conventions')
+        .select('id', { count: 'exact', head: true })
+        .gte('start_date', now),
+      supabase
+        .from('conventions')
+        .select('id', { count: 'exact', head: true })
+        .gte('start_date', now)
+        .gte('networking_score', 8),
+    ]);
 
-    if (upcomingError) {
-      console.error('Error fetching conventions count:', upcomingError);
-      // Try API fallback
-      try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3005'}/api/conventions`, {
-          cache: 'no-store'
-        });
-        if (response.ok) {
-          const data = await response.json();
-          const conventions = data.conventions || [];
-          const upcoming = conventions.filter((c: any) => new Date(c.start || c.start_date) >= new Date());
-          const highValue = upcoming.filter((c: any) => (c.networkingScore || c.networking_score || 0) >= 8);
-          return {
-            upcoming: upcoming.length,
-            high_value: highValue.length
-          };
-        }
-      } catch (apiError) {
-        console.error('Error fetching from conventions API:', apiError);
-      }
+    if (upcomingResult.error) {
+      console.error('Error fetching conventions count:', upcomingResult.error);
     }
 
-    // Get high-value conventions (networking score >= 8)
-    const { count: highValueCount } = await supabase
-      .from('conventions')
-      .select('*', { count: 'exact', head: true })
-      .gte('start_date', now)
-      .gte('networking_score', 8);
-
     return {
-      upcoming: upcomingCount || 12,
-      high_value: highValueCount || 8
+      upcoming: upcomingResult.count || 12,
+      high_value: highValueResult.count || 8
     };
   } catch (error) {
     console.error('Error fetching conventions metrics:', error);
@@ -168,95 +157,48 @@ async function getConventionsMetrics() {
 }
 
 /**
- * Get graph metrics
+ * Get edge count directly from Supabase (replaces self-referential HTTP call)
  */
-async function getGraphMetrics() {
+async function getEdgeCount(): Promise<number> {
   try {
-    // Get relationships count
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3005';
-    try {
-      const relationshipsResponse = await fetch(`${baseUrl}/api/graph/relationships-cache`, {
-        cache: 'no-store'
-      });
-      
-      if (relationshipsResponse.ok) {
-        const relationshipsData = await relationshipsResponse.json();
-        const relationships = relationshipsData.relationships || [];
-        
-        return {
-          nodes: 4422, // Known entity count
-          edges: relationships.length,
-          cached: true
-        };
-      }
-    } catch (error) {
-      console.error('Error fetching relationships:', error);
-    }
+    const supabase = getSupabaseAdmin();
+    const { count, error } = await supabase
+      .from('entity_relationships')
+      .select('id', { count: 'exact', head: true })
+      .eq('is_active', true);
 
-    return {
-      nodes: 4422,
-      edges: 0,
-      cached: false
-    };
-  } catch (error) {
-    console.error('Error fetching graph metrics:', error);
-    return {
-      nodes: 4422,
-      edges: 0,
-      cached: false
-    };
+    if (error) throw error;
+    return count || 0;
+  } catch {
+    return 0;
   }
 }
 
 /**
- * Get recent activity feed
+ * Get recent activity feed from pre-loaded RFP data
  */
-async function getActivityFeed() {
+function getActivityFeed(rfpData: Awaited<ReturnType<typeof loadUnifiedRfpOpportunities>>) {
   try {
-    const supabase = getSupabaseAdmin();
-    const activities = [];
-
-    // Get recent RFPs (last 24 hours)
+    const activities: Array<{ type: string; message: string; timestamp: string; link: string }> = [];
     const dayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
-    const canonicalRfps = await loadUnifiedRfpOpportunities()
-    canonicalRfps.opportunities
+
+    rfpData.opportunities
       .filter((rfp) => Boolean(rfp.detected_at) && String(rfp.detected_at) >= dayAgo)
       .slice(0, 5)
       .forEach((rfp) => {
         activities.push({
           type: 'rfp',
           message: `New RFP detected: ${rfp.organization} (${Math.round(rfp.yellow_panther_fit || 0)}% fit)`,
-          timestamp: rfp.detected_at,
+          timestamp: rfp.detected_at!,
           link: '/rfps'
         });
-      })
-
-    // Get recent conventions (last 7 days)
-    const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
-    const { data: recentConventions, error: convError } = await supabase
-      .from('conventions')
-      .select('title, location, networking_score, start_date')
-      .gte('start_date', weekAgo)
-      .order('start_date', { ascending: false })
-      .limit(3);
-
-    if (!convError && recentConventions) {
-      recentConventions.forEach(conv => {
-        activities.push({
-          type: 'convention',
-          message: `Convention added: ${conv.title} (${conv.location})`,
-          timestamp: conv.start_date,
-          link: '/conventions'
-        });
       });
-    }
 
-    // Sort by timestamp and return top 10
     return activities
       .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
       .slice(0, 10);
   } catch (error) {
-    console.error('Error fetching activity feed:', error);
+    console.error('Error building activity feed:', error);
     return [];
   }
 }

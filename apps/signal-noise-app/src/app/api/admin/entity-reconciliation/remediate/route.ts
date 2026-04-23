@@ -554,20 +554,20 @@ async function swapCachedIdsForSemanticMatch(
 
   const supabase = getSupabaseAdmin()
   const sourceSwap = await supabase
-    .from('cached_entities')
+    .from('canonical_entities')
     .update({ labels: targetLabels, properties: targetProps, updated_at: now })
     .eq('id', sourceRow.id)
 
   if (sourceSwap.error) return { swapped: false, errors: [sourceSwap.error.message] }
 
   const targetSwap = await supabase
-    .from('cached_entities')
+    .from('canonical_entities')
     .update({ labels: sourceLabels, properties: sourceProps, updated_at: now })
     .eq('id', targetRow.id)
 
   if (targetSwap.error) {
     await supabase
-      .from('cached_entities')
+      .from('canonical_entities')
       .update({ labels: sourceLabels, properties: sourceProps, updated_at: now })
       .eq('id', sourceRow.id)
     return { swapped: false, errors: [targetSwap.error.message] }
@@ -795,13 +795,13 @@ async function runSemanticMerge(cached: CachedEntityRow[], embeddings: Embedding
 
   if (!dryRun) {
     for (const update of updates) {
-      const { error } = await supabase.from('cached_entities').update({ properties: update.properties, updated_at: new Date().toISOString() }).eq('id', update.id)
+      const { error } = await supabase.from('canonical_entities').update({ properties: update.properties, updated_at: new Date().toISOString() }).eq('id', update.id)
       if (!error) updated += 1
       else errors.push(error.message)
     }
 
     if (inserts.length > 0) {
-      const { error } = await supabase.from('cached_entities').insert(inserts)
+      const { error } = await supabase.from('canonical_entities').insert(inserts)
       if (error) {
         errors.push(error.message)
       } else {
@@ -873,7 +873,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       generated_at: new Date().toISOString(),
       counts: {
-        cached_entities: cached.length,
+        cached_entities: cached.length, // still named cached_entities in response for backwards compat
         entity_embeddings: embeddings.length,
         entity_relationships: relationshipRes.count || 0,
         overlap_by_graph_id: cached.filter((row) => embeddingIds.has(stableEntityId(row))).length,
@@ -926,7 +926,7 @@ export async function POST(request: NextRequest) {
       const insertedIds: string[] = []
 
       if (!dryRun && payload.length > 0) {
-        const { error } = await supabase.from('cached_entities').insert(payload)
+        const { error } = await supabase.from('canonical_entities').insert(payload)
         if (error) {
           return NextResponse.json({ success: false, error: error.message }, { status: 500 })
         }

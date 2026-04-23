@@ -353,3 +353,186 @@ async def test_question_first_runner_groups_by_category_and_retries_on_empty_sea
     assert result["questions"][0]["answer"] == "1919"
     assert result["questions"][1]["answer"] == "Chairman answer"
     assert result["questions"][1]["validation_state"] == "validated"
+
+
+@pytest.mark.asyncio
+async def test_run_question_first_dossier_from_payload_uses_launch_source_payload_for_opencode(tmp_path, monkeypatch):
+    artifact_path = tmp_path / "question_first_run.json"
+    _write_question_first_run_artifact(
+        artifact_path,
+        entity_id="arsenal-fc",
+        entity_name="Arsenal FC",
+        questions=[{"question_id": "q1", "question_text": "Foundation question"}],
+        answers=[],
+        categories=[],
+    )
+
+    captured = {}
+
+    class _FakeStream:
+        def __init__(self, lines):
+            self._lines = [line.encode("utf-8") for line in lines]
+
+        async def readline(self):
+            if not self._lines:
+                return b""
+            return self._lines.pop(0)
+
+    class _FakeProcess:
+        stdout = _FakeStream([json.dumps({"question_first_run_path": str(artifact_path)}) + "\n"])
+        stderr = _FakeStream([])
+        returncode = 0
+
+        async def wait(self):
+            return self.returncode
+
+    async def fake_create_subprocess_exec(*args, **kwargs):
+        source_path = Path(args[args.index("--question-source") + 1])
+        captured["launched_source"] = json.loads(source_path.read_text(encoding="utf-8"))
+        return _FakeProcess()
+
+    monkeypatch.setattr(asyncio, "create_subprocess_exec", fake_create_subprocess_exec)
+
+    source_payload = {
+        "entity_id": "arsenal-fc",
+        "entity_name": "Arsenal FC",
+        "questions": [
+            {"question_id": "q1", "question_text": "Foundation question"},
+            {"question_id": "q2", "question_text": "Commercial question"},
+        ],
+    }
+    launch_source_payload = {
+        **source_payload,
+        "questions": [{"question_id": "q1", "question_text": "Foundation question"}],
+    }
+
+    await runner.run_question_first_dossier_from_payload(
+        source_payload=source_payload,
+        launch_source_payload=launch_source_payload,
+        output_dir=tmp_path,
+    )
+
+    assert [question["question_id"] for question in captured["launched_source"]["questions"]] == ["q1"]
+
+
+@pytest.mark.asyncio
+async def test_question_first_runner_streams_opencode_progress_events(tmp_path, monkeypatch):
+    artifact_path = tmp_path / "major-league-cricket_question_first_run_v1.json"
+    _write_question_first_run_artifact(
+        artifact_path,
+        entity_id="major-league-cricket",
+        entity_name="Major League Cricket",
+        questions=[
+            {
+                "question_id": "q1",
+                "section_id": "core_information",
+                "question_text": "When was Major League Cricket founded?",
+            }
+        ],
+        answers=[
+            {
+                "question_id": "q1",
+                "section_id": "core_information",
+                "question_text": "When was Major League Cricket founded?",
+                "search_query": '"Major League Cricket" founded',
+                "search_hit": True,
+                "search_results_count": 1,
+                "scrape_url": "https://www.majorleaguecricket.com/",
+                "answer": "2023",
+                "confidence": 0.91,
+                "evidence_url": "https://www.majorleaguecricket.com/",
+                "reasoning_model_used": "opencode",
+                "retry_count": 0,
+                "category": "identity",
+                "search_queries": ['"Major League Cricket" founded'],
+                "search_attempts": [{"query": '"Major League Cricket" founded', "status": "success", "result_count": 1}],
+                "validation_state": "validated",
+                "signal_type": "FOUNDATION",
+                "evidence_grade": "strong",
+                "structured_signal": {
+                    "named_entities": [
+                        {
+                            "name": "Major League Cricket",
+                            "evidence_url": "https://www.majorleaguecricket.com/",
+                            "evidence_kind": "official_site",
+                            "summary": "Official site confirms the entity profile.",
+                        }
+                    ]
+                },
+                "procurement_model": "unknown",
+                "commercial_implication": "Official grounding supports commercial targeting.",
+                "signal_density": 0.66,
+            }
+        ],
+        categories=[
+            {
+                "category": "identity",
+                "question_count": 1,
+                "validated_count": 1,
+                "pending_count": 0,
+                "no_signal_count": 0,
+                "retry_count": 0,
+            }
+        ],
+    )
+
+    source_payload = {
+        "entity_id": "major-league-cricket",
+        "entity_name": "Major League Cricket",
+        "entity_type": "SPORT_LEAGUE",
+        "questions": [
+            {
+                "question_id": "q1",
+                "question_text": "When was Major League Cricket founded?",
+            }
+        ],
+    }
+
+    class _FakeStream:
+        def __init__(self, lines):
+            self._lines = [line.encode("utf-8") for line in lines]
+
+        async def readline(self):
+            if not self._lines:
+                return b""
+            return self._lines.pop(0)
+
+    class _FakeProcess:
+        def __init__(self, stdout_lines):
+            self.stdout = _FakeStream(stdout_lines)
+            self.stderr = _FakeStream([])
+            self.returncode = 0
+
+        async def wait(self):
+            return self.returncode
+
+    stdout_lines = [
+        '{"event_type":"question_progress","phase":"dossier_generation","current_substep":"question_first_running","current_substep_label":"Question-first running","current_question_id":"q1","current_question_text":"When was Major League Cricket founded?","questions_answered":1,"questions_total":1,"current_substep_progress":"1/1 questions"}\n',
+        json.dumps({"question_first_run_path": str(artifact_path)}) + "\n",
+    ]
+
+    async def fake_create_subprocess_exec(*args, **kwargs):
+        return _FakeProcess(stdout_lines)
+
+    monkeypatch.setattr(asyncio, "create_subprocess_exec", fake_create_subprocess_exec)
+
+    events = []
+
+    async def progress_callback(event):
+        events.append(event)
+
+    result = await runner.run_question_first_dossier_from_payload(
+        source_payload=source_payload,
+        output_dir=tmp_path,
+        progress_callback=progress_callback,
+    )
+
+    assert result["question_first"]["questions_answered"] == 1
+    assert events
+    assert events[0]["current_question_id"] == "q1"
+    assert events[0]["current_question_text"] == "When was Major League Cricket founded?"
+    assert events[0]["current_execution_state"] == "searching sources"
+    assert events[0]["current_substep_progress"] == "1/1 questions"
+    assert result["questions"][0]["question_first_answer"]["evidence_grade"] == "strong"
+    assert result["questions"][0]["question_first_answer"]["commercial_implication"] == "Official grounding supports commercial targeting."
+    assert result["questions"][0]["question_first_answer"]["signal_density"] == 0.66

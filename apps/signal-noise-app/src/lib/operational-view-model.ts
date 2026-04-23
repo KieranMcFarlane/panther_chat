@@ -226,6 +226,8 @@ function buildStatusHeroCopy(input: {
   activityStateLabel: string;
   controlUpdatedLabel: string;
   controlUpdatedExactLabel: string;
+  freshnessState: string | null;
+  lastActivityLabel: string;
 }) {
   const {
     isTransitioning,
@@ -251,6 +253,8 @@ function buildStatusHeroCopy(input: {
     activityStateLabel,
     controlUpdatedLabel,
     controlUpdatedExactLabel,
+    freshnessState,
+    lastActivityLabel,
   } = input;
 
   const headline = isTransitioning
@@ -294,7 +298,9 @@ function buildStatusHeroCopy(input: {
               : "No active work is currently visible.";
 
   const issueSummary =
-    isStaleOrStopped && activeEntity
+    freshnessState === "stale"
+      ? "Operational snapshot is lagging behind recent pipeline activity."
+      : isStaleOrStopped && activeEntity
       ? `Stale session detected for ${activeEntity.entity_name}.`
       : isActuallyPaused && stopReason
         ? `Pipeline paused because ${String(stopReason).replaceAll("_", " ")}.`
@@ -305,25 +311,33 @@ function buildStatusHeroCopy(input: {
   const primaryActionRecommended =
     isRequestedPaused || isStaleOrStopped || isWaiting || isActuallyStopped;
 
-  const primaryActionLabel = isRequestedPaused || isStaleOrStopped || isWaiting || isActuallyStopped
-    ? "Resume pipeline"
-    : "Pause pipeline";
+  const primaryActionLabel = isTransitioning
+    ? workerStateLabel === "Starting"
+      ? "Starting pipeline…"
+      : "Stopping pipeline…"
+    : isRequestedPaused || isActuallyStopped
+      ? "Start pipeline"
+      : "Stop pipeline";
 
-  const primaryActionTitle = isRequestedPaused || isStaleOrStopped || isWaiting || isActuallyStopped
-    ? "Resume pipeline intake"
-    : isTransitioning
-      ? "Pause pipeline intake while the worker is transitioning"
-      : "Pause pipeline intake";
+  const primaryActionTitle = isTransitioning
+    ? workerStateLabel === "Starting"
+      ? "Starting pipeline intake"
+      : "Stopping pipeline intake"
+    : isRequestedPaused || isActuallyStopped
+      ? "Start pipeline intake"
+      : hasFreshActiveWork
+        ? "Stop pipeline intake after the current work item finishes"
+        : "Stop pipeline intake";
 
-  const primaryActionHint = isRequestedPaused || isStaleOrStopped || isWaiting || isActuallyStopped
+  const primaryActionHint = isRequestedPaused || isActuallyStopped
     ? isStaleOrStopped
-      ? "Resume pipeline intake and recover the stale session if a target is available."
+      ? "Start pipeline intake and recover the stale session if a target is available."
       : isWaiting
-        ? "Resume pipeline intake and wait for the next claimable entity."
-        : "Resume pipeline intake."
-    : isTransitioning
-      ? "Pause pipeline intake while the worker transition is still in flight."
-      : "Pause pipeline intake after the current control request is applied.";
+        ? "Start pipeline intake and wait for the next claimable entity."
+        : "Start pipeline intake."
+    : hasFreshActiveWork
+      ? "Stop pipeline intake after the current work item finishes."
+      : "Stop pipeline intake.";
 
   const detailRows = [
     { label: "Requested", value: requestedStateLabel.replace("Requested ", "") },
@@ -332,6 +346,8 @@ function buildStatusHeroCopy(input: {
     { label: "Current question", value: currentQuestionLabel },
     { label: "Elapsed", value: currentElapsedLabel },
     { label: "Last completed", value: lastCompletedLabel },
+    { label: "Last activity", value: lastActivityLabel },
+    { label: "Freshness", value: freshnessState || "fresh" },
     { label: "Updated", value: `${controlUpdatedLabel}${controlUpdatedExactLabel ? ` · ${controlUpdatedExactLabel}` : ""}` },
   ];
 
@@ -574,23 +590,31 @@ export function buildOperationalStatusViewModel(input: {
               ? "Stopped"
               : "Idle";
   const playerStatusLabel = statusBadgeLabel;
-  const primaryActionLabel = canStartPipeline
-    ? "Resume pipeline"
-    : "Pause pipeline";
-  const primaryActionTitle = canStartPipeline
-    ? "Resume pipeline intake"
-    : isTransitioning
-      ? "Pause pipeline intake while the worker is transitioning"
-      : "Pause pipeline intake";
+  const primaryActionLabel = isTransitioning
+    ? transitionState === "starting"
+      ? "Starting pipeline…"
+      : "Stopping pipeline…"
+    : canStartPipeline
+      ? "Start pipeline"
+      : "Stop pipeline";
+  const primaryActionTitle = isTransitioning
+    ? transitionState === "starting"
+      ? "Starting pipeline intake"
+      : "Stopping pipeline intake"
+    : canStartPipeline
+      ? "Start pipeline intake"
+      : hasActiveWork
+        ? "Stop pipeline intake after the current work item finishes"
+        : "Stop pipeline intake";
   const primaryActionHint = canStartPipeline
     ? isStaleOrStopped
-      ? "Resume pipeline intake and recover the stale session if a target is available."
+      ? "Start pipeline intake and recover the stale session if a target is available."
       : isWaiting
-        ? "Resume pipeline intake and wait for the next claimable entity."
-        : "Resume pipeline intake."
-    : isTransitioning
-      ? "Pause pipeline intake while the worker transition is still in flight."
-      : "Pause pipeline intake after the current control request is applied.";
+        ? "Start pipeline intake and wait for the next claimable entity."
+        : "Start pipeline intake."
+    : hasActiveWork
+      ? "Stop pipeline intake after the current work item finishes."
+      : "Stop pipeline intake.";
   const activeQuestionEntity = freshActiveEntity ?? staleActiveEntity;
   const activeQuestionLabel = activeQuestionEntity
     ? formatQuestionProgress(
@@ -734,6 +758,11 @@ export function buildOperationalStatusViewModel(input: {
     controlState?.updated_at || drilldown?.control?.updated_at || null,
     "Updated",
   );
+  const lastActivityLabel = formatHeartbeatAge(
+    drilldown?.last_activity_at || drilldown?.snapshot_at || null,
+    "Activity",
+  );
+  const freshnessState = toText(drilldown?.freshness_state) || null;
   const controlUpdatedExactLabel =
     controlState?.updated_at || drilldown?.control?.updated_at
       ? new Date(
@@ -765,6 +794,8 @@ export function buildOperationalStatusViewModel(input: {
     activityStateLabel,
     controlUpdatedLabel,
     controlUpdatedExactLabel,
+    freshnessState,
+    lastActivityLabel,
   });
   const loopStatus = drilldown?.loop_status;
   const blockedOrPartialCount =

@@ -419,13 +419,19 @@ class BrightDataSDKClient:
         """
         try:
             logger.info(f"🔍 BrightData search: {query} (engine: {engine})")
+            normalized_engine = str(engine or "google").strip().lower() or "google"
 
             try:
                 client = await self._get_client()
             except RuntimeError:
                 # SDK unavailable, use fallback directly
                 logger.info("ℹ️ Using fallback search (SDK unavailable)")
-                return await self._search_engine_fallback(query, engine, country, num_results)
+                fallback_result = await self._search_engine_fallback(query, normalized_engine, country, num_results)
+                return self._merge_search_diagnostics(
+                    fallback_result,
+                    sdk_failure_type="search_transport_failed",
+                    sdk_error="sdk_unavailable",
+                )
 
             search_timeout = float(os.getenv("BRIGHTDATA_SEARCH_TIMEOUT_SECONDS", "30"))
 
@@ -436,39 +442,41 @@ class BrightDataSDKClient:
                 try:
                     await self._wait_for_rate_limit_cooldown()
                     # Call search directly (SDK methods are async)
-                    if engine.lower() == "google":
+                    if normalized_engine == "google":
                         result = await asyncio.wait_for(
                             client.search.google(
                                 query=query,
-                                country=country,
-                                num=num_results,
+                                location=country,
+                                num_results=num_results,
                             ),
                             timeout=search_timeout,
                         )
-                    elif engine.lower() == "bing":
+                    elif normalized_engine == "bing":
                         result = await asyncio.wait_for(
                             client.search.bing(
                                 query=query,
-                                country=country,
-                                num=num_results,
+                                location=country,
+                                num_results=num_results,
                             ),
                             timeout=search_timeout,
                         )
-                    elif engine.lower() == "yandex":
+                    elif normalized_engine == "yandex":
                         result = await asyncio.wait_for(
                             client.search.yandex(
                                 query=query,
-                                num=num_results,
+                                location=country,
+                                num_results=num_results,
                             ),
                             timeout=search_timeout,
                         )
                     else:
-                        return {
-                            "status": "error",
-                            "error": f"Unsupported search engine: {engine}",
-                            "query": query,
-                            "engine": engine
-                        }
+                        return self._build_search_error_response(
+                            query=query,
+                            engine=normalized_engine,
+                            failure_type="search_transport_failed",
+                            error=f"Unsupported search engine: {normalized_engine}",
+                            metadata={"source": "brightdata_sdk"},
+                        )
 
                     # Check if result has data and data is not None
                     if result and hasattr(result, 'data') and result.data is not None:
@@ -506,12 +514,12 @@ class BrightDataSDKClient:
                         await asyncio.sleep(delay)
 
             if not result or not hasattr(result, 'data') or result.data is None:
-                return {
-                    "status": "error",
-                    "error": f"No results returned after {max_attempts} attempts: {last_error}",
-                    "query": query,
-                    "engine": engine
-                }
+                fallback_result = await self._search_engine_fallback(query, normalized_engine, country, num_results)
+                return self._merge_search_diagnostics(
+                    fallback_result,
+                    sdk_failure_type=self._classify_search_exception(last_error),
+                    sdk_error=f"No results returned after {max_attempts} attempts: {last_error}",
+                )
 
             # Format results based on data structure
             results = []
@@ -529,11 +537,23 @@ class BrightDataSDKClient:
                             "snippet": item.get('description', '') or item.get('snippet', '')
                         })
 
+            if not results:
+                logger.warning(
+                    "⚠️ BrightData SDK search returned 0 normalized results for query=%r; using fallback",
+                    query,
+                )
+                fallback_result = await self._search_engine_fallback(query, normalized_engine, country, num_results)
+                return self._merge_search_diagnostics(
+                    fallback_result,
+                    sdk_failure_type="search_empty",
+                    sdk_error="BrightData SDK returned 0 normalized results",
+                )
+
             logger.info(f"✅ Search returned {len(results)} results")
 
             return {
                 "status": "success",
-                "engine": engine,
+                "engine": normalized_engine,
                 "query": query,
                 "results": results,
                 "timestamp": datetime.now().isoformat(),
@@ -545,8 +565,12 @@ class BrightDataSDKClient:
 
         except Exception as e:
             logger.warning(f"⚠️ BrightData search failed, using fallback: {e}")
-            # Fall back to mock search
-            return await self._search_engine_fallback(query, engine, country, num_results)
+            fallback_result = await self._search_engine_fallback(query, normalized_engine, country, num_results)
+            return self._merge_search_diagnostics(
+                fallback_result,
+                sdk_failure_type=self._classify_search_exception(e),
+                sdk_error=str(e),
+            )
 
     async def scrape_as_markdown(self, url: str) -> Dict[str, Any]:
         """
@@ -1000,25 +1024,33 @@ class BrightDataSDKClient:
         logger.warning(f"⚠️ Using BrightData HTTP SERP fallback: {query}")
         token = getattr(self, "token", None)
         if not token:
-            return {
-                "status": "error",
-                "engine": engine,
-                "query": query,
-                "results": [],
-                "timestamp": datetime.now().isoformat(),
-                "metadata": {
-                    "source": "brightdata_http_fallback",
-                    "error": "BRIGHTDATA_API_TOKEN missing for HTTP fallback",
-                },
-            }
+            return self._build_search_error_response(
+                query=query,
+                engine=engine,
+                failure_type="search_auth_rejected",
+                error="BRIGHTDATA_API_TOKEN missing for HTTP fallback",
+                metadata={"source": "brightdata_http_fallback"},
+            )
 
         api_base = os.getenv("BRIGHTDATA_API_BASE", "https://api.brightdata.com").rstrip("/")
         timeout = float(os.getenv("BRIGHTDATA_FALLBACK_SEARCH_TIMEOUT_SECONDS", "20"))
         max_attempts = self._resolve_retry_attempts("BRIGHTDATA_FALLBACK_SEARCH_MAX_ATTEMPTS")
 
         last_error: Optional[str] = None
+        last_failure_type = "search_transport_failed"
         request_zones = await self._get_adaptive_request_zones("serp")
         target_url = self._build_serp_target_url(engine, query, country, num_results)
+        attempted_zones: List[str] = []
+        auth_rejected_zones: List[str] = []
+        timeout_zones: List[str] = []
+
+        # Zone-specific passwords (BrightData requires these per-zone)
+        _zone_passwords = {
+            "sdk_serp": os.getenv("BRIGHTDATA_SDK_SERP_PASSWORD", ""),
+            "sdk_unlocker": os.getenv("BRIGHTDATA_SDK_UNLOCKER_PASSWORD", ""),
+            "mcp_unlocker": os.getenv("BRIGHTDATA_MCP_UNLOCKER_PASSWORD", ""),
+            "mcp_browser": os.getenv("BRIGHTDATA_MCP_BROWSER_PASSWORD", ""),
+        }
         headers = {
             "Authorization": f"Bearer {token}",
             "Content-Type": "application/json",
@@ -1026,13 +1058,52 @@ class BrightDataSDKClient:
         }
 
         for zone in request_zones:
-            payload = {"zone": zone, "url": target_url, "format": "json", "country": country}
+            attempted_zones.append(zone)
+            payload = {"zone": zone, "url": target_url, "format": "raw", "country": country}
             for attempt in range(max_attempts):
                 try:
                     async with httpx.AsyncClient(timeout=timeout, follow_redirects=True) as client:
                         response = await client.post(f"{api_base}/request", headers=headers, json=payload)
                         response.raise_for_status()
-                    payload_json = response.json()
+                    # format=raw returns HTML directly; format=json returns JSON wrapper
+                    raw_text = response.text
+                    if raw_text and raw_text.strip().startswith("<!"):
+                        # Raw HTML from SERP zone — parse organic results
+                        results = self._extract_serp_results_from_html(raw_text, num_results)
+                        if results:
+                            self._recover_rate_limit_cooldown()
+                            return self._build_search_success_response(
+                                query=query, engine=engine, results=results,
+                                metadata={"source": "brightdata_request_serp_raw", "zone": zone},
+                            )
+                        last_error = "BrightData raw SERP returned no parseable results"
+                        last_failure_type = "search_empty"
+                        continue
+                    payload_json = self._unwrap_request_api_payload(response.json())
+                    if isinstance(payload_json, dict) and payload_json.get("status") == "error":
+                        last_error = str(payload_json.get("error") or "embedded request payload error")
+                        embedded_status = int(payload_json.get("status_code") or 0)
+                        if "zone" in last_error.lower() and "not found" in last_error.lower():
+                            self._mark_zone_not_found(zone)
+                            logger.warning(f"⚠️ BrightData SERP request zone not found, skipping zone={zone}")
+                            break
+                        if embedded_status in {401, 403} or "blacklisted" in last_error.lower() or "auth failed" in last_error.lower():
+                            last_failure_type = "search_auth_rejected"
+                            auth_rejected_zones.append(zone)
+                            logger.warning(
+                                "⚠️ BrightData SERP request zone rejected auth/access for zone=%s; trying next zone",
+                                zone,
+                            )
+                            break
+                        last_failure_type = "search_transport_failed"
+                        logger.warning(
+                            "⚠️ BrightData /request SERP fallback returned embedded error (zone=%s, attempt %s/%s): %s",
+                            zone,
+                            attempt + 1,
+                            max_attempts,
+                            last_error,
+                        )
+                        continue
                     results = self._extract_serp_results(payload_json, num_results)
                     if not results and isinstance(payload_json, dict):
                         response_id = payload_json.get("response_id")
@@ -1042,6 +1113,16 @@ class BrightDataSDKClient:
                                 zone=zone,
                             )
                             results = self._extract_serp_results(payload_json, num_results)
+                    if not results:
+                        last_error = "BrightData /request returned no SERP results"
+                        last_failure_type = "search_empty"
+                        logger.warning(
+                            "⚠️ BrightData /request SERP fallback returned no normalized results (zone=%s, attempt %s/%s)",
+                            zone,
+                            attempt + 1,
+                            max_attempts,
+                        )
+                        continue
                     return {
                         "status": "success",
                         "engine": engine,
@@ -1068,7 +1149,10 @@ class BrightDataSDKClient:
                         logger.warning(f"⚠️ BrightData SERP request zone not found, skipping zone={zone}")
                         break
                     last_error = str(e)
+                    last_failure_type = self._classify_search_exception(e)
                     self._mark_zone_timeout(zone, e)
+                    if last_failure_type == "search_timeout":
+                        timeout_zones.append(zone)
                     logger.warning(
                         "⚠️ BrightData /request SERP fallback failed (zone=%s, attempt %s/%s): %s",
                         zone,
@@ -1079,7 +1163,10 @@ class BrightDataSDKClient:
                     continue
                 except Exception as e:
                     last_error = str(e)
+                    last_failure_type = self._classify_search_exception(e)
                     self._mark_zone_timeout(zone, e)
+                    if last_failure_type == "search_timeout":
+                        timeout_zones.append(zone)
                     logger.warning(
                         "⚠️ BrightData /request SERP fallback failed (zone=%s, attempt %s/%s): %s",
                         zone,
@@ -1088,6 +1175,23 @@ class BrightDataSDKClient:
                         e,
                     )
                     continue
+
+        if str(engine or "google").strip().lower() == "google":
+            return self._build_search_error_response(
+                query=query,
+                engine=engine,
+                failure_type=last_failure_type,
+                error=last_error or "Google SERP request fallback exhausted",
+                metadata={
+                    "source": "brightdata_http_fallback",
+                    "country": country,
+                    "endpoint": f"{api_base}/request",
+                    "attempted_zones": attempted_zones,
+                    "auth_rejected_zones": auth_rejected_zones,
+                    "timeout_zones": timeout_zones,
+                    "legacy_google_fallback_skipped": True,
+                },
+            )
 
         # Legacy fallback path (older endpoint variants).
         endpoint = f"{api_base}/serp/{engine.lower()}"
@@ -1129,18 +1233,82 @@ class BrightDataSDKClient:
                 continue
 
         return {
+            **self._build_search_error_response(
+                query=query,
+                engine=engine,
+                failure_type=last_failure_type,
+                error=last_error or "unknown fallback error",
+                metadata={
+                    "source": "brightdata_http_fallback",
+                    "country": country,
+                    "endpoint": endpoint,
+                    "attempted_zones": attempted_zones,
+                    "auth_rejected_zones": auth_rejected_zones,
+                    "timeout_zones": timeout_zones,
+                },
+            )
+        }
+
+    def _build_search_error_response(
+        self,
+        *,
+        query: str,
+        engine: str,
+        failure_type: str,
+        error: str,
+        metadata: Optional[Dict[str, Any]] = None,
+    ) -> Dict[str, Any]:
+        response_metadata = {
+            "source": "brightdata_sdk",
+            "failure_type": failure_type,
+        }
+        if metadata:
+            response_metadata.update(metadata)
+        response_metadata["error"] = error
+        return {
             "status": "error",
             "engine": engine,
             "query": query,
             "results": [],
+            "error": error,
+            "error_type": failure_type,
             "timestamp": datetime.now().isoformat(),
-            "metadata": {
-                "source": "brightdata_http_fallback",
-                "country": country,
-                "endpoint": endpoint,
-                "error": last_error or "unknown fallback error",
-            },
+            "metadata": response_metadata,
         }
+
+    def _merge_search_diagnostics(
+        self,
+        result: Dict[str, Any],
+        *,
+        sdk_failure_type: Optional[str] = None,
+        sdk_error: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        payload = dict(result or {})
+        metadata = dict(payload.get("metadata") or {})
+        if sdk_failure_type:
+            metadata["sdk_failure_type"] = sdk_failure_type
+        if sdk_error:
+            metadata["sdk_error"] = sdk_error
+        if payload.get("status") == "error":
+            payload.setdefault("error_type", metadata.get("failure_type") or sdk_failure_type or "search_transport_failed")
+            metadata.setdefault("failure_type", payload.get("error_type"))
+        payload["metadata"] = metadata
+        return payload
+
+    def _classify_search_exception(self, error: Optional[Exception]) -> str:
+        if error is None:
+            return "search_transport_failed"
+        if isinstance(error, (asyncio.TimeoutError, TimeoutError, httpx.TimeoutException, httpx.ReadTimeout, httpx.ConnectTimeout)):
+            return "search_timeout"
+        if isinstance(error, httpx.HTTPStatusError) and error.response is not None:
+            if error.response.status_code in {401, 403}:
+                return "search_auth_rejected"
+            if error.response.status_code == 404:
+                return "search_transport_failed"
+        error_text = str(error).lower()
+        if "blacklisted" in error_text or "auth failed" in error_text or "forbidden" in error_text or "unauthorized" in error_text:
+            return "search_auth_rejected"
+        return "search_transport_failed"
 
     async def _poll_serp_result_payload(self, response_id: str, zone: str) -> Dict[str, Any]:
         """Poll BrightData async SERP results for a response_id."""
@@ -1278,20 +1446,23 @@ class BrightDataSDKClient:
                         break
         return zones
 
+    def _use_sdk_default_zones(self) -> bool:
+        return os.getenv("BRIGHTDATA_USE_SDK_ZONE_DEFAULTS", "true").strip().lower() in {"1", "true", "yes", "on"}
+
     async def _get_adaptive_request_zones(self, request_kind: str) -> List[str]:
+        use_sdk_defaults = self._use_sdk_default_zones()
         if request_kind == "serp":
-            candidates = [
-                os.getenv("BRIGHTDATA_SERP_ZONE", "").strip(),
-                "sdk_serp",
-                os.getenv("BRIGHTDATA_UNLOCKER_ZONE", "").strip(),
-                "sdk_unlocker",
-            ]
+            candidates = [os.getenv("BRIGHTDATA_SERP_ZONE", "").strip()]
+            if use_sdk_defaults:
+                candidates.append("sdk_serp")
+            candidates.append(os.getenv("BRIGHTDATA_UNLOCKER_ZONE", "").strip())
+            if use_sdk_defaults:
+                candidates.append("sdk_unlocker")
         else:
-            candidates = [
-                os.getenv("BRIGHTDATA_UNLOCKER_ZONE", "").strip(),
-                "sdk_unlocker",
-                os.getenv("BRIGHTDATA_BROWSER_ZONE", "").strip(),
-            ]
+            candidates = [os.getenv("BRIGHTDATA_UNLOCKER_ZONE", "").strip()]
+            if use_sdk_defaults:
+                candidates.append("sdk_unlocker")
+            candidates.append(os.getenv("BRIGHTDATA_BROWSER_ZONE", "").strip())
         invalid = getattr(self, "_invalid_request_zones", set())
         ordered = [z for z in dict.fromkeys(candidates) if z and z not in invalid and not self._zone_in_cooldown(z)]
         whitelist = await self._get_request_zone_whitelist()
@@ -1299,6 +1470,32 @@ class BrightDataSDKClient:
             return ordered
         whitelisted = [z for z in ordered if z in whitelist]
         return whitelisted or ordered
+
+    def _extract_serp_results_from_html(self, html: str, num_results: int) -> List[Dict[str, Any]]:
+        """Parse organic SERP results from raw Google HTML."""
+        from bs4 import BeautifulSoup
+        results = []
+        try:
+            soup = BeautifulSoup(html, "html.parser")
+            for g_div in soup.select("div.g"):
+                if len(results) >= num_results:
+                    break
+                title_el = g_div.select_one("h3")
+                link_el = g_div.select_one("a[href]")
+                snippet_el = g_div.select_one("div.VwiC3b, span.aCOpRe, div[style*='-webkit-line-clamp']")
+                title = title_el.get_text(strip=True) if title_el else ""
+                url = link_el.get("href", "") if link_el else ""
+                snippet = snippet_el.get_text(strip=True) if snippet_el else ""
+                if title and url:
+                    results.append({
+                        "position": len(results) + 1,
+                        "title": title,
+                        "url": self._normalize_search_result_url(url),
+                        "snippet": snippet,
+                    })
+        except Exception as exc:
+            logger.warning(f"⚠️ Failed to parse SERP HTML: {exc}")
+        return results
 
     def _extract_serp_results(self, payload: Dict[str, Any], num_results: int) -> List[Dict[str, Any]]:
         """Normalize common BrightData SERP response shapes into list of results."""
@@ -1327,6 +1524,50 @@ class BrightDataSDKClient:
                 "snippet": item.get("description", "") or item.get("snippet", ""),
             })
         return results
+
+    def _unwrap_request_api_payload(self, payload: Any) -> Any:
+        """Normalize BrightData `/request` envelopes into the underlying payload."""
+        if not isinstance(payload, dict):
+            return payload
+        if not {"status_code", "headers", "body"}.issubset(payload.keys()):
+            return payload
+
+        status_code_raw = payload.get("status_code")
+        try:
+            status_code = int(status_code_raw)
+        except (TypeError, ValueError):
+            status_code = None
+
+        headers = payload.get("headers") if isinstance(payload.get("headers"), dict) else {}
+        body = payload.get("body")
+        parsed_body: Any = None
+        if isinstance(body, str) and body.strip():
+            try:
+                parsed_body = json.loads(body)
+            except json.JSONDecodeError:
+                parsed_body = {"body": body}
+        elif isinstance(body, (dict, list)):
+            parsed_body = body
+
+        if status_code is not None and status_code >= 400:
+            error_message = (
+                headers.get("x-brd-err-msg")
+                or headers.get("x-brd-error")
+                or headers.get("proxy-status")
+                or (parsed_body.get("error") if isinstance(parsed_body, dict) else None)
+                or f"BrightData /request returned embedded status {status_code}"
+            )
+            return {
+                "status": "error",
+                "status_code": status_code,
+                "error": str(error_message),
+                "headers": headers,
+                "payload": parsed_body,
+            }
+
+        if parsed_body is not None:
+            return parsed_body
+        return payload
 
     async def _scrape_as_markdown_fallback(self, url: str, reason: Optional[str] = None) -> Dict[str, Any]:
         """Fallback: Use httpx + BeautifulSoup when SDK unavailable"""

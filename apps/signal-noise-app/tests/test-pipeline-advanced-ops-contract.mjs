@@ -14,7 +14,7 @@ test('pipeline page is framed as advanced ops with a link back to entities', asy
   assert.match(stripSource, /Pipeline/)
   assert.match(stripSource, /Live Ops/)
   assert.match(stripSource, /Off|Stopped|Retrying|Skipping|Idle — waiting for claimable work/)
-  assert.match(stripSource, /Resume pipeline|Pause pipeline|Resume pipeline and rerun target/)
+  assert.match(stripSource, /Start pipeline|Stop pipeline|Starting pipeline…|Stopping pipeline…/)
   assert.match(formSource, /Queue entity/)
   assert.match(drilldownRouteSource, /freshness_state/)
   assert.match(drilldownRouteSource, /stale_active_rows/)

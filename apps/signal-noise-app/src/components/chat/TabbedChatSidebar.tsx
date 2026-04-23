@@ -458,6 +458,7 @@ export function TabbedChatSidebar({
                         </div>
                       </motion.div>
                     )}
+                  </AnimatePresence>
 
                     {/* Archive Confirmation Modal */}
                     <AnimatePresence>

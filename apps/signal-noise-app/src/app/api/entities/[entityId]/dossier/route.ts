@@ -91,34 +91,39 @@ async function resolveEntity(entityId: string): Promise<ResolvedEntity | null> {
   }
 
   const parsedId = Number.parseInt(normalizedId, 10)
-  const idFilters = [`id.eq.${normalizedId}`, `neo4j_id.eq.${normalizedId}`, `canonical_entity_id.eq.${normalizedId}`]
+  const idFilters = [`id.eq.${normalizedId}`]
   if (Number.isFinite(parsedId)) {
-    idFilters.push(`neo4j_id.eq.${parsedId}`)
+    idFilters.push(`source_neo4j_ids.cs.{${String(parsedId)}}`)
+  }
+  if (normalizedId !== String(parsedId)) {
+    idFilters.push(`source_neo4j_ids.cs.{${normalizedId}}`)
   }
 
   const directResult = await supabase
-    .from('cached_entities')
-    .select('id, neo4j_id, labels, properties, canonical_entity_id')
+    .from('canonical_entities')
+    .select('id, name, entity_type, sport, league, country, labels, properties, source_neo4j_ids')
     .or(idFilters.join(','))
     .limit(1)
     .maybeSingle()
 
   if (directResult.data) {
+    const row = directResult.data
+    const sourceNeo4jId = Array.isArray(row.source_neo4j_ids) && row.source_neo4j_ids.length > 0
+      ? row.source_neo4j_ids[0]
+      : row.id
     return {
-      id: String(directResult.data.id ?? normalizedId),
-      uuid: resolveEntityUuid({
-        id: directResult.data.id,
-        uuid: directResult.data.canonical_entity_id,
-        neo4j_id: directResult.data.neo4j_id,
-        graph_id: directResult.data.graph_id,
-        supabase_id: directResult.data.supabase_id || directResult.data.properties?.supabase_id,
-        properties: directResult.data.properties,
-      }) || directResult.data.canonical_entity_id || undefined,
-      neo4j_id: directResult.data.neo4j_id,
-      labels: directResult.data.labels,
-      properties: typeof directResult.data.properties === 'object' && directResult.data.properties !== null
-        ? directResult.data.properties
-        : {},
+      id: String(row.id),
+      uuid: row.id,
+      neo4j_id: sourceNeo4jId,
+      labels: row.labels || [],
+      properties: {
+        ...row.properties,
+        name: row.name,
+        type: row.entity_type,
+        sport: row.sport,
+        country: row.country,
+        league: row.league,
+      },
     }
   }
 
@@ -131,9 +136,9 @@ async function resolveEntity(entityId: string): Promise<ResolvedEntity | null> {
   let nameResultData: Record<string, any> | null = null
   for (const candidateName of buildNameCandidates(normalizedId)) {
     const nameResult = await supabase
-      .from('cached_entities')
-      .select('id, neo4j_id, labels, properties, canonical_entity_id')
-      .ilike('properties->>name', `%${candidateName}%`)
+      .from('canonical_entities')
+      .select('id, name, entity_type, sport, league, country, labels, properties, source_neo4j_ids')
+      .ilike('name', `%${candidateName}%`)
       .limit(1)
       .maybeSingle()
     if (nameResult.data) {
@@ -144,21 +149,22 @@ async function resolveEntity(entityId: string): Promise<ResolvedEntity | null> {
 
   if (!nameResultData) return null
 
+  const sourceNeo4jId = Array.isArray(nameResultData.source_neo4j_ids) && nameResultData.source_neo4j_ids.length > 0
+    ? nameResultData.source_neo4j_ids[0]
+    : nameResultData.id
   return {
-    id: String(nameResultData.id ?? normalizedId),
-    uuid: resolveEntityUuid({
-      id: nameResultData.id,
-      uuid: nameResultData.canonical_entity_id,
-      neo4j_id: nameResultData.neo4j_id,
-      graph_id: nameResultData.graph_id,
-      supabase_id: nameResultData.supabase_id || nameResultData.properties?.supabase_id,
-      properties: nameResultData.properties,
-      }) || nameResultData.canonical_entity_id || undefined,
-    neo4j_id: nameResultData.neo4j_id,
-    labels: nameResultData.labels,
-    properties: typeof nameResultData.properties === 'object' && nameResultData.properties !== null
-      ? nameResultData.properties
-      : {},
+    id: String(nameResultData.id),
+    uuid: nameResultData.id,
+    neo4j_id: sourceNeo4jId,
+    labels: nameResultData.labels || [],
+    properties: {
+      ...nameResultData.properties,
+      name: nameResultData.name,
+      type: nameResultData.entity_type,
+      sport: nameResultData.sport,
+      country: nameResultData.country,
+      league: nameResultData.league,
+    },
   }
 }
 
@@ -357,7 +363,7 @@ async function markAutoQueued(entity: ResolvedEntity, entityId: string, batchId:
   }
 
   await supabase
-    .from('cached_entities')
+    .from('canonical_entities')
     .update({ properties })
     .eq('id', entity.id)
 }
@@ -391,6 +397,14 @@ async function queueRun(entityId: string, entity: ResolvedEntity) {
 
 async function handleRequest(entityId: string, forceQueue: boolean) {
   const entity = await resolveEntity(entityId)
+  if (!entity && !forceQueue) {
+    const persisted = await getPersistedDossier(entityId, null)
+    if (persisted) {
+      const dossier = normalizeQuestionFirstDossier(persisted, entityId, null)
+      return NextResponse.json(buildCanonicalDossierResponse(dossier, 'supabase_persisted_dossier'))
+    }
+  }
+
   if (!entity) {
     return NextResponse.json({ error: 'Entity not found', entityId }, { status: 404 })
   }

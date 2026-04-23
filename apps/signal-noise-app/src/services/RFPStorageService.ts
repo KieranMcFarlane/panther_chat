@@ -415,10 +415,19 @@ export class RFPStorageService {
     }
 
     try {
+      const idFilters = [`id.eq.${normalizedId}`]
+      const parsedId = Number.parseInt(normalizedId, 10)
+      if (Number.isFinite(parsedId)) {
+        idFilters.push(`source_neo4j_ids.cs.{${String(parsedId)}}`)
+      }
+      if (normalizedId !== String(parsedId)) {
+        idFilters.push(`source_neo4j_ids.cs.{${normalizedId}}`)
+      }
+
       const { data: entityData, error } = await supabase
-        .from('cached_entities')
-        .select('id, neo4j_id, labels, properties, canonical_entity_id')
-        .or(`neo4j_id.eq.${normalizedId},id.eq.${normalizedId},canonical_entity_id.eq.${normalizedId}`)
+        .from('canonical_entities')
+        .select('id, name, entity_type, sport, country, league, labels, properties, source_neo4j_ids')
+        .or(idFilters.join(','))
         .limit(1)
         .maybeSingle();
 
@@ -431,24 +440,11 @@ export class RFPStorageService {
         };
       }
 
-      const canonicalEntityId = resolveEntityUuid({
-        id: entityData.id,
-        canonical_entity_id: entityData.canonical_entity_id,
-        uuid: entityData.canonical_entity_id,
-        neo4j_id: entityData.neo4j_id,
-        properties: entityData.properties,
-      }) || String(entityData.canonical_entity_id || '').trim() || null;
-
       return {
-        canonicalEntityId,
+        canonicalEntityId: entityData.id,
         rawEntityId: normalizedId,
-        entityName: String(entityData.properties?.name || '').trim() || null,
-        entityType: String(
-          entityData.properties?.type ||
-          entityData.properties?.entityType ||
-          (entityData.labels?.includes('Entity') ? 'Entity' : '') ||
-          ''
-        ).trim() || null,
+        entityName: entityData.name || null,
+        entityType: entityData.entity_type || null,
       };
     } catch (error) {
       console.warn('Failed to resolve linked entity info:', error);

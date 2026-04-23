@@ -2,15 +2,10 @@
  * Realtime FalkorDB (Redis protocol) to Supabase Sync Service
  */
 
-import { createClient } from '@supabase/supabase-js'
+import { supabase } from '@/lib/pg-client'
 import { FalkorRedisGraphService } from '@/lib/falkor-redis-graph'
 import { EntityCacheService } from '@/services/EntityCacheService'
 import { resolveEntityUuid } from '@/lib/entity-public-id'
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY!,
-)
 
 interface SyncResult {
   success: boolean
@@ -71,11 +66,25 @@ export class RealtimeSyncService {
       const existingEntities = await this.getExistingSupabaseEntities()
       console.log(`📊 Found ${existingEntities.length} entities in Supabase`)
 
-      const existingIds = new Set(existingEntities.map((e) => String(e.neo4j_id)))
+      // Build a map of neo4j_id → canonical entity id for matching
+      const existingNeo4jToCanonical = new Map<string, string>()
+      for (const e of existingEntities) {
+        if (Array.isArray(e.source_neo4j_ids)) {
+          for (const nid of e.source_neo4j_ids) {
+            existingNeo4jToCanonical.set(String(nid), e.id)
+          }
+        }
+      }
+      const existingCanonicalIds = new Set(existingEntities.map((e) => e.id))
       const graphIds = new Set(graphEntities.map((e) => String(e.neo4j_id)))
 
-      const newEntities = graphEntities.filter((e) => !existingIds.has(String(e.neo4j_id)))
-      const entitiesToRemove = existingEntities.filter((e) => !graphIds.has(String(e.neo4j_id)))
+      const newEntities = graphEntities.filter((e) => !existingNeo4jToCanonical.has(String(e.neo4j_id)))
+      const canonicalIdsWithNoGraphMatch = new Set<string>()
+      for (const [neo4jId, canonicalId] of existingNeo4jToCanonical) {
+        if (!graphIds.has(neo4jId)) {
+          canonicalIdsWithNoGraphMatch.add(canonicalId)
+        }
+      }
 
       let entitiesAdded = 0
       for (const entity of newEntities) {
@@ -85,9 +94,10 @@ export class RealtimeSyncService {
 
       let entitiesUpdated = 0
       for (const entity of graphEntities) {
-        if (!existingIds.has(String(entity.neo4j_id))) continue
+        const canonicalId = existingNeo4jToCanonical.get(String(entity.neo4j_id))
+        if (!canonicalId) continue
 
-        const existing = existingEntities.find((e) => String(e.neo4j_id) === String(entity.neo4j_id))
+        const existing = existingEntities.find((e) => e.id === canonicalId)
         if (await this.hasEntityChanged(entity, existing)) {
           await this.upsertEntityToSupabase(entity)
           entitiesUpdated++
@@ -95,11 +105,11 @@ export class RealtimeSyncService {
       }
 
       let entitiesRemoved = 0
-      for (const entityToRemove of entitiesToRemove) {
+      for (const canonicalId of canonicalIdsWithNoGraphMatch) {
         await supabase
-          .from('cached_entities')
+          .from('canonical_entities')
           .delete()
-          .eq('neo4j_id', entityToRemove.neo4j_id)
+          .eq('id', canonicalId)
         entitiesRemoved++
       }
 
@@ -184,8 +194,8 @@ export class RealtimeSyncService {
 
   private async getExistingSupabaseEntities() {
     const { data, error } = await supabase
-      .from('cached_entities')
-      .select('neo4j_id, uuid, canonical_entity_id, properties, updated_at')
+      .from('canonical_entities')
+      .select('id, name, source_neo4j_ids, properties, updated_at')
 
     if (error) throw error
     return data || []
@@ -218,26 +228,28 @@ export class RealtimeSyncService {
       neo4j_id: entity.neo4j_id,
       properties: entity.properties,
     }) || entity.neo4j_id
-    const canonicalEntityId = uuid
 
+    const props = entity.properties || {}
     await supabase
-      .from('cached_entities')
+      .from('canonical_entities')
       .upsert(
         {
-          neo4j_id: entity.neo4j_id,
-          uuid,
-          canonical_entity_id: canonicalEntityId,
-          labels: entity.labels,
+          id: uuid,
+          name: props.name || entity.neo4j_id,
+          entity_type: props.type || entity.labels?.[0] || 'ENTITY',
+          sport: props.sport || null,
+          country: props.country || null,
+          league: props.league || null,
+          labels: entity.labels || [],
           properties: {
-            ...entity.properties,
+            ...props,
             uuid,
-            canonical_entity_id: canonicalEntityId,
           },
-          cache_version: 1,
+          source_neo4j_ids: [entity.neo4j_id],
           updated_at: new Date().toISOString(),
         },
         {
-          onConflict: 'neo4j_id',
+          onConflict: 'id',
         },
       )
 

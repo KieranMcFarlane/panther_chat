@@ -4,6 +4,7 @@ import socket
 import threading
 import time
 import logging
+from uuid import UUID
 from copy import deepcopy
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -16,6 +17,7 @@ try:
     from supabase import create_client
 except ImportError:  # pragma: no cover - allows unit tests without supabase package
     create_client = None
+from local_pg_client import create_local_pg_client, should_use_local_pg
 from pipeline_run_metadata import (
     derive_discovery_context,
     derive_monitoring_summary,
@@ -68,6 +70,55 @@ LEASE_SECONDS = int(os.getenv("ENTITY_PIPELINE_LEASE_SECONDS", "90"))
 MAX_RUN_ATTEMPTS = int(os.getenv("ENTITY_PIPELINE_MAX_RUN_ATTEMPTS", "3"))
 DEFAULT_REPAIR_RETRY_BUDGET = int(os.getenv("ENTITY_PIPELINE_REPAIR_RETRY_BUDGET", "3"))
 TERMINAL_BATCH_STATUSES = {"completed", "failed"}
+WORKER_PID_PATH = Path(__file__).resolve().parents[1] / "tmp" / "entity-pipeline-worker.pid"
+WORKER_STATE_PATH = Path(__file__).resolve().parents[1] / "tmp" / "entity-pipeline-worker-state.json"
+WORKER_STARTED_AT: Optional[str] = None
+
+
+def _write_supervisor_state(
+    status: str,
+    error: Optional[str] = None,
+    stopped_at: Optional[str] = None,
+) -> None:
+    """Write the worker state JSON and PID file so the frontend supervisor can reconcile."""
+    global WORKER_STARTED_AT
+    now_iso = datetime.now(timezone.utc).isoformat()
+    if status in ("running", "starting") and WORKER_STARTED_AT is None:
+        WORKER_STARTED_AT = now_iso
+
+    state = {
+        "worker_process_state": status,
+        "worker_pid": os.getpid(),
+        "worker_command": "npm run worker:entity-pipeline",
+        "worker_state_path": str(WORKER_STATE_PATH),
+        "worker_pid_path": str(WORKER_PID_PATH),
+        "started_at": WORKER_STARTED_AT or now_iso,
+        "stopped_at": stopped_at,
+        "updated_at": now_iso,
+        "last_error": error,
+    }
+    try:
+        WORKER_STATE_PATH.parent.mkdir(parents=True, exist_ok=True)
+        WORKER_STATE_PATH.write_text(json.dumps(state, indent=2), encoding="utf-8")
+        WORKER_PID_PATH.write_text(f"{os.getpid()}\n", encoding="utf-8")
+    except Exception as exc:
+        logger.warning("Failed to write supervisor state: %s", exc)
+
+
+def _heartbeat_supervisor_state() -> None:
+    """Lightweight heartbeat — just update updated_at."""
+    try:
+        raw = WORKER_STATE_PATH.read_text(encoding="utf-8")
+        state = json.loads(raw)
+    except Exception:
+        state = {}
+    state["updated_at"] = datetime.now(timezone.utc).isoformat()
+    state["worker_process_state"] = "running"
+    state["worker_pid"] = os.getpid()
+    try:
+        WORKER_STATE_PATH.write_text(json.dumps(state, indent=2), encoding="utf-8")
+    except Exception:
+        pass
 
 
 def _is_distinct_follow_on_batch_id(current_batch_id: Optional[str], next_batch_id: Optional[str]) -> bool:
@@ -216,6 +267,14 @@ def resolve_pipeline_timeout(timeout_seconds: int) -> Optional[int]:
     if timeout_seconds <= 0:
         return None
     return timeout_seconds
+
+
+def is_uuid_like(value: str) -> bool:
+    try:
+        UUID(str(value))
+        return True
+    except (TypeError, ValueError, AttributeError):
+        return False
 
 
 def build_batch_claim_metadata(existing_metadata: Optional[Dict[str, Any]], *, worker_id: str, now_iso: str) -> Dict[str, Any]:
@@ -411,6 +470,13 @@ def merge_cached_entity_properties(
 
 class EntityPipelineWorker:
     def __init__(self) -> None:
+        if should_use_local_pg():
+            self.supabase = create_local_pg_client()
+            self.worker_id = f"{socket.gethostname()}-{os.getpid()}"
+            self.lease_seconds = LEASE_SECONDS
+            self.max_run_attempts = MAX_RUN_ATTEMPTS
+            self.repair_retry_budget = DEFAULT_REPAIR_RETRY_BUDGET
+            return
         if create_client is None:
             raise RuntimeError("supabase package is required for entity pipeline worker runtime")
         supabase_url = (
@@ -711,19 +777,23 @@ class EntityPipelineWorker:
             or run_metadata.get("canonical_entity_id")
             or ""
         ).strip()
-        if canonical_entity_id:
+        entity_id = canonical_entity_id or str(run.get("entity_id") or "").strip()
+
+        lookup = None
+        if canonical_entity_id or is_uuid_like(entity_id):
             lookup = (
-                self.supabase.table("cached_entities")
+                self.supabase.table("canonical_entities")
                 .select("id, properties")
-                .eq("canonical_entity_id", canonical_entity_id)
+                .eq("id", entity_id)
                 .limit(1)
                 .execute()
             )
-        else:
+        # Fallback: match by source_neo4j_ids containing the entity_id
+        if lookup is None or not (lookup.data or []):
             lookup = (
-                self.supabase.table("cached_entities")
+                self.supabase.table("canonical_entities")
                 .select("id, properties")
-                .eq("neo4j_id", run["entity_id"])
+                .contains("source_neo4j_ids", [entity_id])
                 .limit(1)
                 .execute()
             )
@@ -739,15 +809,10 @@ class EntityPipelineWorker:
         )
         cache_row_id = cached_entity.get("id")
         if cache_row_id:
-            update_query = self.supabase.table("cached_entities").update({"properties": properties}).eq("id", cache_row_id)
-        elif canonical_entity_id:
-            update_query = self.supabase.table("cached_entities").update({"properties": properties}).eq(
-                "canonical_entity_id", canonical_entity_id
-            )
+            update_query = self.supabase.table("canonical_entities").update({"properties": properties}).eq("id", cache_row_id)
         else:
-            update_query = self.supabase.table("cached_entities").update({"properties": properties}).eq(
-                "neo4j_id", run["entity_id"]
-            )
+            logger.warning("sync_cached_entity: no canonical_entities row found for entity_id=%s, skipping update", entity_id)
+            return
         self._safe_execute(
             lambda: update_query.execute(),
             context=f"sync cached entity {run['entity_id']}",
@@ -884,8 +949,8 @@ class EntityPipelineWorker:
 
         while True:
             response = (
-                self.supabase.table("cached_entities")
-                .select("id, neo4j_id, canonical_entity_id, labels, properties")
+                self.supabase.table("canonical_entities")
+                .select("id, name, entity_type, sport, country, league, labels, properties, source_neo4j_ids")
                 .range(start, start + page_size - 1)
                 .execute()
             )
@@ -896,24 +961,20 @@ class EntityPipelineWorker:
             for row in rows:
                 if not isinstance(row, dict):
                     continue
-                properties = row.get("properties") if isinstance(row.get("properties"), dict) else {}
-                labels = row.get("labels") if isinstance(row.get("labels"), list) else []
-                entity_id = str(
-                    row.get("canonical_entity_id")
-                    or row.get("neo4j_id")
-                    or row.get("id")
-                    or ""
-                ).strip()
+                entity_id = str(row.get("id") or "").strip()
                 if not entity_id:
                     continue
+                properties = row.get("properties") if isinstance(row.get("properties"), dict) else {}
+                source_neo4j_ids = row.get("source_neo4j_ids") if isinstance(row.get("source_neo4j_ids"), list) else []
                 entities.append(
                     {
                         "cache_row_id": row.get("id"),
                         "entity_id": entity_id,
-                        "canonical_entity_id": str(row.get("canonical_entity_id") or "").strip() or None,
-                        "entity_name": str((properties or {}).get("name") or entity_id).strip(),
-                        "entity_type": str((properties or {}).get("type") or (labels[0] if labels else "ENTITY")).strip() or "ENTITY",
+                        "canonical_entity_id": entity_id,
+                        "entity_name": str(row.get("name") or entity_id).strip(),
+                        "entity_type": str(row.get("entity_type") or "ENTITY").strip() or "ENTITY",
                         "properties": properties,
+                        "source_neo4j_ids": source_neo4j_ids,
                     }
                 )
 
@@ -2214,6 +2275,7 @@ class EntityPipelineWorker:
     def run_forever(self) -> None:
         claim_failure_streak = 0
         while True:
+            _heartbeat_supervisor_state()
             try:
                 batch = self.claim_next_batch()
                 claim_failure_streak = 0
@@ -2265,12 +2327,15 @@ def main() -> None:
         logger.info("Worker queue mode=%s fastapi_url=%s", QUEUE_MODE, FASTAPI_URL)
         if should_process_in_process(QUEUE_MODE):
             raise SystemExit("ENTITY_IMPORT_QUEUE_MODE must be 'durable_worker' to run this worker")
+        _write_supervisor_state("running")
         worker = EntityPipelineWorker()
         worker.run_forever()
     except SystemExit:
+        _write_supervisor_state("stopped")
         raise
     except Exception as error:
         logger.exception("Entity pipeline worker crashed: %s", error)
+        _write_supervisor_state("crashed", error=str(error), stopped_at=datetime.now(timezone.utc).isoformat())
         raise
 
 

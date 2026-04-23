@@ -82,21 +82,22 @@ Q6_LAUNCH_SIGNAL_SEARCH_QUERIES = [
 ]
 
 Q7_PROCUREMENT_SIGNAL_SEARCH_QUERIES = [
-    '"{entity}" official partner',
-    '"{entity}" commercial partner',
-    '"{entity}" sponsorship',
-    '"{entity}" partnerships',
-    '"{entity}" technology partner',
-    '"{entity}" digital transformation',
-    '"{entity}" procurement',
-    '"{entity}" vendor',
+    '"{entity}" sportsbook provider migration',
+    '"{entity}" platform migration partner',
+    '"{entity}" rights partner platform',
+    '"{entity}" betting platform provider',
+    '"{entity}" vendor change digital ecosystem',
+    '"{entity}" data partner media platform',
+    '"{entity}" app launch product partnership',
+    '"{entity}" commercial partnership digital platform',
 ]
 
 Q8_EXPLICIT_RFP_SEARCH_QUERIES = [
-    '"{entity}" RFP',
-    '"{entity}" tender',
-    '"{entity}" invitation to tender',
-    '"{entity}" filetype:pdf tender',
+    '"{entity}" RFP tender procurement',
+    '"{entity}" invitation to tender procurement',
+    '"{entity}" filetype:pdf RFP OR tender',
+    '"{entity}" procurement portal tender',
+    '"{entity}" supplier tender notice',
 ]
 
 Q9_NEWS_SIGNAL_SEARCH_QUERIES = [
@@ -108,11 +109,11 @@ Q9_NEWS_SIGNAL_SEARCH_QUERIES = [
 ]
 
 Q10_HIRING_SIGNAL_SEARCH_QUERIES = [
-    '"{entity}" jobs digital',
-    '"{entity}" jobs CRM',
-    '"{entity}" jobs partnerships',
-    '"{entity}" jobs marketing',
-    '"{entity}" jobs transformation',
+    '"{entity}" careers jobs product engineering data',
+    'site:linkedin.com/jobs "{entity}"',
+    '"{entity}" hiring product data engineering roles',
+    '"{entity}" careers marketing growth roles',
+    '"{entity}" vacancies commercial digital product',
 ]
 
 Q4_PERFORMANCE_SEARCH_QUERIES = [
@@ -234,14 +235,15 @@ UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
         "fallback_to_retrieval": True,
         "hop_budget": HOP_BUDGET,
         "evidence_extension_budget": 2,
+        "commercial_output_enabled": True,
     },
     {
         "question_id": "q7_procurement_signal",
         "question_family": "procurement_signal",
         "question_type": "procurement_signal",
         "question": "Is there evidence {entity} is buying, reshaping vendors, or changing its commercial or digital ecosystem?",
-        "query": '"{entity}" official partner commercial partner platform',
-        "source_priority": ["official_site", "press_release", "news", "google_serp", "linkedin_posts"],
+        "query": '"{entity}" platform migration provider partnership',
+        "source_priority": ["google_serp", "news", "press_release", "linkedin_posts", "official_site"],
         "search_patterns": Q7_PROCUREMENT_SIGNAL_SEARCH_QUERIES,
         "execution_class": "atomic_retrieval",
         "rollout_phase": "phase_1_core",
@@ -255,14 +257,17 @@ UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
         "fallback_to_retrieval": True,
         "hop_budget": HOP_BUDGET,
         "evidence_extension_budget": 2,
+        "question_role": "stage_1_broad_opener",
+        "empty_result_policy": "no_signal",
+        "commercial_output_enabled": True,
     },
     {
         "question_id": "q8_explicit_rfp",
         "question_family": "explicit_rfp",
         "question_type": "tender_docs",
         "question": "Are there published RFPs, tenders, or formal procurement documents for {entity}?",
-        "query": '"{entity}" tender RFP',
-        "source_priority": ["official_site", "google_serp", "press_release", "news"],
+        "query": '"{entity}" RFP tender procurement',
+        "source_priority": ["google_serp", "news", "press_release", "linkedin_posts", "official_site"],
         "search_patterns": Q8_EXPLICIT_RFP_SEARCH_QUERIES,
         "execution_class": "atomic_retrieval",
         "rollout_phase": "phase_2_conditional",
@@ -276,6 +281,9 @@ UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
         "fallback_to_retrieval": True,
         "hop_budget": HOP_BUDGET,
         "evidence_extension_budget": 1,
+        "question_role": "follow_up_negative_confirmation",
+        "empty_result_policy": "no_signal",
+        "commercial_output_enabled": True,
     },
     {
         "question_id": "q9_news_signal",
@@ -297,14 +305,15 @@ UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
         "fallback_to_retrieval": True,
         "hop_budget": HOP_BUDGET,
         "evidence_extension_budget": 2,
+        "commercial_output_enabled": True,
     },
     {
         "question_id": "q10_hiring_signal",
         "question_family": "hiring_signal",
         "question_type": "hiring_signal",
         "question": "What hiring signals suggest current investment priorities for {entity}?",
-        "query": '"{entity}" jobs digital marketing CRM',
-        "source_priority": ["google_serp", "official_site", "linkedin_posts", "news"],
+        "query": '"{entity}" careers jobs product engineering data',
+        "source_priority": ["careers", "linkedin_jobs", "google_serp", "linkedin_posts", "news", "official_site"],
         "search_patterns": Q10_HIRING_SIGNAL_SEARCH_QUERIES,
         "execution_class": "atomic_retrieval",
         "rollout_phase": "phase_2_conditional",
@@ -318,6 +327,9 @@ UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
         "fallback_to_retrieval": True,
         "hop_budget": HOP_BUDGET,
         "evidence_extension_budget": 1,
+        "question_role": "supplementary_signal_probe",
+        "empty_result_policy": "no_signal",
+        "commercial_output_enabled": True,
     },
     {
         "question_id": "q4_performance",
@@ -392,6 +404,7 @@ UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
         "evidence_extension_budget": 2,
         "question_timeout_ms": 300000,
         "hop_timeout_ms": 300000,
+        "commercial_output_enabled": True,
     },
     {
         "question_id": "q12_connections",
@@ -483,6 +496,7 @@ UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
 def _render_question_spec(spec: Dict[str, Any], entity_name: str, entity_id: str, entity_type: str) -> Dict[str, Any]:
     rendered = deepcopy(spec)
     rendered["question"] = str(rendered["question"]).format(entity=entity_name)
+    rendered["question_text"] = rendered["question"]
     rendered["query"] = str(rendered["query"]).format(entity=entity_name)
     rendered["search_strategy"] = {
         "search_queries": _search_queries(entity_name, list(rendered.pop("search_patterns", []))),

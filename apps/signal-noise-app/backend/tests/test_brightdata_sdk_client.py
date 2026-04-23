@@ -6,6 +6,9 @@ Tests for BrightData client fallback scraping behavior.
 import sys
 import time
 import json
+import asyncio
+import json as json_module
+from types import SimpleNamespace
 from pathlib import Path
 import pytest
 import httpx
@@ -35,6 +38,193 @@ def test_brightdata_rate_limit_cooldown_grows_and_decays():
 
     client._recover_rate_limit_cooldown()
     assert client._rate_limit_cooldown_seconds <= second
+
+
+@pytest.mark.asyncio
+async def test_search_engine_google_sdk_empty_then_auth_rejection_returns_explicit_failure():
+    client = BrightDataSDKClient.__new__(BrightDataSDKClient)
+    client._wait_for_rate_limit_cooldown = lambda: asyncio.sleep(0)
+    client._recover_rate_limit_cooldown = lambda: None
+    client._resolve_retry_attempts = lambda *_args, **_kwargs: 1
+
+    class FakeSearchClient:
+        async def google(self, **_kwargs):
+            return SimpleNamespace(data=[])
+
+    class FakeClient:
+        search = FakeSearchClient()
+
+    async def fake_get_client():
+        return FakeClient()
+
+    async def fake_fallback(query, engine, country, num_results):
+        return client._build_search_error_response(
+            query=query,
+            engine=engine,
+            failure_type="search_auth_rejected",
+            error="zone rejected auth/access",
+            metadata={"source": "brightdata_http_fallback"},
+        )
+
+    client._get_client = fake_get_client
+    client._search_engine_fallback = fake_fallback
+
+    result = await BrightDataSDKClient.search_engine(
+        client,
+        '"Arsenal FC" official website founded year',
+        engine="google",
+        num_results=5,
+    )
+
+    assert result["status"] == "error"
+    assert result["error_type"] == "search_auth_rejected"
+    assert result["metadata"]["sdk_failure_type"] == "search_empty"
+    assert result["metadata"]["sdk_error"] == "BrightData SDK returned 0 normalized results"
+
+
+@pytest.mark.asyncio
+async def test_google_fallback_skips_legacy_serp_endpoint_after_request_auth_rejection(monkeypatch):
+    client = BrightDataSDKClient.__new__(BrightDataSDKClient)
+    client.token = "token"
+    client._invalid_request_zones = set()
+    client._zone_cooldowns = {}
+    client._request_zone_whitelist = None
+    client._request_zone_whitelist_checked_at = 0.0
+    client._mark_zone_not_found = lambda _zone: None
+    client._mark_zone_timeout = lambda _zone, _error: None
+
+    async def fake_get_adaptive_request_zones(_request_kind):
+        return ["sdk_serp"]
+
+    client._get_adaptive_request_zones = fake_get_adaptive_request_zones
+
+    monkeypatch.setenv("BRIGHTDATA_API_BASE", "https://api.brightdata.com")
+    monkeypatch.setenv("BRIGHTDATA_FALLBACK_SEARCH_MAX_ATTEMPTS", "1")
+
+    calls = {"post": 0, "get": 0}
+
+    class FakeResponse:
+        def __init__(self, payload):
+            self._payload = payload
+            self.status_code = 200
+            self.text = json_module.dumps(payload)
+
+        def raise_for_status(self):
+            return None
+
+        def json(self):
+            return self._payload
+
+    class FakeAsyncClient:
+        def __init__(self, timeout, follow_redirects, verify=True):
+            self.timeout = timeout
+            self.follow_redirects = follow_redirects
+            self.verify = verify
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc, tb):
+            return False
+
+        async def post(self, url, headers=None, json=None):
+            calls["post"] += 1
+            return FakeResponse({"status": "error", "status_code": 401, "error": "auth failed"})
+
+        async def get(self, url, params=None, headers=None):
+            calls["get"] += 1
+            raise AssertionError("legacy google /serp endpoint should not be called")
+
+    monkeypatch.setattr(brightdata_module.httpx, "AsyncClient", FakeAsyncClient)
+
+    result = await BrightDataSDKClient._search_engine_fallback(
+        client,
+        '"Arsenal FC" official website founded year',
+        engine="google",
+        num_results=5,
+    )
+
+    assert result["status"] == "error"
+    assert result["error_type"] == "search_auth_rejected"
+    assert result["metadata"]["legacy_google_fallback_skipped"] is True
+    assert result["metadata"]["auth_rejected_zones"] == ["sdk_serp"]
+    assert calls == {"post": 1, "get": 0}
+
+
+@pytest.mark.asyncio
+async def test_bing_fallback_preserves_legacy_serp_path_when_request_path_is_empty(monkeypatch):
+    client = BrightDataSDKClient.__new__(BrightDataSDKClient)
+    client.token = "token"
+    client._invalid_request_zones = set()
+    client._zone_cooldowns = {}
+    client._request_zone_whitelist = None
+    client._request_zone_whitelist_checked_at = 0.0
+    client._mark_zone_not_found = lambda _zone: None
+    client._mark_zone_timeout = lambda _zone, _error: None
+
+    async def fake_get_adaptive_request_zones(_request_kind):
+        return ["sdk_serp"]
+
+    client._get_adaptive_request_zones = fake_get_adaptive_request_zones
+
+    monkeypatch.setenv("BRIGHTDATA_API_BASE", "https://api.brightdata.com")
+    monkeypatch.setenv("BRIGHTDATA_FALLBACK_SEARCH_MAX_ATTEMPTS", "1")
+
+    calls = {"post": 0, "get": 0}
+
+    class FakeResponse:
+        def __init__(self, payload=None):
+            self._payload = payload or {}
+            self.status_code = 200
+            self.text = json_module.dumps(self._payload)
+
+        def raise_for_status(self):
+            return None
+
+        def json(self):
+            return self._payload
+
+    class FakeAsyncClient:
+        def __init__(self, timeout, follow_redirects, verify=True):
+            self.timeout = timeout
+            self.follow_redirects = follow_redirects
+            self.verify = verify
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc, tb):
+            return False
+
+        async def post(self, url, headers=None, json=None):
+            calls["post"] += 1
+            return FakeResponse({})
+
+        async def get(self, url, params=None, headers=None):
+            calls["get"] += 1
+            return FakeResponse({
+                "organic": [
+                    {
+                        "title": "Arsenal FC",
+                        "url": "https://www.arsenal.com",
+                        "description": "Official Arsenal site",
+                    }
+                ]
+            })
+
+    monkeypatch.setattr(brightdata_module.httpx, "AsyncClient", FakeAsyncClient)
+
+    result = await BrightDataSDKClient._search_engine_fallback(
+        client,
+        '"Arsenal FC" official website founded year',
+        engine="bing",
+        num_results=5,
+    )
+
+    assert result["status"] == "success"
+    assert result["metadata"]["endpoint"].endswith("/serp/bing")
+    assert len(result["results"]) == 1
+    assert calls == {"post": 1, "get": 1}
 
 
 @pytest.mark.asyncio
@@ -774,6 +964,30 @@ async def test_search_engine_fallback_uses_brightdata_http_serp(monkeypatch):
 
 
 @pytest.mark.asyncio
+async def test_get_adaptive_request_zones_uses_mcp_only_profile_when_sdk_defaults_disabled(monkeypatch):
+    client = BrightDataSDKClient.__new__(BrightDataSDKClient)
+    client._invalid_request_zones = set()
+    client._zone_cooldowns = {}
+    client.token = "test-token"
+
+    monkeypatch.setenv("BRIGHTDATA_SERP_ZONE", "mcp_unlocker")
+    monkeypatch.setenv("BRIGHTDATA_UNLOCKER_ZONE", "mcp_unlocker")
+    monkeypatch.setenv("BRIGHTDATA_BROWSER_ZONE", "mcp_browser")
+    monkeypatch.setenv("BRIGHTDATA_USE_SDK_ZONE_DEFAULTS", "false")
+
+    async def fake_whitelist(self):
+        return {"mcp_unlocker", "mcp_browser"}
+
+    monkeypatch.setattr(BrightDataSDKClient, "_get_request_zone_whitelist", fake_whitelist)
+
+    serp_zones = await BrightDataSDKClient._get_adaptive_request_zones(client, "serp")
+    browser_zones = await BrightDataSDKClient._get_adaptive_request_zones(client, "browser")
+
+    assert serp_zones == ["mcp_unlocker"]
+    assert browser_zones == ["mcp_unlocker", "mcp_browser"]
+
+
+@pytest.mark.asyncio
 async def test_search_engine_fallback_polls_response_id_when_initial_results_empty(monkeypatch):
     client = BrightDataSDKClient.__new__(BrightDataSDKClient)
     client.token = "test-token"
@@ -1012,3 +1226,136 @@ async def test_search_engine_fallback_disables_not_found_zone(monkeypatch):
     )
     assert result_2["status"] == "success"
     assert zone_calls == ["sdk_unlocker"]
+
+
+@pytest.mark.asyncio
+async def test_search_engine_uses_fallback_when_sdk_search_returns_empty(monkeypatch):
+    client = BrightDataSDKClient.__new__(BrightDataSDKClient)
+    client.token = "test-token"
+
+    class FakeSearch:
+        async def google(self, **_kwargs):
+            return SimpleNamespace(data=[])
+
+    class FakeSdkClient:
+        search = FakeSearch()
+
+    async def fake_get_client():
+        return FakeSdkClient()
+
+    async def fake_fallback(query, engine="google", country="us", num_results=10):
+        return {
+            "status": "success",
+            "engine": engine,
+            "query": query,
+            "results": [
+                {
+                    "position": 1,
+                    "title": "Arsenal FC",
+                    "url": "https://www.arsenal.com",
+                    "snippet": "Official site",
+                }
+            ],
+            "metadata": {"source": "brightdata_http_fallback"},
+        }
+
+    monkeypatch.setattr(client, "_get_client", fake_get_client)
+    monkeypatch.setattr(client, "_search_engine_fallback", fake_fallback)
+
+    result = await BrightDataSDKClient.search_engine(
+        client,
+        query="Arsenal FC",
+        engine="google",
+        country="us",
+        num_results=5,
+    )
+
+    assert result["status"] == "success"
+    assert result["results"][0]["url"] == "https://www.arsenal.com"
+    assert result["metadata"]["source"] == "brightdata_http_fallback"
+
+
+@pytest.mark.asyncio
+async def test_search_engine_fallback_retries_when_request_api_wraps_embedded_error(monkeypatch):
+    client = BrightDataSDKClient.__new__(BrightDataSDKClient)
+    client.token = "test-token"
+    client._zone_cooldowns = {}
+    client._invalid_request_zones = set()
+
+    zone_calls = []
+
+    class FakeResponse:
+        def __init__(self, payload):
+            self._payload = payload
+
+        def raise_for_status(self):
+            return None
+
+        def json(self):
+            return self._payload
+
+    class FakeAsyncClient:
+        def __init__(self, timeout, follow_redirects):
+            self.timeout = timeout
+            self.follow_redirects = follow_redirects
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc, tb):
+            return False
+
+        async def post(self, url, headers=None, json=None):
+            zone = json["zone"]
+            zone_calls.append(zone)
+            if zone == "sdk_serp":
+                return FakeResponse(
+                    {
+                        "status_code": 401,
+                        "headers": {
+                            "x-brd-err-msg": "The IP address is blacklisted in this zone",
+                        },
+                        "body": "",
+                    }
+                )
+            return FakeResponse(
+                {
+                    "status_code": 200,
+                    "headers": {},
+                    "body": json_module.dumps(
+                        {
+                            "organic_results": [
+                                {
+                                    "position": 1,
+                                    "title": "Arsenal FC Official Site",
+                                    "link": "https://www.arsenal.com",
+                                    "description": "Official site",
+                                }
+                            ]
+                        }
+                    ),
+                }
+            )
+
+        async def get(self, url, params=None):
+            raise AssertionError("polling should not be used when wrapped body already contains results")
+
+    monkeypatch.setattr(brightdata_module.httpx, "AsyncClient", FakeAsyncClient)
+
+    async def fake_whitelist(self):
+        return {"sdk_serp", "sdk_unlocker"}
+
+    monkeypatch.setattr(BrightDataSDKClient, "_get_request_zone_whitelist", fake_whitelist)
+
+    result = await BrightDataSDKClient._search_engine_fallback(
+        client,
+        query="Arsenal FC",
+        engine="google",
+        country="us",
+        num_results=5,
+    )
+
+    assert result["status"] == "success"
+    assert result["results"][0]["url"] == "https://www.arsenal.com"
+    assert result["metadata"]["zone"] == "sdk_unlocker"
+    assert zone_calls == ["sdk_serp", "sdk_unlocker"]
