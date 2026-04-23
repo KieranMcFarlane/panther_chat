@@ -351,6 +351,41 @@ function classifyQueueState(row: PipelineRunRow, workerRunning: boolean): Pipeli
   return 'running'
 }
 
+function isFreshLiveRuntimeRow(row: PipelineRunRow) {
+  const status = toText(row.status).toLowerCase()
+  if (!['running', 'queued', 'retrying', 'reconciling', 'claiming'].includes(status)) {
+    return false
+  }
+  const metadata = row.metadata && typeof row.metadata === 'object' ? row.metadata : {}
+  const heartbeat = resolveOperationalHeartbeatDetails({
+    heartbeat_at: metadata.heartbeat_at || row.completed_at || row.started_at,
+    started_at: row.started_at,
+    generated_at: row.completed_at ?? row.started_at,
+  })
+  return (heartbeat.heartbeat_age_seconds ?? Number.MAX_SAFE_INTEGER) <= OPERATIONAL_HEARTBEAT_STALE_SECONDS
+}
+
+function resolveEffectiveWorkerState(
+  control: PipelineControlState,
+  worker: PipelineRuntimeWorkerState,
+  rows: PipelineRunRow[],
+): PipelineRuntimeWorkerState {
+  const workerState = worker.worker_process_state
+  const controlStopping = control.observed_state === 'stopping' || control.transition_state === 'stopping'
+  const controlPaused = control.is_paused === true || control.requested_state === 'paused' || control.observed_state === 'paused'
+  const hasFreshLiveRow = rows.some(isFreshLiveRuntimeRow)
+
+  if ((workerState === 'crashed' || workerState === 'stopped') && !controlStopping && !controlPaused && hasFreshLiveRow) {
+    return {
+      ...worker,
+      worker_process_state: 'running',
+      worker_health: 'degraded',
+    }
+  }
+
+  return worker
+}
+
 function toRuntimeRecord(
   row: PipelineRunRow,
   workerRunning: boolean,
@@ -627,7 +662,7 @@ export async function loadPipelineRuntimeReadSet(): Promise<PipelineRuntimeReadS
 }
 
 export function buildPipelineRuntimeSnapshot(readSet: PipelineRuntimeReadSet): PipelineRuntimeSnapshot {
-  const { snapshot_at, control, worker, fastmcp, rows, dossiers } = readSet
+  const { snapshot_at, control, worker: rawWorker, fastmcp, rows, dossiers } = readSet
   const dossierLookup = new Map<string, Record<string, unknown>>()
   for (const dossierRow of dossiers) {
     const dossierData = dossierRow.dossier_data && typeof dossierRow.dossier_data === 'object'
@@ -644,6 +679,7 @@ export function buildPipelineRuntimeSnapshot(readSet: PipelineRuntimeReadSet): P
     }
   }
 
+  const worker = resolveEffectiveWorkerState(control, rawWorker, rows)
   const workerHealthy = worker.worker_process_state === 'running'
 
   const runtimeRecords = rows.map((row) => {

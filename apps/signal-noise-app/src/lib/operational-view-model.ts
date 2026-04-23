@@ -476,6 +476,7 @@ export function buildOperationalStatusViewModel(input: {
 }) {
   const drilldown = input.drilldown;
   const controlState = input.controlState;
+  const runtimeWorkerState = drilldown?.runtime?.worker?.worker_process_state ?? null;
   const inProgressEntity =
     (drilldown?.queue?.in_progress_entity as OperationalRuntimeEntity | null) ??
     null;
@@ -525,6 +526,19 @@ export function buildOperationalStatusViewModel(input: {
   const isRequestedRunning = requestedState === "running";
   const isTransitioning =
     transitionState === "starting" || transitionState === "stopping";
+  const workerAppearsRunning =
+    runtimeWorkerState === "running" ||
+    runtimeWorkerState === "starting" ||
+    observedState === "running";
+  const staleBacklogWhileRunning = Boolean(
+    hasStaleActiveWork &&
+      !hasFreshActiveWork &&
+      !isTransitioning &&
+      !isRequestedPaused &&
+      !stopReason &&
+      operationalState === "waiting" &&
+      workerAppearsRunning,
+  );
   const isWaiting =
     operationalState === "waiting" ||
     (!hasFreshActiveWork &&
@@ -537,17 +551,20 @@ export function buildOperationalStatusViewModel(input: {
     (hasStaleActiveWork &&
       !hasFreshActiveWork &&
       !isTransitioning &&
-      !isRequestedPaused) ||
+      !isRequestedPaused &&
+      !staleBacklogWhileRunning) ||
     Boolean(stopReason);
   const isStaleOrStopped = Boolean(
     isActuallyStopped ||
       (hasStaleActiveWork &&
         !isTransitioning &&
         !isRequestedPaused &&
-        !hasFreshActiveWork),
+        !hasFreshActiveWork &&
+        !staleBacklogWhileRunning),
   );
   const hasActiveWork = hasFreshActiveWork;
-  const canStartPipeline = isRequestedPaused || isActuallyStopped || isWaiting;
+  const canStartPipeline =
+    isRequestedPaused || isActuallyStopped || (isWaiting && !staleBacklogWhileRunning);
   const requestedStateLabel = isRequestedPaused
     ? "Requested paused"
     : "Requested running";
@@ -567,6 +584,8 @@ export function buildOperationalStatusViewModel(input: {
       ? transitionState === "starting"
         ? "Starting"
         : "Stopping"
+      : staleBacklogWhileRunning
+        ? "Waiting"
       : hasStaleActiveWork
         ? "Stale"
         : isActuallyPaused
@@ -580,6 +599,8 @@ export function buildOperationalStatusViewModel(input: {
     ? workerStateLabel
     : hasFreshActiveWork
       ? activityStateLabel
+      : staleBacklogWhileRunning
+        ? "Waiting"
       : hasStaleActiveWork
         ? "Stale"
         : isActuallyPaused
@@ -615,7 +636,8 @@ export function buildOperationalStatusViewModel(input: {
     : hasActiveWork
       ? "Stop pipeline intake after the current work item finishes."
       : "Stop pipeline intake.";
-  const activeQuestionEntity = freshActiveEntity ?? staleActiveEntity;
+  const activeQuestionEntity =
+    freshActiveEntity ?? (staleBacklogWhileRunning ? null : staleActiveEntity);
   const activeQuestionLabel = activeQuestionEntity
     ? formatQuestionProgress(
         activeQuestionEntity.current_question_id || activeQuestionEntity.active_question_id,
@@ -675,8 +697,10 @@ export function buildOperationalStatusViewModel(input: {
       ? stopReason
         ? `Paused — ${String(stopDetails?.entity_name || "Pipeline")} — ${String(stopReason).replaceAll("_", " ")}`
         : "Paused — intake is waiting for resume"
-      : freshActiveEntity
+    : freshActiveEntity
         ? `${activityStateLabel} — ${freshActiveEntity.entity_name} — ${activeActionLabel || activeRunPhaseLabel || "phase unavailable"} — ${activeHeartbeatLabel || formatRunningDuration(freshActiveEntity.started_at || freshActiveEntity.generated_at)}`
+        : staleBacklogWhileRunning
+          ? "Idle — waiting for claimable work"
         : staleActiveEntity
           ? `Stale — ${String(staleActiveEntity.entity_name || "Unknown entity")} — ${
               String(staleActiveEntity.run_phase || "")

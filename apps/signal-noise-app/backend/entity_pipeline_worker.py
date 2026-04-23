@@ -1043,7 +1043,7 @@ class EntityPipelineWorker:
                 break
             start += len(rows)
 
-        return entities
+        return sorted(entities, key=lambda entity: str(entity.get("entity_id") or "").strip())
 
     def _has_active_pipeline_run(self, entity_id: str, canonical_entity_id: Optional[str] = None) -> bool:
         candidate_ids = [

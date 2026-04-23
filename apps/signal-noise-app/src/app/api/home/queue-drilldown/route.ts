@@ -750,28 +750,43 @@ export async function GET() {
   const observedStarting = control?.observed_state === 'starting' || control?.transition_state === 'starting' || workerStarting
   const observedStopping = control?.observed_state === 'stopping' || control?.transition_state === 'stopping' || workerStopping
   const observedPaused = control?.observed_state === 'paused'
+  const workerShowsActiveProcessing = workerProcessState === 'running' || workerProcessState === 'starting'
+  const controlShowsActiveProcessing = !requestedPaused && !observedPaused && !observedStopping && (
+    control?.observed_state === 'running'
+    || control?.transition_state === 'running'
+    || control?.transition_state === 'starting'
+  )
+  const hasActiveProcessingEvidence = !requestedPaused && !observedPaused && (
+    hasFreshRunningEntities
+    || workerShowsActiveProcessing
+    || controlShowsActiveProcessing
+  )
   const stopReason = hasFreshRunningEntities
     ? null
-    : controlStopReason || ((workerStopped || workerProcessState === 'crashed') && hasStaleOnlyActiveRows && !observedStarting && !observedStopping ? 'worker_heartbeat_stale' : null)
+    : hasActiveProcessingEvidence
+      ? null
+      : controlStopReason || ((workerStopped || workerProcessState === 'crashed') && hasStaleOnlyActiveRows && !observedStarting && !observedStopping ? 'worker_heartbeat_stale' : null)
   const operationalState: OperationalState = observedStarting
     ? 'starting'
     : observedStopping
       ? 'stopping'
       : requestedPaused || observedPaused
-      ? 'paused'
-      : skippingEntity
+        ? 'paused'
+        : hasFreshRunningEntities
+          ? (skippingEntity
           ? 'skipping'
           : liveState === 'retrying' || retryingEntity
             ? 'retrying'
             : liveState === 'running' || liveState === 'reconciling' || hasFreshRunningEntities
               ? 'running'
-                : workerStopped
-                  ? 'stopped'
-                  : hasStaleOnlyActiveRows
-                  ? 'stopped'
-                  : 'waiting'
+              : 'waiting')
+          : hasActiveProcessingEvidence
+            ? 'waiting'
+            : workerStopped || hasStaleOnlyActiveRows
+              ? 'stopped'
+              : 'waiting'
   const stopDetails = controlStopDetails || (
-    hasStaleOnlyActiveRows && operationalState === 'stopped'
+    hasStaleOnlyActiveRows && operationalState === 'stopped' && !hasActiveProcessingEvidence
       ? {
           reason: 'worker_heartbeat_stale',
           entity_id: visibleStaleActiveRows[0]?.entity_id ?? null,

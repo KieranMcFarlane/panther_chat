@@ -144,6 +144,77 @@ def test_choose_supabase_key_prefers_anon_key_when_service_role_missing():
     ) == "anon-key"
 
 
+def test_load_manifest_entities_ignores_live_scale_manifest_for_worker_order(monkeypatch):
+    worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
+
+    class _FakeQuery:
+        def select(self, *_args, **_kwargs):
+            return self
+
+        def range(self, *_args, **_kwargs):
+            return self
+
+        def execute(self):
+            return SimpleNamespace(
+                data=[
+                    {"id": "entity-b", "name": "Entity B", "entity_type": "CLUB", "properties": {}, "source_neo4j_ids": []},
+                    {"id": "entity-a", "name": "Entity A", "entity_type": "LEAGUE", "properties": {}, "source_neo4j_ids": []},
+                ]
+            )
+
+    worker.supabase = SimpleNamespace(table=lambda _name: _FakeQuery())
+
+    manifest_payload = {
+        "entities": [
+            {"entity_id": "entity-b", "entity_name": "Entity B", "entity_type": "CLUB"},
+            {"entity_id": "entity-a", "entity_name": "Entity A", "entity_type": "LEAGUE"},
+        ]
+    }
+
+    monkeypatch.setattr(
+        worker_module.Path,
+        "exists",
+        lambda self: str(self).endswith("question_first_scale_batch_3000_live.json"),
+    )
+    monkeypatch.setattr(
+        worker_module.Path,
+        "read_text",
+        lambda self, encoding="utf-8": json.dumps(manifest_payload),
+    )
+
+    entities = worker._load_manifest_entities()
+
+    assert [entity["entity_id"] for entity in entities] == ["entity-a", "entity-b"]
+    assert [entity["canonical_entity_id"] for entity in entities] == ["entity-a", "entity-b"]
+
+
+def test_load_manifest_entities_sorts_canonical_entities_by_id_when_manifest_missing(monkeypatch):
+    worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
+
+    class _FakeQuery:
+        def select(self, *_args, **_kwargs):
+            return self
+
+        def range(self, *_args, **_kwargs):
+            return self
+
+        def execute(self):
+            return SimpleNamespace(
+                data=[
+                    {"id": "entity-b", "name": "Entity B", "entity_type": "CLUB", "properties": {}, "source_neo4j_ids": []},
+                    {"id": "entity-a", "name": "Entity A", "entity_type": "LEAGUE", "properties": {}, "source_neo4j_ids": []},
+                ]
+            )
+
+    worker.supabase = SimpleNamespace(table=lambda _name: _FakeQuery())
+
+    monkeypatch.setattr(worker_module.Path, "exists", lambda self: False)
+
+    entities = worker._load_manifest_entities()
+
+    assert [entity["entity_id"] for entity in entities] == ["entity-a", "entity-b"]
+
+
 def test_resolve_fastapi_url_prefers_ipv4_loopback_default():
     assert resolve_fastapi_url(None, None) == "http://127.0.0.1:8000"
     assert resolve_fastapi_url("http://localhost:8000", None) == "http://127.0.0.1:8000"
