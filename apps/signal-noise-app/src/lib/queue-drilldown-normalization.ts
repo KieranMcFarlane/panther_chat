@@ -1,6 +1,8 @@
 type FollowOnStateRecord = {
   batch_id?: string | null
   status?: string | null
+  current_question_id?: string | null
+  next_repair_question_id?: string | null
   next_repair_status?: string | null
   next_repair_batch_id?: string | null
   next_repair_batch_status?: string | null
@@ -49,4 +51,21 @@ export function normalizeTerminalFollowOnMetadata(
   }
 
   return record
+}
+
+export function shouldSurfaceResumeNeeded(
+  record: FollowOnStateRecord,
+  activeBatchIds: Set<string>,
+) {
+  const status = toText(record.status).toLowerCase() || null
+  if (!isTerminalStatus(status)) {
+    return false
+  }
+  if (hasDistinctActiveFollowOnBatch(record, activeBatchIds)) {
+    return false
+  }
+  return Boolean(
+    toText(record.next_repair_question_id)
+    || toText(record.current_question_id),
+  )
 }

@@ -659,6 +659,37 @@ class EntityPipelineWorker:
             message="pipeline intake running",
         )
         self.recover_stale_batches()
+        resume_candidate = self._select_next_entity_cursor_candidate(
+            current_entity_id="",
+            current_canonical_entity_id=None,
+            include_manifest_fallback=False,
+        )
+        if resume_candidate:
+            materialized_batch_id = self._materialize_entity_cursor_candidate(
+                resume_candidate,
+                queue_mode="durable_worker",
+            )
+            if materialized_batch_id:
+                claimed_batches = self.supabase.rpc(
+                    "claim_next_entity_import_batch",
+                    {
+                        "worker_id": self.worker_id,
+                        "lease_seconds": self.lease_seconds,
+                    },
+                ).execute().data or []
+                if claimed_batches:
+                    claimed = claimed_batches[0]
+                    log_worker_transition(
+                        "batch_claimed",
+                        worker_id=getattr(self, "worker_id", "worker-test"),
+                        batch_id=claimed.get("id"),
+                        entity_id=claimed.get("entity_id"),
+                        entity_name=claimed.get("entity_name"),
+                        phase=claimed.get("phase"),
+                        status=str(claimed.get("status") or "queued").strip().lower() or "queued",
+                        message="claimed resumable entity cursor batch",
+                    )
+                    return claimed
         response = self.supabase.rpc(
             "claim_next_entity_import_batch",
             {
@@ -668,6 +699,36 @@ class EntityPipelineWorker:
         ).execute()
         batches = response.data or []
         if not batches:
+            candidate = self._select_next_entity_cursor_candidate(
+                current_entity_id="",
+                current_canonical_entity_id=None,
+            )
+            if candidate:
+                materialized_batch_id = self._materialize_entity_cursor_candidate(
+                    candidate,
+                    queue_mode="durable_worker",
+                )
+                if materialized_batch_id:
+                    claimed_batches = self.supabase.rpc(
+                        "claim_next_entity_import_batch",
+                        {
+                            "worker_id": self.worker_id,
+                            "lease_seconds": self.lease_seconds,
+                        },
+                    ).execute().data or []
+                    if claimed_batches:
+                        claimed = claimed_batches[0]
+                        log_worker_transition(
+                            "batch_claimed",
+                            worker_id=getattr(self, "worker_id", "worker-test"),
+                            batch_id=claimed.get("id"),
+                            entity_id=claimed.get("entity_id"),
+                            entity_name=claimed.get("entity_name"),
+                            phase=claimed.get("phase"),
+                            status=str(claimed.get("status") or "queued").strip().lower() or "queued",
+                            message="claimed entity cursor batch",
+                        )
+                        return claimed
             log_worker_transition(
                 "claim_cycle_empty",
                 worker_id=getattr(self, "worker_id", "worker-test"),
@@ -1062,6 +1123,141 @@ class EntityPipelineWorker:
             return entity
 
         return None
+
+    def _select_next_entity_cursor_candidate(
+        self,
+        *,
+        current_entity_id: str,
+        current_canonical_entity_id: Optional[str] = None,
+        include_manifest_fallback: bool = True,
+    ) -> Optional[Dict[str, Any]]:
+        current_entity_id = str(current_entity_id or "").strip()
+        current_canonical_entity_id = str(current_canonical_entity_id or "").strip() or None
+
+        try:
+            response = self.supabase.rpc(
+                "select_next_entity_cursor_candidate",
+                {
+                    "current_entity_id": current_entity_id,
+                    "current_canonical_entity_id": current_canonical_entity_id or current_entity_id,
+                },
+            ).execute()
+            candidates = response.data or []
+            if candidates:
+                candidate = candidates[0]
+                if isinstance(candidate, dict) and str(candidate.get("candidate_kind") or "").strip() in {"resume_entity", "resume_repair"}:
+                    return candidate
+        except Exception:
+            pass
+
+        if not include_manifest_fallback:
+            return None
+
+        next_entity = self._find_next_manifest_entity(
+            current_entity_id=current_entity_id,
+            current_canonical_entity_id=current_canonical_entity_id,
+        )
+        if not next_entity:
+            return None
+
+        return {
+            "candidate_kind": "next_entity",
+            "entity_id": str(next_entity.get("entity_id") or "").strip() or None,
+            "canonical_entity_id": str(next_entity.get("canonical_entity_id") or "").strip() or None,
+            "entity_name": str(next_entity.get("entity_name") or "").strip() or None,
+            "entity_type": str(next_entity.get("entity_type") or "ENTITY").strip() or "ENTITY",
+            "question_id": None,
+            "current_question_id": None,
+            "next_repair_question_id": None,
+        }
+
+    def _materialize_entity_cursor_candidate(
+        self,
+        candidate: Dict[str, Any],
+        *,
+        queue_mode: Optional[str] = None,
+    ) -> Optional[str]:
+        candidate_kind = str(candidate.get("candidate_kind") or "").strip()
+        entity_id = str(candidate.get("entity_id") or "").strip()
+        canonical_entity_id = str(candidate.get("canonical_entity_id") or "").strip() or None
+        entity_name = str(candidate.get("entity_name") or entity_id).strip()
+        entity_type = str(candidate.get("entity_type") or "ENTITY").strip() or "ENTITY"
+        if not entity_id:
+            return None
+
+        now_iso = self._now_iso()
+        batch_id = self._build_follow_on_repair_batch_id()
+        normalized_queue_mode = str(queue_mode or QUEUE_MODE)
+        question_id = str(
+            candidate.get("question_id")
+            or candidate.get("next_repair_question_id")
+            or candidate.get("current_question_id")
+            or ""
+        ).strip() or None
+        rerun_mode = "question" if candidate_kind == "resume_repair" and question_id else "full"
+        cascade_dependents = False if rerun_mode == "question" else True
+
+        batch_row = {
+            "id": batch_id,
+            "filename": None,
+            "status": "queued",
+            "total_rows": 1,
+            "created_rows": 0,
+            "updated_rows": 0,
+            "invalid_rows": 0,
+            "started_at": now_iso,
+            "completed_at": None,
+            "metadata": {
+                "source": "entity_cursor_resume",
+                "queue_mode": normalized_queue_mode,
+                "canonical_entity_id": canonical_entity_id,
+                "rerun_mode": rerun_mode,
+                "question_id": question_id,
+                "cascade_dependents": cascade_dependents,
+                "current_question_id": str(candidate.get("current_question_id") or "").strip() or None,
+                "next_repair_question_id": str(candidate.get("next_repair_question_id") or "").strip() or None,
+                "cursor_candidate_kind": candidate_kind or "next_entity",
+            },
+        }
+        run_row = {
+            "id": f"{batch_id}_{entity_id}",
+            "batch_id": batch_id,
+            "entity_id": entity_id,
+            "canonical_entity_id": canonical_entity_id,
+            "entity_name": entity_name,
+            "status": "queued",
+            "phase": "entity_registration",
+            "error_message": None,
+            "dossier_id": None,
+            "sales_readiness": None,
+            "rfp_count": 0,
+            "started_at": now_iso,
+            "completed_at": None,
+            "metadata": {
+                "source": "entity_cursor_resume",
+                "queue_mode": normalized_queue_mode,
+                "canonical_entity_id": canonical_entity_id,
+                "entity_type": entity_type,
+                "rerun_mode": rerun_mode,
+                "question_id": question_id,
+                "cascade_dependents": cascade_dependents,
+                "current_question_id": str(candidate.get("current_question_id") or "").strip() or None,
+                "next_repair_question_id": str(candidate.get("next_repair_question_id") or "").strip() or None,
+                "cursor_candidate_kind": candidate_kind or "next_entity",
+            },
+        }
+
+        batch_inserted = self._safe_execute(
+            lambda: self.supabase.table("entity_import_batches").insert(batch_row).execute(),
+            context=f"insert entity cursor batch {batch_id}",
+        )
+        run_inserted = self._safe_execute(
+            lambda: self.supabase.table("entity_pipeline_runs").insert([run_row]).execute(),
+            context=f"insert entity cursor run {batch_id}/{entity_id}",
+        )
+        if not (batch_inserted and run_inserted):
+            return None
+        return batch_id
 
     def _queue_manifest_auto_advance(
         self,
@@ -1643,6 +1839,27 @@ class EntityPipelineWorker:
                 **base_metadata,
                 "repair_state": "exhausted",
                 "next_repair_status": "exhausted",
+            }
+
+        current_repair_question_id = str(
+            latest_metadata.get("question_id")
+            or latest_metadata.get("current_question_id")
+            or ""
+        ).strip()
+        rerun_mode = str(latest_metadata.get("rerun_mode") or "").strip().lower()
+        cascade_dependents = bool(latest_metadata.get("cascade_dependents", True))
+        if (
+            rerun_mode == "question"
+            and not cascade_dependents
+            and current_repair_question_id
+            and next_repair_question_id == current_repair_question_id
+        ):
+            exhausted_question_ids.add(next_repair_question_id)
+            return {
+                **base_metadata,
+                "repair_state": "exhausted",
+                "next_repair_status": "exhausted",
+                "exhausted_question_ids": sorted(exhausted_question_ids),
             }
 
         next_retry_count = repair_retry_count + 1
@@ -2253,23 +2470,25 @@ class EntityPipelineWorker:
                     context=f"mark auto-advance batch {batch_id}",
                 )
             elif final_runs:
-                source_run = final_runs[-1]
-                self._write_terminal_stop_state(
-                    reason="queue_exhausted",
-                    pause_reason="queue exhausted",
-                    details=build_stop_reason_details(
-                        reason="queue_exhausted",
-                        entity_id=source_run.get("entity_id"),
-                        canonical_entity_id=source_run.get("canonical_entity_id"),
-                        entity_name=source_run.get("entity_name"),
-                        question_id=(
-                            self._get_run_metadata(batch_id, source_run.get("entity_id") or "").get("question_id")
-                            if source_run.get("entity_id")
-                            else None
-                        ),
-                        phase=source_run.get("phase"),
-                        batch_id=batch_id,
-                    ),
+                write_pipeline_control_state(
+                    {
+                        "is_paused": False,
+                        "pause_reason": None,
+                        "stop_reason": None,
+                        "stop_details": None,
+                        "desired_state": "running",
+                        "requested_state": "running",
+                        "observed_state": "running",
+                        "transition_state": "running",
+                        "updated_at": self._now_iso(),
+                    }
+                )
+                log_worker_transition(
+                    "claim_cycle_empty",
+                    worker_id=worker_id,
+                    batch_id=batch_id,
+                    status="idle",
+                    message="no resumable or manifest follow-on entity available",
                 )
 
     def run_forever(self) -> None:

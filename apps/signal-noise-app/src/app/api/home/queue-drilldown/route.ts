@@ -11,7 +11,7 @@ import {
   type PipelineRuntimeSnapshot,
 } from '@/lib/pipeline-runtime'
 import { deriveOperationalFreshnessCheckpoint } from '@/lib/operational-freshness'
-import { normalizeTerminalFollowOnMetadata } from '@/lib/queue-drilldown-normalization'
+import { normalizeTerminalFollowOnMetadata, shouldSurfaceResumeNeeded } from '@/lib/queue-drilldown-normalization'
 import { loadQuestionFirstScaleManifest } from '@/lib/question-first-manifest'
 import { resolveQuestionTextFromDossierData } from '@/lib/question-text-resolver'
 
@@ -603,12 +603,23 @@ export async function GET() {
       ...enrichQuestionTextFields(queueRecord, dossierRow?.dossier_data ?? null),
     }
   })))
+  const resumeNeededEntities = dedupeByEntityId(
+    completedEntities
+      .filter((item) => shouldSurfaceResumeNeeded(item, activeBatchIds))
+      .map((item) => ({
+        ...item,
+        summary: item.summary || 'Resume required.',
+        current_stage: item.current_stage || 'resume_needed',
+        run_phase: item.run_phase || 'resume_needed',
+      })),
+  ).slice(0, 8)
 
   const seenEntityIds = new Set(
     [
       ...runningEntities.map((item) => item.entity_id),
       ...staleActiveRows.map((item) => item.entity_id),
       ...completedEntities.map((item) => item.entity_id),
+      ...resumeNeededEntities.map((item) => item.entity_id),
     ].filter(Boolean) as string[],
   )
   const canonicalManifestEntities = manifestEntities.map((entity) => ({
@@ -870,7 +881,7 @@ export async function GET() {
         running: visibleRunningEntities.length,
         stalled: visibleStaleActiveRows.length,
         retryable: visibleRetryingEntity ? 1 : 0,
-        resume_needed: 0,
+        resume_needed: resumeNeededEntities.length,
       },
     },
     queue: {
@@ -879,7 +890,7 @@ export async function GET() {
       stale_active_rows: visibleStaleActiveRows,
       latest_noteworthy_entity: latestNoteworthyEntity,
       completed_entities: completedEntities,
-      resume_needed_entities: [],
+      resume_needed_entities: resumeNeededEntities,
       upcoming_entities: upcomingEntities,
     },
     dossier_quality: {

@@ -89,6 +89,7 @@ class LocalPgQuery:
         self.order_column: Optional[str] = None
         self.order_descending = False
         self.limit_count: Optional[int] = None
+        self.offset_count: Optional[int] = None
         self.conflict_columns: List[str] = []
 
     def select(self, columns: str = "*") -> "LocalPgQuery":
@@ -150,6 +151,13 @@ class LocalPgQuery:
 
     def limit(self, count: int) -> "LocalPgQuery":
         self.limit_count = int(count)
+        return self
+
+    def range(self, start: int, end: int) -> "LocalPgQuery":
+        start_index = max(int(start), 0)
+        end_index = max(int(end), start_index - 1)
+        self.offset_count = start_index
+        self.limit_count = max(end_index - start_index + 1, 0)
         return self
 
     def maybe_single(self) -> LocalPgResponse:
@@ -216,6 +224,9 @@ class LocalPgQuery:
         if self.limit_count is not None:
             sql += " LIMIT %s"
             params.append(self.limit_count)
+        if self.offset_count is not None:
+            sql += " OFFSET %s"
+            params.append(self.offset_count)
         with self.client._connect() as conn:
             with conn.cursor() as cur:
                 cur.execute(sql, params)
@@ -312,6 +323,91 @@ class LocalPgRpc:
                     RETURNING batch.*
                     """,
                     [worker_id, lease_seconds],
+                )
+                rows = cur.fetchall()
+        return LocalPgResponse(_serialize_rows(rows))
+
+    def _execute_select_next_entity_cursor_candidate(self) -> LocalPgResponse:
+        current_entity_id = str(self.params.get("current_entity_id") or "")
+        current_canonical_entity_id = str(self.params.get("current_canonical_entity_id") or "").strip() or None
+        with self.client._connect() as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    """
+                    WITH resumable_runs AS (
+                        SELECT
+                            CASE
+                                WHEN coalesce(r.metadata->>'next_repair_question_id', '') <> '' THEN 'resume_repair'
+                                ELSE 'resume_entity'
+                            END AS candidate_kind,
+                            r.entity_id::text AS entity_id,
+                            r.canonical_entity_id::text AS canonical_entity_id,
+                            r.entity_name,
+                            coalesce(r.metadata->>'entity_type', 'ENTITY') AS entity_type,
+                            nullif(r.metadata->>'next_repair_question_id', '') AS question_id,
+                            nullif(r.metadata->>'current_question_id', '') AS current_question_id,
+                            nullif(r.metadata->>'next_repair_question_id', '') AS next_repair_question_id,
+                            0 AS priority_rank
+                        FROM entity_pipeline_runs AS r
+                        WHERE (
+                            r.entity_id <> %s
+                            AND (%s::uuid IS NULL OR r.canonical_entity_id IS DISTINCT FROM %s::uuid)
+                        )
+                          AND r.status IN ('queued', 'running', 'retrying', 'failed', 'completed')
+                          AND (
+                            coalesce(r.metadata->>'current_question_id', '') <> ''
+                            OR coalesce(r.metadata->>'next_repair_question_id', '') <> ''
+                          )
+                        ORDER BY
+                            CASE
+                                WHEN coalesce(r.metadata->>'next_repair_question_id', '') <> '' THEN 0
+                                ELSE 1
+                            END,
+                            coalesce(r.completed_at, r.started_at) DESC NULLS LAST
+                        LIMIT 1
+                    ),
+                    next_entities AS (
+                        SELECT
+                            'next_entity' AS candidate_kind,
+                            c.id::text AS entity_id,
+                            c.id::text AS canonical_entity_id,
+                            c.name AS entity_name,
+                            coalesce(c.entity_type, 'ENTITY') AS entity_type,
+                            null::text AS question_id,
+                            null::text AS current_question_id,
+                            null::text AS next_repair_question_id,
+                            1 AS priority_rank
+                        FROM canonical_entities AS c
+                        WHERE (%s::uuid IS NULL OR c.id <> %s::uuid)
+                          AND c.id::text <> %s
+                        ORDER BY c.id ASC
+                        LIMIT 1
+                    )
+                    SELECT
+                        candidate_kind,
+                        entity_id,
+                        canonical_entity_id,
+                        entity_name,
+                        entity_type,
+                        question_id,
+                        current_question_id,
+                        next_repair_question_id
+                    FROM (
+                        SELECT * FROM resumable_runs
+                        UNION ALL
+                        SELECT * FROM next_entities
+                    ) AS candidates
+                    ORDER BY priority_rank ASC
+                    LIMIT 1
+                    """,
+                    [
+                        current_entity_id,
+                        current_canonical_entity_id,
+                        current_canonical_entity_id,
+                        current_canonical_entity_id,
+                        current_canonical_entity_id,
+                        current_entity_id,
+                    ],
                 )
                 rows = cur.fetchall()
         return LocalPgResponse(_serialize_rows(rows))
