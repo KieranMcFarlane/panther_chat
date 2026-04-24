@@ -38,6 +38,17 @@ async function loadOperationalStatusViewModelModule() {
           path.resolve(path.dirname(sourcePath.pathname), "./playlist-sort-key.ts"),
         ).href,
       ),
+    )
+    .replaceAll(
+      '"@/lib/operational-safety-stop"',
+      JSON.stringify(
+        pathToFileURL(
+          path.resolve(
+            path.dirname(sourcePath.pathname),
+            "./operational-safety-stop.ts",
+          ),
+        ).href,
+      ),
     );
   const tempDir = await mkdtemp(path.join(os.tmpdir(), "operational-status-vm-"));
   const tempPath = path.join(tempDir, "operational-view-model.ts");
@@ -94,6 +105,326 @@ test("status view model distinguishes requested paused from worker paused", () =
   assert.equal(vm.statusHero.headline, "Pipeline paused…");
   assert.equal(vm.statusHero.primaryActionRecommended, true);
   assert.match(vm.statusHero.supportingLine, /paused until you resume/i);
+});
+
+test("status hero treats a paused resumable checkpoint as resumable state, not an issue state", () => {
+  const checkpointAt = new Date(Date.now() - 20_000).toISOString();
+  const vm = buildOperationalStatusViewModel({
+    drilldown: {
+      freshness_state: "fresh",
+      last_activity_at: new Date().toISOString(),
+      snapshot_at: new Date().toISOString(),
+      control: {
+        is_paused: true,
+        requested_state: "paused",
+        observed_state: "paused",
+        transition_state: "paused",
+        updated_at: new Date().toISOString(),
+      },
+      operational_state: "paused",
+      stop_reason: null,
+      runtime: {
+        worker: {
+          worker_process_state: "running",
+          worker_health: "healthy",
+        },
+      },
+      loop_status: {
+        total_scheduled: 3332,
+        completed: 0,
+        quality_counts: { blocked: 0 },
+        runtime_counts: { running: 0, stalled: 0, retryable: 0, resume_needed: 1 },
+      },
+      queue: {
+        in_progress_entity: null,
+        running_entities: [],
+        stale_active_rows: [],
+        completed_entities: [
+          {
+            entity_id: "fc-porto",
+            entity_name: "FC Porto",
+            entity_type: "club",
+            summary: "Resume required.",
+            generated_at: checkpointAt,
+            started_at: checkpointAt,
+            current_question_id: "q11_decision_owner",
+            current_question_text:
+              "Who is the highest probability buyer at FC Porto given the current commercial and product context?",
+            next_repair_question_id: "q11_decision_owner",
+            next_repair_question_text:
+              "Who is the highest probability buyer at FC Porto given the current commercial and product context?",
+            run_phase: "resume_needed",
+          },
+        ],
+        resume_needed_entities: [
+          {
+            entity_id: "fc-porto",
+            entity_name: "FC Porto",
+            entity_type: "club",
+            summary: "Resume required.",
+            generated_at: checkpointAt,
+            started_at: checkpointAt,
+            current_question_id: "q11_decision_owner",
+            current_question_text:
+              "Who is the highest probability buyer at FC Porto given the current commercial and product context?",
+            next_repair_question_id: "q11_decision_owner",
+            next_repair_question_text:
+              "Who is the highest probability buyer at FC Porto given the current commercial and product context?",
+            run_phase: "resume_needed",
+          },
+        ],
+        upcoming_entities: [],
+      },
+      dossier_quality: {
+        incomplete_entities: [],
+      },
+    },
+    controlState: {
+      is_paused: true,
+      requested_state: "paused",
+      observed_state: "paused",
+      transition_state: "paused",
+      updated_at: new Date().toISOString(),
+    },
+  });
+
+  assert.match(vm.statusHero.headline, /Paused/i);
+  assert.match(vm.statusHero.headline, /checkpoint|resume/i);
+  assert.match(vm.statusHero.supportingLine, /FC Porto/i);
+  assert.match(vm.statusHero.supportingLine, /question rerun ready|resum/i);
+  assert.equal(vm.statusHero.issueSummary, null);
+  assert.equal(vm.statusHero.marqueeLine, vm.statusHero.headline);
+  assert.equal(
+    vm.statusHero.detailRows.some((row) => row.label === "Current section"),
+    false,
+  );
+  assert.equal(
+    vm.statusHero.detailRows.some((row) => row.label === "Execution state"),
+    false,
+  );
+});
+
+test("status hero prefers the resumable paused checkpoint over an unrelated stale latest completion", () => {
+  const now = new Date().toISOString();
+  const staleCheckpointAt = new Date(Date.now() - 2 * 60 * 60_000 - 35 * 60_000).toISOString();
+  const staleLatestAt = new Date(Date.now() - 20_000).toISOString();
+
+  const vm = buildOperationalStatusViewModel({
+    drilldown: {
+      freshness_state: "stale",
+      last_activity_at: staleCheckpointAt,
+      snapshot_at: now,
+      control: {
+        is_paused: true,
+        requested_state: "paused",
+        observed_state: "paused",
+        transition_state: "paused",
+        updated_at: now,
+      },
+      operational_state: "paused",
+      stop_reason: null,
+      runtime: {
+        worker: {
+          worker_process_state: "running",
+          worker_health: "healthy",
+        },
+      },
+      loop_status: {
+        total_scheduled: 3332,
+        completed: 1,
+        quality_counts: { blocked: 0 },
+        runtime_counts: { running: 0, stalled: 8, retryable: 0, resume_needed: 1 },
+      },
+      queue: {
+        in_progress_entity: null,
+        running_entities: [],
+        stale_active_rows: [],
+        completed_entities: [
+          {
+            entity_id: "zamalek-sc-handball",
+            entity_name: "Zamalek SC Handball",
+            entity_type: "club",
+            summary: "Latest paused row.",
+            generated_at: staleLatestAt,
+            started_at: staleLatestAt,
+            run_phase: "entity_registration",
+            current_action: "entity_registration",
+          },
+        ],
+        resume_needed_entities: [
+          {
+            entity_id: "fc-porto",
+            entity_name: "FC Porto",
+            entity_type: "club",
+            summary: "Resume required.",
+            generated_at: staleCheckpointAt,
+            started_at: staleCheckpointAt,
+            current_question_text:
+              "Who is the highest probability buyer at FC Porto given the current commercial and product context?",
+            next_repair_question_id: "q11_decision_owner",
+            next_repair_question_text:
+              "Who is the highest probability buyer at FC Porto given the current commercial and product context?",
+            run_phase: "resume_needed",
+          },
+        ],
+        upcoming_entities: [],
+      },
+      dossier_quality: {
+        incomplete_entities: [],
+      },
+    },
+    controlState: {
+      is_paused: true,
+      requested_state: "paused",
+      observed_state: "paused",
+      transition_state: "paused",
+      updated_at: now,
+    },
+  });
+
+  assert.match(vm.statusHero.headline, /Paused/i);
+  assert.match(vm.statusHero.headline, /checkpoint|resume/i);
+  assert.match(vm.statusHero.supportingLine, /FC Porto/i);
+  assert.match(vm.currentQuestionLabel, /highest probability buyer at FC Porto/i);
+  assert.match(
+    vm.statusHero.detailRows.find((row) => row.label === "Current question")?.value || "",
+    /highest probability buyer at FC Porto/i,
+  );
+  assert.equal(vm.statusHero.issueSummary, null);
+  assert.equal(
+    vm.statusHero.detailRows.some((row) => row.label === "Current section"),
+    false,
+  );
+  assert.equal(
+    vm.statusHero.detailRows.some((row) => row.label === "Execution state"),
+    false,
+  );
+});
+
+test("status hero prefers a real stop reason over resumable paused checkpoint copy", () => {
+  const checkpointAt = new Date(Date.now() - 20_000).toISOString();
+  const now = new Date().toISOString();
+
+  const vm = buildOperationalStatusViewModel({
+    drilldown: {
+      freshness_state: "stale",
+      last_activity_at: now,
+      snapshot_at: now,
+      control: {
+        is_paused: true,
+        requested_state: "paused",
+        observed_state: "paused",
+        transition_state: "paused",
+        pause_reason: "question retry exhausted",
+        stop_reason: "question_retry_exhausted",
+        updated_at: now,
+      },
+      operational_state: "paused",
+      stop_reason: "question_retry_exhausted",
+      stop_details: {
+        entity_name: "FC Porto",
+        question_id: "q11_decision_owner",
+        error_type: "http_404",
+        error_message: "HTTP Error 404: Not Found",
+        attempts: 2,
+      },
+      runtime: {
+        worker: {
+          worker_process_state: "running",
+          worker_health: "healthy",
+        },
+      },
+      loop_status: {
+        total_scheduled: 3332,
+        completed: 0,
+        quality_counts: { blocked: 0 },
+        runtime_counts: { running: 0, stalled: 0, retryable: 0, resume_needed: 1 },
+      },
+      queue: {
+        in_progress_entity: {
+          entity_id: "fc-porto",
+          entity_name: "FC Porto",
+          entity_type: "club",
+          generated_at: checkpointAt,
+          started_at: checkpointAt,
+          current_action: "entity_registration",
+          run_phase: "entity_registration",
+          current_question_id: "q11_decision_owner",
+          current_question_text:
+            "Who is the highest probability buyer at FC Porto given the current commercial and product context?",
+        },
+        running_entities: [],
+        stale_active_rows: [],
+        completed_entities: [
+          {
+            entity_id: "fc-porto",
+            entity_name: "FC Porto",
+            entity_type: "club",
+            summary: "Resume required.",
+            generated_at: checkpointAt,
+            started_at: checkpointAt,
+            current_question_id: "q11_decision_owner",
+            current_question_text:
+              "Who is the highest probability buyer at FC Porto given the current commercial and product context?",
+            next_repair_question_id: "q11_decision_owner",
+            next_repair_question_text:
+              "Who is the highest probability buyer at FC Porto given the current commercial and product context?",
+            run_phase: "resume_needed",
+          },
+        ],
+        resume_needed_entities: [
+          {
+            entity_id: "fc-porto",
+            entity_name: "FC Porto",
+            entity_type: "club",
+            summary: "Resume required.",
+            generated_at: checkpointAt,
+            started_at: checkpointAt,
+            current_question_id: "q11_decision_owner",
+            current_question_text:
+              "Who is the highest probability buyer at FC Porto given the current commercial and product context?",
+            next_repair_question_id: "q11_decision_owner",
+            next_repair_question_text:
+              "Who is the highest probability buyer at FC Porto given the current commercial and product context?",
+            run_phase: "resume_needed",
+          },
+        ],
+        upcoming_entities: [],
+      },
+      dossier_quality: {
+        incomplete_entities: [],
+      },
+    },
+    controlState: {
+      is_paused: true,
+      requested_state: "paused",
+      observed_state: "paused",
+      transition_state: "paused",
+      pause_reason: "question retry exhausted",
+      stop_reason: "question_retry_exhausted",
+      stop_details: {
+        entity_name: "FC Porto",
+        question_id: "q11_decision_owner",
+        error_type: "http_404",
+        error_message: "HTTP Error 404: Not Found",
+        attempts: 2,
+      },
+      updated_at: now,
+    },
+  });
+
+  assert.doesNotMatch(vm.statusHero.headline, /resumable checkpoint ready/i);
+  assert.doesNotMatch(
+    vm.statusHero.supportingLine,
+    /start pipeline to resume from the saved checkpoint/i,
+  );
+  assert.match(vm.statusHero.issueSummary || "", /question retry exhausted/i);
+  assert.match(vm.statusHero.marqueeLine || "", /question retry exhausted/i);
+  assert.equal(vm.statusHero.primaryActionRecommended, false);
+  assert.match(vm.statusHero.primaryActionHint || "", /fc porto/i);
+  assert.match(vm.statusHero.primaryActionHint || "", /q11_decision_owner/i);
+  assert.match(vm.statusHero.primaryActionHint || "", /http 404/i);
+  assert.doesNotMatch(vm.statusHero.primaryActionHint || "", /queue.*question rerun/i);
 });
 
 test("status view model exposes starting transition separately from activity", () => {
@@ -709,4 +1040,67 @@ test("operational drawer merges stopped, stale, and resume-needed items into a s
   assert.equal(drawerVm.waitingItems.length, 1);
   assert.equal(drawerVm.stoppedItems.length, 3);
   assert.equal(drawerVm.completedItems.length, 1);
+});
+
+test("operational drawer labels non-blocking failed history as failed, continuing", () => {
+  const drawerVm = buildOperationalDrawerViewModel({
+    dashboard: {
+      control: {
+        is_paused: false,
+        pause_reason: null,
+        updated_at: null,
+      },
+      loop_status: {
+        total_scheduled: 4,
+        completed: 0,
+        failed: 1,
+        retryable_failures: 0,
+        quality_counts: { partial: 0, blocked: 0, complete: 0, client_ready: 0 },
+        runtime_counts: { running: 1, stalled: 0, retryable: 0, resume_needed: 0, queued: 1 },
+      },
+      queue: {
+        in_progress_entity: {
+          entity_id: "running-1",
+          entity_name: "Running One",
+          entity_type: "club",
+          summary: "Running now.",
+          generated_at: new Date().toISOString(),
+          started_at: new Date().toISOString(),
+          heartbeat_at: new Date().toISOString(),
+          current_question_id: "q1",
+          current_action: "run",
+          run_phase: "running",
+        },
+        running_entities: [],
+        stale_active_rows: [],
+        completed_entities: [
+          {
+            entity_id: "failed-1",
+            entity_name: "FC Porto",
+            entity_type: "club",
+            summary: "HTTP Error 403: Forbidden",
+            generated_at: new Date().toISOString(),
+            started_at: new Date(Date.now() - 1000 * 60 * 5).toISOString(),
+            heartbeat_at: new Date().toISOString(),
+            current_question_id: "q11_decision_owner",
+            current_action: "entity_registration",
+            run_phase: "entity_registration",
+            continue_pipeline_on_failure: true,
+            stop_reason: null,
+          },
+        ],
+        resume_needed_entities: [],
+        upcoming_entities: [],
+      },
+      dossier_quality: {
+        incomplete_entities: [],
+      },
+    },
+    activeSection: "completed",
+  });
+
+  assert.equal(drawerVm.completedItems.length, 1);
+  assert.equal(drawerVm.completedItems[0]?.badge, "Failed, continuing");
+  assert.equal(drawerVm.completedItems[0]?.next_action, "Inspect the failed entity");
+  assert.match(drawerVm.completedItems[0]?.detail || "", /403/);
 });

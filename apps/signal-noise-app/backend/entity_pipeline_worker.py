@@ -127,6 +127,14 @@ def _is_distinct_follow_on_batch_id(current_batch_id: Optional[str], next_batch_
     return bool(follow_on) and follow_on != current
 
 
+def _is_legacy_manual_pause_state(payload: Dict[str, Any]) -> bool:
+    stop_reason = str(payload.get("stop_reason") or "").strip().lower()
+    pause_reason = str(payload.get("pause_reason") or "").strip().lower()
+    return stop_reason == "manual_stop" or (
+        not stop_reason and pause_reason in {"paused from live ops", "manual stop"}
+    )
+
+
 def read_pipeline_control_state() -> Dict[str, Any]:
     try:
         payload = json.loads(PIPELINE_CONTROL_STATE_PATH.read_text(encoding="utf-8"))
@@ -137,6 +145,19 @@ def read_pipeline_control_state() -> Dict[str, Any]:
             "stop_reason": None,
             "stop_details": None,
             "updated_at": None,
+            "desired_state": "running",
+            "requested_state": "running",
+            "observed_state": "running",
+            "transition_state": "running",
+        }
+
+    if _is_legacy_manual_pause_state(payload):
+        return {
+            "is_paused": False,
+            "pause_reason": None,
+            "stop_reason": None,
+            "stop_details": None,
+            "updated_at": str(payload.get("updated_at") or "").strip() or None,
             "desired_state": "running",
             "requested_state": "running",
             "observed_state": "running",
@@ -196,6 +217,23 @@ def write_pipeline_control_state(payload: Dict[str, Any]) -> Dict[str, Any]:
     PIPELINE_CONTROL_STATE_PATH.parent.mkdir(parents=True, exist_ok=True)
     PIPELINE_CONTROL_STATE_PATH.write_text(json.dumps(next_state, indent=2), encoding="utf-8")
     return next_state
+
+
+def normalize_pipeline_control_state_for_worker_start(now_iso: Optional[str] = None) -> Dict[str, Any]:
+    control_state = read_pipeline_control_state()
+    next_state = {
+        **control_state,
+        "is_paused": False,
+        "pause_reason": None,
+        "stop_reason": None,
+        "stop_details": None,
+        "desired_state": "running",
+        "requested_state": "running",
+        "observed_state": "running",
+        "transition_state": "running",
+        "updated_at": now_iso or datetime.now(timezone.utc).isoformat(),
+    }
+    return write_pipeline_control_state(next_state)
 
 
 def build_stop_reason_details(
@@ -322,6 +360,17 @@ def _is_question_local_failure(error_type: str) -> bool:
         "json_decode",
         "value_error",
     }
+
+
+def _is_nonblocking_terminal_failure(error_type: str) -> bool:
+    error_type = str(error_type or "").strip().lower()
+    if not error_type.startswith("http_"):
+        return False
+    try:
+        status_code = int(error_type.split("_", 1)[1])
+    except (TypeError, ValueError):
+        return False
+    return status_code in {400, 401, 403, 404, 410, 422}
 
 
 def build_batch_heartbeat_metadata(
@@ -2318,34 +2367,51 @@ class EntityPipelineWorker:
                             message=skip_note,
                         )
                 elif not should_retry:
-                    stop_reason = "orchestrator_unhealthy" if retryable else "question_retry_exhausted"
-                    stop_details = build_stop_reason_details(
-                        reason=stop_reason,
-                        entity_id=run.get("entity_id"),
-                        canonical_entity_id=canonical_entity_id,
-                        entity_name=run.get("entity_name"),
-                        question_id=question_id or None,
-                        phase=run.get("phase"),
-                        error_type=error_type,
-                        error_message=str(error),
-                        batch_id=batch_id,
-                        attempts=attempts,
-                    )
-                    log_worker_transition(
-                        "run_stopped",
-                        worker_id=worker_id,
-                        batch_id=batch_id,
-                        entity_id=run.get("entity_id"),
-                        entity_name=run.get("entity_name"),
-                        question_id=question_id or None,
-                        phase=run.get("phase"),
-                        status="stopped",
-                        stop_reason=stop_reason,
-                        error_type=error_type,
-                        attempts=attempts,
-                        current_action=f"question {question_id}" if question_id else run.get("phase"),
-                        message=str(error),
-                    )
+                    if _is_nonblocking_terminal_failure(error_type):
+                        retry_metadata["continue_pipeline_on_failure"] = True
+                        log_worker_transition(
+                            "run_failed_nonblocking",
+                            worker_id=worker_id,
+                            batch_id=batch_id,
+                            entity_id=run.get("entity_id"),
+                            entity_name=run.get("entity_name"),
+                            question_id=question_id or None,
+                            phase=run.get("phase"),
+                            status="failed",
+                            error_type=error_type,
+                            attempts=attempts,
+                            current_action=f"question {question_id}" if question_id else run.get("phase"),
+                            message=str(error),
+                        )
+                    else:
+                        stop_reason = "orchestrator_unhealthy" if retryable else "question_retry_exhausted"
+                        stop_details = build_stop_reason_details(
+                            reason=stop_reason,
+                            entity_id=run.get("entity_id"),
+                            canonical_entity_id=canonical_entity_id,
+                            entity_name=run.get("entity_name"),
+                            question_id=question_id or None,
+                            phase=run.get("phase"),
+                            error_type=error_type,
+                            error_message=str(error),
+                            batch_id=batch_id,
+                            attempts=attempts,
+                        )
+                        log_worker_transition(
+                            "run_stopped",
+                            worker_id=worker_id,
+                            batch_id=batch_id,
+                            entity_id=run.get("entity_id"),
+                            entity_name=run.get("entity_name"),
+                            question_id=question_id or None,
+                            phase=run.get("phase"),
+                            status="stopped",
+                            stop_reason=stop_reason,
+                            error_type=error_type,
+                            attempts=attempts,
+                            current_action=f"question {question_id}" if question_id else run.get("phase"),
+                            message=str(error),
+                        )
                 next_status = "retrying" if should_retry else "failed"
                 if should_retry:
                     log_worker_transition(
@@ -2422,6 +2488,43 @@ class EntityPipelineWorker:
                 ).eq("id", batch_id).execute(),
                 context=f"finalize failed batch {batch_id}",
             )
+            failed_source_run = next(
+                (
+                    candidate
+                    for candidate in final_runs
+                    if str(candidate.get("status") or "").strip().lower() == "failed"
+                ),
+                None,
+            )
+            failed_metadata = failed_source_run.get("metadata") if isinstance(failed_source_run, dict) and isinstance(failed_source_run.get("metadata"), dict) else {}
+            if failed_source_run and failed_metadata.get("continue_pipeline_on_failure") is True:
+                latest_batch_metadata = self._batch_metadata(batch)
+                try:
+                    fetched_batch_metadata = self._get_batch_metadata(batch_id)
+                    if fetched_batch_metadata:
+                        latest_batch_metadata = fetched_batch_metadata
+                except Exception as error:
+                    logger.warning("Failed to fetch batch metadata for failed auto-advance %s: %s", batch_id, error)
+                auto_advance_result = self._queue_manifest_auto_advance(
+                    batch_id=batch_id,
+                    source_run=failed_source_run,
+                    batch_metadata=latest_batch_metadata,
+                )
+                if auto_advance_result:
+                    failed_batch_metadata = {
+                        **latest_batch_metadata,
+                        "auto_advance_next_batch_id": auto_advance_result["batch_id"],
+                        "auto_advance_next_entity_id": auto_advance_result["entity_id"],
+                        "auto_advance_next_entity_name": auto_advance_result["entity_name"],
+                        "auto_advance_next_entity_type": auto_advance_result["entity_type"],
+                        "auto_advance_state": "queued",
+                    }
+                    self._safe_execute(
+                        lambda: self.supabase.table("entity_import_batches").update(
+                            {"metadata": failed_batch_metadata}
+                        ).eq("id", batch_id).execute(),
+                        context=f"mark failed auto-advance batch {batch_id}",
+                    )
         else:
             self._safe_execute(
                 lambda: self.supabase.rpc(
@@ -2547,6 +2650,7 @@ def main() -> None:
         if should_process_in_process(QUEUE_MODE):
             raise SystemExit("ENTITY_IMPORT_QUEUE_MODE must be 'durable_worker' to run this worker")
         _write_supervisor_state("running")
+        normalize_pipeline_control_state_for_worker_start()
         worker = EntityPipelineWorker()
         worker.run_forever()
     except SystemExit:

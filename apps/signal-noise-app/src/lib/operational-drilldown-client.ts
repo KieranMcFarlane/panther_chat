@@ -32,6 +32,7 @@ type RuntimeRunSnapshot = {
   publication_status?: string | null
   retry_state?: string | null
   stop_reason?: string | null
+  continue_pipeline_on_failure?: boolean
   error_type?: string | null
   error_message?: string | null
   queue_state?: RuntimeRunState
@@ -52,6 +53,7 @@ export type OperationalQueueEntity = {
   freshness_state?: 'fresh' | 'stale' | null
   retry_state?: string | null
   stop_reason?: string | null
+  continue_pipeline_on_failure?: boolean
   stop_details?: Record<string, unknown> | null
   active_question_id?: string | null
   current_question_id?: string | null
@@ -330,7 +332,25 @@ export async function loadOperationalDrilldownPayload() {
 
 export async function refreshOperationalDrilldownPayload() {
   resetOperationalDrilldownCache()
-  return loadOperationalDrilldownPayload()
+  if (!inFlightOperationalDrilldownRequest) {
+    inFlightOperationalDrilldownRequest = fetch('/api/home/queue-drilldown?refresh=1', { cache: 'no-store' })
+      .then(async (response) => {
+        if (!response.ok) {
+          throw new Error('Failed to refresh operational drilldown')
+        }
+        const payload = await response.json() as OperationalDrilldownPayload
+        cachedOperationalDrilldownPayload = payload
+        cachedOperationalDrilldownFetchedAt = Date.now()
+        persistOperationalDrilldownPayload(payload)
+        notifyOperationalDrilldownListeners(payload)
+        return payload
+      })
+      .finally(() => {
+        inFlightOperationalDrilldownRequest = null
+      })
+  }
+
+  return inFlightOperationalDrilldownRequest
 }
 
 export function primeOperationalDrilldownPayload() {

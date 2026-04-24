@@ -5,6 +5,8 @@ from pathlib import Path
 from types import SimpleNamespace
 import time
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import entity_pipeline_worker as worker_module
@@ -26,6 +28,7 @@ from entity_pipeline_worker import (
     merge_cached_entity_properties,
     derive_discovery_context,
     derive_monitoring_summary,
+    normalize_pipeline_control_state_for_worker_start,
     resolve_pipeline_timeout,
     resolve_fastapi_url,
     read_pipeline_control_state,
@@ -254,15 +257,44 @@ def test_read_pipeline_control_state_defaults_to_running_when_missing(tmp_path, 
     assert read_pipeline_control_state()["is_paused"] is False
 
 
-def test_read_pipeline_control_state_reads_pause_file(tmp_path, monkeypatch):
+def test_read_pipeline_control_state_ignores_legacy_manual_pause_file(tmp_path, monkeypatch):
     control_path = tmp_path / "pipeline-control-state.json"
-    control_path.write_text('{"is_paused": true, "pause_reason": "Paused from Live Ops"}', encoding="utf-8")
+    control_path.write_text('{"is_paused": true, "pause_reason": "Paused from Live Ops", "requested_state": "paused", "observed_state": "paused", "transition_state": "paused"}', encoding="utf-8")
+    monkeypatch.setattr("entity_pipeline_worker.PIPELINE_CONTROL_STATE_PATH", control_path)
+
+    state = read_pipeline_control_state()
+
+    assert state["is_paused"] is False
+    assert state["pause_reason"] is None
+    assert state["requested_state"] == "running"
+    assert state["observed_state"] == "running"
+    assert state["transition_state"] == "running"
+
+
+def test_read_pipeline_control_state_preserves_worker_stop_pause_file(tmp_path, monkeypatch):
+    control_path = tmp_path / "pipeline-control-state.json"
+    control_path.write_text(
+        json.dumps(
+            {
+                "is_paused": True,
+                "pause_reason": "orchestrator unhealthy",
+                "stop_reason": "orchestrator_unhealthy",
+                "requested_state": "paused",
+                "observed_state": "paused",
+                "transition_state": "paused",
+                "desired_state": "paused",
+            }
+        ),
+        encoding="utf-8",
+    )
     monkeypatch.setattr("entity_pipeline_worker.PIPELINE_CONTROL_STATE_PATH", control_path)
 
     state = read_pipeline_control_state()
 
     assert state["is_paused"] is True
-    assert state["pause_reason"] == "Paused from Live Ops"
+    assert state["pause_reason"] == "orchestrator unhealthy"
+    assert state["stop_reason"] == "orchestrator_unhealthy"
+    assert state["requested_state"] == "paused"
 
 
 def test_read_pipeline_control_state_exposes_ignition_transition_fields(tmp_path, monkeypatch):
@@ -289,6 +321,96 @@ def test_read_pipeline_control_state_exposes_ignition_transition_fields(tmp_path
     assert state["observed_state"] == "starting"
     assert state["transition_state"] == "starting"
     assert state["desired_state"] == "running"
+
+
+def test_normalize_pipeline_control_state_for_worker_start_clears_saved_safety_stop(tmp_path, monkeypatch):
+    control_path = tmp_path / "pipeline-control-state.json"
+    control_path.write_text(
+        json.dumps(
+            {
+                "is_paused": True,
+                "pause_reason": "question retry exhausted",
+                "stop_reason": "question_retry_exhausted",
+                "stop_details": {
+                    "entity_name": "FC Porto",
+                    "question_id": "q11_decision_owner",
+                    "error_type": "http_404",
+                    "error_message": "HTTP Error 404: Not Found",
+                    "attempts": 2,
+                },
+                "requested_state": "paused",
+                "observed_state": "paused",
+                "transition_state": "paused",
+                "desired_state": "paused",
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr("entity_pipeline_worker.PIPELINE_CONTROL_STATE_PATH", control_path)
+
+    state = normalize_pipeline_control_state_for_worker_start("2026-04-24T02:40:00+00:00")
+
+    assert state["is_paused"] is False
+    assert state["pause_reason"] is None
+    assert state["stop_reason"] is None
+    assert state["stop_details"] is None
+    assert state["desired_state"] == "running"
+    assert state["requested_state"] == "running"
+    assert state["observed_state"] == "running"
+    assert state["transition_state"] == "running"
+    assert state["updated_at"] == "2026-04-24T02:40:00+00:00"
+
+
+def test_main_clears_saved_safety_stop_before_entering_worker_loop(tmp_path, monkeypatch):
+    control_path = tmp_path / "pipeline-control-state.json"
+    control_path.write_text(
+        json.dumps(
+            {
+                "is_paused": True,
+                "pause_reason": "question retry exhausted",
+                "stop_reason": "question_retry_exhausted",
+                "stop_details": {
+                    "entity_name": "FC Porto",
+                    "question_id": "q11_decision_owner",
+                    "attempts": 2,
+                },
+                "requested_state": "paused",
+                "observed_state": "paused",
+                "transition_state": "paused",
+                "desired_state": "paused",
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr("entity_pipeline_worker.PIPELINE_CONTROL_STATE_PATH", control_path)
+    monkeypatch.setattr(worker_module, "QUEUE_MODE", "durable_worker")
+
+    supervisor_states = []
+
+    def fake_write_supervisor_state(status, error=None, stopped_at=None):
+        supervisor_states.append((status, error, stopped_at))
+
+    class FakeWorker:
+        def run_forever(self):
+            raise SystemExit("stop after bootstrap")
+
+    monkeypatch.setattr(worker_module, "_write_supervisor_state", fake_write_supervisor_state)
+    monkeypatch.setattr(worker_module, "EntityPipelineWorker", FakeWorker)
+
+    with pytest.raises(SystemExit, match="stop after bootstrap"):
+        worker_module.main()
+
+    state = read_pipeline_control_state()
+
+    assert state["is_paused"] is False
+    assert state["pause_reason"] is None
+    assert state["stop_reason"] is None
+    assert state["stop_details"] is None
+    assert state["requested_state"] == "running"
+    assert state["observed_state"] == "running"
+    assert state["transition_state"] == "running"
+    assert supervisor_states[0][0] == "running"
+    assert supervisor_states[-1][0] == "stopped"
 
 
 def test_build_batch_claim_metadata_sets_worker_and_heartbeat_fields():
@@ -827,7 +949,10 @@ def test_claim_next_batch_returns_none_when_pipeline_is_paused(monkeypatch):
     worker.worker_id = "worker-1"
     worker.lease_seconds = 60
     worker.supabase = SimpleNamespace(rpc=lambda *_args, **_kwargs: None)
-    monkeypatch.setattr("entity_pipeline_worker.read_pipeline_control_state", lambda: {"is_paused": True, "pause_reason": "Paused from Live Ops"})
+    monkeypatch.setattr(
+        "entity_pipeline_worker.read_pipeline_control_state",
+        lambda: {"is_paused": True, "pause_reason": "orchestrator unhealthy", "stop_reason": "orchestrator_unhealthy"},
+    )
 
     claimed = worker.claim_next_batch()
 
@@ -2066,6 +2191,162 @@ def test_process_batch_marks_exhausted_retrying_run_failed_and_fails_batch():
     assert sync_calls, "expected failed cached-entity sync for exhausted retry"
     assert batch_updates[-1]["status"] == "failed"
     assert batch_updates[-1]["metadata"]["retry_state"] == "failed"
+
+
+@pytest.mark.parametrize(
+    ("status_code", "error_type"),
+    [
+        (403, "http_403"),
+        (404, "http_404"),
+        (422, "http_422"),
+    ],
+)
+def test_process_batch_nonblocking_http_client_failure_keeps_pipeline_running_and_auto_advances(monkeypatch, tmp_path, status_code, error_type):
+    control_path = tmp_path / "pipeline-control-state.json"
+    monkeypatch.setattr("entity_pipeline_worker.PIPELINE_CONTROL_STATE_PATH", control_path)
+
+    worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
+    worker._now_iso = lambda: "2026-04-24T03:00:00+00:00"
+    worker._batch_metadata = lambda batch: batch.get("metadata", {})
+    worker._get_batch_metadata = lambda batch_id: {"queue_mode": "durable_worker"}
+    worker.refresh_batch_heartbeat = lambda batch_id, metadata=None: {
+        **(metadata or {}),
+        "heartbeat_at": "2026-04-24T03:00:00+00:00",
+    }
+    worker._start_batch_heartbeat = lambda batch_id, metadata=None: (
+        SimpleNamespace(set=lambda: None),
+        SimpleNamespace(join=lambda timeout=1: None),
+    )
+    worker.worker_id = "worker-404"
+    worker.lease_seconds = 60
+    worker.max_run_attempts = 1
+    worker.sync_cached_entity = lambda *args, **kwargs: None
+    worker._has_active_pipeline_run = lambda *_args, **_kwargs: False
+    worker._load_manifest_entities = lambda: [
+        {
+            "entity_id": "fc-porto",
+            "canonical_entity_id": "fc-porto",
+            "entity_name": "FC Porto",
+            "entity_type": "SPORT_CLUB",
+            "properties": {"name": "FC Porto"},
+        },
+        {
+            "entity_id": "fifa",
+            "canonical_entity_id": "fifa",
+            "entity_name": "FIFA",
+            "entity_type": "SPORT_FEDERATION",
+            "properties": {"name": "FIFA"},
+        },
+    ]
+
+    error = worker_module.HTTPError(
+        url="http://127.0.0.1:8000/api/pipeline/run-entity",
+        code=status_code,
+        msg="Not Found",
+        hdrs=None,
+        fp=None,
+    )
+    worker.call_pipeline = lambda run, batch_id: (_ for _ in ()).throw(error)
+    worker._get_run_metadata = lambda batch_id, entity_id: {
+        "attempt_count": 0,
+        "rerun_mode": "question",
+        "question_id": "q11_decision_owner",
+        "canonical_entity_id": "fc-porto",
+    }
+    worker._get_batch_record = lambda batch_id: {"id": batch_id, "status": "running", "metadata": {"queue_mode": "durable_worker"}}
+
+    run_updates = []
+    worker.update_run = lambda batch_id, entity_id, payload: run_updates.append(payload)
+
+    inserted_batches = []
+    inserted_runs = []
+    batch_updates = []
+    rpc_calls = []
+
+    class FakeRpcQuery:
+        def __init__(self, name, params):
+            self.name = name
+            self.params = params
+
+        def execute(self):
+            rpc_calls.append((self.name, self.params))
+            return SimpleNamespace(data=[])
+
+    class FakeQuery:
+        def __init__(self, table_name):
+            self.table_name = table_name
+            self.payload = None
+            self.action = None
+
+        def insert(self, payload):
+            self.action = "insert"
+            self.payload = payload
+            return self
+
+        def update(self, payload):
+            self.action = "update"
+            self.payload = payload
+            return self
+
+        def select(self, *_args, **_kwargs):
+            return self
+
+        def eq(self, *_args, **_kwargs):
+            return self
+
+        def in_(self, *_args, **_kwargs):
+            return self
+
+        def limit(self, *_args, **_kwargs):
+            return self
+
+        def execute(self):
+            if self.table_name == "entity_import_batches" and self.action == "insert":
+                inserted_batches.append(self.payload)
+            elif self.table_name == "entity_pipeline_runs" and self.action == "insert":
+                inserted_runs.append(self.payload)
+            elif self.table_name == "entity_import_batches" and self.action == "update":
+                batch_updates.append(self.payload)
+            return SimpleNamespace(data=[])
+
+    worker.supabase = SimpleNamespace(
+        table=lambda name: FakeQuery(name),
+        rpc=lambda name, params: FakeRpcQuery(name, params),
+    )
+
+    run = {
+        "batch_id": "batch-404",
+        "entity_id": "fc-porto",
+        "canonical_entity_id": "fc-porto",
+        "entity_name": "FC Porto",
+        "status": "running",
+        "phase": "entity_registration",
+        "metadata": {
+            "rerun_mode": "question",
+            "question_id": "q11_decision_owner",
+            "canonical_entity_id": "fc-porto",
+        },
+    }
+    states = [[run], [{"entity_id": "fc-porto", "status": "failed", "metadata": {"continue_pipeline_on_failure": True}}]]
+    worker.get_batch_runs = lambda batch_id: states.pop(0)
+
+    batch = {"id": "batch-404", "metadata": {"queue_mode": "durable_worker"}}
+    worker.process_batch(batch)
+
+    control_state = read_pipeline_control_state()
+
+    assert run_updates[-1]["status"] == "failed"
+    assert run_updates[-1]["metadata"]["retry_state"] == "failed"
+    assert run_updates[-1]["metadata"]["continue_pipeline_on_failure"] is True
+    assert run_updates[-1]["metadata"]["last_error_type"] == error_type
+    assert control_state["is_paused"] is False
+    assert control_state["stop_reason"] is None
+    assert inserted_batches, "expected next manifest entity to be queued after non-blocking 404 failure"
+    assert inserted_batches[-1]["metadata"]["source"] == "manifest_auto_advance"
+    assert inserted_batches[-1]["metadata"]["auto_advance_from_entity_id"] == "fc-porto"
+    assert inserted_runs[-1][0]["entity_id"] == "fifa"
+    assert any(call[0] == "fail_entity_pipeline_run" for call in rpc_calls)
+    assert any(update.get("metadata", {}).get("auto_advance_next_entity_id") == "fifa" for update in batch_updates)
 
 
 def test_process_batch_marks_run_completed_when_supabase_publishes_but_falkordb_requires_reconciliation():

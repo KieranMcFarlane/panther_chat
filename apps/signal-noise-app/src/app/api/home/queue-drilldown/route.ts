@@ -21,6 +21,11 @@ const manifestSortKey = Array.isArray(scaleManifestData?.sort_key)
   : []
 
 export const dynamic = 'force-dynamic'
+const ROUTE_CACHE_TTL_MS = 4_000
+
+let cachedQueueDrilldownPayload: Record<string, unknown> | null = null
+let cachedQueueDrilldownFetchedAt = 0
+let inFlightQueueDrilldownBuild: Promise<Record<string, unknown>> | null = null
 
 type ManifestEntity = {
   entity_id: string
@@ -44,6 +49,7 @@ type QueueEntityRecord = {
   freshness_state?: OperationalHeartbeatFreshness | null
   retry_state?: string | null
   stop_reason?: string | null
+  continue_pipeline_on_failure?: boolean
   stop_details?: Record<string, unknown> | null
   active_question_id?: string | null
   current_question_id?: string | null
@@ -87,6 +93,21 @@ type OperationalState = 'starting' | 'running' | 'retrying' | 'skipping' | 'stop
 
 type LiveOperationalState = 'starting' | 'running' | 'retrying' | 'reconciling' | 'published_degraded' | 'stopping' | 'paused' | 'stopped' | 'waiting'
 
+function isQueueDrilldownCacheFresh(now = Date.now()) {
+  return Boolean(cachedQueueDrilldownPayload) && (now - cachedQueueDrilldownFetchedAt) < ROUTE_CACHE_TTL_MS
+}
+
+function isTransientReadTimeout(error: unknown) {
+  const message = error instanceof Error ? error.message : String(error || '')
+  return message.toLowerCase().includes('connection timeout')
+}
+
+export function __resetQueueDrilldownRouteCacheForTests() {
+  cachedQueueDrilldownPayload = null
+  cachedQueueDrilldownFetchedAt = 0
+  inFlightQueueDrilldownBuild = null
+}
+
 function dedupeByEntityId<T extends { entity_id: string }>(items: T[]) {
   const seen = new Set<string>()
   const deduped: T[] = []
@@ -96,6 +117,21 @@ function dedupeByEntityId<T extends { entity_id: string }>(items: T[]) {
     deduped.push(item)
   }
   return deduped
+}
+
+function applyCanonicalQueuePositions<T extends { entity_id: string; queue_position?: number | null }>(
+  items: T[],
+  canonicalQueuePositionByEntityId: Map<string, number>,
+) {
+  return items.map((item) => {
+    if (typeof item.queue_position === 'number') {
+      return item
+    }
+    const queuePosition = canonicalQueuePositionByEntityId.get(item.entity_id)
+    return typeof queuePosition === 'number'
+      ? { ...item, queue_position: queuePosition }
+      : item
+  })
 }
 
 function toText(value: unknown): string {
@@ -287,6 +323,10 @@ function toQueueRecord(row: Record<string, unknown>): QueueEntityRecord {
       || toText(metadata.current_execution_state)
       || toText(metadata.current_substep_label)
       || toText(metadata.quality_summary)
+      || toText(metadata.error_message)
+      || toText((metadata.stop_details && typeof metadata.stop_details === 'object'
+        ? (metadata.stop_details as Record<string, unknown>).error_message
+        : null))
       || (toText(metadata.active_question_id) ? `Running ${toText(metadata.active_question_id)}` : null),
     generated_at: toText(row.completed_at ?? row.started_at) || null,
     started_at: toText(row.started_at) || null,
@@ -296,6 +336,7 @@ function toQueueRecord(row: Record<string, unknown>): QueueEntityRecord {
     freshness_state: heartbeat.freshness_state,
     retry_state: toText(metadata.retry_state) || null,
     stop_reason: toText(metadata.stop_reason) || null,
+    continue_pipeline_on_failure: metadata.continue_pipeline_on_failure === true,
     stop_details: metadata.stop_details && typeof metadata.stop_details === 'object'
       ? metadata.stop_details as Record<string, unknown>
       : null,
@@ -464,6 +505,7 @@ function buildQueueEntityFromRuntimeRun(
     freshness_state: runtimeRun.queue_state === 'worker_stale' ? 'stale' : 'fresh',
     retry_state: runtimeRun.retry_state || null,
     stop_reason: runtimeRun.stop_reason || null,
+    continue_pipeline_on_failure: runtimeRun.continue_pipeline_on_failure === true,
     stop_details: runtimeRun.error_message ? { error_message: runtimeRun.error_message } : null,
     active_question_id: runtimeRun.current_question_id || null,
     current_question_id: runtimeRun.current_question_id || null,
@@ -542,7 +584,7 @@ function deriveLiveState(
   return 'waiting'
 }
 
-export async function GET() {
+async function buildQueueDrilldownPayload() {
   const manifestPayload = (scaleManifestData || null) as Record<string, unknown> | null
   const manifestEntities = Array.isArray(manifestPayload?.entities)
     ? manifestPayload.entities as ManifestEntity[]
@@ -558,7 +600,15 @@ export async function GET() {
     .filter((row) => ['queued', 'claiming', 'running', 'retrying'].includes(toText(row.status).toLowerCase()))
     .slice(0, 8) as Record<string, unknown>[]
   const completedRuns = runtimeReadSet.rows
-    .filter((row) => toText(row.status).toLowerCase() === 'completed')
+    .filter((row) => {
+      const status = toText(row.status).toLowerCase()
+      if (status === 'completed') return true
+      if (status !== 'failed') return false
+      const metadata = row.metadata && typeof row.metadata === 'object'
+        ? row.metadata as Record<string, unknown>
+        : {}
+      return metadata.continue_pipeline_on_failure === true
+    })
     .slice(0, 8) as Record<string, unknown>[]
   const dossierRows = runtimeReadSet.dossiers as DossierRecord[]
   const dossierLookup = buildDossierLookup(dossierRows)
@@ -605,6 +655,7 @@ export async function GET() {
   })))
   const resumeNeededEntities = dedupeByEntityId(
     completedEntities
+      .filter((item) => item.continue_pipeline_on_failure !== true)
       .filter((item) => shouldSurfaceResumeNeeded(item, activeBatchIds))
       .map((item) => ({
         ...item,
@@ -628,6 +679,11 @@ export async function GET() {
     source_entity_name: entity.entity_name,
     source_entity_type: entity.entity_type,
   }))
+  const canonicalQueuePositionByEntityId = new Map(
+    canonicalManifestEntities.map((entity, index) => [entity.entity_id, index + 1] as const),
+  )
+  const positionedCompletedEntities = applyCanonicalQueuePositions(completedEntities, canonicalQueuePositionByEntityId)
+  const positionedResumeNeededEntities = applyCanonicalQueuePositions(resumeNeededEntities, canonicalQueuePositionByEntityId)
   const upcomingEntities = canonicalManifestEntities
     .filter((entity) => !seenEntityIds.has(entity.entity_id))
     .slice(0, 8)
@@ -704,7 +760,10 @@ export async function GET() {
         : 'Rerun dossier',
     }))
   )
-  const dedupedBlockedEntities = dedupeByEntityId(blockedEntities)
+  const dedupedBlockedEntities = applyCanonicalQueuePositions(
+    dedupeByEntityId(blockedEntities),
+    canonicalQueuePositionByEntityId,
+  )
     .slice(0, 8)
   const backlogHealth = buildBacklogHealth(runtimeSnapshot, staleActiveRows)
   const liveState = deriveLiveState(runtimeSnapshot, control)
@@ -800,7 +859,7 @@ export async function GET() {
   const visibleRetryingEntity = hasFreshRunningEntities ? retryingEntity : null
   const visibleInProgressEntity = liveInProgressEntity || (hasFreshRunningEntities ? inProgressEntity : null)
   const latestNoteworthyEntityFromCompleted = runtimeLatestNoteworthyRun
-    ? completedEntities.find((item) => (
+    ? positionedCompletedEntities.find((item) => (
       (runtimeLatestNoteworthyRun.batch_id && toText(item.batch_id) === toText(runtimeLatestNoteworthyRun.batch_id))
       || toText(item.entity_id) === toText(runtimeLatestNoteworthyRun.canonical_entity_id || runtimeLatestNoteworthyRun.entity_id)
     )) || visibleStaleActiveRows.find((item) => (
@@ -838,10 +897,10 @@ export async function GET() {
     currentRun: visibleInProgressEntity,
     runningEntities: visibleRunningEntities,
     staleActiveRows: latestNoteworthyEntity ? [latestNoteworthyEntity, ...visibleStaleActiveRows] : visibleStaleActiveRows,
-    completedEntities,
+    completedEntities: positionedCompletedEntities,
   })
 
-  return NextResponse.json({
+  return {
     snapshot_at: runtimeSnapshot.snapshot_at,
     last_activity_at: freshnessCheckpoint.last_activity_at,
     freshness_state: freshnessCheckpoint.freshness_state,
@@ -877,7 +936,7 @@ export async function GET() {
     loop_status: {
       universe_count: universeCount,
       total_scheduled: manifestEntities.length,
-      completed: completedEntities.length,
+      completed: positionedCompletedEntities.filter((item) => toText(item.status).toLowerCase() === 'completed').length,
       failed: 0,
       retryable_failures: 0,
       quality_counts: {
@@ -890,7 +949,7 @@ export async function GET() {
         running: visibleRunningEntities.length,
         stalled: visibleStaleActiveRows.length,
         retryable: visibleRetryingEntity ? 1 : 0,
-        resume_needed: resumeNeededEntities.length,
+        resume_needed: positionedResumeNeededEntities.length,
       },
     },
     queue: {
@@ -898,12 +957,41 @@ export async function GET() {
       running_entities: visibleRunningEntities,
       stale_active_rows: visibleStaleActiveRows,
       latest_noteworthy_entity: latestNoteworthyEntity,
-      completed_entities: completedEntities,
-      resume_needed_entities: resumeNeededEntities,
+      completed_entities: positionedCompletedEntities,
+      resume_needed_entities: positionedResumeNeededEntities,
       upcoming_entities: upcomingEntities,
     },
     dossier_quality: {
       incomplete_entities: dedupedBlockedEntities,
     },
-  })
+  }
+}
+
+export async function GET(request?: Request) {
+  const requestUrl = request?.url ? new URL(request.url) : null
+  const forceRefresh = requestUrl?.searchParams.get('refresh') === '1'
+
+  if (!forceRefresh && isQueueDrilldownCacheFresh()) {
+    return NextResponse.json(cachedQueueDrilldownPayload)
+  }
+
+  if (!inFlightQueueDrilldownBuild) {
+    inFlightQueueDrilldownBuild = buildQueueDrilldownPayload()
+      .then((payload) => {
+        cachedQueueDrilldownPayload = payload
+        cachedQueueDrilldownFetchedAt = Date.now()
+        return payload
+      })
+      .catch((error) => {
+        if (cachedQueueDrilldownPayload && isTransientReadTimeout(error)) {
+          return cachedQueueDrilldownPayload
+        }
+        throw error
+      })
+      .finally(() => {
+        inFlightQueueDrilldownBuild = null
+      })
+  }
+
+  return NextResponse.json(await inFlightQueueDrilldownBuild)
 }

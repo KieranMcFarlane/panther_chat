@@ -52,6 +52,7 @@ export type PipelineRuntimeRunRecord = {
   publication_status: string | null
   retry_state: string | null
   stop_reason: string | null
+  continue_pipeline_on_failure: boolean
   error_type: string | null
   error_message: string | null
   queue_state: 'queued' | 'running' | 'completed' | 'retrying' | 'reconciling' | 'published_degraded' | 'failed_terminal' | 'worker_stale'
@@ -438,6 +439,7 @@ function toRuntimeRecord(
     publication_status: toText(metadata.publication_status) || null,
     retry_state: toText(metadata.retry_state) || null,
     stop_reason: toText(metadata.stop_reason) || null,
+    continue_pipeline_on_failure: metadata.continue_pipeline_on_failure === true,
     error_type: toText(metadata.error_type || metadata.failure_type) || null,
     error_message: toText(metadata.error_message || stopDetails?.error_message || stopDetails?.message) || null,
     queue_state: queueState,

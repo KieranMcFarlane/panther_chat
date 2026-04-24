@@ -21,7 +21,7 @@ test('operational status hero centralizes action-first state copy', async () => 
   assert.match(heroSource, /Strategy/)
   assert.match(heroSource, /Source order/)
   assert.match(heroSource, /marqueeLine/)
-  assert.match(heroSource, /const currentCheckpoint = currentLiveRun \|\| inProgressEntity/)
+  assert.match(heroSource, /const currentCheckpoint = activeExecutionCheckpoint \|\| \(pipelinePaused \? pausedCheckpoint : null\)/)
   assert.match(heroSource, /currentCheckpoint\.current_question_text/)
   assert.match(heroSource, /No active worker/)
   assert.match(heroSource, /Historical stale backlog remains/)

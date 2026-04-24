@@ -27,7 +27,7 @@ async function loadQueueDrilldownRouteModule() {
   await writeFile(stubs.nextServer, [
     'export const NextResponse = {',
     '  json(payload) {',
-    '    return { payload, async json() { return payload } }',
+    '    return { status: 200, payload, async json() { return payload } }',
     '  },',
     '}',
     '',
@@ -68,6 +68,8 @@ async function loadQueueDrilldownRouteModule() {
 
   await writeFile(stubs.pipelineRuntime, [
     'export async function loadPipelineRuntimeReadSet() {',
+    '  globalThis.__queueDrilldownReadSetCount = (globalThis.__queueDrilldownReadSetCount || 0) + 1',
+    '  if (globalThis.__queueDrilldownThrowOnReadSet) throw new Error(globalThis.__queueDrilldownThrowOnReadSet)',
     '  return globalThis.__queueDrilldownTestReadSet',
     '}',
     'export function buildPipelineRuntimeSnapshot() {',
@@ -129,9 +131,10 @@ async function loadQueueDrilldownRouteModule() {
   return import(`${pathToFileURL(tempPath).href}?t=${Date.now()}`)
 }
 
-const { GET } = await loadQueueDrilldownRouteModule()
+const { GET, __resetQueueDrilldownRouteCacheForTests } = await loadQueueDrilldownRouteModule()
 
 test('queue drilldown stays waiting when control and worker are running but only stale rows remain', async () => {
+  __resetQueueDrilldownRouteCacheForTests()
   const staleHeartbeatAt = new Date(Date.now() - 15 * 60_000).toISOString()
   const staleStartedAt = new Date(Date.now() - 20 * 60_000).toISOString()
 
@@ -245,6 +248,7 @@ test('queue drilldown stays waiting when control and worker are running but only
 })
 
 test('queue drilldown reports worker heartbeat stale when control says running but the worker crashed and only stale rows remain', async () => {
+  __resetQueueDrilldownRouteCacheForTests()
   const staleHeartbeatAt = new Date(Date.now() - 15 * 60_000).toISOString()
   const staleStartedAt = new Date(Date.now() - 20 * 60_000).toISOString()
 
@@ -344,6 +348,7 @@ test('queue drilldown reports worker heartbeat stale when control says running b
 })
 
 test('queue drilldown surfaces resumable terminal work as resume-needed instead of silently completed', async () => {
+  __resetQueueDrilldownRouteCacheForTests()
   const completedAt = new Date(Date.now() - 2 * 60_000).toISOString()
 
   globalThis.__queueDrilldownTestReadSet = {
@@ -375,9 +380,9 @@ test('queue drilldown surfaces resumable terminal work as resume-needed instead 
     rows: [
       {
         batch_id: 'batch_completed',
-        entity_id: 'arsenal',
-        canonical_entity_id: 'arsenal',
-        entity_name: 'Arsenal',
+        entity_id: 'fc-porto',
+        canonical_entity_id: 'fc-porto',
+        entity_name: 'FC Porto',
         status: 'completed',
         phase: 'dossier_generation',
         started_at: new Date(Date.now() - 8 * 60_000).toISOString(),
@@ -402,9 +407,9 @@ test('queue drilldown surfaces resumable terminal work as resume-needed instead 
     current_live_run: null,
     latest_noteworthy_run: {
       batch_id: 'batch_completed',
-      entity_id: 'arsenal',
-      canonical_entity_id: 'arsenal',
-      entity_name: 'Arsenal',
+      entity_id: 'fc-porto',
+      canonical_entity_id: 'fc-porto',
+      entity_name: 'FC Porto',
       phase: 'dossier_generation',
       queue_state: 'completed',
       heartbeat_at: completedAt,
@@ -429,6 +434,274 @@ test('queue drilldown surfaces resumable terminal work as resume-needed instead 
   assert.equal(payload.operational_state, 'paused')
   assert.equal(payload.loop_status.runtime_counts.resume_needed, 1)
   assert.equal(payload.queue.resume_needed_entities.length, 1)
-  assert.equal(payload.queue.resume_needed_entities[0]?.entity_name, 'Arsenal')
+  assert.equal(payload.queue.resume_needed_entities[0]?.entity_name, 'FC Porto')
   assert.equal(payload.queue.resume_needed_entities[0]?.next_repair_question_id, 'q11_decision_owner')
+  assert.equal(payload.queue.resume_needed_entities[0]?.queue_position, 1)
+})
+
+test('queue drilldown treats non-blocking failed entities as history instead of resume-needed work', async () => {
+  __resetQueueDrilldownRouteCacheForTests()
+  const now = new Date().toISOString()
+  const failedAt = new Date(Date.now() - 2 * 60_000).toISOString()
+
+  globalThis.__queueDrilldownTestReadSet = {
+    snapshot_at: now,
+    control: {
+      is_paused: false,
+      pause_reason: null,
+      stop_reason: null,
+      stop_details: null,
+      updated_at: now,
+      desired_state: 'running',
+      requested_state: 'running',
+      observed_state: 'running',
+      transition_state: 'running',
+    },
+    worker: {
+      worker_process_state: 'running',
+      worker_health: 'healthy',
+      worker_pid: 321,
+      worker_command: 'npm run worker:entity-pipeline',
+      worker_state_path: '/tmp/state.json',
+      worker_pid_path: '/tmp/pid',
+      started_at: new Date(Date.now() - 10 * 60_000).toISOString(),
+      stopped_at: null,
+      updated_at: now,
+      last_error: null,
+    },
+    fastmcp: { reachable: true },
+    rows: [
+      {
+        batch_id: 'batch-fc-porto',
+        entity_id: 'fc-porto',
+        canonical_entity_id: 'fc-porto',
+        entity_name: 'FC Porto',
+        status: 'failed',
+        phase: 'entity_registration',
+        started_at: new Date(Date.now() - 3 * 60_000).toISOString(),
+        completed_at: failedAt,
+        metadata: {
+          continue_pipeline_on_failure: true,
+          error_message: 'HTTP Error 403: Forbidden',
+          error_type: 'http_403',
+          current_question_id: 'q11_decision_owner',
+        },
+      },
+      {
+        batch_id: 'batch-wei-chuan',
+        entity_id: 'wei-chuan-dragons',
+        canonical_entity_id: 'wei-chuan-dragons',
+        entity_name: 'Wei Chuan Dragons',
+        status: 'queued',
+        phase: 'entity_registration',
+        started_at: now,
+        completed_at: null,
+        metadata: {},
+      },
+    ],
+    dossiers: [],
+  }
+
+  globalThis.__queueDrilldownTestRuntimeSnapshot = {
+    snapshot_at: now,
+    generated_at: now,
+    control: globalThis.__queueDrilldownTestReadSet.control,
+    worker: globalThis.__queueDrilldownTestReadSet.worker,
+    fastmcp: { reachable: true },
+    queue_depth: 1,
+    current_run: {
+      batch_id: 'batch-wei-chuan',
+      entity_id: 'wei-chuan-dragons',
+      canonical_entity_id: 'wei-chuan-dragons',
+      entity_name: 'Wei Chuan Dragons',
+      phase: 'entity_registration',
+      queue_state: 'queued',
+      heartbeat_at: now,
+      continue_pipeline_on_failure: false,
+    },
+    current_live_run: {
+      batch_id: 'batch-wei-chuan',
+      entity_id: 'wei-chuan-dragons',
+      canonical_entity_id: 'wei-chuan-dragons',
+      entity_name: 'Wei Chuan Dragons',
+      phase: 'entity_registration',
+      queue_state: 'queued',
+      heartbeat_at: now,
+      continue_pipeline_on_failure: false,
+    },
+    latest_noteworthy_run: {
+      batch_id: 'batch-fc-porto',
+      entity_id: 'fc-porto',
+      canonical_entity_id: 'fc-porto',
+      entity_name: 'FC Porto',
+      phase: 'entity_registration',
+      queue_state: 'failed_terminal',
+      heartbeat_at: failedAt,
+      current_question_id: 'q11_decision_owner',
+      error_message: 'HTTP Error 403: Forbidden',
+      continue_pipeline_on_failure: true,
+    },
+    recent_failures: [],
+    failure_buckets: {
+      queued: 1,
+      running: 0,
+      completed: 0,
+      retrying: 0,
+      reconciling: 0,
+      published_degraded: 0,
+      failed_terminal: 1,
+      worker_stale: 0,
+    },
+  }
+
+  const response = await GET()
+  const payload = await response.json()
+
+  assert.equal(payload.operational_state, 'running')
+  assert.equal(payload.stop_reason, null)
+  assert.equal(payload.queue.resume_needed_entities.length, 0)
+  assert.equal(payload.queue.in_progress_entity?.entity_name, 'Wei Chuan Dragons')
+  assert.equal(payload.queue.completed_entities[0]?.entity_name, 'FC Porto')
+  assert.equal(payload.queue.completed_entities[0]?.continue_pipeline_on_failure, true)
+})
+
+test('queue drilldown reuses a fresh route snapshot instead of rebuilding immediately on repeated GETs', async () => {
+  __resetQueueDrilldownRouteCacheForTests()
+  globalThis.__queueDrilldownReadSetCount = 0
+  globalThis.__queueDrilldownThrowOnReadSet = null
+  const snapshotAt = new Date().toISOString()
+
+  globalThis.__queueDrilldownTestReadSet = {
+    snapshot_at: snapshotAt,
+    control: {
+      is_paused: false,
+      pause_reason: null,
+      stop_reason: null,
+      stop_details: null,
+      updated_at: snapshotAt,
+      desired_state: 'running',
+      requested_state: 'running',
+      observed_state: 'running',
+      transition_state: 'running',
+    },
+    worker: {
+      worker_process_state: 'running',
+      worker_health: 'healthy',
+      worker_pid: 123,
+      worker_command: 'npm run worker:entity-pipeline',
+      worker_state_path: '/tmp/state.json',
+      worker_pid_path: '/tmp/pid',
+      started_at: snapshotAt,
+      stopped_at: null,
+      updated_at: snapshotAt,
+      last_error: null,
+    },
+    fastmcp: { reachable: true },
+    rows: [],
+    dossiers: [],
+  }
+
+  globalThis.__queueDrilldownTestRuntimeSnapshot = {
+    snapshot_at: snapshotAt,
+    generated_at: snapshotAt,
+    control: globalThis.__queueDrilldownTestReadSet.control,
+    worker: globalThis.__queueDrilldownTestReadSet.worker,
+    fastmcp: { reachable: true },
+    queue_depth: 0,
+    current_run: null,
+    current_live_run: null,
+    latest_noteworthy_run: null,
+    recent_failures: [],
+    failure_buckets: {
+      queued: 0,
+      running: 0,
+      completed: 0,
+      retrying: 0,
+      reconciling: 0,
+      published_degraded: 0,
+      failed_terminal: 0,
+      worker_stale: 0,
+    },
+  }
+
+  const first = await GET()
+  const second = await GET()
+  const firstPayload = await first.json()
+  const secondPayload = await second.json()
+
+  assert.equal(globalThis.__queueDrilldownReadSetCount, 1)
+  assert.equal(firstPayload.snapshot_at, snapshotAt)
+  assert.equal(secondPayload.snapshot_at, snapshotAt)
+})
+
+test('queue drilldown serves the last good payload when a refresh hits a transient read timeout', async () => {
+  __resetQueueDrilldownRouteCacheForTests()
+  globalThis.__queueDrilldownReadSetCount = 0
+  globalThis.__queueDrilldownThrowOnReadSet = null
+  const snapshotAt = new Date().toISOString()
+
+  globalThis.__queueDrilldownTestReadSet = {
+    snapshot_at: snapshotAt,
+    control: {
+      is_paused: false,
+      pause_reason: null,
+      stop_reason: null,
+      stop_details: null,
+      updated_at: snapshotAt,
+      desired_state: 'running',
+      requested_state: 'running',
+      observed_state: 'running',
+      transition_state: 'running',
+    },
+    worker: {
+      worker_process_state: 'running',
+      worker_health: 'healthy',
+      worker_pid: 123,
+      worker_command: 'npm run worker:entity-pipeline',
+      worker_state_path: '/tmp/state.json',
+      worker_pid_path: '/tmp/pid',
+      started_at: snapshotAt,
+      stopped_at: null,
+      updated_at: snapshotAt,
+      last_error: null,
+    },
+    fastmcp: { reachable: true },
+    rows: [],
+    dossiers: [],
+  }
+
+  globalThis.__queueDrilldownTestRuntimeSnapshot = {
+    snapshot_at: snapshotAt,
+    generated_at: snapshotAt,
+    control: globalThis.__queueDrilldownTestReadSet.control,
+    worker: globalThis.__queueDrilldownTestReadSet.worker,
+    fastmcp: { reachable: true },
+    queue_depth: 0,
+    current_run: null,
+    current_live_run: null,
+    latest_noteworthy_run: null,
+    recent_failures: [],
+    failure_buckets: {
+      queued: 0,
+      running: 0,
+      completed: 0,
+      retrying: 0,
+      reconciling: 0,
+      published_degraded: 0,
+      failed_terminal: 0,
+      worker_stale: 0,
+    },
+  }
+
+  const first = await GET()
+  const firstPayload = await first.json()
+
+  globalThis.__queueDrilldownThrowOnReadSet = 'Connection terminated due to connection timeout'
+  const refreshed = await GET(new Request('http://localhost:3005/api/home/queue-drilldown?refresh=1'))
+  const refreshedPayload = await refreshed.json()
+
+  assert.equal(firstPayload.snapshot_at, snapshotAt)
+  assert.equal(refreshed.status, 200)
+  assert.equal(refreshedPayload.snapshot_at, snapshotAt)
+  assert.equal(globalThis.__queueDrilldownReadSetCount, 2)
 })

@@ -28,6 +28,12 @@ const DEFAULT_CONTROL_STATE: PipelineControlState = {
   transition_state: 'running',
 }
 
+function isLegacyManualPauseState(parsed: Partial<PipelineControlState>) {
+  const stopReason = typeof parsed.stop_reason === 'string' ? parsed.stop_reason.trim().toLowerCase() : ''
+  const pauseReason = typeof parsed.pause_reason === 'string' ? parsed.pause_reason.trim().toLowerCase() : ''
+  return stopReason === 'manual_stop' || (!stopReason && (pauseReason === 'paused from live ops' || pauseReason === 'manual stop'))
+}
+
 function resolveControlStatePath() {
   return path.join(process.cwd(), 'tmp', 'pipeline-control-state.json')
 }
@@ -36,6 +42,14 @@ export async function readPipelineControlState(): Promise<PipelineControlState> 
   try {
     const raw = await readFile(resolveControlStatePath(), 'utf8')
     const parsed = JSON.parse(raw) as Partial<PipelineControlState>
+    if (isLegacyManualPauseState(parsed)) {
+      return {
+        ...DEFAULT_CONTROL_STATE,
+        updated_at: typeof parsed.updated_at === 'string' && parsed.updated_at.trim().length > 0
+          ? parsed.updated_at
+          : null,
+      }
+    }
     const requestedState = parsed.requested_state === 'paused' || parsed.is_paused === true ? 'paused' : 'running'
     const observedState = parsed.observed_state === 'starting'
       || parsed.observed_state === 'running'

@@ -49,9 +49,11 @@ test('home queue dashboard renders loop status, queue lanes, client-ready dossie
 test('live ops strip exposes compact ignition mode with expand and minimize controls', () => {
   assert.match(stripSource, /Expand|Minimize/)
   assert.match(stripSource, /maxHeight:\s*isExpanded \? '40rem' : '7rem', padding: '0.7rem'/)
-  assert.match(stripSource, /Start pipeline|Stop pipeline|Starting pipeline…|Stopping pipeline…/)
   assert.match(stripSource, /animate-marquee/)
+  assert.match(stripSource, /isSafetyStop \? compactTicker : null/)
   assert.match(stripSource, /Universe/)
+  assert.match(stripSource, /currentUniverseProgressLabel/)
+  assert.match(stripSource, /Fast MCP \${fastmcpHealth}/)
   assert.match(stripSource, /Running now/)
   assert.match(stripSource, /Blocked \/ partial/)
   assert.match(stripSource, /Recent completions/)
@@ -64,6 +66,8 @@ test('live ops strip exposes compact ignition mode with expand and minimize cont
   assert.match(stripSource, /Stale \/ blocked/)
   assert.match(stripSource, /Completed/)
   assert.match(stripSource, /Recommended/)
+  assert.match(stripSource, /runtimeCheckpointFailed/)
+  assert.match(stripSource, /getOperationalStopDetails/)
   assert.match(stripSource, /Issue detected/)
   assert.match(stripSource, /System details/)
   assert.match(stripSource, /Current question:/)
@@ -71,6 +75,7 @@ test('live ops strip exposes compact ignition mode with expand and minimize cont
   assert.doesNotMatch(stripSource, /requested: .*acknowledged: .*running: .*paused:/i)
   assert.doesNotMatch(stripSource, /No entity is actively running right now/)
   assert.doesNotMatch(stripSource, /No entities are currently running\./)
+  assert.doesNotMatch(stripSource, /Start pipeline intake|Stop pipeline intake/)
 })
 
 test('home queue dashboard API exposes the normalized payload contract for loop status, queue, dossiers, rfp cards, and sales summary', () => {
