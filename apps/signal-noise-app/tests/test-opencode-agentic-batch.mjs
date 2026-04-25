@@ -35,7 +35,7 @@ const CANONICAL_PARITY_SMOKE_SOURCE = join(
   'canonical_two_question_parity_smoke.json',
 );
 
-test('buildOpenCodeConfig wires Z.AI API GLM 5.1 and BrightData MCP for OpenCode', async () => {
+test('buildOpenCodeConfig wires Z.AI coding plan GLM-5 and BrightData MCP for OpenCode', async () => {
   const previousZaiApiKey = process.env.ZAI_API_KEY;
   const previousBrightDataToken = process.env.BRIGHTDATA_API_TOKEN;
   process.env.ZAI_API_KEY = 'test-zai-token';
@@ -45,21 +45,21 @@ test('buildOpenCodeConfig wires Z.AI API GLM 5.1 and BrightData MCP for OpenCode
   });
 
   assert.equal(config.$schema, 'https://opencode.ai/config.json');
-  assert.equal(config.model, 'zai-api/glm-5.1');
-  assert.equal(config.provider['zai-api'].npm, '@ai-sdk/openai-compatible');
-  assert.equal(config.provider['zai-api'].name, 'Z.AI API');
-  assert.equal(config.provider['zai-api'].options.baseURL, 'https://api.z.ai/api/paas/v4');
-  assert.equal(config.provider['zai-api'].options.apiKey, '{env:ZAI_API_KEY}');
-  assert.equal(config.provider['zai-api'].models['glm-5.1'].id, 'GLM-5.1');
-  assert.equal(config.provider['zai-api'].models['glm-5.1'].name, 'GLM-5.1');
-  assert.equal(config.provider['zai-api'].models['glm-5.1'].limit.output, 16384);
+  assert.equal(config.model, 'zai-coding-plan/glm-5');
+  assert.equal(config.provider['zai-coding-plan'].npm, '@ai-sdk/anthropic');
+  assert.equal(config.provider['zai-coding-plan'].name, 'Z.AI Coding Plan');
+  assert.equal(config.provider['zai-coding-plan'].options.baseURL, 'https://api.z.ai/api/anthropic/v1');
+  assert.equal(config.provider['zai-coding-plan'].options.apiKey, '{env:ZAI_API_KEY}');
+  assert.equal(config.provider['zai-coding-plan'].models['glm-5'].id, 'GLM-5');
+  assert.equal(config.provider['zai-coding-plan'].models['glm-5'].name, 'GLM-5');
+  assert.equal(config.provider['zai-coding-plan'].models['glm-5'].limit.output, 16384);
   assert.ok(config.mcp.brightData);
   assert.equal(config.mcp.brightData.type, 'remote');
   assert.equal(config.mcp.brightData.enabled, true);
   assert.equal(config.mcp.brightData.url, 'http://127.0.0.1:8000/mcp/');
   assert.equal(config.mcp.brightData.timeout, 15000);
   assert.equal(config.agent.discovery.steps, 4);
-  assert.equal(config.agent.discovery.model, 'zai-api/glm-5.1');
+  assert.equal(config.agent.discovery.model, 'zai-coding-plan/glm-5');
   assert.deepEqual(config.tools, { 'brightData*': false, 'brightdata*': false });
   assert.deepEqual(config.agent.build.tools, { 'brightData*': true, 'brightdata*': true });
   assert.deepEqual(config.agent.discovery.tools, { 'brightData*': true, 'brightdata*': true });
@@ -99,9 +99,9 @@ test('prepareOpenCodeRunWorkspace materializes repo-local OpenCode MCP config', 
     const config = JSON.parse(readFileSync(configPath, 'utf8'));
 
     assert.notEqual(prepared.cwd, workspaceRoot);
-    assert.equal(config.model, 'zai-api/glm-5.1');
-    assert.equal(config.provider['zai-api'].options.baseURL, 'https://api.z.ai/api/paas/v4');
-    assert.equal(config.provider['zai-api'].options.apiKey, '{env:ZAI_API_KEY}');
+    assert.equal(config.model, 'zai-coding-plan/glm-5');
+    assert.equal(config.provider['zai-coding-plan'].options.baseURL, 'https://api.z.ai/api/anthropic/v1');
+    assert.equal(config.provider['zai-coding-plan'].options.apiKey, '{env:ZAI_API_KEY}');
     assert.ok(config.mcp.brightData);
     assert.equal(config.mcp.brightData.type, 'remote');
     assert.equal(config.mcp.brightData.url, 'http://127.0.0.1:8000/mcp/');
@@ -655,6 +655,7 @@ test('buildOpenCodeRunArgs selects the build agent so BrightData tools are enabl
   const args = buildOpenCodeRunArgs({ question_id: 'q6_launch_signal' }, prompt);
 
   assert.deepEqual(args.slice(0, 4), ['run', '--format', 'json', '--model']);
+  assert.equal(args[4], 'zai-coding-plan/glm-5');
   assert.equal(args.includes('--agent'), true);
   assert.equal(args[args.indexOf('--agent') + 1], 'build');
   assert.equal(args.includes('--model'), true);
