@@ -1466,7 +1466,7 @@ CLAUDE.md files use plain markdown and can contain:
 ## Commands
 
 - Build: `npm run build`
-- Dev server: `npm run dev`
+- Dev server: `bash scripts/dev-full.sh`
 - Type check: `npm run typecheck`
 ```
 

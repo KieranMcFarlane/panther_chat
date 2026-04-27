@@ -1438,7 +1438,7 @@ Expected: No errors
 
 **Step 3: Test the endpoint manually**
 
-Run: `npm run dev`
+Run: `bash scripts/dev-full.sh`
 
 In browser: `http://localhost:3005/api/scoring?entityId=test-entity`
 
@@ -1632,7 +1632,7 @@ export default function TestScoreCard() {
 
 **Step 5: Test the component**
 
-Run: `npm run dev`
+Run: `bash scripts/dev-full.sh`
 
 Navigate to: `http://localhost:3005/test-scorecard`
 

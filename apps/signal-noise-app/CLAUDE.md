@@ -49,7 +49,7 @@ PHASE 4: Three-Axis Dashboard Scoring (Maturity + Probability → Sales Readines
 ## Commands
 
 ```bash
-npm run dev          # Next.js dev server (port 3005)
+bash scripts/dev-full.sh   # Full app stack (backend, worker, frontend)
 npm run build        # Production build
 npm run start        # Production server (port 4328)
 npm run test         # Run tests
