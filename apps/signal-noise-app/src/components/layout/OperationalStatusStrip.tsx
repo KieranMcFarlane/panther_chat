@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
   getCachedOperationalDrilldownPayload,
+  loadOperationalDrilldownPayload,
   refreshOperationalDrilldownPayload,
   startOperationalDrilldownPolling,
   subscribeOperationalDrilldown,
@@ -293,7 +294,7 @@ export function OperationalStatusStrip({
       setControlState(payload?.control ?? null)
     })
     const stopPolling = startOperationalDrilldownPolling(OPERATIONAL_STATUS_POLL_INTERVAL_MS)
-    void refreshOperationalDrilldownPayload().then((payload) => {
+    void loadOperationalDrilldownPayload().then((payload) => {
       setDrilldown(payload)
       setControlState(payload?.control ?? null)
     }).catch(() => {
