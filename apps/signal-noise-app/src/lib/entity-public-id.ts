@@ -1,5 +1,5 @@
 import { v5 as uuidv5 } from 'uuid'
-import entityUuidAliases from '@/lib/entity-public-id-aliases.js'
+import entityUuidAliases from './entity-public-id-aliases.js'
 
 type PublicIdEntity = {
   uuid?: unknown

@@ -93,10 +93,64 @@ def test_select_next_entity_cursor_candidate_prefers_resumable_work(monkeypatch)
     assert "candidate_kind" in captured["sql"]
     assert "next_repair_question_id" in captured["sql"]
     assert "current_question_id" in captured["sql"]
-    assert "'completed'" in captured["sql"]
+    assert "'running'" in captured["sql"]
+    assert "'retrying'" in captured["sql"]
+    assert "'failed'" in captured["sql"]
+    assert "'queued'" not in captured["sql"]
     assert captured["params"] == ["entity-c", "entity-c", "entity-c", "entity-c", "entity-c", "entity-c"]
     assert response.data[0]["candidate_kind"] == "resume_repair"
     assert response.data[0]["question_id"] == "q11_decision_owner"
+
+
+def test_select_next_entity_cursor_candidate_ignores_queued_rows(monkeypatch):
+    captured = {}
+
+    class _FakeCursor:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+        def execute(self, sql, params):
+            captured["sql"] = sql
+            captured["params"] = params
+
+        def fetchall(self):
+            return [{
+                "candidate_kind": "next_entity",
+                "entity_id": "entity-z",
+                "canonical_entity_id": "entity-z",
+                "entity_name": "Entity Z",
+                "entity_type": "CLUB",
+                "question_id": None,
+                "current_question_id": None,
+                "next_repair_question_id": None,
+            }]
+
+    class _FakeConnection:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+        def cursor(self):
+            return _FakeCursor()
+
+    client = LocalPgClient("postgresql://localhost/signal_noise_app")
+    monkeypatch.setattr(client, "_connect", lambda: _FakeConnection())
+
+    response = client.rpc(
+        "select_next_entity_cursor_candidate",
+        {"current_entity_id": "entity-a", "current_canonical_entity_id": "entity-a"},
+    ).execute()
+
+    assert "'running'" in captured["sql"]
+    assert "'retrying'" in captured["sql"]
+    assert "'failed'" in captured["sql"]
+    assert "'queued'" not in captured["sql"]
+    assert response.data[0]["candidate_kind"] == "next_entity"
 
 
 def test_select_next_entity_cursor_candidate_accepts_blank_canonical_entity_id(monkeypatch):
@@ -136,6 +190,82 @@ def test_select_next_entity_cursor_candidate_accepts_blank_canonical_entity_id(m
 
     assert "IS DISTINCT FROM" in captured["sql"]
     assert captured["params"] == ["", None, None, None, None, ""]
+
+
+def test_select_next_entity_cursor_candidate_ignores_nonblocking_continue_on_failure_rows(monkeypatch):
+    captured = {}
+
+    class _FakeCursor:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+        def execute(self, sql, params):
+            captured["sql"] = sql
+            captured["params"] = params
+
+        def fetchall(self):
+            return []
+
+    class _FakeConnection:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+        def cursor(self):
+            return _FakeCursor()
+
+    client = LocalPgClient("postgresql://localhost/signal_noise_app")
+    monkeypatch.setattr(client, "_connect", lambda: _FakeConnection())
+
+    client.rpc(
+        "select_next_entity_cursor_candidate",
+        {"current_entity_id": "", "current_canonical_entity_id": ""},
+    ).execute()
+
+    assert "continue_pipeline_on_failure" in captured["sql"]
+
+
+def test_select_next_entity_cursor_candidate_only_considers_latest_run_per_entity(monkeypatch):
+    captured = {}
+
+    class _FakeCursor:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+        def execute(self, sql, params):
+            captured["sql"] = sql
+            captured["params"] = params
+
+        def fetchall(self):
+            return []
+
+    class _FakeConnection:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+        def cursor(self):
+            return _FakeCursor()
+
+    client = LocalPgClient("postgresql://localhost/signal_noise_app")
+    monkeypatch.setattr(client, "_connect", lambda: _FakeConnection())
+
+    client.rpc(
+        "select_next_entity_cursor_candidate",
+        {"current_entity_id": "", "current_canonical_entity_id": ""},
+    ).execute()
+
+    assert "row_number()" in captured["sql"].lower()
 
 
 def test_contains_on_text_array_uses_text_array_rhs(monkeypatch):

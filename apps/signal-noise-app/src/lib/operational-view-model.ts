@@ -116,6 +116,7 @@ export type OperationalDrawerPayload = OperationalDrilldownPayload & {
   queue: {
     in_progress_entity: OperationalDrawerEntity | null;
     stale_active_rows?: OperationalDrawerEntity[];
+    processed_entities?: OperationalDrawerEntity[];
     completed_entities: OperationalDrawerEntity[];
     resume_needed_entities: OperationalDrawerEntity[];
     upcoming_entities: OperationalDrawerEntity[];
@@ -898,6 +899,10 @@ export function buildOperationalStatusViewModel(input: {
   const blockedOrPartialCount =
     Number(loopStatus?.quality_counts?.partial ?? 0) +
     Number(loopStatus?.quality_counts?.blocked ?? 0);
+  const canonicalEntityLabel =
+    inProgressEntity?.queue_position !== undefined && inProgressEntity?.queue_position !== null
+      ? `${inProgressEntity.queue_position}/${loopStatus?.universe_count ?? loopStatus?.total_scheduled ?? "…"}`
+      : String(loopStatus?.universe_count ?? loopStatus?.total_scheduled ?? "…");
   const statusItems = [
     {
       label: "Universe",
@@ -915,8 +920,8 @@ export function buildOperationalStatusViewModel(input: {
       tone: "text-amber-300",
     },
     {
-      label: "Recent completions",
-      value: String(loopStatus?.completed ?? "…"),
+      label: "Canonical entity",
+      value: canonicalEntityLabel,
       tone: "text-emerald-300",
     },
   ] as const;
@@ -1086,7 +1091,7 @@ export function buildOperationalDrawerViewModel(input: {
     ...blockedItems,
   ];
 
-  const completedItems = asArray(dashboard.queue.completed_entities)
+  const completedItems = asArray(dashboard.queue.processed_entities || dashboard.queue.completed_entities)
     .slice(0, 8)
     .map((item) =>
       buildEntityCardBase(item, {

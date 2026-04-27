@@ -10,9 +10,9 @@ const questionFirstDossierPath = new URL('../src/components/entity-dossier/Quest
 const questionFirstDossierSource = readFileSync(questionFirstDossierPath, 'utf8')
 
 test('entity dossier router prefers the question-first tab renderer when canonical dossier tabs exist', () => {
-  assert.match(routerSource, /QuestionFirstEntityDossier/)
-  assert.match(routerSource, /dossier\?\.tabs/)
-  assert.match(routerSource, /return <QuestionFirstEntityDossier/)
+  assert.match(routerSource, /FinalRalphClubDossier/)
+  assert.match(routerSource, /dossier=\{dossier\}/)
+  assert.match(routerSource, /return dossier \? \(/)
 })
 
 test('entity dossier client page does not auto-queue generation on initial view without explicit generate intent', () => {

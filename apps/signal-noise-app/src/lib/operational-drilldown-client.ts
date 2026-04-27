@@ -154,6 +154,7 @@ export type OperationalDrilldownPayload = {
     universe_count?: number
     total_scheduled?: number
     completed?: number
+    processed_dossiers?: number
     failed?: number
     retryable_failures?: number
     quality_counts?: {
@@ -175,6 +176,7 @@ export type OperationalDrilldownPayload = {
     running_entities?: OperationalQueueEntity[]
     stale_active_rows?: OperationalQueueEntity[]
     latest_noteworthy_entity?: OperationalQueueEntity | null
+    processed_entities?: OperationalQueueEntity[]
     completed_entities: OperationalQueueEntity[]
     resume_needed_entities: OperationalQueueEntity[]
     upcoming_entities: OperationalQueueEntity[]
@@ -199,6 +201,83 @@ let operationalDrilldownPoller: number | null = null
 
 export const OPERATIONAL_DRILLDOWN_CACHE_TTL_MS = 4_000
 export const OPERATIONAL_DRILLDOWN_STORAGE_KEY = 'signal-noise.operational-drilldown.v1'
+export const OPERATIONAL_DRILLDOWN_ACTIVE_GRACE_MS = 8_000
+
+function parseTimestamp(value: unknown) {
+  if (!value) return 0
+  const parsed = Date.parse(String(value))
+  return Number.isFinite(parsed) ? parsed : 0
+}
+
+function smoothOperationalDrilldownPayload(
+  nextPayload: OperationalDrilldownPayload,
+  previousPayload: OperationalDrilldownPayload | null,
+  now = Date.now(),
+) {
+  if (!previousPayload) return nextPayload
+  if (nextPayload.operational_state !== 'waiting') return nextPayload
+  if (nextPayload.control?.requested_state === 'paused' || nextPayload.control?.is_paused === true) {
+    return nextPayload
+  }
+  if (nextPayload.live_state?.current_live_run || nextPayload.queue?.in_progress_entity) {
+    return nextPayload
+  }
+
+  const previousRun = previousPayload.live_state?.current_live_run
+    || previousPayload.queue?.in_progress_entity
+    || previousPayload.runtime?.current_live_run
+    || previousPayload.runtime?.current_run
+    || null
+  if (!previousRun) return nextPayload
+
+  const previousState = previousPayload.operational_state || previousPayload.live_state?.operational_state || null
+  if (previousState !== 'running' && previousState !== 'retrying' && previousState !== 'reconciling') {
+    return nextPayload
+  }
+
+  const previousActivityAt = parseTimestamp(
+    previousPayload.last_activity_at
+    || previousPayload.runtime?.worker?.current_activity_at
+    || previousPayload.snapshot_at
+    || previousPayload.runtime?.generated_at
+    || previousPayload.runtime?.snapshot_at,
+  )
+  if (!previousActivityAt || (now - previousActivityAt) > OPERATIONAL_DRILLDOWN_ACTIVE_GRACE_MS) {
+    return nextPayload
+  }
+
+  const previousInProgressEntity = previousPayload.live_state?.in_progress_entity
+    || previousPayload.queue?.in_progress_entity
+    || null
+  const previousRunningEntities = previousPayload.live_state?.running_entities
+    || previousPayload.queue?.running_entities
+    || (previousInProgressEntity ? [previousInProgressEntity] : [])
+
+  return {
+    ...nextPayload,
+    operational_state: 'running',
+    live_state: {
+      ...nextPayload.live_state,
+      operational_state: 'running',
+      current_run: previousRun,
+      current_live_run: previousRun,
+      in_progress_entity: previousInProgressEntity,
+      running_entities: previousRunningEntities,
+    },
+    runtime: {
+      ...nextPayload.runtime,
+      current_run: previousRun,
+      current_live_run: previousRun,
+      latest_noteworthy_run: nextPayload.runtime?.latest_noteworthy_run || previousRun,
+    },
+    queue: {
+      ...nextPayload.queue,
+      in_progress_entity: previousInProgressEntity,
+      running_entities: previousRunningEntities,
+      latest_noteworthy_entity: nextPayload.queue?.latest_noteworthy_entity || previousInProgressEntity || previousRun,
+    },
+  }
+}
 
 function persistOperationalDrilldownPayload(payload: OperationalDrilldownPayload | null) {
   if (typeof window === 'undefined' || !window.sessionStorage) return
@@ -315,7 +394,10 @@ export async function loadOperationalDrilldownPayload() {
         if (!response.ok) {
           throw new Error('Failed to load operational drilldown')
         }
-        const payload = await response.json() as OperationalDrilldownPayload
+        const payload = smoothOperationalDrilldownPayload(
+          await response.json() as OperationalDrilldownPayload,
+          cachedOperationalDrilldownPayload,
+        )
         cachedOperationalDrilldownPayload = payload
         cachedOperationalDrilldownFetchedAt = Date.now()
         persistOperationalDrilldownPayload(payload)
@@ -331,6 +413,7 @@ export async function loadOperationalDrilldownPayload() {
 }
 
 export async function refreshOperationalDrilldownPayload() {
+  const previousPayload = cachedOperationalDrilldownPayload ?? hydrateOperationalDrilldownPayloadFromStorage()
   resetOperationalDrilldownCache()
   if (!inFlightOperationalDrilldownRequest) {
     inFlightOperationalDrilldownRequest = fetch('/api/home/queue-drilldown?refresh=1', { cache: 'no-store' })
@@ -338,7 +421,10 @@ export async function refreshOperationalDrilldownPayload() {
         if (!response.ok) {
           throw new Error('Failed to refresh operational drilldown')
         }
-        const payload = await response.json() as OperationalDrilldownPayload
+        const payload = smoothOperationalDrilldownPayload(
+          await response.json() as OperationalDrilldownPayload,
+          previousPayload,
+        )
         cachedOperationalDrilldownPayload = payload
         cachedOperationalDrilldownFetchedAt = Date.now()
         persistOperationalDrilldownPayload(payload)

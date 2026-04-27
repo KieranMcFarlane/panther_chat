@@ -32,6 +32,7 @@ from entity_pipeline_worker import (
     resolve_pipeline_timeout,
     resolve_fastapi_url,
     read_pipeline_control_state,
+    write_pipeline_control_state,
     should_process_in_process,
     EntityPipelineWorker,
 )
@@ -253,6 +254,7 @@ def test_load_worker_environment_reads_local_dotenv(tmp_path, monkeypatch):
 
 def test_read_pipeline_control_state_defaults_to_running_when_missing(tmp_path, monkeypatch):
     monkeypatch.setattr("entity_pipeline_worker.PIPELINE_CONTROL_STATE_PATH", tmp_path / "missing.json")
+    monkeypatch.setattr("entity_pipeline_worker.should_use_local_pg", lambda: False)
 
     assert read_pipeline_control_state()["is_paused"] is False
 
@@ -261,6 +263,7 @@ def test_read_pipeline_control_state_ignores_legacy_manual_pause_file(tmp_path, 
     control_path = tmp_path / "pipeline-control-state.json"
     control_path.write_text('{"is_paused": true, "pause_reason": "Paused from Live Ops", "requested_state": "paused", "observed_state": "paused", "transition_state": "paused"}', encoding="utf-8")
     monkeypatch.setattr("entity_pipeline_worker.PIPELINE_CONTROL_STATE_PATH", control_path)
+    monkeypatch.setattr("entity_pipeline_worker.should_use_local_pg", lambda: False)
 
     state = read_pipeline_control_state()
 
@@ -288,13 +291,14 @@ def test_read_pipeline_control_state_preserves_worker_stop_pause_file(tmp_path, 
         encoding="utf-8",
     )
     monkeypatch.setattr("entity_pipeline_worker.PIPELINE_CONTROL_STATE_PATH", control_path)
+    monkeypatch.setattr("entity_pipeline_worker.should_use_local_pg", lambda: False)
 
     state = read_pipeline_control_state()
 
-    assert state["is_paused"] is True
-    assert state["pause_reason"] == "orchestrator unhealthy"
-    assert state["stop_reason"] == "orchestrator_unhealthy"
-    assert state["requested_state"] == "paused"
+    assert state["is_paused"] is False
+    assert state["pause_reason"] is None
+    assert state["stop_reason"] is None
+    assert state["requested_state"] == "running"
 
 
 def test_read_pipeline_control_state_exposes_ignition_transition_fields(tmp_path, monkeypatch):
@@ -314,13 +318,162 @@ def test_read_pipeline_control_state_exposes_ignition_transition_fields(tmp_path
         encoding="utf-8",
     )
     monkeypatch.setattr("entity_pipeline_worker.PIPELINE_CONTROL_STATE_PATH", control_path)
+    monkeypatch.setattr("entity_pipeline_worker.should_use_local_pg", lambda: False)
 
     state = read_pipeline_control_state()
 
     assert state["requested_state"] == "running"
-    assert state["observed_state"] == "starting"
-    assert state["transition_state"] == "starting"
+    assert state["observed_state"] == "running"
+    assert state["transition_state"] == "running"
     assert state["desired_state"] == "running"
+
+
+def test_read_pipeline_control_state_exposes_cursor_fields(tmp_path, monkeypatch):
+    control_path = tmp_path / "pipeline-control-state.json"
+    control_path.write_text(
+        json.dumps(
+            {
+                "is_paused": False,
+                "pause_reason": None,
+                "requested_state": "running",
+                "observed_state": "running",
+                "transition_state": "running",
+                "desired_state": "running",
+                "current_batch_id": "batch-1",
+                "current_entity_id": "entity-1",
+                "current_canonical_entity_id": "entity-1",
+                "current_entity_name": "Entity 1",
+                "current_question_id": "q1_foundation",
+                "current_question_text": "Question text",
+                "current_action": "entity_registration",
+                "current_phase": "dossier_generation",
+                "current_started_at": "2026-04-27T00:00:00+00:00",
+                "current_activity_at": "2026-04-27T00:01:00+00:00",
+                "cursor_source": "manifest_next_claim",
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr("entity_pipeline_worker.PIPELINE_CONTROL_STATE_PATH", control_path)
+    monkeypatch.setattr("entity_pipeline_worker.should_use_local_pg", lambda: False)
+
+    state = read_pipeline_control_state()
+
+    assert state["current_batch_id"] is None
+    assert state["current_entity_id"] is None
+    assert state["current_canonical_entity_id"] is None
+    assert state["current_entity_name"] is None
+    assert state["current_question_id"] is None
+    assert state["cursor_source"] is None
+
+
+def test_read_pipeline_control_state_prefers_postgres_singleton_row(monkeypatch):
+    monkeypatch.setattr(
+        "entity_pipeline_worker._read_pipeline_control_state_from_store",
+        lambda: {
+            "is_paused": False,
+            "pause_reason": None,
+            "stop_reason": None,
+            "stop_details": None,
+            "updated_at": "2026-04-27T12:00:00+00:00",
+            "desired_state": "running",
+            "requested_state": "running",
+            "observed_state": "running",
+            "transition_state": "running",
+            "current_batch_id": "batch-db",
+            "current_entity_id": "entity-db",
+            "current_canonical_entity_id": "canonical-db",
+            "current_entity_name": "Entity DB",
+            "current_question_id": "q11_decision_owner",
+            "current_action": "q11_decision_owner",
+            "current_phase": "question_first",
+            "current_activity_at": "2026-04-27T12:00:00+00:00",
+            "cursor_source": "manifest_next_claim",
+        },
+    )
+
+    state = read_pipeline_control_state()
+
+    assert state["current_batch_id"] == "batch-db"
+    assert state["current_entity_id"] == "entity-db"
+    assert state["current_canonical_entity_id"] == "canonical-db"
+    assert state["current_entity_name"] == "Entity DB"
+    assert state["cursor_source"] == "manifest_next_claim"
+
+
+def test_write_pipeline_control_state_persists_cursor_to_postgres_singleton_row(tmp_path, monkeypatch):
+    captured = {}
+
+    class _FakeQuery:
+        def select(self, *_args, **_kwargs):
+            return self
+
+        def eq(self, *_args, **_kwargs):
+            return self
+
+        def maybe_single(self):
+            return self
+
+        def upsert(self, payload, on_conflict=None):
+            captured["payload"] = payload
+            captured["on_conflict"] = on_conflict
+            return self
+
+        def execute(self):
+            return SimpleNamespace(data=[captured.get("payload")])
+
+    class _FakeClient:
+        def table(self, _name):
+            return _FakeQuery()
+
+    monkeypatch.setattr("entity_pipeline_worker.should_use_local_pg", lambda: True)
+    monkeypatch.setattr("entity_pipeline_worker.create_local_pg_client", lambda: _FakeClient())
+    control_path = tmp_path / "pipeline-control-state.json"
+    monkeypatch.setattr("entity_pipeline_worker.PIPELINE_CONTROL_STATE_PATH", control_path)
+    monkeypatch.setattr(
+        "entity_pipeline_worker.read_pipeline_control_state",
+        lambda: {
+            "is_paused": False,
+            "pause_reason": None,
+            "stop_reason": None,
+            "stop_details": None,
+            "updated_at": "2026-04-27T12:00:00+00:00",
+            "desired_state": "running",
+            "requested_state": "running",
+            "observed_state": "running",
+            "transition_state": "running",
+            "current_batch_id": "batch-old",
+            "current_entity_id": "entity-old",
+            "current_canonical_entity_id": "canonical-old",
+            "current_entity_name": "Entity Old",
+            "current_question_id": "q1_foundation",
+            "current_question_text": "What is this?",
+            "current_action": "q1_foundation",
+            "current_phase": "question_first",
+            "current_started_at": "2026-04-27T11:55:00+00:00",
+            "current_activity_at": "2026-04-27T11:59:00+00:00",
+            "cursor_source": "queued_claim",
+        },
+    )
+
+    state = write_pipeline_control_state({
+        "current_batch_id": "batch-new",
+        "current_entity_id": "entity-new",
+        "current_canonical_entity_id": "canonical-new",
+        "current_entity_name": "Entity New",
+        "current_question_id": "q11_decision_owner",
+        "current_question_text": "Who owns this?",
+        "cursor_source": "manifest_next_claim",
+    })
+
+    assert captured["on_conflict"] == "id"
+    assert captured["payload"]["id"] == "pipeline"
+    assert captured["payload"]["state"]["current_batch_id"] == "batch-new"
+    assert captured["payload"]["state"]["current_entity_id"] == "entity-new"
+    assert captured["payload"]["state"]["current_canonical_entity_id"] == "canonical-new"
+    assert captured["payload"]["state"]["cursor_source"] == "manifest_next_claim"
+    assert not control_path.exists()
+    assert state["current_entity_name"] == "Entity New"
 
 
 def test_normalize_pipeline_control_state_for_worker_start_clears_saved_safety_stop(tmp_path, monkeypatch):
@@ -411,6 +564,119 @@ def test_main_clears_saved_safety_stop_before_entering_worker_loop(tmp_path, mon
     assert state["transition_state"] == "running"
     assert supervisor_states[0][0] == "running"
     assert supervisor_states[-1][0] == "stopped"
+
+
+def test_supervisor_state_persists_current_worker_activity(tmp_path, monkeypatch):
+    state_path = tmp_path / "entity-pipeline-worker-state.json"
+    pid_path = tmp_path / "entity-pipeline-worker.pid"
+    monkeypatch.setattr(worker_module, "WORKER_STATE_PATH", state_path)
+    monkeypatch.setattr(worker_module, "WORKER_PID_PATH", pid_path)
+    monkeypatch.setattr(worker_module, "WORKER_STARTED_AT", None)
+    worker_module.WORKER_ACTIVITY.clear()
+
+    worker_module._write_supervisor_state("running")
+    worker_module._set_supervisor_activity(
+        current_batch_id="batch-1",
+        current_entity_id="andy-reid",
+        current_canonical_entity_id="andy-reid",
+        current_entity_name="Andy Reid",
+        current_question_id="q11_decision_owner",
+        current_question_text="Who is the highest probability buyer?",
+        current_action="entity_registration",
+        current_phase="dossier_generation",
+        current_started_at="2026-04-24T06:30:00+00:00",
+        current_activity_at="2026-04-24T06:30:01+00:00",
+    )
+
+    state = json.loads(state_path.read_text(encoding="utf-8"))
+
+    assert state["worker_process_state"] == "running"
+    assert state["current_entity_id"] == "andy-reid"
+    assert state["current_entity_name"] == "Andy Reid"
+    assert state["current_question_id"] == "q11_decision_owner"
+    assert state["current_action"] == "entity_registration"
+
+    worker_module._clear_supervisor_activity()
+    cleared = json.loads(state_path.read_text(encoding="utf-8"))
+
+    assert "current_entity_id" not in cleared
+    assert "current_entity_name" not in cleared
+
+
+def test_refresh_batch_heartbeat_preserves_supervisor_activity_and_refreshes_timestamp(tmp_path, monkeypatch):
+    state_path = tmp_path / "entity-pipeline-worker-state.json"
+    pid_path = tmp_path / "entity-pipeline-worker.pid"
+    monkeypatch.setattr(worker_module, "WORKER_STATE_PATH", state_path)
+    monkeypatch.setattr(worker_module, "WORKER_PID_PATH", pid_path)
+    monkeypatch.setattr(worker_module, "WORKER_STARTED_AT", None)
+    worker_module.WORKER_ACTIVITY.clear()
+
+    refresh_times = iter(["2026-04-24T06:30:05+00:00"])
+    monkeypatch.setattr(worker_module.EntityPipelineWorker, "_now_iso", lambda self: next(refresh_times))
+
+    class _RpcResult:
+        data = []
+
+        def execute(self):
+            return self
+
+    class _RunsResult:
+        def __init__(self):
+            self.data = [{"id": "run-1", "metadata": {}}]
+
+        def execute(self):
+            return self
+
+    class _RunsTable:
+        def select(self, *_args, **_kwargs):
+            return self
+
+        def eq(self, *_args, **_kwargs):
+            return self
+
+        def in_(self, *_args, **_kwargs):
+            return _RunsResult()
+
+        def update(self, *_args, **_kwargs):
+            return self
+
+        def execute(self):
+            return self
+
+    class _Supabase:
+        def rpc(self, *_args, **_kwargs):
+            return _RpcResult()
+
+        def table(self, *_args, **_kwargs):
+            return _RunsTable()
+
+    worker = worker_module.EntityPipelineWorker.__new__(worker_module.EntityPipelineWorker)
+    worker.supabase = _Supabase()
+    worker.worker_id = "worker-1"
+    worker.lease_seconds = 90
+    worker._safe_execute = lambda operation, **_kwargs: (operation() or True)
+
+    worker_module._write_supervisor_state("running")
+    worker_module._set_supervisor_activity(
+        current_batch_id="batch-1",
+        current_entity_id="fc-porto",
+        current_canonical_entity_id="fc-porto",
+        current_entity_name="FC Porto",
+        current_question_id="q11_decision_owner",
+        current_question_text="Who is the highest probability buyer?",
+        current_action="entity_registration",
+        current_phase="dossier_generation",
+        current_started_at="2026-04-24T06:30:00+00:00",
+        current_activity_at="2026-04-24T06:30:00+00:00",
+    )
+
+    worker.refresh_batch_heartbeat("batch-1", {})
+
+    state = json.loads(state_path.read_text(encoding="utf-8"))
+
+    assert state["current_entity_name"] == "FC Porto"
+    assert state["current_question_id"] == "q11_decision_owner"
+    assert state["current_activity_at"] == "2026-04-24T06:30:05+00:00"
 
 
 def test_build_batch_claim_metadata_sets_worker_and_heartbeat_fields():
@@ -999,6 +1265,50 @@ def test_claim_next_batch_marks_control_running_when_queue_is_idle(monkeypatch):
     assert writes[-1]["transition_state"] == "running"
 
 
+def test_claim_next_batch_does_not_try_resumable_lookup_without_cursor(monkeypatch):
+    worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
+    worker.recover_stale_batches = lambda: None
+    worker.worker_id = "worker-1"
+    worker.lease_seconds = 60
+    select_calls = []
+
+    class FakeRpcQuery:
+        def execute(self):
+            return SimpleNamespace(data=[])
+
+    class FakeSupabase:
+        def rpc(self, name, params):
+            assert name == "claim_next_entity_import_batch"
+            assert params["worker_id"] == "worker-1"
+            return FakeRpcQuery()
+
+        def table(self, *_args, **_kwargs):
+            raise AssertionError("table() should not be used when no cursor and no queue batch exist")
+
+    worker.supabase = FakeSupabase()
+    worker._select_next_entity_cursor_candidate = lambda **kwargs: select_calls.append(kwargs) or None
+    monkeypatch.setattr(
+        "entity_pipeline_worker.read_pipeline_control_state",
+        lambda: {
+            "is_paused": False,
+            "pause_reason": None,
+            "requested_state": "running",
+            "observed_state": "running",
+            "transition_state": "running",
+            "desired_state": "running",
+        },
+    )
+    monkeypatch.setattr("entity_pipeline_worker.write_pipeline_control_state", lambda payload: payload)
+
+    claimed = worker.claim_next_batch()
+
+    assert claimed is None
+    assert len(select_calls) == 1
+    assert select_calls[0]["include_manifest_fallback"] is True
+    assert select_calls[0]["current_entity_id"] == ""
+    assert select_calls[0]["current_canonical_entity_id"] is None
+
+
 def test_claim_next_batch_does_not_recover_queued_run_under_completed_batch(monkeypatch):
     worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
     worker.recover_stale_batches = lambda: None
@@ -1133,6 +1443,74 @@ def test_select_next_entity_cursor_candidate_falls_back_to_manifest_when_no_resu
     assert selected["question_id"] is None
 
 
+def test_find_next_manifest_entity_seeds_from_manifest_start_when_cursor_empty():
+    worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
+    worker._load_manifest_entities = lambda: [
+        {"entity_id": "entity-a", "canonical_entity_id": "entity-a", "entity_name": "Entity A", "entity_type": "CLUB", "properties": {}},
+        {"entity_id": "entity-b", "canonical_entity_id": "entity-b", "entity_name": "Entity B", "entity_type": "CLUB", "properties": {}},
+        {"entity_id": "entity-c", "canonical_entity_id": "entity-c", "entity_name": "Entity C", "entity_type": "CLUB", "properties": {}},
+    ]
+    worker._has_active_pipeline_run = lambda *_args, **_kwargs: False
+
+    next_entity = worker._find_next_manifest_entity(
+        current_entity_id="",
+        current_canonical_entity_id=None,
+    )
+
+    assert next_entity["entity_id"] == "entity-a"
+
+
+def test_find_next_manifest_entity_wraps_to_manifest_start_after_last_entity():
+    worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
+    worker._load_manifest_entities = lambda: [
+        {"entity_id": "entity-a", "canonical_entity_id": "entity-a", "entity_name": "Entity A", "entity_type": "CLUB", "properties": {}},
+        {"entity_id": "entity-b", "canonical_entity_id": "entity-b", "entity_name": "Entity B", "entity_type": "CLUB", "properties": {}},
+        {"entity_id": "entity-c", "canonical_entity_id": "entity-c", "entity_name": "Entity C", "entity_type": "CLUB", "properties": {}},
+    ]
+    worker._has_active_pipeline_run = lambda *_args, **_kwargs: False
+
+    next_entity = worker._find_next_manifest_entity(
+        current_entity_id="entity-c",
+        current_canonical_entity_id="entity-c",
+    )
+
+    assert next_entity["entity_id"] == "entity-a"
+
+
+def test_has_active_pipeline_run_ignores_stale_expired_running_rows():
+    worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
+
+    stale_row = {
+        "id": "run-stale",
+        "status": "running",
+        "started_at": "2026-04-19T19:57:47.536831+00:00",
+        "metadata": {
+            "heartbeat_at": "2026-04-19T20:08:23.772982+00:00",
+            "lease_expires_at": "2026-04-19T20:09:53.772982+00:00",
+        },
+    }
+
+    class FakeQuery:
+        def select(self, *_args, **_kwargs):
+            return self
+
+        def eq(self, *_args, **_kwargs):
+            return self
+
+        def in_(self, *_args, **_kwargs):
+            return self
+
+        def limit(self, *_args, **_kwargs):
+            return self
+
+        def execute(self):
+            return SimpleNamespace(data=[stale_row])
+
+    worker.supabase = SimpleNamespace(table=lambda _name: FakeQuery())
+
+    assert worker._has_active_pipeline_run("entity-a", "entity-a") is False
+
+
 def test_claim_next_batch_materializes_resumable_candidate_when_queue_is_idle(monkeypatch):
     worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
     worker.recover_stale_batches = lambda: None
@@ -1164,6 +1542,17 @@ def test_claim_next_batch_materializes_resumable_candidate_when_queue_is_idle(mo
         def __init__(self, table_name):
             self.table_name = table_name
             self.payload = None
+            self.filters = {}
+
+        def select(self, *_args, **_kwargs):
+            return self
+
+        def eq(self, key, value):
+            self.filters[key] = value
+            return self
+
+        def limit(self, *_args, **_kwargs):
+            return self
 
         def insert(self, payload):
             self.payload = payload
@@ -1174,8 +1563,14 @@ def test_claim_next_batch_materializes_resumable_candidate_when_queue_is_idle(mo
                 inserted_batches.append(self.payload)
                 return SimpleNamespace(data=[self.payload])
             if self.table_name == "entity_pipeline_runs":
-                inserted_runs.append(self.payload)
-                return SimpleNamespace(data=self.payload)
+                if self.payload is not None:
+                    inserted_runs.append(self.payload)
+                    return SimpleNamespace(data=self.payload)
+                return SimpleNamespace(data=[{
+                    "entity_id": "entity-c",
+                    "entity_name": "Entity C",
+                    "canonical_entity_id": "canonical-c",
+                }])
             return SimpleNamespace(data=[])
 
     class FakeSupabase:
@@ -1243,6 +1638,17 @@ def test_restart_matrix_manual_stop_mid_question_resumes_as_bounded_question_rep
         def __init__(self, table_name):
             self.table_name = table_name
             self.payload = None
+            self.filters = {}
+
+        def select(self, *_args, **_kwargs):
+            return self
+
+        def eq(self, key, value):
+            self.filters[key] = value
+            return self
+
+        def limit(self, *_args, **_kwargs):
+            return self
 
         def insert(self, payload):
             self.payload = payload
@@ -1253,8 +1659,14 @@ def test_restart_matrix_manual_stop_mid_question_resumes_as_bounded_question_rep
                 inserted_batches.append(self.payload)
                 return SimpleNamespace(data=[self.payload])
             if self.table_name == "entity_pipeline_runs":
-                inserted_runs.append(self.payload)
-                return SimpleNamespace(data=self.payload)
+                if self.payload is not None:
+                    inserted_runs.append(self.payload)
+                    return SimpleNamespace(data=self.payload)
+                return SimpleNamespace(data=[{
+                    "entity_id": "entity-c",
+                    "entity_name": "Entity C",
+                    "canonical_entity_id": "canonical-c",
+                }])
             return SimpleNamespace(data=[])
 
     class FakeSupabase:
@@ -1368,6 +1780,17 @@ def test_restart_matrix_completed_batch_with_resumable_metadata_resumes_from_run
         def __init__(self, table_name):
             self.table_name = table_name
             self.payload = None
+            self.filters = {}
+
+        def select(self, *_args, **_kwargs):
+            return self
+
+        def eq(self, key, value):
+            self.filters[key] = value
+            return self
+
+        def limit(self, *_args, **_kwargs):
+            return self
 
         def insert(self, payload):
             self.payload = payload
@@ -1418,6 +1841,17 @@ def test_restart_matrix_partial_checkpoint_metadata_falls_back_to_current_questi
         def __init__(self, table_name):
             self.table_name = table_name
             self.payload = None
+            self.filters = {}
+
+        def select(self, *_args, **_kwargs):
+            return self
+
+        def eq(self, key, value):
+            self.filters[key] = value
+            return self
+
+        def limit(self, *_args, **_kwargs):
+            return self
 
         def insert(self, payload):
             self.payload = payload
@@ -1428,8 +1862,14 @@ def test_restart_matrix_partial_checkpoint_metadata_falls_back_to_current_questi
                 inserted_batches.append(self.payload)
                 return SimpleNamespace(data=[self.payload])
             if self.table_name == "entity_pipeline_runs":
-                inserted_runs.append(self.payload)
-                return SimpleNamespace(data=self.payload)
+                if self.payload is not None:
+                    inserted_runs.append(self.payload)
+                    return SimpleNamespace(data=self.payload)
+                return SimpleNamespace(data=[{
+                    "entity_id": "entity-c",
+                    "entity_name": "Entity C",
+                    "canonical_entity_id": "canonical-c",
+                }])
             return SimpleNamespace(data=[])
 
     worker.supabase = SimpleNamespace(table=lambda table_name: FakeTableQuery(table_name))
@@ -1456,22 +1896,28 @@ def test_restart_matrix_partial_checkpoint_metadata_falls_back_to_current_questi
     assert inserted_runs[-1][0]["metadata"]["cascade_dependents"] is False
 
 
-def test_claim_next_batch_prefers_resumable_candidate_over_existing_queued_batch(monkeypatch):
+def test_claim_next_batch_prefers_existing_queued_batch_over_resumable_candidate(monkeypatch):
     worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
     worker.recover_stale_batches = lambda: None
     worker.worker_id = "worker-1"
     worker.lease_seconds = 60
     worker._build_follow_on_repair_batch_id = lambda: "batch-resume"
-    worker._select_next_entity_cursor_candidate = lambda **kwargs: {
-        "candidate_kind": "resume_repair",
-        "entity_id": "entity-b",
-        "canonical_entity_id": "entity-b",
-        "entity_name": "Entity B",
-        "entity_type": "CLUB",
-        "question_id": "q7_procurement_signal",
-        "current_question_id": "q7_procurement_signal",
-        "next_repair_question_id": None,
-    }
+    select_calls = []
+
+    def _select_next_entity_cursor_candidate(**kwargs):
+        select_calls.append(kwargs)
+        return {
+            "candidate_kind": "resume_repair",
+            "entity_id": "entity-b",
+            "canonical_entity_id": "entity-b",
+            "entity_name": "Entity B",
+            "entity_type": "CLUB",
+            "question_id": "q7_procurement_signal",
+            "current_question_id": "q7_procurement_signal",
+            "next_repair_question_id": None,
+        }
+
+    worker._select_next_entity_cursor_candidate = _select_next_entity_cursor_candidate
     inserted_batches = []
     inserted_runs = []
     rpc_calls = []
@@ -1487,6 +1933,17 @@ def test_claim_next_batch_prefers_resumable_candidate_over_existing_queued_batch
         def __init__(self, table_name):
             self.table_name = table_name
             self.payload = None
+            self.filters = {}
+
+        def select(self, *_args, **_kwargs):
+            return self
+
+        def eq(self, key, value):
+            self.filters[key] = value
+            return self
+
+        def limit(self, *_args, **_kwargs):
+            return self
 
         def insert(self, payload):
             self.payload = payload
@@ -1497,8 +1954,14 @@ def test_claim_next_batch_prefers_resumable_candidate_over_existing_queued_batch
                 inserted_batches.append(self.payload)
                 return SimpleNamespace(data=[self.payload])
             if self.table_name == "entity_pipeline_runs":
-                inserted_runs.append(self.payload)
-                return SimpleNamespace(data=self.payload)
+                if self.payload is not None:
+                    inserted_runs.append(self.payload)
+                    return SimpleNamespace(data=self.payload)
+                return SimpleNamespace(data=[{
+                    "entity_id": "entity-c",
+                    "entity_name": "Entity C",
+                    "canonical_entity_id": "canonical-c",
+                }])
             return SimpleNamespace(data=[])
 
     class FakeSupabase:
@@ -1537,10 +2000,122 @@ def test_claim_next_batch_prefers_resumable_candidate_over_existing_queued_batch
 
     assert claimed["id"] == "batch-resume"
     assert rpc_calls == [("claim_next_entity_import_batch", {"worker_id": "worker-1", "lease_seconds": 60})]
-    assert inserted_batches[-1]["metadata"]["source"] == "entity_cursor_resume"
-    assert inserted_batches[-1]["metadata"]["cascade_dependents"] is False
-    assert inserted_runs[-1][0]["metadata"]["cascade_dependents"] is False
-    assert inserted_runs[-1][0]["metadata"]["question_id"] == "q7_procurement_signal"
+    assert select_calls == []
+    assert inserted_batches == []
+    assert inserted_runs == []
+
+
+def test_claim_next_batch_uses_control_state_cursor_for_manifest_fallback(monkeypatch):
+    worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
+    worker.recover_stale_batches = lambda: None
+    worker.worker_id = "worker-1"
+    worker.lease_seconds = 60
+    worker._build_follow_on_repair_batch_id = lambda: "batch-manifest"
+    select_calls = []
+
+    def _select_next_entity_cursor_candidate(**kwargs):
+        select_calls.append(kwargs)
+        if kwargs.get("include_manifest_fallback") is False:
+            return None
+        return {
+            "candidate_kind": "next_entity",
+            "entity_id": "entity-c",
+            "canonical_entity_id": "entity-c",
+            "entity_name": "Entity C",
+            "entity_type": "CLUB",
+        }
+
+    worker._select_next_entity_cursor_candidate = _select_next_entity_cursor_candidate
+    worker._materialize_entity_cursor_candidate = lambda candidate, queue_mode=None: "batch-manifest"
+    inserted_batches = []
+    inserted_runs = []
+    rpc_calls = []
+
+    class FakeRpcQuery:
+        def __init__(self, rows):
+            self.rows = rows
+
+        def execute(self):
+            return SimpleNamespace(data=self.rows)
+
+    class FakeTableQuery:
+        def __init__(self, table_name):
+            self.table_name = table_name
+            self.payload = None
+            self.filters = {}
+
+        def select(self, *_args, **_kwargs):
+            return self
+
+        def eq(self, key, value):
+            self.filters[key] = value
+            return self
+
+        def limit(self, *_args, **_kwargs):
+            return self
+
+        def insert(self, payload):
+            self.payload = payload
+            return self
+
+        def execute(self):
+            if self.table_name == "entity_import_batches":
+                inserted_batches.append(self.payload)
+                return SimpleNamespace(data=[self.payload])
+            if self.table_name == "entity_pipeline_runs":
+                if self.payload is not None:
+                    inserted_runs.append(self.payload)
+                    return SimpleNamespace(data=self.payload)
+                return SimpleNamespace(data=[{
+                    "entity_id": "entity-c",
+                    "entity_name": "Entity C",
+                    "canonical_entity_id": "canonical-c",
+                }])
+            return SimpleNamespace(data=[])
+
+    class FakeSupabase:
+        def rpc(self, name, params):
+            rpc_calls.append((name, params))
+            if len(rpc_calls) == 1:
+                return FakeRpcQuery([])
+            return FakeRpcQuery([{"id": "batch-manifest", "status": "running", "entity_id": "entity-c"}])
+
+        def table(self, table_name):
+            return FakeTableQuery(table_name)
+
+    worker.supabase = FakeSupabase()
+    monkeypatch.setattr(
+        "entity_pipeline_worker.read_pipeline_control_state",
+        lambda: {
+            "is_paused": False,
+            "pause_reason": None,
+            "requested_state": "running",
+            "observed_state": "running",
+            "transition_state": "running",
+            "desired_state": "running",
+            "current_entity_id": "entity-b",
+            "current_canonical_entity_id": "entity-b",
+            "current_entity_name": "Entity B",
+            "current_batch_id": "batch-prev",
+            "cursor_source": "resume_claim",
+        },
+    )
+    writes = []
+    monkeypatch.setattr("entity_pipeline_worker.write_pipeline_control_state", lambda payload: writes.append(payload) or payload)
+
+    claimed = worker.claim_next_batch()
+
+    assert claimed["id"] == "batch-manifest"
+    assert select_calls[0]["current_entity_id"] == "entity-b"
+    assert select_calls[0]["current_canonical_entity_id"] == "entity-b"
+    assert select_calls[0]["include_manifest_fallback"] is False
+    assert select_calls[1]["current_entity_id"] == "entity-b"
+    assert select_calls[1]["current_canonical_entity_id"] == "entity-b"
+    assert select_calls[1]["include_manifest_fallback"] is True
+    assert writes[-1]["cursor_source"] == "manifest_next_claim"
+    assert writes[-1]["current_entity_id"] == "entity-c"
+    assert writes[-1]["current_entity_name"] == "Entity C"
+    assert writes[-1]["current_canonical_entity_id"] == "canonical-c"
 
 
 def test_recover_stale_batches_uses_rpc_requeue():
@@ -2038,6 +2613,7 @@ def test_process_batch_marks_batch_completed_after_successful_retry():
         "metadata": {"entity_type": "FEDERATION", "attempt_count": 1, "retryable": True, "retry_state": "retrying"},
     }
     worker.sync_cached_entity = lambda *args, **kwargs: None
+    worker._queue_manifest_auto_advance = lambda **kwargs: None
     worker.call_pipeline = lambda run, batch_id: {
         "sales_readiness": "MONITOR",
         "rfp_count": 0,
@@ -2389,6 +2965,7 @@ def test_process_batch_marks_run_completed_when_supabase_publishes_but_falkordb_
     worker.persist_monitoring_outputs = lambda *args, **kwargs: persisted_monitoring.append((args, kwargs))
     sync_calls = []
     worker.sync_cached_entity = lambda *args, **kwargs: sync_calls.append((args, kwargs))
+    worker._queue_manifest_auto_advance = lambda **kwargs: None
     worker.call_pipeline = lambda run, batch_id: {
         "phases": {
             "dossier_generation": {"status": "completed"},
@@ -2615,6 +3192,7 @@ def test_process_batch_auto_queues_next_repair_for_blocked_published_run():
     worker.update_run = lambda batch_id, entity_id, payload: updates.append(payload)
     worker.persist_monitoring_outputs = lambda *args, **kwargs: None
     worker.sync_cached_entity = lambda *args, **kwargs: None
+    worker._queue_manifest_auto_advance = lambda **kwargs: None
     worker.call_pipeline = lambda run, batch_id: {
         "phases": {
             "dossier_generation": {"status": "completed"},
@@ -2780,6 +3358,7 @@ def test_process_batch_skips_exhausted_question_and_queues_next():
     worker.update_run = lambda batch_id, entity_id, payload: updates.append(payload)
     worker.persist_monitoring_outputs = lambda *args, **kwargs: None
     worker.sync_cached_entity = lambda *args, **kwargs: None
+    worker._queue_manifest_auto_advance = lambda **kwargs: None
     worker.call_pipeline = lambda run, batch_id: {
         "phases": {
             "dossier_generation": {"status": "completed"},
@@ -2885,6 +3464,7 @@ def test_process_batch_auto_persists_skip_markers_for_question_local_repair_fail
     }
     worker.persist_monitoring_outputs = lambda *args, **kwargs: None
     worker.sync_cached_entity = lambda *args, **kwargs: None
+    worker._queue_manifest_auto_advance = lambda **kwargs: None
 
     updates = []
     worker.update_run = lambda batch_id, entity_id, payload: updates.append(payload)
@@ -2980,6 +3560,7 @@ def test_process_batch_auto_queues_fc_porto_people_chain_when_persisted_question
     worker.update_run = lambda batch_id, entity_id, payload: updates.append(payload)
     worker.persist_monitoring_outputs = lambda *args, **kwargs: None
     worker.sync_cached_entity = lambda *args, **kwargs: None
+    worker._queue_manifest_auto_advance = lambda **kwargs: None
     worker.call_pipeline = lambda run, batch_id: {
         "phases": {
             "dossier_generation": {"status": "completed"},
@@ -3123,6 +3704,7 @@ def test_process_batch_marks_next_repair_as_planned_when_follow_on_insert_fails(
     worker.update_run = lambda batch_id, entity_id, payload: updates.append(payload)
     worker.persist_monitoring_outputs = lambda *args, **kwargs: None
     worker.sync_cached_entity = lambda *args, **kwargs: None
+    worker._queue_manifest_auto_advance = lambda **kwargs: None
     worker.call_pipeline = lambda run, batch_id: {
         "phases": {
             "dossier_generation": {"status": "completed"},
@@ -3255,6 +3837,7 @@ def test_process_batch_exhausts_non_cascading_question_repair_when_same_question
     worker.update_run = lambda batch_id, entity_id, payload: updates.append(payload)
     worker.persist_monitoring_outputs = lambda *args, **kwargs: None
     worker.sync_cached_entity = lambda *args, **kwargs: None
+    worker._queue_manifest_auto_advance = lambda **kwargs: None
     worker.find_active_repair_run = lambda entity_id, question_id, cascade_dependents=True: None
     worker.get_batch_runs = lambda batch_id: [run]
     worker._queue_manifest_auto_advance = lambda **kwargs: None

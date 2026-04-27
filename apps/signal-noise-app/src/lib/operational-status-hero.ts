@@ -129,7 +129,7 @@ export function buildOperationalStatusHero(input: {
   const liveState = input.drilldown?.live_state ?? null
   const backlogHealth = input.drilldown?.backlog_health ?? null
   const runtime = input.drilldown?.runtime ?? null
-  const currentLiveRun = liveState?.current_live_run ?? liveState?.current_run ?? runtime?.current_live_run ?? runtime?.current_run ?? null
+  const currentLiveRun = liveState?.current_live_run ?? runtime?.current_live_run ?? null
   const inProgressEntity = liveState?.in_progress_entity ?? input.drilldown?.queue?.in_progress_entity ?? null
   const resumeNeededEntity = input.drilldown?.queue?.resume_needed_entities?.[0] ?? null
   const latestNoteworthyEntity = input.drilldown?.queue?.latest_noteworthy_entity ?? input.drilldown?.queue?.completed_entities?.[0] ?? null
@@ -161,7 +161,11 @@ export function buildOperationalStatusHero(input: {
       || inProgressEntity.next_repair_batch_id
     ),
   )
-  const activeExecutionCheckpoint = pipelinePaused ? null : (currentLiveRun || inProgressEntity)
+  const activeExecutionCheckpoint = pipelinePaused
+    ? null
+    : currentLiveRun
+      ? (inProgressEntity || currentLiveRun)
+      : null
   const pausedCheckpoint = resumeNeededEntity ?? inProgressEntity ?? latestNoteworthyEntity
   const currentCheckpoint = activeExecutionCheckpoint || (pipelinePaused ? pausedCheckpoint : null)
   const activeQuestionLabel = currentCheckpoint

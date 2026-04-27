@@ -196,3 +196,86 @@ test('getCachedOperationalDrilldownPayload hydrates from session storage after a
     globalThis.sessionStorage = realSessionStorage
   }
 })
+
+test('refreshOperationalDrilldownPayload carries forward a recent active entity when the fresh payload falls back to waiting', async () => {
+  const client = await loadOperationalDrilldownClientModule()
+  const realFetch = globalThis.fetch
+  const realNow = Date.now
+
+  let fetchCount = 0
+  const payloads = [
+    {
+      snapshot_at: '2026-04-17T17:00:00.000Z',
+      last_activity_at: '2026-04-17T17:00:00.000Z',
+      operational_state: 'running',
+      control: { requested_state: 'running', is_paused: false },
+      live_state: {
+        operational_state: 'running',
+        current_live_run: { entity_id: 'fc-porto', entity_name: 'FC Porto' },
+        in_progress_entity: { entity_id: 'fc-porto', entity_name: 'FC Porto' },
+        running_entities: [{ entity_id: 'fc-porto', entity_name: 'FC Porto' }],
+      },
+      runtime: {
+        generated_at: '2026-04-17T17:00:00.000Z',
+        current_live_run: { entity_id: 'fc-porto', entity_name: 'FC Porto' },
+        current_run: { entity_id: 'fc-porto', entity_name: 'FC Porto' },
+        worker: { current_activity_at: '2026-04-17T17:00:00.000Z' },
+      },
+      queue: {
+        in_progress_entity: { entity_id: 'fc-porto', entity_name: 'FC Porto' },
+        running_entities: [{ entity_id: 'fc-porto', entity_name: 'FC Porto' }],
+        completed_entities: [],
+        resume_needed_entities: [],
+        upcoming_entities: [],
+      },
+      dossier_quality: { incomplete_entities: [] },
+      loop_status: {},
+    },
+    {
+      snapshot_at: '2026-04-17T17:00:03.000Z',
+      last_activity_at: '2026-04-17T17:00:03.000Z',
+      operational_state: 'waiting',
+      control: { requested_state: 'running', is_paused: false },
+      live_state: {
+        operational_state: 'waiting',
+        current_live_run: null,
+        in_progress_entity: null,
+        running_entities: [],
+      },
+      runtime: {
+        generated_at: '2026-04-17T17:00:03.000Z',
+        current_live_run: null,
+        current_run: null,
+        worker: {},
+      },
+      queue: {
+        in_progress_entity: null,
+        running_entities: [],
+        completed_entities: [],
+        resume_needed_entities: [],
+        upcoming_entities: [],
+      },
+      dossier_quality: { incomplete_entities: [] },
+      loop_status: {},
+    },
+  ]
+
+  try {
+    Date.now = () => Date.parse('2026-04-17T17:00:00.000Z')
+    globalThis.fetch = async () => createFetchResponse(payloads[fetchCount++])
+
+    const firstPayload = await client.loadOperationalDrilldownPayload()
+
+    Date.now = () => Date.parse('2026-04-17T17:00:03.000Z')
+    const refreshedPayload = await client.refreshOperationalDrilldownPayload()
+
+    assert.equal(fetchCount, 2)
+    assert.equal(firstPayload.operational_state, 'running')
+    assert.equal(refreshedPayload.operational_state, 'running')
+    assert.equal(refreshedPayload.live_state?.current_live_run?.entity_name, 'FC Porto')
+    assert.equal(refreshedPayload.queue?.in_progress_entity?.entity_name, 'FC Porto')
+  } finally {
+    Date.now = realNow
+    globalThis.fetch = realFetch
+  }
+})

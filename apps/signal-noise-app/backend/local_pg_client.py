@@ -334,7 +334,20 @@ class LocalPgRpc:
             with conn.cursor() as cur:
                 cur.execute(
                     """
-                    WITH resumable_runs AS (
+                    WITH latest_runs AS (
+                        SELECT *
+                        FROM (
+                            SELECT
+                                r.*,
+                                row_number() OVER (
+                                    PARTITION BY coalesce(r.canonical_entity_id::text, r.entity_id::text)
+                                    ORDER BY coalesce(r.completed_at, r.started_at) DESC NULLS LAST
+                                ) AS row_number_rank
+                            FROM entity_pipeline_runs AS r
+                        ) ranked_runs
+                        WHERE row_number_rank = 1
+                    ),
+                    resumable_runs AS (
                         SELECT
                             CASE
                                 WHEN coalesce(r.metadata->>'next_repair_question_id', '') <> '' THEN 'resume_repair'
@@ -348,12 +361,13 @@ class LocalPgRpc:
                             nullif(r.metadata->>'current_question_id', '') AS current_question_id,
                             nullif(r.metadata->>'next_repair_question_id', '') AS next_repair_question_id,
                             0 AS priority_rank
-                        FROM entity_pipeline_runs AS r
+                        FROM latest_runs AS r
                         WHERE (
                             r.entity_id <> %s
                             AND (%s::uuid IS NULL OR r.canonical_entity_id IS DISTINCT FROM %s::uuid)
                         )
-                          AND r.status IN ('queued', 'running', 'retrying', 'failed', 'completed')
+                          AND r.status IN ('running', 'retrying', 'failed')
+                          AND coalesce(r.metadata->>'continue_pipeline_on_failure', 'false') <> 'true'
                           AND (
                             coalesce(r.metadata->>'current_question_id', '') <> ''
                             OR coalesce(r.metadata->>'next_repair_question_id', '') <> ''

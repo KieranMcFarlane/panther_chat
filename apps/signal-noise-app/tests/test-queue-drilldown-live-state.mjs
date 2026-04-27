@@ -519,16 +519,7 @@ test('queue drilldown treats non-blocking failed entities as history instead of 
       heartbeat_at: now,
       continue_pipeline_on_failure: false,
     },
-    current_live_run: {
-      batch_id: 'batch-wei-chuan',
-      entity_id: 'wei-chuan-dragons',
-      canonical_entity_id: 'wei-chuan-dragons',
-      entity_name: 'Wei Chuan Dragons',
-      phase: 'entity_registration',
-      queue_state: 'queued',
-      heartbeat_at: now,
-      continue_pipeline_on_failure: false,
-    },
+    current_live_run: null,
     latest_noteworthy_run: {
       batch_id: 'batch-fc-porto',
       entity_id: 'fc-porto',
@@ -557,10 +548,10 @@ test('queue drilldown treats non-blocking failed entities as history instead of 
   const response = await GET()
   const payload = await response.json()
 
-  assert.equal(payload.operational_state, 'running')
+  assert.equal(payload.operational_state, 'waiting')
   assert.equal(payload.stop_reason, null)
   assert.equal(payload.queue.resume_needed_entities.length, 0)
-  assert.equal(payload.queue.in_progress_entity?.entity_name, 'Wei Chuan Dragons')
+  assert.equal(payload.queue.in_progress_entity, null)
   assert.equal(payload.queue.completed_entities[0]?.entity_name, 'FC Porto')
   assert.equal(payload.queue.completed_entities[0]?.continue_pipeline_on_failure, true)
 })
@@ -704,4 +695,301 @@ test('queue drilldown serves the last good payload when a refresh hits a transie
   assert.equal(refreshed.status, 200)
   assert.equal(refreshedPayload.snapshot_at, snapshotAt)
   assert.equal(globalThis.__queueDrilldownReadSetCount, 2)
+})
+
+test('queue drilldown carries forward a very recent active entity across an inter-batch gap', async () => {
+  __resetQueueDrilldownRouteCacheForTests()
+  globalThis.__queueDrilldownReadSetCount = 0
+  globalThis.__queueDrilldownThrowOnReadSet = null
+  const activeAt = new Date().toISOString()
+
+  globalThis.__queueDrilldownTestReadSet = {
+    snapshot_at: activeAt,
+    control: {
+      is_paused: false,
+      pause_reason: null,
+      stop_reason: null,
+      stop_details: null,
+      updated_at: activeAt,
+      desired_state: 'running',
+      requested_state: 'running',
+      observed_state: 'running',
+      transition_state: 'running',
+    },
+    worker: {
+      worker_process_state: 'running',
+      worker_health: 'healthy',
+      worker_pid: 123,
+      worker_command: 'npm run worker:entity-pipeline',
+      worker_state_path: '/tmp/state.json',
+      worker_pid_path: '/tmp/pid',
+      started_at: activeAt,
+      stopped_at: null,
+      updated_at: activeAt,
+      last_error: null,
+    },
+    fastmcp: { reachable: true },
+    rows: [],
+    dossiers: [],
+  }
+
+  globalThis.__queueDrilldownTestRuntimeSnapshot = {
+    snapshot_at: activeAt,
+    generated_at: activeAt,
+    control: globalThis.__queueDrilldownTestReadSet.control,
+    worker: globalThis.__queueDrilldownTestReadSet.worker,
+    fastmcp: { reachable: true },
+    queue_depth: 1,
+    current_run: {
+      batch_id: 'batch-andy-reid',
+      entity_id: 'andy-reid',
+      canonical_entity_id: 'andy-reid',
+      entity_name: 'Andy Reid',
+      phase: 'entity_registration',
+      queue_state: 'running',
+      current_question_id: 'q11_decision_owner',
+      current_question_text: 'Who is the highest probability buyer?',
+      heartbeat_at: activeAt,
+    },
+    current_live_run: {
+      batch_id: 'batch-andy-reid',
+      entity_id: 'andy-reid',
+      canonical_entity_id: 'andy-reid',
+      entity_name: 'Andy Reid',
+      phase: 'entity_registration',
+      queue_state: 'running',
+      current_question_id: 'q11_decision_owner',
+      current_question_text: 'Who is the highest probability buyer?',
+      heartbeat_at: activeAt,
+    },
+    latest_noteworthy_run: null,
+    recent_failures: [],
+    failure_buckets: {
+      queued: 0,
+      running: 1,
+      completed: 0,
+      retrying: 0,
+      reconciling: 0,
+      published_degraded: 0,
+      failed_terminal: 0,
+      worker_stale: 0,
+    },
+  }
+
+  const first = await GET(new Request('http://localhost:3005/api/home/queue-drilldown?refresh=1'))
+  const firstPayload = await first.json()
+
+  const gapAt = new Date(Date.now() + 1000).toISOString()
+  globalThis.__queueDrilldownTestReadSet = {
+    ...globalThis.__queueDrilldownTestReadSet,
+    snapshot_at: gapAt,
+    control: {
+      ...globalThis.__queueDrilldownTestReadSet.control,
+      updated_at: gapAt,
+    },
+    worker: {
+      ...globalThis.__queueDrilldownTestReadSet.worker,
+      updated_at: gapAt,
+    },
+  }
+  globalThis.__queueDrilldownTestRuntimeSnapshot = {
+    snapshot_at: gapAt,
+    generated_at: gapAt,
+    control: globalThis.__queueDrilldownTestReadSet.control,
+    worker: globalThis.__queueDrilldownTestReadSet.worker,
+    fastmcp: { reachable: true },
+    queue_depth: 0,
+    current_run: null,
+    current_live_run: null,
+    latest_noteworthy_run: null,
+    recent_failures: [],
+    failure_buckets: {
+      queued: 0,
+      running: 0,
+      completed: 0,
+      retrying: 0,
+      reconciling: 0,
+      published_degraded: 0,
+      failed_terminal: 0,
+      worker_stale: 0,
+    },
+  }
+
+  const second = await GET(new Request('http://localhost:3005/api/home/queue-drilldown?refresh=1'))
+  const secondPayload = await second.json()
+
+  assert.equal(firstPayload.operational_state, 'running')
+  assert.equal(secondPayload.operational_state, 'running')
+  assert.equal(secondPayload.live_state.current_live_run?.entity_name, 'Andy Reid')
+  assert.equal(secondPayload.queue.in_progress_entity?.entity_name, 'Andy Reid')
+})
+
+test('queue drilldown synthesizes a live entity from worker activity when db sampling misses a short run', async () => {
+  __resetQueueDrilldownRouteCacheForTests()
+  globalThis.__queueDrilldownReadSetCount = 0
+  globalThis.__queueDrilldownThrowOnReadSet = null
+  const snapshotAt = new Date().toISOString()
+
+  globalThis.__queueDrilldownTestReadSet = {
+    snapshot_at: snapshotAt,
+    control: {
+      is_paused: false,
+      pause_reason: null,
+      stop_reason: null,
+      stop_details: null,
+      updated_at: snapshotAt,
+      desired_state: 'running',
+      requested_state: 'running',
+      observed_state: 'running',
+      transition_state: 'running',
+    },
+    worker: {
+      worker_process_state: 'running',
+      worker_health: 'healthy',
+      worker_pid: 123,
+      worker_command: 'npm run worker:entity-pipeline',
+      worker_state_path: '/tmp/state.json',
+      worker_pid_path: '/tmp/pid',
+      started_at: snapshotAt,
+      stopped_at: null,
+      updated_at: snapshotAt,
+      last_error: null,
+      current_entity_id: 'andy-reid',
+      current_entity_name: 'Andy Reid',
+      current_question_id: 'q11_decision_owner',
+      current_question_text: 'Who is the highest probability buyer?',
+      current_action: 'entity_registration',
+      current_phase: 'dossier_generation',
+    },
+    fastmcp: { reachable: true },
+    rows: [],
+    dossiers: [],
+  }
+
+  globalThis.__queueDrilldownTestRuntimeSnapshot = {
+    snapshot_at: snapshotAt,
+    generated_at: snapshotAt,
+    control: globalThis.__queueDrilldownTestReadSet.control,
+    worker: globalThis.__queueDrilldownTestReadSet.worker,
+    fastmcp: { reachable: true },
+    queue_depth: 0,
+    current_run: null,
+    current_live_run: null,
+    latest_noteworthy_run: null,
+    recent_failures: [],
+    failure_buckets: {
+      queued: 0,
+      running: 0,
+      completed: 0,
+      retrying: 0,
+      reconciling: 0,
+      published_degraded: 0,
+      failed_terminal: 0,
+      worker_stale: 0,
+    },
+  }
+
+  const response = await GET(new Request('http://localhost:3005/api/home/queue-drilldown?refresh=1'))
+  const payload = await response.json()
+
+  assert.equal(payload.operational_state, 'running')
+  assert.equal(payload.live_state.current_live_run?.entity_name, 'Andy Reid')
+  assert.equal(payload.queue.in_progress_entity?.entity_name, 'Andy Reid')
+})
+
+test('queue drilldown falls back to the raw worker state file when runtime worker activity is missing', async () => {
+  __resetQueueDrilldownRouteCacheForTests()
+  globalThis.__queueDrilldownReadSetCount = 0
+  globalThis.__queueDrilldownThrowOnReadSet = null
+  const snapshotAt = new Date().toISOString()
+  const tempDir = await mkdtemp(path.join(os.tmpdir(), 'queue-drilldown-worker-state-'))
+  const workerStatePath = path.join(tempDir, 'entity-pipeline-worker-state.json')
+  await writeFile(workerStatePath, JSON.stringify({
+    worker_process_state: 'running',
+    worker_pid: 123,
+    worker_command: 'npm run worker:entity-pipeline',
+    worker_state_path: workerStatePath,
+    worker_pid_path: path.join(tempDir, 'entity-pipeline-worker.pid'),
+    started_at: snapshotAt,
+    stopped_at: null,
+    updated_at: snapshotAt,
+    last_error: null,
+    current_batch_id: 'batch-1',
+    current_entity_id: 'neill-blake',
+    current_canonical_entity_id: 'neill-blake',
+    current_entity_name: 'Neill Blake',
+    current_question_id: 'q11_decision_owner',
+    current_question_text: 'Who is the highest probability buyer?',
+    current_action: 'entity_registration',
+    current_phase: 'dossier_generation',
+    current_started_at: snapshotAt,
+    current_activity_at: snapshotAt,
+  }), 'utf8')
+
+  globalThis.__queueDrilldownTestReadSet = {
+    snapshot_at: snapshotAt,
+    control: {
+      is_paused: false,
+      pause_reason: null,
+      stop_reason: null,
+      stop_details: null,
+      updated_at: snapshotAt,
+      desired_state: 'running',
+      requested_state: 'running',
+      observed_state: 'running',
+      transition_state: 'running',
+    },
+    worker: {
+      worker_process_state: 'running',
+      worker_health: 'healthy',
+      worker_pid: 123,
+      worker_command: 'npm run worker:entity-pipeline',
+      worker_state_path: workerStatePath,
+      worker_pid_path: path.join(tempDir, 'entity-pipeline-worker.pid'),
+      started_at: snapshotAt,
+      stopped_at: null,
+      updated_at: snapshotAt,
+      last_error: null,
+      current_entity_id: null,
+      current_entity_name: null,
+      current_question_id: null,
+      current_question_text: null,
+      current_action: null,
+      current_phase: null,
+    },
+    fastmcp: { reachable: true },
+    rows: [],
+    dossiers: [],
+  }
+
+  globalThis.__queueDrilldownTestRuntimeSnapshot = {
+    snapshot_at: snapshotAt,
+    generated_at: snapshotAt,
+    control: globalThis.__queueDrilldownTestReadSet.control,
+    worker: globalThis.__queueDrilldownTestReadSet.worker,
+    fastmcp: { reachable: true },
+    queue_depth: 0,
+    current_run: null,
+    current_live_run: null,
+    latest_noteworthy_run: null,
+    recent_failures: [],
+    failure_buckets: {
+      queued: 0,
+      running: 0,
+      completed: 0,
+      retrying: 0,
+      reconciling: 0,
+      published_degraded: 0,
+      failed_terminal: 0,
+      worker_stale: 0,
+    },
+  }
+
+  const response = await GET(new Request('http://localhost:3005/api/home/queue-drilldown?refresh=1'))
+  const payload = await response.json()
+
+  assert.equal(payload.operational_state, 'running')
+  assert.equal(payload.runtime.worker.current_entity_name, 'Neill Blake')
+  assert.equal(payload.live_state.current_live_run?.entity_name, 'Neill Blake')
+  assert.equal(payload.queue.in_progress_entity?.entity_name, 'Neill Blake')
 })

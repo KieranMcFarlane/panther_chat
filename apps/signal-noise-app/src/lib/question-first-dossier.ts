@@ -2,11 +2,11 @@ import { existsSync, readdirSync, statSync } from 'fs'
 import { readFile } from 'fs/promises'
 import path from 'path'
 
-import { getDossierRoots } from '@/lib/dossier-paths'
-import { buildDossierTabs } from '@/lib/dossier-tabs'
-import { matchesEntityUuid, resolveEntityUuid } from '@/lib/entity-public-id'
-import { VALIDATION_ROLLOUT_PROOF_SET } from '@/lib/rollout-proof-set'
-import { allowDemoFallbacks } from '@/lib/runtime-env'
+import { getDossierRoots } from './dossier-paths.ts'
+import { buildDossierTabs } from './dossier-tabs.ts'
+import { matchesEntityUuid, resolveEntityUuid } from './entity-public-id.ts'
+import { VALIDATION_ROLLOUT_PROOF_SET } from './rollout-proof-set.ts'
+import { allowDemoFallbacks } from './runtime-env.ts'
 
 type EntityLike = {
   id?: unknown
@@ -297,6 +297,10 @@ function getQuestionTerminalState(question: Record<string, any>): string {
   ).toLowerCase()
 }
 
+function isAnsweredQuestionState(state: string): boolean {
+  return state === 'validated' || state === 'provisional'
+}
+
 function isNonBlockingQuestion(question: Record<string, any>): boolean {
   const summary = toText(
     question.terminal_summary
@@ -313,7 +317,7 @@ function deriveQuestionTerminalState(input: {
   rawStructuredOutput: Record<string, any>
   timeoutSalvage: Record<string, any>
   rawAnswerValue: unknown
-}): 'answered' | 'no_signal' | 'blocked' | 'skipped' {
+}): 'validated' | 'provisional' | 'no_signal' | 'blocked' | 'skipped' | 'failed' {
   const validationState = toText(input.answerRecord.validation_state).toLowerCase()
   const hasAnswerText = hasReadableValue(input.answer.summary)
     || hasReadableValue(input.answer.value)
@@ -326,17 +330,27 @@ function deriveQuestionTerminalState(input: {
     return 'skipped'
   }
 
-  if (hasAnswerText && ['validated', 'partially_validated', 'deterministic_detected', 'provisional', 'inferred'].includes(validationState)) {
-    return 'answered'
+  if (['failed', 'exhausted', 'tool_call_missing'].includes(validationState)) {
+    return 'failed'
   }
 
   if (
     blockedNote.includes('question conditions were not met')
     || blockedNote.includes('no capability-gap inference')
     || blockedNote.includes('upstream signals are available yet')
+    || blockedNote.includes('upstream signals are not available yet')
+    || blockedNote.includes('upstream signals are not available')
     || (dependsOn.length > 0 && validationState === 'no_signal' && !hasAnswerText)
   ) {
     return 'blocked'
+  }
+
+  if (hasAnswerText && ['validated', 'partially_validated', 'deterministic_detected'].includes(validationState)) {
+    return 'validated'
+  }
+
+  if (hasAnswerText && ['provisional', 'inferred', 'pending', 'partially_supported'].includes(validationState)) {
+    return 'provisional'
   }
 
   return 'no_signal'
@@ -348,7 +362,7 @@ function deriveQuestionTerminalSummary(input: {
   answer: Record<string, any>
   rawStructuredOutput: Record<string, any>
   timeoutSalvage: Record<string, any>
-  terminalState: 'answered' | 'no_signal' | 'blocked' | 'skipped'
+  terminalState: 'validated' | 'provisional' | 'no_signal' | 'blocked' | 'skipped' | 'failed'
   rawAnswerValue: unknown
 }): string {
   const commercialInterpretation = ensureObject(input.answer.commercial_interpretation)
@@ -403,6 +417,14 @@ function deriveQuestionTerminalSummary(input: {
     if (dependsOn.length > 0) {
       return `Blocked by upstream question state: ${dependsOn.join(', ')}`
     }
+  }
+
+  if (input.terminalState === 'failed') {
+    const failureReason = toText(input.answerRecord.failure_reason || input.answerRecord.notes || input.rawStructuredOutput.context)
+    if (failureReason) {
+      return failureReason
+    }
+    return 'Question execution failed before a safe answer could be produced.'
   }
 
   return 'No deterministic answer was produced for this question.'
@@ -539,6 +561,532 @@ function buildLegacyMergedQuestions(
         : {}),
     }
   })
+}
+
+function getQuestionPromotionTarget(question: Record<string, any>): string | null {
+  const questionId = toText(question.question_id).toLowerCase()
+  const signalType = toText(question.signal_type).toLowerCase()
+
+  if (['q2_digital_stack', 'q4_performance', 'q5_league_context'].includes(questionId) || ['digital_stack', 'performance', 'league_context'].includes(signalType)) {
+    return 'digital_stack'
+  }
+
+  if (['q8_explicit_rfp', 'q9_news_signal'].includes(questionId) || ['tender_docs', 'news_signal'].includes(signalType)) {
+    return 'timing_procurement_markers'
+  }
+
+  if (['q3_leadership', 'q11_decision_owner', 'q12_connections'].includes(questionId) || ['leadership', 'decision_owner', 'poi', 'connections'].includes(signalType)) {
+    return 'decision_owners'
+  }
+
+  if (
+    ['q7_procurement_signal', 'q10_hiring_signal', 'q13_capability_gap', 'q15_outreach_strategy'].includes(questionId)
+    || ['procurement_signal', 'launch_signal', 'hiring_signal', 'capability_gap', 'outreach_strategy'].includes(signalType)
+  ) {
+    return 'opportunity_signals'
+  }
+
+  return null
+}
+
+function getQuestionAnswerRecord(question: Record<string, any>): Record<string, any> {
+  return ensureObject(question.question_first_answer || question)
+}
+
+function getQuestionAnswerText(question: Record<string, any>): string {
+  const answerRecord = getQuestionAnswerRecord(question)
+  const answer = ensureObject(answerRecord.answer)
+  const rawStructuredOutput = ensureObject(answer.raw_structured_output)
+
+  return [
+    toDisplayText(answer.summary),
+    toDisplayText(answer.value),
+    toDisplayText(answerRecord.terminal_summary),
+    toDisplayText(rawStructuredOutput.answer),
+    toDisplayText(rawStructuredOutput.summary),
+    toDisplayText(rawStructuredOutput.context),
+    toDisplayText(answerRecord.notes),
+  ].find((value) => Boolean(value)) || ''
+}
+
+function getQuestionEvidenceUrls(question: Record<string, any>): string[] {
+  const answerRecord = getQuestionAnswerRecord(question)
+  const answer = ensureObject(answerRecord.answer)
+  const rawStructuredOutput = ensureObject(answer.raw_structured_output)
+  const sources = Array.isArray(rawStructuredOutput.sources) ? rawStructuredOutput.sources : []
+  const evidenceRefs = Array.isArray(answerRecord.evidence_refs) ? answerRecord.evidence_refs : []
+
+  return uniqueStrings(
+    [...sources, ...evidenceRefs]
+      .map((value) => toDisplayText(value))
+      .filter(Boolean),
+  )
+}
+
+function buildQuestionFirstPromotionEntry(question: Record<string, any>, promotionTarget: string): Record<string, any> | null {
+  const answerRecord = getQuestionAnswerRecord(question)
+  const answer = ensureObject(answerRecord.answer)
+  const rawStructuredOutput = ensureObject(answer.raw_structured_output)
+  const answerText = getQuestionAnswerText(question)
+  const evidenceUrls = getQuestionEvidenceUrls(question)
+
+  if (!answerText && evidenceUrls.length === 0) {
+    return null
+  }
+
+  const confidenceValue = Number(question.confidence ?? answerRecord.confidence ?? answer.validation_state?.confidence ?? 0)
+
+  return {
+    candidate_id: `${toText(question.question_id)}:${promotionTarget}`,
+    question_id: toText(question.question_id),
+    question_text: toText(question.question_text || question.question || ''),
+    promotion_target: promotionTarget,
+    signal_type: toText(question.signal_type || answerRecord.signal_type || ''),
+    answer: answerText,
+    confidence: Number.isFinite(confidenceValue) ? confidenceValue : 0,
+    evidence_url: evidenceUrls[0] || '',
+    evidence_urls: evidenceUrls,
+    evidence_id: toText(answerRecord.evidence_id || question.evidence_id || ''),
+    answer_kind: toText(answer.kind || answerRecord.answer_kind || ''),
+    validation_state: toText(question.validation_state || answerRecord.validation_state || '').toLowerCase(),
+    rollout_phase: toText(question.rollout_phase || answerRecord.rollout_phase || ''),
+    execution_class: toText(question.execution_class || answerRecord.execution_class || ''),
+    structured_output_schema: toText(question.structured_output_schema || answerRecord.structured_output_schema || rawStructuredOutput.schema_version || ''),
+    commercial_implication: toText(answerRecord.commercial_implication || question.commercial_implication || ''),
+  }
+}
+
+function buildQuestionFirstDiscoverySummary(questions: Record<string, any>[], answers: Record<string, any>[]) {
+  const promoted: Record<string, any>[] = []
+  const seenPromotionKeys = new Set<string>()
+  const evidenceCountKeys = new Set<string>()
+  const grouped: Record<string, Record<string, any>[]> = {
+    digital_stack: [],
+    opportunity_signals: [],
+    timing_procurement_markers: [],
+    decision_owners: [],
+  }
+
+  const answerByQuestionId = new Map<string, Record<string, any>>()
+  for (const answer of answers) {
+    const questionId = toText(answer?.question_id)
+    if (questionId && !answerByQuestionId.has(questionId)) {
+      answerByQuestionId.set(questionId, ensureObject(answer))
+    }
+  }
+
+  for (const question of questions) {
+    const promotionTarget = getQuestionPromotionTarget(question)
+    if (!promotionTarget) {
+      continue
+    }
+
+    const entry = buildQuestionFirstPromotionEntry(question, promotionTarget)
+    if (!entry) {
+      continue
+    }
+
+    const promotionKey = [entry.question_id, entry.promotion_target, entry.answer].join('|').toLowerCase()
+    if (seenPromotionKeys.has(promotionKey)) {
+      continue
+    }
+    seenPromotionKeys.add(promotionKey)
+    promoted.push(entry)
+    if (!grouped[promotionTarget]) {
+      grouped[promotionTarget] = []
+    }
+    grouped[promotionTarget].push(entry)
+
+    const evidenceKey = entry.evidence_url || entry.evidence_id || entry.candidate_id
+    if (evidenceKey) {
+      evidenceCountKeys.add(evidenceKey)
+    }
+  }
+
+  const decisionOwnerAnswer = answerByQuestionId.get('q11_decision_owner') || {}
+  const connectionsAnswer = answerByQuestionId.get('q12_connections') || {}
+  const capabilityGapAnswer = answerByQuestionId.get('q13_capability_gap') || {}
+  const ypFitAnswer = answerByQuestionId.get('q14_yp_fit') || {}
+  const outreachStrategyAnswer = answerByQuestionId.get('q15_outreach_strategy') || {}
+
+  const decisionOwnerRecord = getQuestionAnswerRecord(ensureObject(questions.find((question) => toText(question.question_id) === 'q11_decision_owner') || answerByQuestionId.get('q11_decision_owner') || {}))
+  const decisionOwnerAnswerRecord = ensureObject(decisionOwnerRecord.answer)
+  const decisionOwnerStructured = ensureObject(decisionOwnerAnswerRecord.structured_signal || decisionOwnerAnswer.structured_signal)
+  const decisionOwnerName = toText(
+    decisionOwnerStructured.decision_owner_name
+    || decisionOwnerStructured.name
+    || decisionOwnerAnswerRecord.value
+    || decisionOwnerAnswerRecord.summary
+    || decisionOwnerAnswer.summary
+    || decisionOwnerAnswer.value
+    || decisionOwnerAnswer.answer,
+  )
+  const decisionOwnerTitle = toText(
+    decisionOwnerStructured.decision_owner_title
+    || decisionOwnerStructured.title
+    || decisionOwnerStructured.role
+    || '',
+  )
+
+  const connectionsRecord = getQuestionAnswerRecord(ensureObject(questions.find((question) => toText(question.question_id) === 'q12_connections') || connectionsAnswer || {}))
+  const connectionsRaw = ensureObject(ensureObject(connectionsRecord.answer).raw_structured_output)
+  const connectionPaths = Array.isArray(connectionsRaw.candidate_paths) ? connectionsRaw.candidate_paths : []
+  const bestPath = connectionPaths.find((item) => item && typeof item === 'object') as Record<string, any> | undefined
+
+  const capabilityGapRecord = getQuestionAnswerRecord(ensureObject(questions.find((question) => toText(question.question_id) === 'q13_capability_gap') || capabilityGapAnswer || {}))
+  const capabilityGapRaw = ensureObject(ensureObject(capabilityGapRecord.answer).raw_structured_output)
+
+  const ypFitRecord = getQuestionAnswerRecord(ensureObject(questions.find((question) => toText(question.question_id) === 'q14_yp_fit') || ypFitAnswer || {}))
+  const ypFitRaw = ensureObject(ensureObject(ypFitRecord.answer).raw_structured_output)
+
+  const outreachStrategyRecord = getQuestionAnswerRecord(ensureObject(questions.find((question) => toText(question.question_id) === 'q15_outreach_strategy') || outreachStrategyAnswer || {}))
+  const outreachStrategyRaw = ensureObject(ensureObject(outreachStrategyRecord.answer).raw_structured_output)
+
+  const strongestOpportunity = promoted
+    .slice()
+    .sort((left, right) => Number(right.confidence || 0) - Number(left.confidence || 0))[0] || null
+
+  const graphitiSalesBrief = {
+    status: decisionOwnerName ? 'available' : 'insufficient_signal',
+    buyer_name: decisionOwnerName || null,
+    buyer_title: decisionOwnerTitle || null,
+    best_path_owner: toText(bestPath?.best_yp_owner || bestPath?.recommended_yp_owner || ''),
+    path_type: toText(bestPath?.path_type || ''),
+    capability_gap: toText(capabilityGapRaw.top_gap || capabilityGapRaw.gap_label || capabilityGapRaw.answer || ''),
+    yp_fit_service: toText(ypFitRaw.best_service || ypFitRaw.recommended_service || ''),
+    outreach_target: toText(outreachStrategyRaw.recommended_target || decisionOwnerName || ''),
+    outreach_route: toText(outreachStrategyRaw.recommended_route || bestPath?.path_type || ''),
+    outreach_angle: toText(outreachStrategyRaw.recommended_angle || strongestOpportunity?.answer || ''),
+    source: 'question_first_normalizer',
+  }
+  const recommendedApproach = toText(
+    graphitiSalesBrief.outreach_angle
+    || graphitiSalesBrief.outreach_target
+    || strongestOpportunity?.answer
+    || decisionOwnerName
+    || '',
+  )
+
+  const qualitySupportQuestions = questions.filter((question) => {
+    const text = getQuestionAnswerText(question)
+    return Boolean(text)
+  })
+
+  const sortPromotedEntries = (left: Record<string, any>, right: Record<string, any>) => {
+    const confidenceDiff = Number(right.confidence || 0) - Number(left.confidence || 0)
+    if (confidenceDiff !== 0) {
+      return confidenceDiff
+    }
+    return toText(left.candidate_id).localeCompare(toText(right.candidate_id))
+  }
+
+  promoted.sort(sortPromotedEntries)
+  for (const key of Object.keys(grouped)) {
+    grouped[key].sort(sortPromotedEntries)
+  }
+
+  return {
+    promoted_count: promoted.length,
+    supporting_evidence_count: evidenceCountKeys.size,
+    promotion_targets: Object.keys(grouped).filter((key) => grouped[key].length > 0),
+    promotion_rollout_phase: 'phase_3_decision',
+    client_ready: false,
+    client_ready_blockers: [],
+    graphiti_sales_brief: graphitiSalesBrief,
+    recommended_approach: recommendedApproach || null,
+    next_best_action: recommendedApproach || null,
+    yellow_panther_opportunity: {
+      estimated_probability: Number(strongestOpportunity?.confidence || 0),
+      service_fit: [graphitiSalesBrief.yp_fit_service].filter(Boolean),
+      entry_point: graphitiSalesBrief.outreach_target || decisionOwnerName || null,
+      competitive_advantage: strongestOpportunity?.answer || graphitiSalesBrief.capability_gap || null,
+      fit_feedback: strongestOpportunity?.answer || graphitiSalesBrief.outreach_angle || null,
+    },
+    ...grouped,
+    evidence_items: qualitySupportQuestions
+      .map((question) => ({
+        question_id: toText(question.question_id),
+        question_text: toText(question.question_text || question.question || ''),
+        answer: getQuestionAnswerText(question),
+        evidence_urls: getQuestionEvidenceUrls(question),
+      }))
+      .filter((item) => Boolean(item.answer) || item.evidence_urls.length > 0),
+  }
+}
+
+function getQuestionById(questions: Record<string, any>[], questionId: string): Record<string, any> | null {
+  return questions.find((question) => toText(question?.question_id) === questionId) || null
+}
+
+function getQuestionSummary(question: Record<string, any> | null | undefined): string {
+  if (!question) {
+    return ''
+  }
+
+  return getQuestionAnswerText(question) || toText(question.terminal_summary || question.notes)
+}
+
+function buildQuestionFirstCoreInfo(
+  entity: EntityLike | null | undefined,
+  dossier: Record<string, any>,
+  questions: Record<string, any>[],
+): Record<string, any> {
+  const foundationQuestion = getQuestionById(questions, 'q1_foundation')
+  const foundationSummary = getQuestionSummary(foundationQuestion)
+  const foundationAnswer = ensureObject(ensureObject(foundationQuestion?.question_first_answer).answer)
+  const foundationRaw = ensureObject(foundationAnswer.raw_structured_output)
+  const entityProperties = ensureObject(entity?.properties)
+
+  return {
+    name: getEntityName(entity, dossier),
+    type: getEntityType(entity, dossier),
+    league: toText(entityProperties.league || entityProperties.league_name || foundationRaw.league || foundationRaw.competition || ''),
+    founded: toText(
+      foundationRaw.founded_year
+      || foundationRaw.year_founded
+      || foundationRaw.founded
+      || entityProperties.founded
+      || entityProperties.founded_year
+      || entityProperties.year_founded
+      || 'Unknown',
+    ),
+    hq: toText(
+      entityProperties.headquarters
+      || entityProperties.hq
+      || entityProperties.country
+      || foundationRaw.headquarters
+      || foundationRaw.location
+      || '',
+    ) || 'Unknown',
+    stadium: toText(
+      entityProperties.stadium
+      || entityProperties.venue
+      || foundationRaw.stadium
+      || foundationRaw.ground
+      || foundationRaw.home_ground
+      || '',
+    ) || 'Unknown',
+    website: toText(
+      entityProperties.website
+      || entityProperties.url
+      || foundationRaw.website
+      || foundationRaw.url
+      || foundationRaw.href
+      || '',
+    ) || 'No website available',
+    employee_range: toText(
+      entityProperties.employee_range
+      || entityProperties.company_size
+      || foundationRaw.employee_range
+      || foundationRaw.employees
+      || '',
+    ) || 'Unknown',
+    grounding_summary: foundationSummary || 'No grounding summary available yet.',
+    source_questions: ['q1_foundation'],
+  }
+}
+
+function buildQuestionFirstDigitalTransformation(
+  questions: Record<string, any>[],
+  discoverySummary: Record<string, any>,
+): Record<string, any> {
+  const digitalQuestions = ['q2_digital_stack', 'q4_performance', 'q5_league_context']
+    .map((questionId) => getQuestionById(questions, questionId))
+    .filter(Boolean) as Record<string, any>[]
+
+  const discoveryDigitalStack = Array.isArray(discoverySummary.digital_stack) ? discoverySummary.digital_stack : []
+  const stackHighlights = uniqueStrings([
+    ...digitalQuestions.map((question) => getQuestionSummary(question)),
+    ...discoveryDigitalStack.map((entry) => toDisplayText(entry.answer || entry.question_text || entry.candidate_id)),
+  ])
+
+  return {
+    summary: stackHighlights[0] || 'Digital stack signals are still being assembled.',
+    digital_maturity: toText(
+      discoverySummary.digital_stack?.[0]?.score
+      || discoverySummary.digital_stack?.[0]?.confidence
+      || '',
+    ) || null,
+    current_tech_partners: uniqueStrings([
+      ...discoveryDigitalStack.map((entry) => toDisplayText(entry.answer || entry.question_text || entry.candidate_id)),
+    ]),
+    strategic_opportunities: uniqueStrings([
+      ...digitalQuestions.map((question) => getQuestionSummary(question)),
+      ...discoveryDigitalStack.map((entry) => toDisplayText(entry.answer || entry.question_text || entry.candidate_id)),
+    ]),
+    highlights: stackHighlights,
+    source_questions: ['q2_digital_stack', 'q4_performance', 'q5_league_context'],
+  }
+}
+
+function buildQuestionFirstProcurementSignals(
+  questions: Record<string, any>[],
+  discoverySummary: Record<string, any>,
+): Record<string, any> {
+  const procurementQuestions = ['q7_procurement_signal', 'q8_explicit_rfp', 'q9_news_signal', 'q10_hiring_signal']
+    .map((questionId) => getQuestionById(questions, questionId))
+    .filter(Boolean) as Record<string, any>[]
+  const decisionOwnerQuestions = ['q11_decision_owner', 'q12_connections', 'q13_capability_gap', 'q14_yp_fit', 'q15_outreach_strategy']
+    .map((questionId) => getQuestionById(questions, questionId))
+    .filter(Boolean) as Record<string, any>[]
+  const opportunityEntries = Array.isArray(discoverySummary.opportunity_signals) ? discoverySummary.opportunity_signals : []
+  const timingEntries = Array.isArray(discoverySummary.timing_procurement_markers)
+    ? discoverySummary.timing_procurement_markers
+    : Array.isArray(discoverySummary.timing_and_procurement)
+      ? discoverySummary.timing_and_procurement
+      : Array.isArray(discoverySummary.timing_markers)
+        ? discoverySummary.timing_markers
+        : []
+  const decisionOwnerEntries = Array.isArray(discoverySummary.decision_owners) ? discoverySummary.decision_owners : []
+  const evidenceItems = Array.isArray(discoverySummary.evidence_items) ? discoverySummary.evidence_items : []
+  const procurementHighlights = uniqueStrings([
+    ...procurementQuestions.map((question) => getQuestionSummary(question)),
+    ...opportunityEntries.map((entry) => toDisplayText(entry.answer || entry.question_text || entry.candidate_id)),
+    ...timingEntries.map((entry) => toDisplayText(entry.answer || entry.question_text || entry.candidate_id)),
+  ])
+
+  return {
+    summary: procurementHighlights[0] || 'Procurement and ecosystem signals are still being assembled.',
+    opportunity_signals: uniqueStrings([
+      ...opportunityEntries.map((entry) => toDisplayText(entry.answer || entry.question_text || entry.candidate_id)),
+      ...procurementQuestions.map((question) => getQuestionSummary(question)),
+    ]),
+    timing_markers: uniqueStrings([
+      ...timingEntries.map((entry) => toDisplayText(entry.answer || entry.question_text || entry.candidate_id)),
+    ]),
+    decision_owners: uniqueStrings([
+      ...decisionOwnerEntries.map((entry) => toDisplayText(entry.answer || entry.question_text || entry.candidate_id)),
+      ...decisionOwnerQuestions.map((question) => getQuestionSummary(question)),
+    ]),
+    evidence_urls: uniqueStrings([
+      ...evidenceItems.flatMap((entry) => Array.isArray(entry?.evidence_urls) ? entry.evidence_urls : []),
+    ]),
+    highlights: procurementHighlights,
+    source_questions: ['q7_procurement_signal', 'q8_explicit_rfp', 'q9_news_signal', 'q10_hiring_signal', 'q11_decision_owner', 'q12_connections', 'q13_capability_gap', 'q14_yp_fit', 'q15_outreach_strategy'],
+  }
+}
+
+function buildQuestionFirstTimingAnalysis(
+  procurementSignals: Record<string, any>,
+  discoverySummary: Record<string, any>,
+): Record<string, any> {
+  const timingMarkers = uniqueStrings([
+    ...(Array.isArray(procurementSignals.timing_markers) ? procurementSignals.timing_markers : []),
+    ...((Array.isArray(discoverySummary.timing_procurement_markers) ? discoverySummary.timing_procurement_markers : [])
+      .map((entry) => toDisplayText(entry?.answer || entry?.question_text || entry?.candidate_id))),
+  ])
+  const procurementSummary = toText(procurementSignals.summary)
+  const nextAction = toText(discoverySummary.next_best_action || discoverySummary.recommended_approach)
+
+  return {
+    summary: timingMarkers[0] || procurementSummary || 'Timing and procurement markers are still being assembled.',
+    timing_markers: timingMarkers,
+    next_best_action: nextAction || procurementSummary || null,
+    source_questions: ['q7_procurement_signal', 'q8_explicit_rfp', 'q9_news_signal', 'q10_hiring_signal', 'q15_outreach_strategy'],
+  }
+}
+
+function buildQuestionFirstConnectionsSummary(
+  discoverySummary: Record<string, any>,
+): Record<string, any> {
+  const buyerBrief = ensureObject(discoverySummary.graphiti_sales_brief)
+  const commercialPositioning = ensureObject(discoverySummary.yellow_panther_opportunity)
+  const promotedDecisionOwners = Array.isArray(discoverySummary.decision_owners) ? discoverySummary.decision_owners : []
+  const promotedOwnerTexts = uniqueStrings(
+    promotedDecisionOwners.map((entry) => toDisplayText(entry?.answer || entry?.question_text || entry?.candidate_id)),
+  )
+  const decisionOwner = toText(buyerBrief.buyer_name) || null
+  const decisionOwnerTitle = toText(buyerBrief.buyer_title) || null
+  const recommendedOwner = toText(buyerBrief.best_path_owner) || null
+  const pathType = toText(buyerBrief.path_type) || null
+  const outreachTarget = toText(buyerBrief.outreach_target) || null
+  const outreachRoute = toText(buyerBrief.outreach_route) || null
+  const serviceFit = uniqueStrings(
+    Array.isArray(commercialPositioning.service_fit)
+      ? commercialPositioning.service_fit
+      : [commercialPositioning.service_fit].filter(Boolean),
+  )
+  const summary =
+    toText(buyerBrief.outreach_angle)
+    || outreachTarget
+    || promotedOwnerTexts[0]
+    || ''
+
+  if (!decisionOwner && !recommendedOwner && !pathType && serviceFit.length === 0 && promotedOwnerTexts.length === 0) {
+    return {}
+  }
+
+  return {
+    summary,
+    decision_owner: decisionOwner,
+    decision_owner_title: decisionOwnerTitle,
+    recommended_owner: recommendedOwner,
+    path_type: pathType,
+    outreach_target: outreachTarget,
+    outreach_route: outreachRoute,
+    service_fit: serviceFit,
+    promoted_decision_owners: promotedOwnerTexts,
+    source_questions: ['q11_decision_owner', 'q12_connections', 'q14_yp_fit', 'q15_outreach_strategy'],
+  }
+}
+
+function buildQuestionFirstExecutiveSummary(
+  entityName: string,
+  qualitySummary: string,
+  coreInfo: Record<string, any>,
+  digitalTransformation: Record<string, any>,
+  procurementSignals: Record<string, any>,
+  discoverySummary: Record<string, any>,
+): Record<string, any> {
+  const preferredSummary = [
+    procurementSignals.summary,
+    discoverySummary.recommended_approach,
+    digitalTransformation.summary,
+    qualitySummary,
+    coreInfo.grounding_summary,
+  ]
+    .map((value) => toText(value))
+    .find((value) => value && value.toLowerCase() !== 'no grounding summary available yet.')
+  const highlights = uniqueStrings([
+    coreInfo.grounding_summary,
+    digitalTransformation.summary,
+    procurementSignals.summary,
+    discoverySummary.recommended_approach,
+    qualitySummary,
+  ])
+
+  return {
+    headline: `${entityName} question-first dossier`,
+    summary: preferredSummary || highlights[0] || qualitySummary || `Question-first dossier for ${entityName}`,
+    highlights,
+    question_count: Array.isArray(coreInfo.source_questions) ? coreInfo.source_questions.length : 0,
+    source: 'question_first_normalizer',
+  }
+}
+
+function buildQuestionFirstStrategicAnalysis(
+  qualitySummary: string,
+  discoverySummary: Record<string, any>,
+  digitalTransformation: Record<string, any>,
+  procurementSignals: Record<string, any>,
+  executiveSummary: Record<string, any>,
+): Record<string, any> {
+  return {
+    overall_assessment: qualitySummary || 'Assessment not yet available',
+    recommended_approach:
+      toText(discoverySummary.recommended_approach)
+      || toText(discoverySummary.next_best_action)
+      || procurementSignals.summary
+      || digitalTransformation.summary
+      || executiveSummary.summary
+      || 'Review the question-first answers and continue enrichment',
+    procurement_signals: procurementSignals,
+    digital_transformation: digitalTransformation,
+    executive_summary: executiveSummary,
+    buyer_brief: discoverySummary.graphiti_sales_brief || null,
+    commercial_positioning: discoverySummary.yellow_panther_opportunity || null,
+    source: 'question_first_normalizer',
+  }
 }
 
 export function mergeQuestionFirstRunArtifactIntoDossier(
@@ -709,7 +1257,7 @@ export function normalizeQuestionFirstDossier(
       )
     : []
   const questionsPresent = questions.length > 0 ? questions : answers
-  const answeredQuestions = questionsPresent.filter((question) => getQuestionTerminalState(ensureObject(question)) === 'answered')
+  const answeredQuestions = questionsPresent.filter((question) => isAnsweredQuestionState(getQuestionTerminalState(ensureObject(question))))
   const blockedQuestions = questionsPresent.filter((question) => getQuestionTerminalState(ensureObject(question)) === 'blocked')
   const skippedQuestions = questionsPresent.filter((question) => getQuestionTerminalState(ensureObject(question)) === 'skipped')
   const nonBlockingQuestions = blockedQuestions.filter((question) => isNonBlockingQuestion(ensureObject(question)))
@@ -720,6 +1268,47 @@ export function normalizeQuestionFirstDossier(
       .map((question) => toText(ensureObject(question).question_id))
       .filter(Boolean),
   )
+  const syntheticDiscoverySummary = buildQuestionFirstDiscoverySummary(questionsPresent, answers)
+  const existingDiscoverySummary = ensureObject(questionFirst.discovery_summary)
+  const mergedDiscoverySummary = Object.keys(existingDiscoverySummary).length > 0
+    ? {
+        ...syntheticDiscoverySummary,
+        ...existingDiscoverySummary,
+        digital_stack: Array.isArray(existingDiscoverySummary.digital_stack) && existingDiscoverySummary.digital_stack.length > 0
+          ? existingDiscoverySummary.digital_stack
+          : syntheticDiscoverySummary.digital_stack,
+        opportunity_signals: Array.isArray(existingDiscoverySummary.opportunity_signals) && existingDiscoverySummary.opportunity_signals.length > 0
+          ? existingDiscoverySummary.opportunity_signals
+          : syntheticDiscoverySummary.opportunity_signals,
+        timing_procurement_markers: Array.isArray(existingDiscoverySummary.timing_procurement_markers) && existingDiscoverySummary.timing_procurement_markers.length > 0
+          ? existingDiscoverySummary.timing_procurement_markers
+          : syntheticDiscoverySummary.timing_procurement_markers,
+        decision_owners: Array.isArray(existingDiscoverySummary.decision_owners) && existingDiscoverySummary.decision_owners.length > 0
+          ? existingDiscoverySummary.decision_owners
+          : syntheticDiscoverySummary.decision_owners,
+        promotion_targets: Array.isArray(existingDiscoverySummary.promotion_targets) && existingDiscoverySummary.promotion_targets.length > 0
+          ? existingDiscoverySummary.promotion_targets
+          : syntheticDiscoverySummary.promotion_targets,
+        evidence_items: Array.isArray(existingDiscoverySummary.evidence_items) && existingDiscoverySummary.evidence_items.length > 0
+          ? existingDiscoverySummary.evidence_items
+          : syntheticDiscoverySummary.evidence_items,
+        graphiti_sales_brief: Object.keys(ensureObject(existingDiscoverySummary.graphiti_sales_brief)).length > 0
+          ? existingDiscoverySummary.graphiti_sales_brief
+          : syntheticDiscoverySummary.graphiti_sales_brief,
+        yellow_panther_opportunity: Object.keys(ensureObject(existingDiscoverySummary.yellow_panther_opportunity)).length > 0
+          ? existingDiscoverySummary.yellow_panther_opportunity
+          : syntheticDiscoverySummary.yellow_panther_opportunity,
+      }
+    : syntheticDiscoverySummary
+  const promotedRows = [
+    ...(Array.isArray(mergedDiscoverySummary?.digital_stack) ? mergedDiscoverySummary.digital_stack : []),
+    ...(Array.isArray(mergedDiscoverySummary?.opportunity_signals) ? mergedDiscoverySummary.opportunity_signals : []),
+    ...(Array.isArray(mergedDiscoverySummary?.timing_procurement_markers) ? mergedDiscoverySummary.timing_procurement_markers : []),
+    ...(Array.isArray(mergedDiscoverySummary?.decision_owners) ? mergedDiscoverySummary.decision_owners : []),
+  ]
+  const dossierPromotions = promotedRows.length > 0
+    ? promotedRows
+    : Array.isArray(questionFirst.dossier_promotions) ? questionFirst.dossier_promotions : []
   const requiredQuestionBlockers = REQUIRED_QUESTION_IDS.flatMap((questionId) => {
     const question = questionsPresent.find((candidate) => toText(ensureObject(candidate).question_id) === questionId)
     if (!question) {
@@ -728,7 +1317,7 @@ export function normalizeQuestionFirstDossier(
 
     const normalizedQuestion = ensureObject(question)
     const terminalState = getQuestionTerminalState(normalizedQuestion)
-    if (terminalState === 'answered' || terminalState === 'skipped') {
+    if (isAnsweredQuestionState(terminalState) || terminalState === 'skipped') {
       return []
     }
 
@@ -740,7 +1329,7 @@ export function normalizeQuestionFirstDossier(
     return [summary || `${questionId} is ${terminalState || 'unresolved'}`]
   })
   const missingQuestionCount = Math.max(FULL_QUESTION_FIRST_PACK_SIZE - questionsPresent.length, 0)
-  const clientReady = questionFirst.discovery_summary?.client_ready === true
+  const clientReady = mergedDiscoverySummary?.client_ready === true
   let qualityState: 'complete' | 'partial' | 'blocked' | 'client_ready' = 'partial'
   let qualitySummary = ''
   let qualityBlockers: string[] = []
@@ -777,6 +1366,27 @@ export function normalizeQuestionFirstDossier(
     qualityBlockers = [`${missingQuestionCount} expected questions are still missing.`]
   }
 
+  const coreInfo = buildQuestionFirstCoreInfo(entity, dossier, questionsPresent)
+  const digitalTransformation = buildQuestionFirstDigitalTransformation(questionsPresent, mergedDiscoverySummary)
+  const procurementSignals = buildQuestionFirstProcurementSignals(questionsPresent, mergedDiscoverySummary)
+  const timingAnalysis = buildQuestionFirstTimingAnalysis(procurementSignals, mergedDiscoverySummary)
+  const connectionsSummary = buildQuestionFirstConnectionsSummary(mergedDiscoverySummary)
+  const executiveSummary = buildQuestionFirstExecutiveSummary(
+    getEntityName(entity, dossier),
+    qualitySummary,
+    coreInfo,
+    digitalTransformation,
+    procurementSignals,
+    mergedDiscoverySummary,
+  )
+  const strategicAnalysis = buildQuestionFirstStrategicAnalysis(
+    qualitySummary,
+    mergedDiscoverySummary,
+    digitalTransformation,
+    procurementSignals,
+    executiveSummary,
+  )
+
   const normalized = {
     ...dossier,
     entity_id: entityUuid,
@@ -798,18 +1408,30 @@ export function normalizeQuestionFirstDossier(
     },
     question_first: {
       ...questionFirst,
+      discovery_summary: mergedDiscoverySummary,
+      dossier_promotions: dossierPromotions,
       run_rollup: runRollup,
       categories,
       answers,
       question_timings: questionTimings,
       poi_graph: poiGraph,
     },
+    core_info: coreInfo,
+    digital_transformation: digitalTransformation,
+    procurement_signals: procurementSignals,
+    timing_analysis: timingAnalysis,
+    connections_summary: connectionsSummary,
+    executive_summary: executiveSummary,
+    strategic_analysis: strategicAnalysis,
+    recommended_approach: strategicAnalysis.recommended_approach,
     run_rollup: runRollup,
     categories,
     answers,
     questions,
     question_timings: questionTimings,
     poi_graph: poiGraph,
+    discovery_summary: mergedDiscoverySummary,
+    dossier_promotions: dossierPromotions,
     question_first_run_path: toText(dossier.question_first_run_path || rawDossier.question_first_run_path) || null,
     quality_state: qualityState,
     quality_summary: qualitySummary,
@@ -829,6 +1451,15 @@ export function normalizeQuestionFirstDossier(
 
   normalized.metadata.question_first = {
     ...ensureObject(normalized.metadata.question_first),
+    discovery_summary: mergedDiscoverySummary,
+    dossier_promotions: normalized.dossier_promotions,
+    core_info: coreInfo,
+    digital_transformation: digitalTransformation,
+    procurement_signals: procurementSignals,
+    timing_analysis: timingAnalysis,
+    connections_summary: connectionsSummary,
+    executive_summary: executiveSummary,
+    strategic_analysis: strategicAnalysis,
     quality_state: qualityState,
     quality_summary: qualitySummary,
     quality_blockers: qualityBlockers,

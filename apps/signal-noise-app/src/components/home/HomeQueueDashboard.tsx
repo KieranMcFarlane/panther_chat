@@ -114,6 +114,7 @@ type HomeQueueDashboardPayload = {
       universe_count: number
       total_scheduled: number
       completed: number
+      processed_dossiers?: number
       failed: number
       retryable_failures: number
       client_ready_dossiers: number
@@ -130,6 +131,7 @@ type HomeQueueDashboardPayload = {
       in_progress_entity: QueueEntityRecord | null
       running_entities: QueueEntityRecord[]
       stale_active_rows: QueueEntityRecord[]
+      processed_entities?: QueueEntityRecord[]
       resume_needed_entities: QueueEntityRecord[]
       upcoming_entities: QueueEntityRecord[]
     }
@@ -434,6 +436,7 @@ function deriveLiveDashboardState(
         universe_count: livePayload.loop_status.universe_count ?? fallbackLoopStatus?.universe_count ?? 0,
         total_scheduled: livePayload.loop_status.total_scheduled ?? fallbackLoopStatus?.total_scheduled ?? 0,
         completed: livePayload.loop_status.completed ?? fallbackLoopStatus?.completed ?? 0,
+        processed_dossiers: livePayload.loop_status.processed_dossiers ?? fallbackLoopStatus?.processed_dossiers ?? livePayload.loop_status.completed ?? fallbackLoopStatus?.completed ?? 0,
         failed: livePayload.loop_status.failed ?? fallbackLoopStatus?.failed ?? 0,
         retryable_failures: livePayload.loop_status.retryable_failures ?? fallbackLoopStatus?.retryable_failures ?? 0,
         client_ready_dossiers: livePayload.loop_status.quality_counts?.client_ready ?? fallbackLoopStatus?.client_ready_dossiers ?? 0,
@@ -639,6 +642,10 @@ export function HomeQueueDashboard() {
     : liveState.operational_state === 'stopped' && controlObservedState === 'starting'
       ? 'starting'
       : liveState.operational_state
+  const currentCanonicalEntity = queue.in_progress_entity ?? queue.running_entities[0] ?? null
+  const currentCanonicalEntityLabel = currentCanonicalEntity && typeof currentCanonicalEntity.queue_position === 'number'
+    ? `${currentCanonicalEntity.queue_position}/${loop_status.universe_count ?? loop_status.total_scheduled ?? '…'}`
+    : String(loop_status.universe_count ?? loop_status.total_scheduled ?? '…')
   const runningEntities = dedupeQueueItems([
     queue.in_progress_entity,
     ...queue.running_entities,
@@ -709,8 +716,11 @@ export function HomeQueueDashboard() {
                 aria-label="Open pipeline kanban"
                 title="Open pipeline kanban"
               >
-                <p className="text-xs uppercase tracking-[0.16em] text-slate-400">Completions</p>
-                <p className="mt-3 text-3xl font-semibold text-emerald-300">{loop_status.completed}</p>
+                <p className="text-xs uppercase tracking-[0.16em] text-slate-400">Canonical entity</p>
+                <p className="mt-3 text-3xl font-semibold text-emerald-300">{currentCanonicalEntityLabel}</p>
+                <p className="mt-2 text-xs uppercase tracking-[0.14em] text-slate-500">
+                  {currentCanonicalEntity?.entity_name ?? 'No active entity'}
+                </p>
               </button>
             </CardContent>
           </Card>

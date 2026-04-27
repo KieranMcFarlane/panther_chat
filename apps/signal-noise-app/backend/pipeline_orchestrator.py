@@ -47,7 +47,7 @@ except ImportError:
     from objective_profiles import DEFAULT_PIPELINE_OBJECTIVE, normalize_run_objective
 
 logger = logging.getLogger(__name__)
-DEFAULT_OPENCODE_MODEL = "zai-api/glm-5.1"
+DEFAULT_OPENCODE_MODEL = "zai-coding-plan/glm-5.1"
 
 
 @dataclass
@@ -162,6 +162,43 @@ class PipelineOrchestrator:
             **self._question_first_runtime_metadata(request_metadata=request_metadata),
         }
         return source_payload
+
+    async def _persist_question_first_dossier_snapshot(
+        self,
+        *,
+        run_id: str,
+        entity_id: str,
+        entity_name: str,
+        entity_type: str,
+        dossier: Dict[str, Any],
+        question_first_meta: Optional[Dict[str, Any]] = None,
+        request_metadata: Optional[Dict[str, Any]] = None,
+    ) -> None:
+        """
+        Persist the enriched question-first dossier immediately after enrichment.
+
+        This is intentionally earlier than the final publication stage so the
+        entity dossier page can render the result even if later phases fail.
+        """
+        if not isinstance(dossier, dict) or not dossier:
+            return
+        payload: Dict[str, Any] = {
+            "entity_name": entity_name,
+            "entity_type": entity_type,
+            "dossier": dossier,
+        }
+        if isinstance(question_first_meta, dict) and question_first_meta:
+            payload["question_first"] = question_first_meta
+        if isinstance(request_metadata, dict) and request_metadata:
+            payload["request_metadata"] = request_metadata
+        await self.persistence_coordinator.persist_run_artifacts(
+            run_id=run_id,
+            entity_id=entity_id,
+            phase="question_first_enrichment",
+            record_type="question_first_dossier",
+            record_id=entity_id,
+            payload=payload,
+        )
 
     def _build_canonical_publication_dossier(
         self,
@@ -317,6 +354,26 @@ class PipelineOrchestrator:
                     },
                 )
                 logger.warning("🚦 Pipeline boundary: question_first_enrichment:complete")
+                try:
+                    await self._persist_question_first_dossier_snapshot(
+                        run_id=run_id,
+                        entity_id=entity_id,
+                        entity_name=entity_name,
+                        entity_type=entity_type,
+                        dossier=dossier,
+                        question_first_meta=question_first_meta if isinstance(question_first_meta, dict) else None,
+                        request_metadata=request_metadata,
+                    )
+                except Exception as error:  # noqa: BLE001
+                    logger.warning(
+                        "question_first_dossier_snapshot_persist_failed",
+                        extra={
+                            "entity_id": entity_id,
+                            "entity_name": entity_name,
+                            "run_id": run_id,
+                            "error": str(error),
+                        },
+                    )
             else:
                 await self._emit_phase_update(phase_callback, "dossier_generation", {"status": "running", "current_substep": "dossier_generation_running"})
                 dossier = await self._run_dossier_generation(
@@ -358,6 +415,26 @@ class PipelineOrchestrator:
                         },
                     )
                     logger.warning("🚦 Pipeline boundary: question_first_enrichment:complete")
+                    try:
+                        await self._persist_question_first_dossier_snapshot(
+                            run_id=run_id,
+                            entity_id=entity_id,
+                            entity_name=entity_name,
+                            entity_type=entity_type,
+                            dossier=dossier,
+                            question_first_meta=question_first_meta if isinstance(question_first_meta, dict) else None,
+                            request_metadata=request_metadata,
+                        )
+                    except Exception as error:  # noqa: BLE001
+                        logger.warning(
+                            "question_first_dossier_snapshot_persist_failed",
+                            extra={
+                                "entity_id": entity_id,
+                                "entity_name": entity_name,
+                                "run_id": run_id,
+                                "error": str(error),
+                            },
+                        )
             dossier = self._coerce_dossier_payload(dossier)
             await self._emit_phase_update(
                 phase_callback,
@@ -413,6 +490,26 @@ class PipelineOrchestrator:
                         },
                     )
                     logger.warning("🚦 Pipeline boundary: question_first_enrichment:complete")
+                    try:
+                        await self._persist_question_first_dossier_snapshot(
+                            run_id=run_id,
+                            entity_id=entity_id,
+                            entity_name=entity_name,
+                            entity_type=entity_type,
+                            dossier=dossier,
+                            question_first_meta=question_first_meta if isinstance(question_first_meta, dict) else None,
+                            request_metadata=request_metadata,
+                        )
+                    except Exception as error:  # noqa: BLE001
+                        logger.warning(
+                            "question_first_dossier_snapshot_persist_failed",
+                            extra={
+                                "entity_id": entity_id,
+                                "entity_name": entity_name,
+                                "run_id": run_id,
+                                "error": str(error),
+                            },
+                        )
             phase_results["dossier_generation"] = {"status": "completed"}
             step_artifacts.extend(self._build_dossier_step_artifacts(dossier=dossier, entity_id=entity_id))
 

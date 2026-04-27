@@ -7,9 +7,11 @@ import { getNormalizedUniverseCount } from '@/lib/normalized-universe-count'
 import { matchesEntityUuid, resolveEntityUuid } from '@/lib/entity-public-id'
 import { mergeQuestionFirstRunArtifactIntoDossier, normalizeQuestionFirstDossier, resolveCanonicalQuestionFirstDossier } from '@/lib/question-first-dossier'
 import { resolveOperationalHeartbeatDetails } from '@/lib/operational-heartbeat'
+import { query as queryPostgres } from '@/lib/pg-client'
 import { readPipelineControlState } from '@/lib/pipeline-control-state'
 import { buildPipelineRuntimeSnapshot, loadPipelineRuntimeReadSet, type PipelineRuntimeRunRecord } from '@/lib/pipeline-runtime'
 import { loadQuestionFirstLiveQueueSnapshot, loadQuestionFirstScaleManifest } from '@/lib/question-first-manifest'
+import { describeQuestionFirstQueueOrder, sortQuestionFirstManifestEntities } from '@/lib/question-first-queue-order'
 import { ROLLOUT_PROOF_SET } from '@/lib/rollout-proof-set'
 
 type ScaleProgress = {
@@ -154,6 +156,7 @@ export type HomeQueueDashboardPayload = {
     universe_count: number
     total_scheduled: number
     completed: number
+    processed_dossiers?: number
     failed: number
     retryable_failures: number
     client_ready_dossiers: number
@@ -170,6 +173,7 @@ export type HomeQueueDashboardPayload = {
     in_progress_entity: QueueEntityRecord | null
     running_entities: QueueEntityRecord[]
     stale_active_rows?: QueueEntityRecord[]
+    processed_entities?: QueueEntityRecord[]
     resume_needed_entities: QueueEntityRecord[]
     upcoming_entities: QueueEntityRecord[]
   }
@@ -213,6 +217,15 @@ type PipelineRunRecord = {
   metadata?: Record<string, unknown> | null
 }
 
+type ProcessedDossierRow = {
+  entity_id: string
+  canonical_entity_id?: string | null
+  entity_name: string
+  entity_type: string
+  generated_at: string | null
+  dossier_data?: Record<string, unknown> | null
+}
+
 type LoopHealth = 'active' | 'stale' | 'idle'
 type LoopSource = 'pipeline_runs' | 'diagnostics' | 'snapshot'
 
@@ -240,6 +253,103 @@ const EMPTY_RUNTIME_COUNTS: Record<RuntimeState, number> = {
   stalled: 0,
   retryable: 0,
   resume_needed: 0,
+}
+
+async function loadProcessedDossierCount(): Promise<number> {
+  try {
+    const result = await queryPostgres(`
+      select count(distinct canonical_entity_id)::int as processed_dossiers
+      from entity_dossiers
+      where canonical_entity_id is not null
+    `)
+    const rawValue = result.rows?.[0]?.processed_dossiers
+    const processedDossiers = Number(rawValue)
+    return Number.isFinite(processedDossiers) ? processedDossiers : 0
+  } catch {
+    return 0
+  }
+}
+
+function extractProcessedDossierSummary(dossierData: Record<string, unknown> | null): string | null {
+  if (!dossierData || typeof dossierData !== 'object') return null
+
+  const questionFirst = dossierData.question_first && typeof dossierData.question_first === 'object'
+    ? dossierData.question_first as Record<string, unknown>
+    : null
+  const discoverySummary = questionFirst?.discovery_summary && typeof questionFirst.discovery_summary === 'object'
+    ? questionFirst.discovery_summary as Record<string, unknown>
+    : null
+  const graphiti = discoverySummary?.graphiti_sales_brief && typeof discoverySummary.graphiti_sales_brief === 'object'
+    ? discoverySummary.graphiti_sales_brief as Record<string, unknown>
+    : null
+
+  const candidates = [
+    graphiti?.outreach_angle,
+    graphiti?.outreach_target,
+    discoverySummary?.recommended_approach,
+    discoverySummary?.opportunity_summary,
+    discoverySummary?.summary,
+    dossierData.recommended_approach,
+    dossierData.overall_assessment,
+    questionFirst?.summary,
+    questionFirst?.recommended_approach,
+    questionFirst?.discovery_summary,
+  ]
+  for (const candidate of candidates) {
+    const text = toText(candidate)
+    if (text) return text
+  }
+  return null
+}
+
+async function loadProcessedDossierRows(limit = 100): Promise<ProcessedDossierRow[]> {
+  try {
+    const result = await queryPostgres(
+      `
+        select entity_id, canonical_entity_id, entity_name, entity_type, generated_at, dossier_data
+        from entity_dossiers
+        where canonical_entity_id is not null
+        order by generated_at desc nulls last, entity_name asc
+        limit $1
+      `,
+      [limit],
+    )
+    return Array.isArray(result.rows)
+      ? result.rows.map((row) => ({
+        entity_id: toText(row.entity_id),
+        canonical_entity_id: toText(row.canonical_entity_id) || null,
+        entity_name: toText(row.entity_name),
+        entity_type: toText(row.entity_type) || 'Entity',
+        generated_at: toText(row.generated_at) || null,
+        dossier_data: (row.dossier_data && typeof row.dossier_data === 'object') ? row.dossier_data as Record<string, unknown> : null,
+      }))
+      : []
+  } catch {
+    return []
+  }
+}
+
+function mapProcessedDossierRowsToQueueEntities(rows: ProcessedDossierRow[]): QueueEntityRecord[] {
+  return rows.map((row, index) => ({
+    entity_id: row.canonical_entity_id || row.entity_id,
+    entity_name: row.entity_name || row.canonical_entity_id || row.entity_id,
+    entity_type: row.entity_type || 'Entity',
+    state: 'completed',
+    client_ready: false,
+    promoted: true,
+    summary: extractProcessedDossierSummary(row.dossier_data),
+    generated_at: row.generated_at,
+    started_at: row.generated_at,
+    current_question_id: 'completed',
+    current_question_text: 'Completed dossier',
+    run_phase: 'completed',
+    publication_status: 'published',
+    next_action: 'Open the completed dossier',
+    freshness_state: 'fresh',
+    queue_position: index + 1,
+    heartbeat_at: row.generated_at,
+    heartbeat_source: 'entity_dossiers',
+  }))
 }
 
 function toText(value: unknown): string {
@@ -1415,13 +1525,12 @@ export async function buildHomeQueueDashboardPayload(options: BuildOptions = {})
   const snapshotPath = path.join(appRoot, 'backend', 'data', 'question_first_live_queue_snapshot.json')
   const manifestPayload = loadQuestionFirstScaleManifest(appRoot) as Record<string, unknown> | null
   const manifestEntities = Array.isArray(manifestPayload?.entities) ? manifestPayload.entities as ManifestEntity[] : []
-  const playlistSortKey = Array.isArray(manifestPayload?.sort_key)
-    ? manifestPayload.sort_key.map((part) => String(part || '').trim()).filter(Boolean)
-    : []
   const normalizedUniverseCount = await getNormalizedUniverseCount()
-  const universeCount = normalizedUniverseCount ?? manifestEntities.length
   const dossierRoot = path.join(appRoot, 'backend', 'data', 'dossiers', 'question_first')
   const canonicalEntities = await getCanonicalEntitiesSnapshot()
+  const orderedManifestEntities = sortQuestionFirstManifestEntities(manifestEntities, canonicalEntities)
+  const playlistSortKey = describeQuestionFirstQueueOrder()
+  const universeCount = normalizedUniverseCount ?? orderedManifestEntities.length
   const clientReadyStore = includeClientReadyDossiers || includeSalesSummary
     ? buildClientReadyDossiersStore(dossierRoot, canonicalEntities)
     : { cards: [] as ClientReadyDossierCard[], sales: [] as SalesSummaryItem[], ids: new Set<string>() }
@@ -1441,6 +1550,8 @@ export async function buildHomeQueueDashboardPayload(options: BuildOptions = {})
   let runtimeCurrentLiveRun: PipelineRuntimeRunRecord | null = null
   let pipelineRuns: PipelineRunRecord[] = []
   let activeRepairRuns: PipelineRunRecord[] = []
+  const processedDossierRows = await loadProcessedDossierRows(200)
+  const processedEntities = mapProcessedDossierRowsToQueueEntities(processedDossierRows)
 
   try {
     const runtimeReadSet = await loadPipelineRuntimeReadSet()
@@ -1451,7 +1562,7 @@ export async function buildHomeQueueDashboardPayload(options: BuildOptions = {})
   }
 
   try {
-    pipelineRuns = await loadPipelineRuns(manifestEntities.map((entity) => entity.entity_id))
+    pipelineRuns = await loadPipelineRuns(orderedManifestEntities.map((entity) => entity.entity_id))
   } catch {
     pipelineRuns = []
   }
@@ -1463,9 +1574,9 @@ export async function buildHomeQueueDashboardPayload(options: BuildOptions = {})
   }
 
   const dashboardEntities = [
-    ...manifestEntities,
+    ...orderedManifestEntities,
     ...activeRepairRuns
-      .filter((run) => !manifestEntities.some((entity) => entity.entity_id === run.entity_id))
+      .filter((run) => !orderedManifestEntities.some((entity) => entity.entity_id === run.entity_id))
       .map((run) => {
         const metadata = (run.metadata && typeof run.metadata === 'object') ? run.metadata as Record<string, unknown> : {}
         return {
@@ -1476,6 +1587,7 @@ export async function buildHomeQueueDashboardPayload(options: BuildOptions = {})
       }),
   ]
   const allPipelineRuns = [...pipelineRuns, ...activeRepairRuns]
+  const processedDossierCount = await loadProcessedDossierCount()
 
   const queue = allPipelineRuns.length > 0
     ? await buildQueueState(dashboardEntities, allPipelineRuns, ids)
@@ -1486,7 +1598,7 @@ export async function buildHomeQueueDashboardPayload(options: BuildOptions = {})
   const selectedSource = selectQueueSource({
     control,
     universeCount,
-    manifestCount: manifestEntities.length,
+    manifestCount: orderedManifestEntities.length,
     progress,
     progressPath,
     pipelineRuns: allPipelineRuns,
@@ -1525,16 +1637,18 @@ export async function buildHomeQueueDashboardPayload(options: BuildOptions = {})
   runtimeSelectedSource.loop_status = {
     ...runtimeSelectedSource.loop_status,
     universe_count: universeCount,
+    processed_dossiers: processedDossierCount,
     runtime_counts: runtimeCounts,
   }
 
   return {
     control,
-    playlist_sort_key: playlistSortKey.length > 0
-      ? playlistSortKey
-      : ['priority_score DESC', 'entity_type ASC', 'entity_name ASC', 'entity_id ASC'],
+    playlist_sort_key: playlistSortKey,
     loop_status: runtimeSelectedSource.loop_status,
-    queue: runtimeSelectedSource.queue,
+    queue: {
+      ...runtimeSelectedSource.queue,
+      processed_entities: processedEntities.slice(0, 200),
+    },
     client_ready_dossiers: includeClientReadyDossiers ? cards.slice(0, 6) : [],
     rfp_cards: rfpCards.slice(0, 6),
     sales_summary: {

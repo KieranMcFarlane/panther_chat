@@ -3,6 +3,7 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 
 import { getSupabaseAdmin } from '@/lib/supabase-client'
+import { query as queryPostgres } from '@/lib/pg-client'
 import { CANONICAL_GOVERNING_BODY_OVERRIDES } from '@/lib/canonical-governing-body-overrides'
 import { canonicalizeEntities, type CanonicalEntity } from '@/lib/entity-canonicalization'
 import { loadQuestionFirstScaleManifest } from '@/lib/question-first-manifest'
@@ -11,7 +12,7 @@ const scaleManifestData = loadQuestionFirstScaleManifest()
 
 const SNAPSHOT_TTL_MS = 15 * 60_000
 const localFalkorExportPath = path.resolve(process.cwd(), 'backend', 'falkordb_export.json')
-const canonicalEntitySelectColumns = 'id, name, entity_type, sport, league, country, canonical_key, badge_path, badge_s3_url, labels, properties, source_neo4j_ids, source_graph_ids, source_entity_ids'
+const canonicalEntitySelectColumns = 'id, name, entity_type, sport, league, country, canonical_key, badge_path, badge_s3_url, labels, properties, source_neo4j_ids, source_graph_ids, source_entity_ids, priority_score, quality_score, alias_count, entity_category, league_canonical_entity_id, parent_canonical_entity_id'
 const canonicalEntitiesInvalidationPath = path.resolve(process.cwd(), 'tmp', 'canonical-entities-cache.invalidated.json')
 const hasUsableSupabaseConfiguration = Boolean(
   process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL
@@ -50,6 +51,12 @@ function mapCanonicalEntityRow(entity: any): CanonicalEntity {
       league: entity.league || entity.properties?.league || '',
       country: entity.country || entity.properties?.country || '',
       canonical_key: entity.canonical_key || entity.properties?.canonical_key || '',
+      priority_score: entity.priority_score || entity.properties?.priority_score || 0,
+      quality_score: entity.quality_score || entity.properties?.quality_score || 0,
+      alias_count: entity.alias_count || entity.properties?.alias_count || 0,
+      entity_category: entity.entity_category || entity.properties?.entity_category || '',
+      league_canonical_entity_id: entity.league_canonical_entity_id || entity.properties?.league_canonical_entity_id || '',
+      parent_canonical_entity_id: entity.parent_canonical_entity_id || entity.properties?.parent_canonical_entity_id || '',
     },
   }
 }
@@ -97,6 +104,36 @@ async function fetchCanonicalEntitiesFromLocalExport(): Promise<CanonicalEntity[
   return applyCanonicalOverrides(exportEntities.map(mapCanonicalEntityRow))
 }
 
+async function fetchCanonicalEntitiesFromLocalPostgres(): Promise<CanonicalEntity[]> {
+  const { rows } = await queryPostgres(`
+    select
+      id,
+      name,
+      entity_type,
+      sport,
+      league,
+      country,
+      canonical_key,
+      badge_path,
+      badge_s3_url,
+      labels,
+      properties,
+      source_neo4j_ids,
+      source_graph_ids,
+      source_entity_ids,
+      priority_score,
+      quality_score,
+      alias_count,
+      entity_category,
+      league_canonical_entity_id,
+      parent_canonical_entity_id
+    from canonical_entities
+    order by name asc
+  `)
+
+  return applyCanonicalOverrides((rows || []).map(mapCanonicalEntityRow))
+}
+
 function fetchCanonicalEntitiesFromBundledManifest(): CanonicalEntity[] {
   const manifestEntities = Array.isArray(scaleManifestData?.entities) ? scaleManifestData.entities : []
   return applyCanonicalOverrides(
@@ -119,6 +156,10 @@ function fetchCanonicalEntitiesFromBundledManifest(): CanonicalEntity[] {
 async function fetchCanonicalEntitiesFromBestAvailableSource(): Promise<CanonicalEntity[]> {
   if (!hasUsableSupabaseConfiguration) {
     console.log('Supabase configuration is not available in this environment')
+    if (process.env.DATABASE_URL?.trim()) {
+      console.log('Falling back to local Postgres for canonical entities snapshot')
+      return fetchCanonicalEntitiesFromLocalPostgres()
+    }
     if (existsSync(localFalkorExportPath)) {
       console.log('Falling back to local Falkor export for canonical entities snapshot')
       return fetchCanonicalEntitiesFromLocalExport()
@@ -136,9 +177,26 @@ async function fetchCanonicalEntitiesFromBestAvailableSource(): Promise<Canonica
     }
   }
 
+  if (!preferSupabaseSnapshot && process.env.DATABASE_URL?.trim()) {
+    console.log('Falling back to local Postgres for canonical entities snapshot')
+    try {
+      return await fetchCanonicalEntitiesFromLocalPostgres()
+    } catch (localPostgresError) {
+      console.warn('⚠️ Failed to load local Postgres snapshot, falling back to Supabase snapshot:', localPostgresError)
+    }
+  }
+
   try {
     return await fetchCanonicalEntitiesFromSupabase()
   } catch (supabaseError) {
+    if (process.env.DATABASE_URL?.trim()) {
+      console.log('Falling back to local Postgres for canonical entities snapshot')
+      try {
+        return await fetchCanonicalEntitiesFromLocalPostgres()
+      } catch (localPostgresError) {
+        console.warn('⚠️ Failed to load local Postgres snapshot, falling back to local Falkor export:', localPostgresError)
+      }
+    }
     if (existsSync(localFalkorExportPath)) {
       console.log('Falling back to local Falkor export for canonical entities snapshot')
       return fetchCanonicalEntitiesFromLocalExport()

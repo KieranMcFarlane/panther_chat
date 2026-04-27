@@ -16,7 +16,7 @@ const APP_ROOT = path.resolve(MODULE_DIR, '..');
 const WORKTREE_ROOT = path.resolve(APP_ROOT, '..', '..');
 const QUESTION_PROGRESS_FRAMEWORK_PATH = path.join(APP_ROOT, 'backend', 'question_progress_framework.json');
 const STANDALONE_BRIGHTDATA_FALLBACK_SCRIPT = path.join(APP_ROOT, 'scripts', 'standalone_brightdata_fallback.py');
-const DEFAULT_PROVIDER_ID = 'zai-api';
+const DEFAULT_PROVIDER_ID = 'zai-coding-plan';
 const DEFAULT_MODEL_ID = 'glm-5.1';
 const DEFAULT_MODEL = `${DEFAULT_PROVIDER_ID}/${DEFAULT_MODEL_ID}`;
 const COMMERCIAL_SIGNAL_QUESTION_IDS = new Set([
@@ -56,7 +56,7 @@ function _resolveOpenCodeEnv(explicit) {
   _loadEnv(true);
   const env = explicit || _captureOpenCodeExplicitEnv();
   return {
-    baseUrl: env.baseUrl || process.env.ZAI_BASE_URL || 'https://api.z.ai/api/paas/v4',
+    baseUrl: env.baseUrl || process.env.ZAI_BASE_URL || 'https://api.z.ai/api/anthropic/v1',
     apiKey: env.zaiApiKey || process.env.ZAI_API_KEY || '',
     brightdataToken:
       env.brightdataApiToken || env.brightdataToken || process.env.BRIGHTDATA_API_TOKEN || process.env.BRIGHTDATA_TOKEN || '',
@@ -156,6 +156,17 @@ async function _normalizeQuestionSourceQuestions(sourcePayload) {
           const normalizedQuestionId = String(hydratedQuestion.question_id || hydratedQuestion.id || hydratedQuestion.slug || `q${index + 1}`).trim();
           const progressFields = progressLookup.get(normalizedQuestionId) || {};
           const normalizedQuestionText = String(hydratedQuestion.question_text || hydratedQuestion.question || hydratedQuestion.prompt || '').trim();
+          const sourcePriority = Array.isArray(hydratedQuestion.source_priority) && hydratedQuestion.source_priority.length > 0
+            ? [...hydratedQuestion.source_priority]
+            : (Array.isArray(hydratedQuestion.current_source_order) && hydratedQuestion.current_source_order.length > 0
+              ? [...hydratedQuestion.current_source_order]
+              : resolveQuestionSourceOrder({
+                ...hydratedQuestion,
+                question_id: normalizedQuestionId,
+              }, String(hydratedQuestion.entity_type || entityType).trim() || entityType));
+          const currentSourceOrder = Array.isArray(progressFields.current_source_order) && progressFields.current_source_order.length > 0
+            ? [...progressFields.current_source_order]
+            : sourcePriority;
           return {
             ...hydratedQuestion,
             ...Object.fromEntries(Object.entries(progressFields).filter(([, value]) => value !== null && value !== undefined)),
@@ -167,6 +178,8 @@ async function _normalizeQuestionSourceQuestions(sourcePayload) {
             entity_type: String(hydratedQuestion.entity_type || entityType).trim() || entityType,
             preset: hydratedQuestion.preset ?? preset,
             current_execution_state: String(hydratedQuestion.current_execution_state || progressFields.current_execution_state || 'searching sources').trim(),
+            source_priority: sourcePriority,
+            current_source_order: currentSourceOrder,
           };
         })
     : [];
@@ -174,6 +187,54 @@ async function _normalizeQuestionSourceQuestions(sourcePayload) {
 
 function _isCommercialSignalQuestion(question) {
   return COMMERCIAL_SIGNAL_QUESTION_IDS.has(String(question?.question_id || '').trim());
+}
+
+function _getQuestionFamilyKey(question) {
+  const questionId = String(question?.question_id || '').trim().toLowerCase();
+  const questionType = String(question?.question_type || '').trim().toLowerCase();
+
+  if (['q7_procurement_signal', 'q8_explicit_rfp', 'q10_hiring_signal'].includes(questionId) || ['procurement', 'procurement_signal', 'tender_docs', 'hiring_signal'].includes(questionType)) {
+    return 'procurement';
+  }
+  if (['q11_decision_owner', 'q12_connections', 'q15_outreach_strategy', 'q3_leadership'].includes(questionId) || ['decision_owner', 'connections', 'outreach_strategy', 'leadership', 'poi'].includes(questionType)) {
+    return 'decision-owner';
+  }
+  if (['q2_digital_stack', 'q6_launch_signal', 'q9_news_signal'].includes(questionId) || ['digital_stack', 'launch_signal', 'news_signal', 'performance', 'league_context'].includes(questionType)) {
+    return 'digital';
+  }
+  if (['q13_capability_gap', 'q14_yp_fit'].includes(questionId) || ['capability_gap', 'yp_fit'].includes(questionType)) {
+    return 'capability';
+  }
+  return 'generic';
+}
+
+export function resolveQuestionSourceOrder(question, entityType = 'ENTITY') {
+  const normalizedEntityType = String(entityType || question?.entity_type || 'ENTITY').trim().toUpperCase();
+  const family = _getQuestionFamilyKey(question);
+
+  const entityTypeDefaults = {
+    CLUB: ['official_site', 'leadership_page', 'vacancies', 'app_store', 'sponsors', 'news', 'linkedin_posts', 'wikipedia'],
+    LEAGUE: ['official_site', 'broadcast_partner', 'app_store', 'commercial_partner', 'federation_site', 'press_release', 'news', 'linkedin_posts'],
+    FEDERATION: ['official_site', 'tender_portal', 'board_minutes', 'strategic_plan', 'leadership_page', 'press_release', 'news', 'linkedin_posts'],
+    PERSON: ['official_bio', 'linkedin_posts', 'interview', 'official_site', 'news'],
+    ENTITY: ['official_site', 'news', 'linkedin_posts', 'wikipedia'],
+  };
+
+  const familyOverrides = {
+    procurement: ['vacancies', 'partner_announcement', 'vendor_page', 'tender_portal', 'press_release', 'news'],
+    'decision-owner': ['official_site', 'linkedin_posts', 'news', 'leadership_page', 'official_bio'],
+    digital: ['official_site', 'app_store', 'press_release', 'news', 'vendor_page', 'wikipedia'],
+    capability: ['official_site', 'news', 'press_release', 'linkedin_posts'],
+    generic: [],
+  };
+
+  if (normalizedEntityType === 'FEDERATION' && family === 'procurement') {
+    return ['official_site', 'tender_portal', 'board_minutes', 'strategic_plan', 'leadership_page', 'press_release', 'news', 'linkedin_posts', 'partner_announcement', 'vendor_page'];
+  }
+
+  const base = entityTypeDefaults[normalizedEntityType] || entityTypeDefaults.ENTITY;
+  const familyFirst = familyOverrides[family] || [];
+  return Array.from(new Set([...familyFirst, ...base]));
 }
 
 function _clampNumber(value, min = 0, max = 1) {
@@ -1065,10 +1126,10 @@ export async function buildOpenCodeConfig({
     model: DEFAULT_MODEL,
     provider: {
       [DEFAULT_PROVIDER_ID]: {
-        npm: '@ai-sdk/openai-compatible',
-        name: 'Z.AI API',
+        npm: '@ai-sdk/anthropic',
+        name: 'Z.AI Coding Plan',
         options: {
-          baseURL: baseUrl || resolvedEnv.baseUrl,
+          baseURL: baseUrl || 'https://api.z.ai/api/anthropic/v1',
           apiKey: '{env:ZAI_API_KEY}',
         },
         models: {
@@ -1128,15 +1189,22 @@ export async function buildOpenCodeConfig({
 }
 
 export function buildOpenCodeQuestionPrompt(question, { standaloneHarness = false } = {}) {
+  const sourceOrder = Array.isArray(question?.source_priority) && question.source_priority.length > 0
+    ? question.source_priority
+    : (Array.isArray(question?.current_source_order) && question.current_source_order.length > 0
+      ? question.current_source_order
+      : []);
   const promptLines = [
     'Use BrightData to answer one atomic question.',
     'Do not inspect local files, the repository, tests, or generated scripts.',
     'Do not use bash, python, grep, ripgrep, or any local code-analysis workflow.',
     'Use only BrightData-backed web evidence and your final JSON response.',
+    `Entity type: ${question.entity_type || 'ENTITY'}`,
     `Question type: ${question.question_type}`,
     `Question: ${question.question_text}`,
     `Canonical query: ${question.query}`,
     ...(question?.structured_output_schema ? [`Structured output schema: ${question.structured_output_schema}`] : []),
+    ...(sourceOrder.length > 0 ? [`Prioritize sources in this order: ${sourceOrder.join(', ')}`] : []),
     'Return only JSON with these keys: question, answer, context, sources, confidence.',
     'If you cannot find an answer, leave answer empty, keep context brief, and set confidence to 0.',
     'If the question is compound, answer the narrowest concrete fact first.',
@@ -1204,6 +1272,11 @@ function _usesTwoStageOpenCodeFlow(question) {
 }
 
 export function buildOpenCodeRetrievalPrompt(question, { standaloneHarness = false } = {}) {
+  const sourceOrder = Array.isArray(question?.source_priority) && question.source_priority.length > 0
+    ? question.source_priority
+    : (Array.isArray(question?.current_source_order) && question.current_source_order.length > 0
+      ? question.current_source_order
+      : []);
   const promptLines = [
     'Use BrightData to gather retrieval evidence for one atomic question.',
     'This is the retrieval pass.',
@@ -1211,10 +1284,12 @@ export function buildOpenCodeRetrievalPrompt(question, { standaloneHarness = fal
     'Do not inspect local files, the repository, tests, or generated scripts.',
     'Do not use bash, python, grep, ripgrep, or any local code-analysis workflow.',
     'Use only BrightData-backed web evidence.',
+    `Entity type: ${question.entity_type || 'ENTITY'}`,
     `Question type: ${question.question_type}`,
     `Question: ${question.question_text}`,
     `Canonical query: ${question.query}`,
     ...(question?.structured_output_schema ? [`Structured output schema: ${question.structured_output_schema}`] : []),
+    ...(sourceOrder.length > 0 ? [`Prioritize sources in this order: ${sourceOrder.join(', ')}`] : []),
     'Your first action must be one BrightData search using the canonical query.',
     'If the first search is weak, do at most one follow-up BrightData search or scrape.',
     'Return only JSON with these keys: question, query, leads, retrieval_summary.',

@@ -741,7 +741,7 @@ async def test_run_entity_pipeline_skips_python_phase0_and_enters_orchestrator_w
                         "status": "question_first_running",
                         "question_first_backend": "opencode",
                         "phase0_mode": "opencode_first",
-                        "opencode_model": "zai-api/glm-5.1",
+                        "opencode_model": "zai-coding-plan/glm-5.1",
                         "opencode_provider": "z.ai",
                         "brightdata_transport": "stdio",
                     },

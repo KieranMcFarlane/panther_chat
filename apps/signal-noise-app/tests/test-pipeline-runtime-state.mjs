@@ -207,6 +207,62 @@ test('pipeline runtime does not treat a fresh queued row as proof that a stopped
   assert.equal(snapshot.failure_buckets.worker_stale, 1)
 })
 
+test('pipeline runtime does not expose a fresh queued row as current_live_run when the worker is healthy', () => {
+  const snapshot = buildPipelineRuntimeSnapshot({
+    snapshot_at: '2026-04-23T12:00:00.000Z',
+    control: {
+      is_paused: false,
+      pause_reason: null,
+      stop_reason: null,
+      stop_details: null,
+      updated_at: '2026-04-23T11:59:59.000Z',
+      desired_state: 'running',
+      requested_state: 'running',
+      observed_state: 'running',
+      transition_state: 'running',
+    },
+    worker: {
+      worker_process_state: 'running',
+      worker_health: 'healthy',
+      worker_pid: 123,
+      worker_command: 'npm run worker:entity-pipeline',
+      worker_state_path: '/tmp/entity-pipeline-worker-state.json',
+      worker_pid_path: '/tmp/entity-pipeline-worker.pid',
+      started_at: '2026-04-23T11:58:00.000Z',
+      stopped_at: null,
+      updated_at: '2026-04-23T11:59:59.000Z',
+      last_error: null,
+    },
+    fastmcp: {
+      url: 'http://127.0.0.1:8001/health',
+      reachable: true,
+      status_code: 200,
+      latency_ms: 10,
+      error: null,
+    },
+    rows: [
+      {
+        batch_id: 'import_queued_live',
+        entity_id: 'porto',
+        canonical_entity_id: 'porto',
+        entity_name: 'FC Porto',
+        status: 'queued',
+        phase: 'entity_registration',
+        started_at: new Date(Date.now() - 5_000).toISOString(),
+        completed_at: null,
+        metadata: {
+          current_question_id: 'q11_decision_owner',
+        },
+      },
+    ],
+    dossiers: [],
+  })
+
+  assert.equal(snapshot.current_live_run, null)
+  assert.equal(snapshot.current_run, null)
+  assert.equal(snapshot.failure_buckets.queued, 1)
+})
+
 test('pipeline runtime does not treat a claiming row without fresh heartbeat as proof that a crashed worker recovered', () => {
   const snapshot = buildPipelineRuntimeSnapshot({
     snapshot_at: '2026-04-23T12:00:00.000Z',

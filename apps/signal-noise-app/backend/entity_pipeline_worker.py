@@ -73,6 +73,46 @@ TERMINAL_BATCH_STATUSES = {"completed", "failed"}
 WORKER_PID_PATH = Path(__file__).resolve().parents[1] / "tmp" / "entity-pipeline-worker.pid"
 WORKER_STATE_PATH = Path(__file__).resolve().parents[1] / "tmp" / "entity-pipeline-worker-state.json"
 WORKER_STARTED_AT: Optional[str] = None
+WORKER_ACTIVITY: Dict[str, Optional[str]] = {}
+ACTIVE_WORKER_STATE_FIELDS = (
+    "current_batch_id",
+    "current_entity_id",
+    "current_canonical_entity_id",
+    "current_entity_name",
+    "current_question_id",
+    "current_question_text",
+    "current_action",
+    "current_phase",
+    "current_started_at",
+    "current_activity_at",
+)
+PIPELINE_CONTROL_STATE_TABLE = "pipeline_control_state"
+PIPELINE_CONTROL_STATE_ROW_ID = "pipeline"
+
+
+def _default_pipeline_control_state() -> Dict[str, Any]:
+    return {
+        "is_paused": False,
+        "pause_reason": None,
+        "stop_reason": None,
+        "stop_details": None,
+        "updated_at": None,
+        "desired_state": "running",
+        "requested_state": "running",
+        "observed_state": "running",
+        "transition_state": "running",
+        "current_batch_id": None,
+        "current_entity_id": None,
+        "current_canonical_entity_id": None,
+        "current_entity_name": None,
+        "current_question_id": None,
+        "current_question_text": None,
+        "current_action": None,
+        "current_phase": None,
+        "current_started_at": None,
+        "current_activity_at": None,
+        "cursor_source": None,
+    }
 
 
 def _write_supervisor_state(
@@ -97,6 +137,7 @@ def _write_supervisor_state(
         "updated_at": now_iso,
         "last_error": error,
     }
+    state.update(WORKER_ACTIVITY)
     try:
         WORKER_STATE_PATH.parent.mkdir(parents=True, exist_ok=True)
         WORKER_STATE_PATH.write_text(json.dumps(state, indent=2), encoding="utf-8")
@@ -115,10 +156,40 @@ def _heartbeat_supervisor_state() -> None:
     state["updated_at"] = datetime.now(timezone.utc).isoformat()
     state["worker_process_state"] = "running"
     state["worker_pid"] = os.getpid()
+    for key in ACTIVE_WORKER_STATE_FIELDS:
+        if key in WORKER_ACTIVITY:
+            state[key] = WORKER_ACTIVITY[key]
+        else:
+            state.pop(key, None)
     try:
         WORKER_STATE_PATH.write_text(json.dumps(state, indent=2), encoding="utf-8")
     except Exception:
         pass
+
+
+def _set_supervisor_activity(**activity: Optional[str]) -> None:
+    WORKER_ACTIVITY.clear()
+    now_iso = datetime.now(timezone.utc).isoformat()
+    normalized = {
+        key: (str(value).strip() if value is not None and str(value).strip() else None)
+        for key, value in activity.items()
+        if key in ACTIVE_WORKER_STATE_FIELDS
+    }
+    normalized["current_activity_at"] = normalized.get("current_activity_at") or now_iso
+    WORKER_ACTIVITY.update(normalized)
+    _heartbeat_supervisor_state()
+
+
+def _touch_supervisor_activity(now_iso: Optional[str] = None) -> None:
+    if not WORKER_ACTIVITY:
+        return
+    WORKER_ACTIVITY["current_activity_at"] = now_iso or datetime.now(timezone.utc).isoformat()
+    _heartbeat_supervisor_state()
+
+
+def _clear_supervisor_activity() -> None:
+    WORKER_ACTIVITY.clear()
+    _heartbeat_supervisor_state()
 
 
 def _is_distinct_follow_on_batch_id(current_batch_id: Optional[str], next_batch_id: Optional[str]) -> bool:
@@ -135,34 +206,14 @@ def _is_legacy_manual_pause_state(payload: Dict[str, Any]) -> bool:
     )
 
 
-def read_pipeline_control_state() -> Dict[str, Any]:
-    try:
-        payload = json.loads(PIPELINE_CONTROL_STATE_PATH.read_text(encoding="utf-8"))
-    except Exception:
-        return {
-            "is_paused": False,
-            "pause_reason": None,
-            "stop_reason": None,
-            "stop_details": None,
-            "updated_at": None,
-            "desired_state": "running",
-            "requested_state": "running",
-            "observed_state": "running",
-            "transition_state": "running",
-        }
+def _normalize_pipeline_control_state_payload(payload: Optional[Dict[str, Any]]) -> Dict[str, Any]:
+    normalized = _default_pipeline_control_state()
+    if not isinstance(payload, dict):
+        return normalized
 
     if _is_legacy_manual_pause_state(payload):
-        return {
-            "is_paused": False,
-            "pause_reason": None,
-            "stop_reason": None,
-            "stop_details": None,
-            "updated_at": str(payload.get("updated_at") or "").strip() or None,
-            "desired_state": "running",
-            "requested_state": "running",
-            "observed_state": "running",
-            "transition_state": "running",
-        }
+        normalized["updated_at"] = str(payload.get("updated_at") or "").strip() or None
+        return normalized
 
     requested_state = str(payload.get("requested_state") or "").strip().lower()
     if requested_state not in PIPELINE_CONTROL_REQUESTED_STATES:
@@ -176,47 +227,125 @@ def read_pipeline_control_state() -> Dict[str, Any]:
     desired_state = str(payload.get("desired_state") or "").strip().lower()
     if desired_state not in PIPELINE_CONTROL_REQUESTED_STATES:
         desired_state = requested_state
-    return {
-        "is_paused": bool(payload.get("is_paused")),
-        "pause_reason": str(payload.get("pause_reason") or "").strip() or None,
-        "stop_reason": str(payload.get("stop_reason") or "").strip() or None,
-        "stop_details": payload.get("stop_details") if isinstance(payload.get("stop_details"), dict) else None,
-        "updated_at": str(payload.get("updated_at") or "").strip() or None,
-        "desired_state": desired_state,
-        "requested_state": requested_state,
-        "observed_state": observed_state,
-        "transition_state": transition_state,
-    }
+
+    normalized.update(
+        {
+            "is_paused": bool(payload.get("is_paused")),
+            "pause_reason": str(payload.get("pause_reason") or "").strip() or None,
+            "stop_reason": str(payload.get("stop_reason") or "").strip() or None,
+            "stop_details": payload.get("stop_details") if isinstance(payload.get("stop_details"), dict) else None,
+            "updated_at": str(payload.get("updated_at") or "").strip() or None,
+            "desired_state": desired_state,
+            "requested_state": requested_state,
+            "observed_state": observed_state,
+            "transition_state": transition_state,
+            "current_batch_id": str(payload.get("current_batch_id") or "").strip() or None,
+            "current_entity_id": str(payload.get("current_entity_id") or "").strip() or None,
+            "current_canonical_entity_id": str(payload.get("current_canonical_entity_id") or "").strip() or None,
+            "current_entity_name": str(payload.get("current_entity_name") or "").strip() or None,
+            "current_question_id": str(payload.get("current_question_id") or "").strip() or None,
+            "current_question_text": str(payload.get("current_question_text") or "").strip() or None,
+            "current_action": str(payload.get("current_action") or "").strip() or None,
+            "current_phase": str(payload.get("current_phase") or "").strip() or None,
+            "current_started_at": str(payload.get("current_started_at") or "").strip() or None,
+            "current_activity_at": str(payload.get("current_activity_at") or "").strip() or None,
+            "cursor_source": str(payload.get("cursor_source") or "").strip() or None,
+        }
+    )
+    return normalized
+
+
+def _read_pipeline_control_state_from_store() -> Optional[Dict[str, Any]]:
+    if not should_use_local_pg():
+        return None
+    try:
+        client = create_local_pg_client()
+        response = client.table(PIPELINE_CONTROL_STATE_TABLE).select("*").eq("id", PIPELINE_CONTROL_STATE_ROW_ID).maybe_single()
+        row = response.data if hasattr(response, "data") else None
+        if isinstance(row, dict):
+            state = row.get("state")
+            if isinstance(state, dict):
+                return state
+            return row
+    except Exception as error:
+        logger.warning("Failed to read pipeline control state from Postgres: %s", error)
+    return None
+
+
+def _write_pipeline_control_state_to_store(state: Dict[str, Any]) -> None:
+    if not should_use_local_pg():
+        return
+    client = create_local_pg_client()
+    client.table(PIPELINE_CONTROL_STATE_TABLE).upsert(
+        {
+            "id": PIPELINE_CONTROL_STATE_ROW_ID,
+            "state": state,
+            "updated_at": state.get("updated_at") or datetime.now(timezone.utc).isoformat(),
+        },
+        on_conflict="id",
+    ).execute()
+
+
+def read_pipeline_control_state() -> Dict[str, Any]:
+    store_payload = _read_pipeline_control_state_from_store()
+    if store_payload is not None:
+        return _normalize_pipeline_control_state_payload(store_payload)
+    return _default_pipeline_control_state()
 
 
 def write_pipeline_control_state(payload: Dict[str, Any]) -> Dict[str, Any]:
-    requested_state = str(payload.get("requested_state") or "").strip().lower()
+    current_state = read_pipeline_control_state()
+    merged_payload = {**current_state, **payload}
+    requested_state = str(merged_payload.get("requested_state") or "").strip().lower()
     if requested_state not in PIPELINE_CONTROL_REQUESTED_STATES:
-        requested_state = "paused" if payload.get("is_paused") is True else "running"
-    transition_state = str(payload.get("transition_state") or "").strip().lower()
+        requested_state = "paused" if merged_payload.get("is_paused") is True else "running"
+    transition_state = str(merged_payload.get("transition_state") or "").strip().lower()
     if transition_state not in PIPELINE_CONTROL_OBSERVED_STATES:
         transition_state = "stopping" if requested_state == "paused" else "starting"
-    observed_state = str(payload.get("observed_state") or "").strip().lower()
+    observed_state = str(merged_payload.get("observed_state") or "").strip().lower()
     if observed_state not in PIPELINE_CONTROL_OBSERVED_STATES:
         observed_state = transition_state
-    desired_state = str(payload.get("desired_state") or "").strip().lower()
+    desired_state = str(merged_payload.get("desired_state") or "").strip().lower()
     if desired_state not in PIPELINE_CONTROL_REQUESTED_STATES:
         desired_state = requested_state
-    is_paused = bool(payload.get("is_paused")) or requested_state == "paused" or observed_state == "paused"
+    is_paused = bool(merged_payload.get("is_paused")) or requested_state == "paused" or observed_state == "paused"
     next_state = {
         "is_paused": is_paused,
-        "pause_reason": (str(payload.get("pause_reason") or "").strip() or None) if is_paused else None,
-        "stop_reason": str(payload.get("stop_reason") or "").strip() or None,
-        "stop_details": payload.get("stop_details") if isinstance(payload.get("stop_details"), dict) else None,
-        "updated_at": str(payload.get("updated_at") or "").strip() or datetime.now(timezone.utc).isoformat(),
+        "pause_reason": (str(merged_payload.get("pause_reason") or "").strip() or None) if is_paused else None,
+        "stop_reason": str(merged_payload.get("stop_reason") or "").strip() or None,
+        "stop_details": merged_payload.get("stop_details") if isinstance(merged_payload.get("stop_details"), dict) else None,
+        "updated_at": str(merged_payload.get("updated_at") or "").strip() or datetime.now(timezone.utc).isoformat(),
         "desired_state": desired_state,
         "requested_state": requested_state,
         "observed_state": observed_state,
         "transition_state": transition_state,
+        "current_batch_id": str(merged_payload.get("current_batch_id") or "").strip() or None,
+        "current_entity_id": str(merged_payload.get("current_entity_id") or "").strip() or None,
+        "current_canonical_entity_id": str(merged_payload.get("current_canonical_entity_id") or "").strip() or None,
+        "current_entity_name": str(merged_payload.get("current_entity_name") or "").strip() or None,
+        "current_question_id": str(merged_payload.get("current_question_id") or "").strip() or None,
+        "current_question_text": str(merged_payload.get("current_question_text") or "").strip() or None,
+        "current_action": str(merged_payload.get("current_action") or "").strip() or None,
+        "current_phase": str(merged_payload.get("current_phase") or "").strip() or None,
+        "current_started_at": str(merged_payload.get("current_started_at") or "").strip() or None,
+        "current_activity_at": str(merged_payload.get("current_activity_at") or "").strip() or None,
+        "cursor_source": str(merged_payload.get("cursor_source") or "").strip() or None,
     }
-    PIPELINE_CONTROL_STATE_PATH.parent.mkdir(parents=True, exist_ok=True)
-    PIPELINE_CONTROL_STATE_PATH.write_text(json.dumps(next_state, indent=2), encoding="utf-8")
+    try:
+        _write_pipeline_control_state_to_store(next_state)
+    except Exception as error:
+        logger.warning("Failed to persist pipeline control state to Postgres: %s", error)
     return next_state
+
+
+def _extract_pipeline_cursor_state(control_state: Dict[str, Any]) -> tuple[Optional[str], Optional[str]]:
+    current_entity_id = str(control_state.get("current_entity_id") or "").strip() or None
+    current_canonical_entity_id = str(control_state.get("current_canonical_entity_id") or "").strip() or None
+    if current_canonical_entity_id:
+        return current_entity_id or current_canonical_entity_id, current_canonical_entity_id
+    if current_entity_id:
+        return current_entity_id, current_entity_id
+    return None, None
 
 
 def normalize_pipeline_control_state_for_worker_start(now_iso: Optional[str] = None) -> Dict[str, Any]:
@@ -596,6 +725,7 @@ class EntityPipelineWorker:
         lease_seconds = getattr(self, "lease_seconds", LEASE_SECONDS)
         worker_id = getattr(self, "worker_id", "worker-test")
         now_iso = self._now_iso()
+        _touch_supervisor_activity(now_iso)
         heartbeat_metadata = build_batch_heartbeat_metadata(
             metadata,
             now_iso=now_iso,
@@ -666,6 +796,7 @@ class EntityPipelineWorker:
 
     def claim_next_batch(self) -> Optional[Dict[str, Any]]:
         control_state = read_pipeline_control_state()
+        cursor_entity_id, cursor_canonical_entity_id = _extract_pipeline_cursor_state(control_state)
         if control_state.get("is_paused") is True:
             write_pipeline_control_state(
                 {
@@ -708,37 +839,6 @@ class EntityPipelineWorker:
             message="pipeline intake running",
         )
         self.recover_stale_batches()
-        resume_candidate = self._select_next_entity_cursor_candidate(
-            current_entity_id="",
-            current_canonical_entity_id=None,
-            include_manifest_fallback=False,
-        )
-        if resume_candidate:
-            materialized_batch_id = self._materialize_entity_cursor_candidate(
-                resume_candidate,
-                queue_mode="durable_worker",
-            )
-            if materialized_batch_id:
-                claimed_batches = self.supabase.rpc(
-                    "claim_next_entity_import_batch",
-                    {
-                        "worker_id": self.worker_id,
-                        "lease_seconds": self.lease_seconds,
-                    },
-                ).execute().data or []
-                if claimed_batches:
-                    claimed = claimed_batches[0]
-                    log_worker_transition(
-                        "batch_claimed",
-                        worker_id=getattr(self, "worker_id", "worker-test"),
-                        batch_id=claimed.get("id"),
-                        entity_id=claimed.get("entity_id"),
-                        entity_name=claimed.get("entity_name"),
-                        phase=claimed.get("phase"),
-                        status=str(claimed.get("status") or "queued").strip().lower() or "queued",
-                        message="claimed resumable entity cursor batch",
-                    )
-                    return claimed
         response = self.supabase.rpc(
             "claim_next_entity_import_batch",
             {
@@ -747,14 +847,35 @@ class EntityPipelineWorker:
             },
         ).execute()
         batches = response.data or []
-        if not batches:
-            candidate = self._select_next_entity_cursor_candidate(
-                current_entity_id="",
-                current_canonical_entity_id=None,
+        if batches:
+            claimed = batches[0]
+            self._persist_pipeline_cursor_state(
+                claimed,
+                cursor_source="queued_claim",
+                control_state=control_state,
             )
-            if candidate:
+            log_worker_transition(
+                "batch_claimed",
+                worker_id=getattr(self, "worker_id", "worker-test"),
+                batch_id=claimed.get("id"),
+                entity_id=claimed.get("entity_id"),
+                entity_name=claimed.get("entity_name"),
+                phase=claimed.get("phase"),
+                status=str(claimed.get("status") or "queued").strip().lower() or "queued",
+                cursor_source="queued_claim",
+                message="claimed queued entity batch",
+            )
+            return claimed
+
+        if cursor_entity_id or cursor_canonical_entity_id:
+            resume_candidate = self._select_next_entity_cursor_candidate(
+                current_entity_id=cursor_entity_id or "",
+                current_canonical_entity_id=cursor_canonical_entity_id,
+                include_manifest_fallback=False,
+            )
+            if resume_candidate:
                 materialized_batch_id = self._materialize_entity_cursor_candidate(
-                    candidate,
+                    resume_candidate,
                     queue_mode="durable_worker",
                 )
                 if materialized_batch_id:
@@ -767,6 +888,11 @@ class EntityPipelineWorker:
                     ).execute().data or []
                     if claimed_batches:
                         claimed = claimed_batches[0]
+                        self._persist_pipeline_cursor_state(
+                            claimed,
+                            cursor_source="resume_claim",
+                            control_state=control_state,
+                        )
                         log_worker_transition(
                             "batch_claimed",
                             worker_id=getattr(self, "worker_id", "worker-test"),
@@ -775,28 +901,131 @@ class EntityPipelineWorker:
                             entity_name=claimed.get("entity_name"),
                             phase=claimed.get("phase"),
                             status=str(claimed.get("status") or "queued").strip().lower() or "queued",
-                            message="claimed entity cursor batch",
+                            cursor_source="resume_claim",
+                            message="claimed resumable entity cursor batch",
                         )
                         return claimed
-            log_worker_transition(
-                "claim_cycle_empty",
-                worker_id=getattr(self, "worker_id", "worker-test"),
-                status="idle",
-                message="no claimable batch available",
-            )
-            return None
-        claimed = batches[0]
-        log_worker_transition(
-            "batch_claimed",
-            worker_id=getattr(self, "worker_id", "worker-test"),
-            batch_id=claimed.get("id"),
-            entity_id=claimed.get("entity_id"),
-            entity_name=claimed.get("entity_name"),
-            phase=claimed.get("phase"),
-            status=str(claimed.get("status") or "queued").strip().lower() or "queued",
-            message="claimed next entity import batch",
+
+        candidate = self._select_next_entity_cursor_candidate(
+            current_entity_id=cursor_entity_id or "",
+            current_canonical_entity_id=cursor_canonical_entity_id,
+            include_manifest_fallback=True,
         )
-        return claimed
+        if candidate:
+            materialized_batch_id = self._materialize_entity_cursor_candidate(
+                candidate,
+                queue_mode="durable_worker",
+            )
+            if materialized_batch_id:
+                claimed_batches = self.supabase.rpc(
+                    "claim_next_entity_import_batch",
+                    {
+                        "worker_id": self.worker_id,
+                        "lease_seconds": self.lease_seconds,
+                    },
+                ).execute().data or []
+                if claimed_batches:
+                    claimed = claimed_batches[0]
+                    self._persist_pipeline_cursor_state(
+                        claimed,
+                        cursor_source="manifest_next_claim",
+                        control_state=control_state,
+                    )
+                    log_worker_transition(
+                        "batch_claimed",
+                        worker_id=getattr(self, "worker_id", "worker-test"),
+                        batch_id=claimed.get("id"),
+                        entity_id=claimed.get("entity_id"),
+                        entity_name=claimed.get("entity_name"),
+                        phase=claimed.get("phase"),
+                        status=str(claimed.get("status") or "queued").strip().lower() or "queued",
+                        cursor_source="manifest_next_claim",
+                        message="claimed manifest-next entity cursor batch",
+                    )
+                    return claimed
+        log_worker_transition(
+            "claim_cycle_empty",
+            worker_id=getattr(self, "worker_id", "worker-test"),
+            status="idle",
+            message="no claimable batch available",
+        )
+        return None
+
+    def _persist_pipeline_cursor_state(
+        self,
+        batch: Dict[str, Any],
+        *,
+        cursor_source: str,
+        control_state: Optional[Dict[str, Any]] = None,
+    ) -> None:
+        if not isinstance(batch, dict):
+            return
+        next_state = dict(control_state or read_pipeline_control_state())
+        metadata = batch.get("metadata") if isinstance(batch.get("metadata"), dict) else {}
+        batch_identity = self._resolve_batch_cursor_identity(batch)
+        next_state.update(
+            {
+                "current_batch_id": str(batch.get("id") or "").strip() or next_state.get("current_batch_id"),
+                "current_entity_id": batch_identity.get("current_entity_id") or next_state.get("current_entity_id"),
+                "current_canonical_entity_id": str(
+                    batch_identity.get("current_canonical_entity_id")
+                    or batch.get("canonical_entity_id")
+                    or batch.get("entity_id")
+                    or ""
+                ).strip() or next_state.get("current_canonical_entity_id"),
+                "current_entity_name": batch_identity.get("current_entity_name") or next_state.get("current_entity_name"),
+                "current_question_id": str(metadata.get("question_id") or metadata.get("current_question_id") or "").strip() or next_state.get("current_question_id"),
+                "current_question_text": str(metadata.get("current_question_text") or "").strip() or next_state.get("current_question_text"),
+                "current_action": str(batch.get("phase") or metadata.get("question_id") or "").strip() or next_state.get("current_action"),
+                "current_phase": str(batch.get("phase") or "").strip() or next_state.get("current_phase"),
+                "current_started_at": str(batch.get("started_at") or "").strip() or next_state.get("current_started_at"),
+                "current_activity_at": self._now_iso(),
+                "cursor_source": cursor_source,
+            }
+        )
+        try:
+            write_pipeline_control_state(next_state)
+        except Exception as error:
+            logger.warning("Failed to persist pipeline cursor state: %s", error)
+
+    def _resolve_batch_cursor_identity(self, batch: Dict[str, Any]) -> Dict[str, Optional[str]]:
+        metadata = batch.get("metadata") if isinstance(batch.get("metadata"), dict) else {}
+        current_entity_id = str(batch.get("entity_id") or "").strip() or None
+        current_canonical_entity_id = str(
+            batch.get("canonical_entity_id")
+            or metadata.get("canonical_entity_id")
+            or ""
+        ).strip() or None
+        current_entity_name = str(batch.get("entity_name") or "").strip() or None
+
+        batch_id = str(batch.get("id") or "").strip()
+        if batch_id and (current_entity_id is None or current_entity_name is None):
+            looked_up: Dict[str, Any] = {}
+
+            def _lookup_batch_run_identity() -> None:
+                response = self.supabase.table("entity_pipeline_runs").select(
+                    "entity_id, entity_name, canonical_entity_id"
+                ).eq("batch_id", batch_id).limit(1).execute()
+                rows = getattr(response, "data", None) or []
+                if isinstance(rows, list) and rows and isinstance(rows[0], dict):
+                    looked_up.update(rows[0])
+
+            if self._safe_execute(_lookup_batch_run_identity, context=f"resolve batch identity {batch_id}"):
+                current_entity_id = current_entity_id or str(looked_up.get("entity_id") or "").strip() or None
+                current_canonical_entity_id = current_canonical_entity_id or str(
+                    looked_up.get("canonical_entity_id") or looked_up.get("entity_id") or ""
+                ).strip() or None
+                current_entity_name = current_entity_name or str(looked_up.get("entity_name") or "").strip() or None
+
+        if current_entity_id and not current_canonical_entity_id:
+            current_canonical_entity_id = current_entity_id
+        if current_entity_id and not current_entity_name:
+            current_entity_name = current_entity_id
+        return {
+            "current_entity_id": current_entity_id,
+            "current_canonical_entity_id": current_canonical_entity_id,
+            "current_entity_name": current_entity_name,
+        }
 
     def get_batch_runs(self, batch_id: str) -> list[Dict[str, Any]]:
         response = (
@@ -1095,6 +1324,42 @@ class EntityPipelineWorker:
         return sorted(entities, key=lambda entity: str(entity.get("entity_id") or "").strip())
 
     def _has_active_pipeline_run(self, entity_id: str, canonical_entity_id: Optional[str] = None) -> bool:
+        def _parse_timestamp(value: Any) -> Optional[datetime]:
+            text = str(value or "").strip()
+            if not text:
+                return None
+            normalized = text.replace("Z", "+00:00")
+            try:
+                parsed = datetime.fromisoformat(normalized)
+            except ValueError:
+                return None
+            if parsed.tzinfo is None:
+                parsed = parsed.replace(tzinfo=timezone.utc)
+            return parsed.astimezone(timezone.utc)
+
+        def _run_is_still_active(run: Dict[str, Any]) -> bool:
+            status = str(run.get("status") or "").strip().lower()
+            if status in {"queued", "claiming"}:
+                return True
+            if status not in {"running", "retrying"}:
+                return False
+
+            metadata = run.get("metadata") if isinstance(run.get("metadata"), dict) else {}
+            now = datetime.now(timezone.utc)
+            lease_expires_at = _parse_timestamp(metadata.get("lease_expires_at"))
+            if lease_expires_at is not None:
+                return lease_expires_at >= now
+
+            heartbeat_at = _parse_timestamp(metadata.get("heartbeat_at"))
+            if heartbeat_at is not None:
+                return (now - heartbeat_at) <= timedelta(minutes=STALE_MINUTES)
+
+            started_at = _parse_timestamp(run.get("started_at"))
+            if started_at is not None:
+                return (now - started_at) <= timedelta(minutes=STALE_MINUTES)
+
+            return True
+
         candidate_ids = [
             str(entity_id or "").strip(),
             str(canonical_entity_id or "").strip(),
@@ -1106,13 +1371,13 @@ class EntityPipelineWorker:
         for candidate_id in candidate_ids:
             response = (
                 self.supabase.table("entity_pipeline_runs")
-                .select("id")
+                .select("id, status, started_at, metadata")
                 .eq("entity_id", candidate_id)
                 .in_("status", ["queued", "claiming", "running", "retrying"])
-                .limit(1)
+                .limit(20)
                 .execute()
             )
-            if response.data:
+            if any(_run_is_still_active(run) for run in (response.data or []) if isinstance(run, dict)):
                 return True
 
             if candidate_id != candidate_ids[0]:
@@ -1121,13 +1386,13 @@ class EntityPipelineWorker:
             if canonical_entity_id and canonical_entity_id != candidate_id:
                 canonical_response = (
                     self.supabase.table("entity_pipeline_runs")
-                    .select("id")
+                    .select("id, status, started_at, metadata")
                     .eq("canonical_entity_id", canonical_entity_id)
                     .in_("status", ["queued", "claiming", "running", "retrying"])
-                    .limit(1)
+                    .limit(20)
                     .execute()
                 )
-                if canonical_response.data:
+                if any(_run_is_still_active(run) for run in (canonical_response.data or []) if isinstance(run, dict)):
                     return True
 
         return False
@@ -1160,9 +1425,11 @@ class EntityPipelineWorker:
                 break
 
         if current_index < 0:
-            return None
+            search_order = manifest_entities
+        else:
+            search_order = manifest_entities[current_index + 1:] + manifest_entities[:current_index]
 
-        for entity in manifest_entities[current_index + 1:]:
+        for entity in search_order:
             entity_id = str(entity.get("entity_id") or "").strip()
             canonical_entity_id = str(entity.get("canonical_entity_id") or "").strip() or None
             if not entity_id:
@@ -2105,6 +2372,33 @@ class EntityPipelineWorker:
                     ),
                 },
             )
+            _set_supervisor_activity(
+                current_batch_id=batch_id,
+                current_entity_id=str(run.get("entity_id") or "").strip() or None,
+                current_canonical_entity_id=str(
+                    run.get("canonical_entity_id")
+                    or run_metadata.get("canonical_entity_id")
+                    or run.get("entity_id")
+                    or ""
+                ).strip() or None,
+                current_entity_name=str(run.get("entity_name") or "").strip() or None,
+                current_question_id=str(
+                    run_metadata.get("question_id")
+                    or run_metadata.get("current_question_id")
+                    or run_metadata.get("active_question_id")
+                    or ""
+                ).strip() or None,
+                current_question_text=str(run_metadata.get("current_question_text") or "").strip() or None,
+                current_action=str(
+                    run_metadata.get("question_id")
+                    or run_metadata.get("active_question_id")
+                    or run.get("phase")
+                    or "entity_registration"
+                ).strip() or None,
+                current_phase="dossier_generation",
+                current_started_at=now_iso,
+                current_activity_at=now_iso,
+            )
             try:
                 result = self.call_pipeline(run, batch_id)
                 phases = result.get("phases") or {}
@@ -2466,6 +2760,7 @@ class EntityPipelineWorker:
             batch["metadata"] = self.refresh_batch_heartbeat(batch_id, self._batch_metadata(batch))
         heartbeat_stop.set()
         heartbeat_thread.join(timeout=1)
+        _clear_supervisor_activity()
         final_runs = self.get_batch_runs(batch_id)
         if any(run.get("status") == "retrying" for run in final_runs):
             self._safe_execute(

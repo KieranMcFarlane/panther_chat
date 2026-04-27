@@ -866,6 +866,79 @@ test("status view model treats stale backlog as waiting when control remains run
   assert.match(vm.liveEntityTicker, /Idle|waiting for claimable work/i);
 });
 
+test("status hero does not describe a queued checkpoint as active processing when live state is waiting", () => {
+  const now = new Date().toISOString();
+  const vm = buildOperationalStatusViewModel({
+    drilldown: {
+      control: {
+        is_paused: false,
+        requested_state: "running",
+        observed_state: "running",
+        transition_state: "running",
+        updated_at: now,
+      },
+      operational_state: "running",
+      freshness_state: "fresh",
+      last_activity_at: now,
+      runtime: {
+        worker: {
+          worker_process_state: "running",
+          worker_health: "healthy",
+        },
+        current_run: {
+          entity_id: "fc-porto",
+          entity_name: "FC Porto",
+          phase: "entity_registration",
+          queue_state: "queued",
+          current_question_id: "q11_decision_owner",
+          current_question_text:
+            "Who is the highest probability buyer at FC Porto given the current commercial and product context?",
+          heartbeat_at: now,
+        },
+        current_live_run: null,
+      },
+      live_state: {
+        operational_state: "waiting",
+        worker_process_state: "running",
+        current_run: null,
+        current_live_run: null,
+        in_progress_entity: null,
+        running_entities: [],
+      },
+      loop_status: {
+        total_scheduled: 3332,
+        completed: 0,
+        quality_counts: { blocked: 0 },
+        runtime_counts: { running: 0, stalled: 0, retryable: 0, resume_needed: 0, queued: 1 },
+      },
+      queue: {
+        in_progress_entity: null,
+        running_entities: [],
+        stale_active_rows: [],
+        latest_noteworthy_entity: null,
+        completed_entities: [],
+        resume_needed_entities: [],
+        upcoming_entities: [],
+      },
+      dossier_quality: {
+        incomplete_entities: [],
+      },
+    },
+    controlState: {
+      is_paused: false,
+      requested_state: "running",
+      observed_state: "running",
+      transition_state: "running",
+      updated_at: now,
+    },
+  });
+
+  assert.doesNotMatch(vm.statusHero.headline, /Processing FC Porto/i);
+  assert.doesNotMatch(vm.statusHero.supportingLine, /Currently processing FC Porto/i);
+  assert.match(vm.statusHero.headline, /Waiting/i);
+  assert.match(vm.statusHero.supportingLine, /queue is ready|waiting for claimable work/i);
+});
+
 test("status view model keeps stale backlog in a stopped state when the worker crashed even if control still says running", () => {
   const staleAt = new Date(Date.now() - 15 * 60_000).toISOString();
   const vm = buildOperationalStatusViewModel({

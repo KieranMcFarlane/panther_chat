@@ -1,9 +1,13 @@
+import { readFile } from 'node:fs/promises'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { NextResponse } from 'next/server'
 import { getCanonicalEntitiesSnapshot } from '@/lib/canonical-entities-snapshot'
 import { matchesEntityUuid, resolveEntityUuid } from '@/lib/entity-public-id'
 import { deriveEntityPipelineLifecycle } from '@/lib/entity-pipeline-lifecycle'
 import { resolveOperationalHeartbeatDetails, type OperationalHeartbeatFreshness } from '@/lib/operational-heartbeat'
 import { getNormalizedUniverseCount } from '@/lib/normalized-universe-count'
+import { query as queryPostgres } from '@/lib/pg-client'
 import {
   buildPipelineRuntimeSnapshot,
   loadPipelineRuntimeReadSet,
@@ -13,19 +17,22 @@ import {
 import { deriveOperationalFreshnessCheckpoint } from '@/lib/operational-freshness'
 import { normalizeTerminalFollowOnMetadata, shouldSurfaceResumeNeeded } from '@/lib/queue-drilldown-normalization'
 import { loadQuestionFirstScaleManifest } from '@/lib/question-first-manifest'
+import { describeQuestionFirstQueueOrder, sortQuestionFirstManifestEntities } from '@/lib/question-first-queue-order'
 import { resolveQuestionTextFromDossierData } from '@/lib/question-text-resolver'
 
 const scaleManifestData = loadQuestionFirstScaleManifest()
-const manifestSortKey = Array.isArray(scaleManifestData?.sort_key)
-  ? scaleManifestData.sort_key.map((part) => String(part || '').trim()).filter(Boolean)
-  : []
 
 export const dynamic = 'force-dynamic'
 const ROUTE_CACHE_TTL_MS = 4_000
+const RECENT_ACTIVE_GRACE_MS = 8_000
+const FRESH_ACTIVITY_WINDOW_SECONDS = 300
+const ROUTE_DIR = path.dirname(fileURLToPath(import.meta.url))
+const DEFAULT_WORKER_STATE_PATH = path.resolve(ROUTE_DIR, '../../../../../tmp/entity-pipeline-worker-state.json')
 
 let cachedQueueDrilldownPayload: Record<string, unknown> | null = null
 let cachedQueueDrilldownFetchedAt = 0
 let inFlightQueueDrilldownBuild: Promise<Record<string, unknown>> | null = null
+let latestQueueDrilldownBuildToken = 0
 
 type ManifestEntity = {
   entity_id: string
@@ -89,6 +96,15 @@ type QueueEntityRecord = {
 
 type DossierRecord = PipelineDossierRow
 
+type ProcessedDossierRow = {
+  entity_id: string
+  canonical_entity_id?: string | null
+  entity_name: string
+  entity_type: string
+  generated_at: string | null
+  dossier_data?: Record<string, unknown> | null
+}
+
 type OperationalState = 'starting' | 'running' | 'retrying' | 'skipping' | 'stopping' | 'paused' | 'stopped' | 'waiting'
 
 type LiveOperationalState = 'starting' | 'running' | 'retrying' | 'reconciling' | 'published_degraded' | 'stopping' | 'paused' | 'stopped' | 'waiting'
@@ -102,10 +118,96 @@ function isTransientReadTimeout(error: unknown) {
   return message.toLowerCase().includes('connection timeout')
 }
 
+function parseTimestamp(value: unknown) {
+  const text = typeof value === 'string' ? value.trim() : ''
+  if (!text) return 0
+  const parsed = Date.parse(text)
+  return Number.isFinite(parsed) ? parsed : 0
+}
+
+function carryForwardRecentActiveEntity(
+  payload: Record<string, unknown>,
+  previousPayload: Record<string, unknown> | null,
+  now = Date.now(),
+) {
+  if (!previousPayload) return payload
+
+  const nextLiveState = payload.live_state && typeof payload.live_state === 'object'
+    ? payload.live_state as Record<string, unknown>
+    : null
+  const nextQueue = payload.queue && typeof payload.queue === 'object'
+    ? payload.queue as Record<string, unknown>
+    : null
+  const nextRuntime = payload.runtime && typeof payload.runtime === 'object'
+    ? payload.runtime as Record<string, unknown>
+    : null
+  const nextControl = payload.control && typeof payload.control === 'object'
+    ? payload.control as Record<string, unknown>
+    : null
+
+  if (!nextLiveState || !nextQueue || !nextRuntime || !nextControl) return payload
+  if (nextLiveState.current_live_run || nextQueue.in_progress_entity) return payload
+  if (String(payload.operational_state || '') !== 'waiting') return payload
+  if (String(nextControl.requested_state || '') === 'paused' || nextControl.is_paused === true) return payload
+
+  const workerState = String(nextLiveState.worker_process_state || nextRuntime.worker?.worker_process_state || '')
+  if (workerState !== 'running' && workerState !== 'starting') return payload
+
+  const previousLiveState = previousPayload.live_state && typeof previousPayload.live_state === 'object'
+    ? previousPayload.live_state as Record<string, unknown>
+    : null
+  const previousQueue = previousPayload.queue && typeof previousPayload.queue === 'object'
+    ? previousPayload.queue as Record<string, unknown>
+    : null
+  const previousRuntime = previousPayload.runtime && typeof previousPayload.runtime === 'object'
+    ? previousPayload.runtime as Record<string, unknown>
+    : null
+
+  const previousRun = previousLiveState?.current_live_run
+    || previousQueue?.in_progress_entity
+    || previousRuntime?.current_live_run
+    || null
+  if (!previousRun || typeof previousRun !== 'object') return payload
+
+  const recentActivityAt = parseTimestamp(
+    previousPayload.last_activity_at
+    || previousPayload.snapshot_at
+    || previousRuntime?.generated_at
+    || previousRuntime?.snapshot_at,
+  )
+  if (!recentActivityAt || (now - recentActivityAt) > RECENT_ACTIVE_GRACE_MS) return payload
+
+  return {
+    ...payload,
+    operational_state: 'running',
+    live_state: {
+      ...nextLiveState,
+      operational_state: 'running',
+      current_run: previousRun,
+      current_live_run: previousRun,
+      in_progress_entity: previousQueue?.in_progress_entity || previousRun,
+      running_entities: previousQueue?.running_entities || [previousQueue?.in_progress_entity || previousRun],
+    },
+    runtime: {
+      ...nextRuntime,
+      current_run: previousRun,
+      current_live_run: previousRun,
+      latest_noteworthy_run: nextRuntime.latest_noteworthy_run || previousRun,
+    },
+    queue: {
+      ...nextQueue,
+      in_progress_entity: previousQueue?.in_progress_entity || previousRun,
+      running_entities: previousQueue?.running_entities || [previousQueue?.in_progress_entity || previousRun],
+      latest_noteworthy_entity: nextQueue.latest_noteworthy_entity || previousQueue?.in_progress_entity || previousRun,
+    },
+  }
+}
+
 export function __resetQueueDrilldownRouteCacheForTests() {
   cachedQueueDrilldownPayload = null
   cachedQueueDrilldownFetchedAt = 0
   inFlightQueueDrilldownBuild = null
+  latestQueueDrilldownBuildToken = 0
 }
 
 function dedupeByEntityId<T extends { entity_id: string }>(items: T[]) {
@@ -540,6 +642,100 @@ function buildQueueEntityFromRuntimeRun(
   }
 }
 
+function buildSyntheticLiveRunFromWorker(runtime: PipelineRuntimeSnapshot['worker']) {
+  const runtimeRecord = runtime && typeof runtime === 'object' ? runtime as Record<string, unknown> : null
+  if (!runtimeRecord) return null
+  const workerState = toText(runtimeRecord.worker_process_state).toLowerCase()
+  if (workerState !== 'running' && workerState !== 'starting') return null
+
+  const entityId = toText(runtimeRecord.current_entity_id)
+  const entityName = toText(runtimeRecord.current_entity_name)
+  if (!entityId || !entityName) return null
+
+  const heartbeatAt = toText(runtimeRecord.current_activity_at || runtimeRecord.updated_at) || null
+  const heartbeat = resolveOperationalHeartbeatDetails({
+    heartbeat_at: heartbeatAt,
+    started_at: toText(runtimeRecord.current_started_at) || heartbeatAt,
+    generated_at: heartbeatAt,
+  })
+  if ((heartbeat.heartbeat_age_seconds ?? Number.MAX_SAFE_INTEGER) > FRESH_ACTIVITY_WINDOW_SECONDS) {
+    return null
+  }
+
+  return {
+    batch_id: toText(runtimeRecord.current_batch_id) || null,
+    entity_id: entityId,
+    canonical_entity_id: toText(runtimeRecord.current_canonical_entity_id) || entityId,
+    entity_name: entityName,
+    status: 'running',
+    phase: toText(runtimeRecord.current_phase) || 'entity_registration',
+    current_section_id: null,
+    current_section_label: null,
+    current_section_index: null,
+    current_section_total: null,
+    current_substep: null,
+    current_substep_label: null,
+    current_substep_progress: null,
+    current_question_id: toText(runtimeRecord.current_question_id) || null,
+    current_question_text: toText(runtimeRecord.current_question_text) || null,
+    current_question_index: null,
+    current_question_total: null,
+    current_strategy_label: null,
+    current_execution_state: null,
+    current_source_order: null,
+    execution_backend: null,
+    execution_model: null,
+    execution_provider: null,
+    brightdata_transport: null,
+    current_action: toText(runtimeRecord.current_action) || toText(runtimeRecord.current_phase) || null,
+    current_stage: toText(runtimeRecord.current_phase) || 'entity_registration',
+    heartbeat_at: heartbeatAt,
+    heartbeat_age_seconds: heartbeat.heartbeat_age_seconds ?? null,
+    publication_status: null,
+    retry_state: null,
+    stop_reason: null,
+    continue_pipeline_on_failure: false,
+    error_type: null,
+    error_message: null,
+    queue_state: 'running' as const,
+  }
+}
+
+async function loadWorkerActivityOverlay(workerStatePath: unknown) {
+  const workerStateFile = toText(workerStatePath)
+  if (!workerStateFile) return null
+
+  for (let attempt = 0; attempt < 8; attempt += 1) {
+    try {
+      const raw = await readFile(workerStateFile, 'utf8')
+      const parsed = JSON.parse(raw) as Record<string, unknown>
+      const entityId = toText(parsed.current_entity_id)
+      const entityName = toText(parsed.current_entity_name)
+      if (entityId && entityName) {
+        return {
+          current_batch_id: toText(parsed.current_batch_id) || null,
+          current_entity_id: entityId,
+          current_canonical_entity_id: toText(parsed.current_canonical_entity_id) || entityId,
+          current_entity_name: entityName,
+          current_question_id: toText(parsed.current_question_id) || null,
+          current_question_text: toText(parsed.current_question_text) || null,
+          current_action: toText(parsed.current_action) || null,
+          current_phase: toText(parsed.current_phase) || null,
+          current_started_at: toText(parsed.current_started_at) || null,
+          current_activity_at: toText(parsed.current_activity_at) || null,
+          updated_at: toText(parsed.updated_at) || null,
+        }
+      }
+    } catch {
+      // Best-effort retry during rapid worker-state rewrites.
+    }
+    if (attempt < 7) {
+      await new Promise((resolve) => setTimeout(resolve, 30))
+    }
+  }
+  return null
+}
+
 function buildBacklogHealth(runtime: PipelineRuntimeSnapshot, staleActiveRows: QueueEntityRecord[]) {
   const failureBuckets = runtime.failure_buckets
   return {
@@ -556,6 +752,104 @@ function buildBacklogHealth(runtime: PipelineRuntimeSnapshot, staleActiveRows: Q
       && (failureBuckets.published_degraded ?? 0) === 0
       && (failureBuckets.failed_terminal ?? 0) === 0,
   }
+}
+
+async function loadProcessedDossierCount(): Promise<number> {
+  try {
+    const result = await queryPostgres(`
+      select count(distinct canonical_entity_id)::int as processed_dossiers
+      from entity_dossiers
+      where canonical_entity_id is not null
+    `)
+    const rawValue = result.rows?.[0]?.processed_dossiers
+    const processedDossiers = Number(rawValue)
+    return Number.isFinite(processedDossiers) ? processedDossiers : 0
+  } catch {
+    return 0
+  }
+}
+
+function extractProcessedDossierSummary(dossierData: Record<string, unknown> | null): string | null {
+  if (!dossierData || typeof dossierData !== 'object') return null
+
+  const questionFirst = dossierData.question_first && typeof dossierData.question_first === 'object'
+    ? dossierData.question_first as Record<string, unknown>
+    : null
+  const discoverySummary = questionFirst?.discovery_summary && typeof questionFirst.discovery_summary === 'object'
+    ? questionFirst.discovery_summary as Record<string, unknown>
+    : null
+  const graphiti = discoverySummary?.graphiti_sales_brief && typeof discoverySummary.graphiti_sales_brief === 'object'
+    ? discoverySummary.graphiti_sales_brief as Record<string, unknown>
+    : null
+
+  const candidates = [
+    graphiti?.outreach_angle,
+    graphiti?.outreach_target,
+    discoverySummary?.recommended_approach,
+    discoverySummary?.opportunity_summary,
+    discoverySummary?.summary,
+    dossierData.recommended_approach,
+    dossierData.overall_assessment,
+    questionFirst?.summary,
+    questionFirst?.recommended_approach,
+  ]
+  for (const candidate of candidates) {
+    const text = toText(candidate)
+    if (text) return text
+  }
+  return null
+}
+
+async function loadProcessedDossierRows(limit = 200): Promise<ProcessedDossierRow[]> {
+  try {
+    const result = await queryPostgres(
+      `
+        select entity_id, canonical_entity_id, entity_name, entity_type, generated_at, dossier_data
+        from entity_dossiers
+        where canonical_entity_id is not null
+        order by generated_at desc nulls last, entity_name asc
+        limit $1
+      `,
+      [limit],
+    )
+    return Array.isArray(result.rows)
+      ? result.rows.map((row) => ({
+        entity_id: toText(row.entity_id),
+        canonical_entity_id: toText(row.canonical_entity_id) || null,
+        entity_name: toText(row.entity_name),
+        entity_type: toText(row.entity_type) || 'Entity',
+        generated_at: toText(row.generated_at) || null,
+        dossier_data: (row.dossier_data && typeof row.dossier_data === 'object') ? row.dossier_data as Record<string, unknown> : null,
+      }))
+      : []
+  } catch {
+    return []
+  }
+}
+
+function mapProcessedDossierRowsToQueueEntities(rows: ProcessedDossierRow[]): QueueEntityRecord[] {
+  return rows.map((row, index) => ({
+    entity_id: row.canonical_entity_id || row.entity_id,
+    entity_name: row.entity_name || row.canonical_entity_id || row.entity_id,
+    entity_type: row.entity_type || 'Entity',
+    summary: extractProcessedDossierSummary(row.dossier_data),
+    generated_at: row.generated_at,
+    heartbeat_at: row.generated_at,
+    heartbeat_age_seconds: null,
+    heartbeat_source: 'entity_dossiers',
+    freshness_state: 'fresh',
+    status: 'completed',
+    started_at: row.generated_at,
+    completed_at: row.generated_at,
+    run_phase: 'completed',
+    current_stage: 'completed',
+    queue_position: index + 1,
+    publication_status: 'published',
+    current_question_id: 'completed',
+    current_question_text: 'Completed dossier',
+    current_action: 'completed',
+    next_action: 'Open the completed dossier',
+  }))
 }
 
 function deriveLiveState(
@@ -585,16 +879,28 @@ function deriveLiveState(
 }
 
 async function buildQueueDrilldownPayload() {
+  const preloadedWorkerActivityOverlay = await loadWorkerActivityOverlay(DEFAULT_WORKER_STATE_PATH)
   const manifestPayload = (scaleManifestData || null) as Record<string, unknown> | null
   const manifestEntities = Array.isArray(manifestPayload?.entities)
     ? manifestPayload.entities as ManifestEntity[]
     : []
   const canonicalEntities = await getCanonicalEntitiesSnapshot()
   const normalizedUniverseCount = await getNormalizedUniverseCount()
-  const universeCount = normalizedUniverseCount ?? manifestEntities.length
+  const orderedManifestEntities = sortQuestionFirstManifestEntities(manifestEntities, canonicalEntities)
+  const universeCount = normalizedUniverseCount ?? orderedManifestEntities.length
+  const processedDossierCount = await loadProcessedDossierCount()
+  const processedEntities = mapProcessedDossierRowsToQueueEntities(await loadProcessedDossierRows(200))
 
   const runtimeReadSet = await loadPipelineRuntimeReadSet()
   const runtimeSnapshot = buildPipelineRuntimeSnapshot(runtimeReadSet)
+  const workerActivityOverlay = preloadedWorkerActivityOverlay
+    || await loadWorkerActivityOverlay(runtimeSnapshot.worker.worker_state_path)
+  const effectiveWorker = workerActivityOverlay
+    ? {
+        ...runtimeSnapshot.worker,
+        ...workerActivityOverlay,
+      }
+    : runtimeSnapshot.worker
   const control = runtimeSnapshot.control
   const activeRuns = runtimeReadSet.rows
     .filter((row) => ['queued', 'claiming', 'running', 'retrying'].includes(toText(row.status).toLowerCase()))
@@ -612,7 +918,7 @@ async function buildQueueDrilldownPayload() {
     .slice(0, 8) as Record<string, unknown>[]
   const dossierRows = runtimeReadSet.dossiers as DossierRecord[]
   const dossierLookup = buildDossierLookup(dossierRows)
-  const workerProcessState = runtimeSnapshot.worker.worker_process_state
+  const workerProcessState = effectiveWorker.worker_process_state
   const workerRunning = workerProcessState === 'running'
   const workerStarting = workerProcessState === 'starting'
   const workerStopping = workerProcessState === 'stopping'
@@ -673,7 +979,7 @@ async function buildQueueDrilldownPayload() {
       ...resumeNeededEntities.map((item) => item.entity_id),
     ].filter(Boolean) as string[],
   )
-  const canonicalManifestEntities = manifestEntities.map((entity) => ({
+  const canonicalManifestEntities = orderedManifestEntities.map((entity) => ({
     ...resolveCanonicalQueueEntity(entity, canonicalEntities),
     source_entity_id: entity.entity_id,
     source_entity_name: entity.entity_name,
@@ -767,7 +1073,7 @@ async function buildQueueDrilldownPayload() {
     .slice(0, 8)
   const backlogHealth = buildBacklogHealth(runtimeSnapshot, staleActiveRows)
   const liveState = deriveLiveState(runtimeSnapshot, control)
-  const runtimeCurrentLiveRun = runtimeSnapshot.current_live_run
+  const runtimeCurrentLiveRun = runtimeSnapshot.current_live_run ?? buildSyntheticLiveRunFromWorker(effectiveWorker)
   const runtimeLatestNoteworthyRun = runtimeSnapshot.latest_noteworthy_run
   const liveEntityFromActiveRuns = runtimeCurrentLiveRun
     ? activeEntities.find((item) => (
@@ -908,20 +1214,20 @@ async function buildQueueDrilldownPayload() {
     runtime: {
       snapshot_at: runtimeSnapshot.snapshot_at,
       generated_at: runtimeSnapshot.generated_at,
-      worker: runtimeSnapshot.worker,
+      worker: effectiveWorker,
       fastmcp: runtimeSnapshot.fastmcp,
       queue_depth: runtimeSnapshot.queue_depth,
-      current_run: runtimeSnapshot.current_run,
-      current_live_run: runtimeSnapshot.current_live_run,
+      current_run: runtimeCurrentLiveRun || runtimeSnapshot.current_run,
+      current_live_run: runtimeCurrentLiveRun,
       latest_noteworthy_run: runtimeSnapshot.latest_noteworthy_run,
       recent_failures: runtimeSnapshot.recent_failures,
       failure_buckets: runtimeSnapshot.failure_buckets,
     },
     live_state: {
       operational_state: liveState,
-      worker_process_state: runtimeSnapshot.worker.worker_process_state,
-      current_run: runtimeSnapshot.current_live_run,
-      current_live_run: runtimeSnapshot.current_live_run,
+      worker_process_state: effectiveWorker.worker_process_state,
+      current_run: runtimeCurrentLiveRun,
+      current_live_run: runtimeCurrentLiveRun,
       in_progress_entity: visibleInProgressEntity,
       running_entities: visibleRunningEntities,
     },
@@ -930,13 +1236,12 @@ async function buildQueueDrilldownPayload() {
     stop_reason: stopReason,
     stop_details: stopDetails,
     freshness_threshold_seconds: freshnessThresholdSeconds,
-    playlist_sort_key: manifestSortKey.length > 0
-      ? manifestSortKey
-      : ['priority_score DESC', 'entity_type ASC', 'entity_name ASC', 'entity_id ASC'],
+    playlist_sort_key: describeQuestionFirstQueueOrder(),
     loop_status: {
       universe_count: universeCount,
-      total_scheduled: manifestEntities.length,
+      total_scheduled: orderedManifestEntities.length,
       completed: positionedCompletedEntities.filter((item) => toText(item.status).toLowerCase() === 'completed').length,
+      processed_dossiers: processedDossierCount,
       failed: 0,
       retryable_failures: 0,
       quality_counts: {
@@ -958,6 +1263,7 @@ async function buildQueueDrilldownPayload() {
       stale_active_rows: visibleStaleActiveRows,
       latest_noteworthy_entity: latestNoteworthyEntity,
       completed_entities: positionedCompletedEntities,
+      processed_entities: processedEntities,
       resume_needed_entities: positionedResumeNeededEntities,
       upcoming_entities: upcomingEntities,
     },
@@ -970,17 +1276,16 @@ async function buildQueueDrilldownPayload() {
 export async function GET(request?: Request) {
   const requestUrl = request?.url ? new URL(request.url) : null
   const forceRefresh = requestUrl?.searchParams.get('refresh') === '1'
-
-  if (!forceRefresh && isQueueDrilldownCacheFresh()) {
-    return NextResponse.json(cachedQueueDrilldownPayload)
-  }
-
-  if (!inFlightQueueDrilldownBuild) {
-    inFlightQueueDrilldownBuild = buildQueueDrilldownPayload()
+  const runBuild = () => {
+    const buildToken = ++latestQueueDrilldownBuildToken
+    return buildQueueDrilldownPayload()
       .then((payload) => {
-        cachedQueueDrilldownPayload = payload
-        cachedQueueDrilldownFetchedAt = Date.now()
-        return payload
+        const smoothedPayload = carryForwardRecentActiveEntity(payload, cachedQueueDrilldownPayload)
+        if (buildToken === latestQueueDrilldownBuildToken) {
+          cachedQueueDrilldownPayload = smoothedPayload
+          cachedQueueDrilldownFetchedAt = Date.now()
+        }
+        return smoothedPayload
       })
       .catch((error) => {
         if (cachedQueueDrilldownPayload && isTransientReadTimeout(error)) {
@@ -988,6 +1293,18 @@ export async function GET(request?: Request) {
         }
         throw error
       })
+  }
+
+  if (!forceRefresh && isQueueDrilldownCacheFresh()) {
+    return NextResponse.json(cachedQueueDrilldownPayload)
+  }
+
+  if (forceRefresh) {
+    return NextResponse.json(await runBuild())
+  }
+
+  if (!inFlightQueueDrilldownBuild) {
+    inFlightQueueDrilldownBuild = runBuild()
       .finally(() => {
         inFlightQueueDrilldownBuild = null
       })

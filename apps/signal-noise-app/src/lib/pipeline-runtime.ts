@@ -559,8 +559,7 @@ function sortMostRelevant(left: PipelineRuntimeRunRecord, right: PipelineRuntime
 }
 
 function isLiveQueueState(queueState: PipelineRuntimeRunRecord['queue_state']) {
-  return queueState === 'queued'
-    || queueState === 'running'
+  return queueState === 'running'
     || queueState === 'retrying'
     || queueState === 'reconciling'
 }
@@ -570,8 +569,7 @@ function rankLiveRun(record: PipelineRuntimeRunRecord) {
     record.queue_state === 'running' ? 4
       : record.queue_state === 'retrying' ? 3
         : record.queue_state === 'reconciling' ? 2
-          : record.queue_state === 'queued' ? 1
-            : 0
+          : 0
   )
   return [queueStateScore, record.heartbeat_age_seconds ?? Number.MAX_SAFE_INTEGER] as const
 }
@@ -613,6 +611,9 @@ function selectLatestNoteworthyRun(
   return records
     .filter((record) => {
       if (currentLiveRun && record.batch_id && record.batch_id === currentLiveRun.batch_id) {
+        return false
+      }
+      if (record.queue_state === 'queued') {
         return false
       }
       return !isCurrentLiveRun(record)

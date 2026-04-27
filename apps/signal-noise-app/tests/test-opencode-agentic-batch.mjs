@@ -19,6 +19,7 @@ import {
   buildOpenCodeSynthesisPrompt,
   buildQuestionState,
   prepareOpenCodeRunWorkspace,
+  resolveQuestionSourceOrder,
   runOpenCodeCliQuestion,
   runOpenCodeQuestionSourceBatch,
   runOpenCodePresetBatch,
@@ -35,7 +36,7 @@ const CANONICAL_PARITY_SMOKE_SOURCE = join(
   'canonical_two_question_parity_smoke.json',
 );
 
-test('buildOpenCodeConfig wires Z.AI coding plan GLM-5 and BrightData MCP for OpenCode', async () => {
+test('buildOpenCodeConfig wires Z.AI coding plan GLM-5.1 and BrightData MCP for OpenCode', async () => {
   const previousZaiApiKey = process.env.ZAI_API_KEY;
   const previousBrightDataToken = process.env.BRIGHTDATA_API_TOKEN;
   process.env.ZAI_API_KEY = 'test-zai-token';
@@ -45,21 +46,21 @@ test('buildOpenCodeConfig wires Z.AI coding plan GLM-5 and BrightData MCP for Op
   });
 
   assert.equal(config.$schema, 'https://opencode.ai/config.json');
-  assert.equal(config.model, 'zai-coding-plan/glm-5');
+  assert.equal(config.model, 'zai-coding-plan/glm-5.1');
   assert.equal(config.provider['zai-coding-plan'].npm, '@ai-sdk/anthropic');
   assert.equal(config.provider['zai-coding-plan'].name, 'Z.AI Coding Plan');
   assert.equal(config.provider['zai-coding-plan'].options.baseURL, 'https://api.z.ai/api/anthropic/v1');
   assert.equal(config.provider['zai-coding-plan'].options.apiKey, '{env:ZAI_API_KEY}');
-  assert.equal(config.provider['zai-coding-plan'].models['glm-5'].id, 'GLM-5');
-  assert.equal(config.provider['zai-coding-plan'].models['glm-5'].name, 'GLM-5');
-  assert.equal(config.provider['zai-coding-plan'].models['glm-5'].limit.output, 16384);
+  assert.equal(config.provider['zai-coding-plan'].models['glm-5.1'].id, 'GLM-5.1');
+  assert.equal(config.provider['zai-coding-plan'].models['glm-5.1'].name, 'GLM-5.1');
+  assert.equal(config.provider['zai-coding-plan'].models['glm-5.1'].limit.output, 16384);
   assert.ok(config.mcp.brightData);
   assert.equal(config.mcp.brightData.type, 'remote');
   assert.equal(config.mcp.brightData.enabled, true);
   assert.equal(config.mcp.brightData.url, 'http://127.0.0.1:8000/mcp/');
   assert.equal(config.mcp.brightData.timeout, 15000);
   assert.equal(config.agent.discovery.steps, 4);
-  assert.equal(config.agent.discovery.model, 'zai-coding-plan/glm-5');
+  assert.equal(config.agent.discovery.model, 'zai-coding-plan/glm-5.1');
   assert.deepEqual(config.tools, { 'brightData*': false, 'brightdata*': false });
   assert.deepEqual(config.agent.build.tools, { 'brightData*': true, 'brightdata*': true });
   assert.deepEqual(config.agent.discovery.tools, { 'brightData*': true, 'brightdata*': true });
@@ -99,7 +100,7 @@ test('prepareOpenCodeRunWorkspace materializes repo-local OpenCode MCP config', 
     const config = JSON.parse(readFileSync(configPath, 'utf8'));
 
     assert.notEqual(prepared.cwd, workspaceRoot);
-    assert.equal(config.model, 'zai-coding-plan/glm-5');
+  assert.equal(config.model, 'zai-coding-plan/glm-5.1');
     assert.equal(config.provider['zai-coding-plan'].options.baseURL, 'https://api.z.ai/api/anthropic/v1');
     assert.equal(config.provider['zai-coding-plan'].options.apiKey, '{env:ZAI_API_KEY}');
     assert.ok(config.mcp.brightData);
@@ -229,6 +230,39 @@ test('buildOpenCodeQuestionPrompt adds no-signal guidance for bounded negative p
 
   assert.match(prompt, /no meaningful public evidence is visible after a bounded search/i);
   assert.match(prompt, /no_signal/i);
+});
+
+test('resolveQuestionSourceOrder varies source ranking by entity type and question family', () => {
+  const clubDecisionOwner = resolveQuestionSourceOrder({
+    question_id: 'q11_decision_owner',
+    question_type: 'decision_owner',
+  }, 'CLUB');
+  const leagueDigital = resolveQuestionSourceOrder({
+    question_id: 'q2_digital_stack',
+    question_type: 'digital_stack',
+  }, 'LEAGUE');
+  const federationProcurement = resolveQuestionSourceOrder({
+    question_id: 'q7_procurement_signal',
+    question_type: 'procurement_signal',
+  }, 'FEDERATION');
+
+  assert.deepEqual(clubDecisionOwner.slice(0, 3), ['official_site', 'linkedin_posts', 'news']);
+  assert.deepEqual(leagueDigital.slice(0, 4), ['official_site', 'app_store', 'press_release', 'news']);
+  assert.deepEqual(federationProcurement.slice(0, 4), ['official_site', 'tender_portal', 'board_minutes', 'strategic_plan']);
+});
+
+test('buildOpenCodeQuestionPrompt includes entity-type-aware source guidance when source order is available', () => {
+  const prompt = buildOpenCodeQuestionPrompt({
+    question_id: 'q11_decision_owner',
+    question_text: 'Who owns the commercial buying decision at Doncaster Rovers?',
+    question_type: 'decision_owner',
+    entity_type: 'CLUB',
+    query: '"Doncaster Rovers" chief commercial officer',
+    source_priority: ['official_site', 'linkedin_posts', 'news', 'press_release'],
+  });
+
+  assert.match(prompt, /Entity type: CLUB/i);
+  assert.match(prompt, /Prioritize sources in this order: official_site, linkedin_posts, news, press_release/i);
 });
 
 test('buildOpenCodeQuestionPrompt requests commercial evidence fields for procurement questions', () => {
@@ -655,7 +689,7 @@ test('buildOpenCodeRunArgs selects the build agent so BrightData tools are enabl
   const args = buildOpenCodeRunArgs({ question_id: 'q6_launch_signal' }, prompt);
 
   assert.deepEqual(args.slice(0, 4), ['run', '--format', 'json', '--model']);
-  assert.equal(args[4], 'zai-coding-plan/glm-5');
+  assert.equal(args[4], 'zai-coding-plan/glm-5.1');
   assert.equal(args.includes('--agent'), true);
   assert.equal(args[args.indexOf('--agent') + 1], 'build');
   assert.equal(args.includes('--model'), true);

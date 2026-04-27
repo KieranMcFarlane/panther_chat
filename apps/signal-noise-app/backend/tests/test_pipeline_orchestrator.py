@@ -996,7 +996,7 @@ def test_pipeline_orchestrator_defaults_question_first_timeout_to_five_minutes(m
         ralph_validator=FakeRalph(),
         graphiti_service=FakeGraphiti(),
         dashboard_scorer=FakeDashboardScorer(),
-        persistence_coordinator=FakePersistenceCoordinator(),
+        persistence_coordinator=CapturingPersistenceCoordinator(),
         brightdata_client=None,
         claude_client=None,
     )
@@ -1181,6 +1181,11 @@ async def test_pipeline_orchestrator_persists_fresh_canonical_question_repair_pa
         },
     )
 
+    persisted_question_first = [
+        payload for payload in persistence.run_payloads
+        if payload.get("phase") == "question_first_enrichment" and payload.get("record_type") == "question_first_dossier"
+    ]
+    assert persisted_question_first
     persisted_dossier = persistence.run_payloads[-1]["payload"]["dossier"]
 
     assert persisted_dossier["run_id"] == result["run_id"]
@@ -1189,6 +1194,7 @@ async def test_pipeline_orchestrator_persists_fresh_canonical_question_repair_pa
     assert persisted_dossier["generated_at"] != "2026-04-10T07:36:45.501Z"
     assert persisted_dossier["questions"][1]["question_id"] == "q11_decision_owner"
     assert persisted_dossier["question_first"]["answers"][1]["question_id"] == "q11_decision_owner"
+    assert persisted_question_first[0]["payload"]["dossier"]["question_first"]["questions_answered"] == 3
 
 
 @pytest.mark.asyncio
