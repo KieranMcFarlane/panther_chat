@@ -3,7 +3,7 @@ export function formatPlaylistSortKey(sortKey: string[] | null | undefined) {
     ? sortKey.map((part) => String(part || '').trim()).filter(Boolean)
     : []
   if (parts.length === 0) {
-    return 'priority_score DESC · entity_type ASC · entity_name ASC · entity_id ASC'
+    return 'league_priority ASC · league_popularity DESC · priority_score DESC · quality_score DESC · entity_type ASC · entity_name ASC · entity_id ASC'
   }
   return parts.join(' · ')
 }

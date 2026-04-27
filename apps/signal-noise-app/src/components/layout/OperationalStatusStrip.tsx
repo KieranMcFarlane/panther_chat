@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
   getCachedOperationalDrilldownPayload,
-  loadOperationalDrilldownPayload,
+  refreshOperationalDrilldownPayload,
   startOperationalDrilldownPolling,
   subscribeOperationalDrilldown,
   type OperationalDrilldownPayload,
@@ -280,6 +280,7 @@ export function OperationalStatusStrip({
   const [drilldown, setDrilldown] = useState<OperationalDrilldownPayload | null>(null)
   const [controlState, setControlState] = useState<OperationalDrilldownPayload['control'] | null>(null)
   const [isExpanded, setIsExpanded] = useState(false)
+  const [completedVisibleCount, setCompletedVisibleCount] = useState(8)
 
   useEffect(() => {
     const cachedPayload = getCachedOperationalDrilldownPayload()
@@ -292,7 +293,7 @@ export function OperationalStatusStrip({
       setControlState(payload?.control ?? null)
     })
     const stopPolling = startOperationalDrilldownPolling(OPERATIONAL_STATUS_POLL_INTERVAL_MS)
-    void loadOperationalDrilldownPayload().then((payload) => {
+    void refreshOperationalDrilldownPayload().then((payload) => {
       setDrilldown(payload)
       setControlState(payload?.control ?? null)
     }).catch(() => {
@@ -311,7 +312,9 @@ export function OperationalStatusStrip({
     ?? (drilldown?.queue?.running_entities as SnapshotItem[] | undefined)
     ?? (inProgressEntity ? [inProgressEntity as SnapshotItem] : [])
   const staleActiveRows = (drilldown?.queue?.stale_active_rows as SnapshotItem[] | undefined) ?? []
-  const completedEntities = (drilldown?.queue?.completed_entities as SnapshotItem[] | undefined) ?? []
+  const completedEntities = (drilldown?.queue?.processed_entities as SnapshotItem[] | undefined)
+    ?? (drilldown?.queue?.completed_entities as SnapshotItem[] | undefined)
+    ?? []
   const blockedEntities = (drilldown?.dossier_quality?.incomplete_entities as SnapshotItem[] | undefined) ?? []
   const upcomingEntities = (drilldown?.queue?.upcoming_entities as SnapshotItem[] | undefined) ?? []
   const resumedEntities = (drilldown?.queue?.resume_needed_entities as SnapshotItem[] | undefined) ?? []
@@ -326,7 +329,7 @@ export function OperationalStatusStrip({
     : runtime?.fastmcp?.reachable === true
       ? 'reachable'
       : 'unknown'
-  const currentRun = liveState?.current_live_run ?? liveState?.current_run ?? runtime?.current_live_run ?? runtime?.current_run ?? null
+  const currentRun = liveState?.current_live_run ?? runtime?.current_live_run ?? null
   const { isSafetyStop, stopReason, stopDetails } = getOperationalStopDetails(
     drilldown,
     controlState,
@@ -357,7 +360,10 @@ export function OperationalStatusStrip({
   const currentTargetLabel = startTarget
     ? `${toText(startTargetEntity?.entity_name) || startTarget.entityId} · ${startTarget.mode === 'full' ? 'full rerun' : 'question rerun'}`
     : null
-  const totalUniverseCount = Number(loopStatus?.universe_count ?? loopStatus?.total_scheduled ?? 0) || null
+  const totalUniverseCountValue = Number(loopStatus?.universe_count ?? loopStatus?.total_scheduled ?? NaN)
+  const totalUniverseCount = Number.isFinite(totalUniverseCountValue) ? totalUniverseCountValue : null
+  const processedUniverseCountValue = Number(loopStatus?.processed_dossiers ?? loopStatus?.completed ?? completedEntities.length ?? NaN)
+  const processedUniverseCount = Number.isFinite(processedUniverseCountValue) ? processedUniverseCountValue : null
   const universeFocusEntity = inProgressEntity
     || runningEntities[0]
     || staleActiveRows[0]
@@ -369,11 +375,13 @@ export function OperationalStatusStrip({
   const currentUniversePosition = typeof universeFocusEntity?.queue_position === 'number'
     ? universeFocusEntity.queue_position
     : null
-  const currentUniverseProgressLabel = currentUniversePosition && totalUniverseCount
+  const currentUniverseProgressLabel = currentUniversePosition !== null && totalUniverseCount !== null
     ? `${currentUniversePosition}/${totalUniverseCount}`
-    : String(totalUniverseCount ?? '…')
-  const universeTileTitle = currentUniversePosition && totalUniverseCount
-    ? `Entity ${currentUniversePosition} of ${totalUniverseCount} in universe`
+    : currentUniversePosition !== null
+      ? String(currentUniversePosition)
+      : String(totalUniverseCount ?? '…')
+  const universeTileTitle = currentUniversePosition !== null
+    ? `${universeFocusEntity?.entity_name ? `${universeFocusEntity.entity_name} · ` : ''}canonical entity ${currentUniverseProgressLabel}${totalUniverseCount !== null ? ` of ${totalUniverseCount}` : ''}`
     : String(totalUniverseCount ?? '…')
 
   const statusHero = buildOperationalStatusHero({
@@ -386,7 +394,7 @@ export function OperationalStatusStrip({
     compactTicker,
     `Fast MCP ${fastmcpHealth}`,
     `Worker ${workerState}`,
-    totalUniverseCount ? `Universe ${currentUniverseProgressLabel}` : null,
+    currentUniversePosition !== null ? `Canonical entity ${currentUniverseProgressLabel}` : null,
   ].filter(Boolean) as string[]
 
   const liveOperationalState = liveState?.operational_state ?? drilldown?.operational_state
@@ -408,7 +416,7 @@ export function OperationalStatusStrip({
             ? 'Paused'
           : repairFocus
             ? 'Repairing'
-          : liveOperationalState === 'running' || inProgressEntity
+          : liveOperationalState === 'running' || currentRun || inProgressEntity
             ? 'Running'
             : 'Waiting'
   const statusItems = [
@@ -423,8 +431,9 @@ export function OperationalStatusStrip({
       tone: fastmcpHealth === 'reachable' ? 'text-emerald-300' : fastmcpHealth === 'unreachable' ? 'text-rose-300' : 'text-slate-300',
     },
     {
-      label: 'Universe',
+      label: 'Canonical entity',
       value: currentUniverseProgressLabel,
+      detail: universeFocusEntity?.entity_name || universeFocusEntity?.entity_id || null,
       tone: 'text-white',
       title: universeTileTitle,
     },
@@ -441,14 +450,16 @@ export function OperationalStatusStrip({
     stopReason,
     stopDetails,
   })
+  const visibleCompletedEntities = completedEntities.slice(0, completedVisibleCount)
+  const hasMoreCompletedEntities = completedVisibleCount < completedEntities.length
 
   return (
     <section
-      className="overflow-hidden rounded-2xl border border-custom-border bg-custom-box shadow-sm transition-[max-height] duration-300 ease-out"
+      className="overflow-y-auto overflow-x-hidden rounded-2xl border border-custom-border bg-custom-box shadow-sm transition-[max-height] duration-300 ease-out"
       style={{ maxHeight: isExpanded ? '40rem' : '7rem', padding: '0.7rem' }}
     >
       <div className="flex flex-col gap-3">
-        <div className="sr-only">Running now. Blocked / partial. Recent completions. Stale / blocked.</div>
+        <div className="sr-only">Running now. Blocked / partial. Canonical entity. Stale / blocked.</div>
         <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
           <div className="flex shrink-0 flex-col gap-2">
             <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-4 xl:justify-items-start">
@@ -461,6 +472,9 @@ export function OperationalStatusStrip({
                 >
                   <div className="text-[0.55rem] uppercase tracking-[0.14em] text-slate-300">{item.label}</div>
                   <div className={`mt-0.5 truncate text-lg font-semibold leading-none ${item.tone}`}>{item.value}</div>
+                  {'detail' in item && item.detail ? (
+                    <div className="mt-1 truncate text-[0.65rem] uppercase tracking-[0.12em] text-slate-400">{item.detail}</div>
+                  ) : null}
                 </button>
               ))}
             </div>
@@ -581,7 +595,7 @@ export function OperationalStatusStrip({
                 Operational Snapshot
               </div>
               <div className="mt-1 text-sm text-slate-300">
-                Queue order: priority_score DESC · entity_type ASC · entity_name ASC · entity_id ASC
+                Queue order: league_priority ASC · league_popularity DESC · priority_score DESC · quality_score DESC · entity_type ASC · entity_name ASC · entity_id ASC
               </div>
               <div className="mt-4 grid gap-4 lg:grid-cols-4">
                 <SnapshotLane
@@ -608,11 +622,25 @@ export function OperationalStatusStrip({
                 <SnapshotLane
                   title="Completed"
                   icon={<CheckCircle2 className="h-4 w-4 text-emerald-300" />}
-                  items={completedEntities}
+                  items={visibleCompletedEntities}
                   emptyLabel="No completed entities yet."
                   kind="completed"
                 />
               </div>
+              {hasMoreCompletedEntities ? (
+                <div className="flex justify-end pt-1">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="h-8 border-custom-border px-3 text-xs"
+                    onClick={() => {
+                      setCompletedVisibleCount((current) => Math.min(current + 8, completedEntities.length))
+                    }}
+                  >
+                    Show more processed entities
+                  </Button>
+                </div>
+              ) : null}
             </div>
           </div>
         ) : null}
