@@ -57,7 +57,7 @@ test('buildOpenCodeConfig wires Z.AI coding plan GLM-5.1 and BrightData MCP for 
   assert.ok(config.mcp.brightData);
   assert.equal(config.mcp.brightData.type, 'remote');
   assert.equal(config.mcp.brightData.enabled, true);
-  assert.equal(config.mcp.brightData.url, 'http://127.0.0.1:8000/mcp/');
+  assert.equal(config.mcp.brightData.url, 'http://127.0.0.1:8014/mcp/');
   assert.equal(config.mcp.brightData.timeout, 15000);
   assert.equal(config.agent.discovery.steps, 4);
   assert.equal(config.agent.discovery.model, 'zai-coding-plan/glm-5.1');
@@ -105,7 +105,7 @@ test('prepareOpenCodeRunWorkspace materializes repo-local OpenCode MCP config', 
     assert.equal(config.provider['zai-coding-plan'].options.apiKey, '{env:ZAI_API_KEY}');
     assert.ok(config.mcp.brightData);
     assert.equal(config.mcp.brightData.type, 'remote');
-    assert.equal(config.mcp.brightData.url, 'http://127.0.0.1:8000/mcp/');
+    assert.equal(config.mcp.brightData.url, 'http://127.0.0.1:8014/mcp/');
     assert.equal(config.mcp.brightData.timeout, 15000);
 
     await prepared.cleanup();

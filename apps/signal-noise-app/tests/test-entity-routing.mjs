@@ -78,11 +78,11 @@ test('entity routing preserves uuid-shaped identifiers as-is', () => {
   )
 })
 
-test('entity routing preserves slug strings for public dossier routes', () => {
-  assert.equal(
-    getEntityBrowserDossierHref('fc-porto-2027', '1'),
-    '/entity-browser/fc-porto-2027/dossier?from=1'
-  )
+test('entity routing canonicalizes slug strings into stable uuid dossier routes', () => {
+  const href = getEntityBrowserDossierHref('fc-porto-2027', '1')
+  assert.ok(href)
+  assert.match(href, /^\/entity-browser\/[0-9a-f-]{36}\/dossier\?from=1$/i)
+  assert.notEqual(href, '/entity-browser/fc-porto-2027/dossier?from=1')
 })
 
 test('entity routing resolves known legacy arsenal uuids to the current canonical arsenal uuid', () => {

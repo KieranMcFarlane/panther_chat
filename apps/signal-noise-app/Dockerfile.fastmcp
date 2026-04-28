@@ -4,7 +4,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PIP_NO_CACHE_DIR=1 \
     BRIGHTDATA_FASTMCP_HOST=0.0.0.0 \
-    BRIGHTDATA_FASTMCP_PORT=8000
+    BRIGHTDATA_FASTMCP_PORT=8014
 
 WORKDIR /app
 
@@ -22,9 +22,9 @@ COPY backend /app/backend
 
 ENV PYTHONPATH=/app
 
-EXPOSE 8000
+EXPOSE 8014
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
-    CMD curl -fsS http://localhost:8000/health || exit 1
+    CMD curl -fsS http://localhost:8014/health || exit 1
 
 CMD ["python3", "-m", "backend.brightdata_fastmcp_service"]

@@ -41,6 +41,18 @@ test('full dev launcher prewarms the entity snapshot after frontend startup', ()
   assert.match(devFullScriptSource, /wait "\$\{frontend_pid\}"/)
 })
 
+test('full dev launcher verifies the Python backend API, not only a generic health endpoint', () => {
+  assert.match(devFullScriptSource, /openapi\.json/)
+  assert.match(devFullScriptSource, /\/api\/pipeline\/run-entity/)
+  assert.match(devFullScriptSource, /payload\.get\("status"\)\s*!=\s*"healthy"/)
+  assert.match(devFullScriptSource, /payload\.get\("version"\)\s*!=\s*"2\.0\.0"/)
+})
+
+test('full dev launcher keeps BrightData FastMCP off the Python backend port', () => {
+  assert.match(devFullScriptSource, /BRIGHTDATA_FASTMCP_PORT=8014/)
+  assert.doesNotMatch(devFullScriptSource, /BRIGHTDATA_FASTMCP_PORT=8000/)
+})
+
 test('full dev launcher supervises the worker and restarts it after crashes', () => {
   assert.match(devFullScriptSource, /worker_supervisor_pid=/)
   assert.match(devFullScriptSource, /while true; do/)

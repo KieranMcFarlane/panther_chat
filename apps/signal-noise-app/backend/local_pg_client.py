@@ -368,6 +368,9 @@ class LocalPgRpc:
                         )
                           AND r.status IN ('running', 'retrying', 'failed')
                           AND coalesce(r.metadata->>'continue_pipeline_on_failure', 'false') <> 'true'
+                          AND coalesce(r.metadata->>'infrastructure_failure', 'false') <> 'true'
+                          AND coalesce(r.metadata->>'failure_class', '') <> 'backend_route_missing'
+                          AND coalesce(r.metadata->>'failure_class', '') <> 'entity_pipeline_timeout'
                           AND (
                             coalesce(r.metadata->>'current_question_id', '') <> ''
                             OR coalesce(r.metadata->>'next_repair_question_id', '') <> ''

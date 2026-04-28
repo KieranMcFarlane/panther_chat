@@ -33,6 +33,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 from supabase import create_client, Client
+from canonical_ids import normalize_canonical_entity_id
 from local_pg_client import create_local_pg_client, should_use_local_pg
 
 # Add backend to path for imports
@@ -78,15 +79,6 @@ def create_pipeline_persistence_client():
         return None
     return create_client(supabase_url, supabase_key)
 
-
-def normalize_canonical_entity_id(value: Any) -> Optional[str]:
-    candidate = str(value or "").strip()
-    if not candidate:
-        return None
-    try:
-        return str(UUID(candidate))
-    except (TypeError, ValueError, AttributeError):
-        return None
 
 PHASE0_SUBSTEP_ORDER = [
     "cache_lookup",
@@ -1261,7 +1253,9 @@ async def generate_dossier(request: DossierRequest):
 
         logger.info(f"📊 Dossier generation requested for {request.entity_name} (entity_id: {request.entity_id})")
         canonical_entity_id = normalize_canonical_entity_id(
-            request.canonical_entity_id or (request.metadata or {}).get("canonical_entity_id")
+            request.canonical_entity_id
+            or (request.metadata or {}).get("canonical_entity_id")
+            or request.entity_id
         )
         question_source_preview = build_universal_atomic_question_source(
             entity_type=request.entity_type,
@@ -1566,7 +1560,9 @@ async def run_entity_pipeline(request: EntityPipelineRequest):
 
         pipeline_supabase: Optional[Any] = None
         canonical_entity_id = normalize_canonical_entity_id(
-            request.canonical_entity_id or (request.metadata or {}).get("canonical_entity_id")
+            request.canonical_entity_id
+            or (request.metadata or {}).get("canonical_entity_id")
+            or request.entity_id
         )
         if request.batch_id:
             pipeline_supabase = create_pipeline_persistence_client()

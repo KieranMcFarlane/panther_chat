@@ -230,6 +230,45 @@ def test_select_next_entity_cursor_candidate_ignores_nonblocking_continue_on_fai
     assert "continue_pipeline_on_failure" in captured["sql"]
 
 
+def test_select_next_entity_cursor_candidate_ignores_infrastructure_failures(monkeypatch):
+    captured = {}
+
+    class _FakeCursor:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+        def execute(self, sql, params):
+            captured["sql"] = sql
+            captured["params"] = params
+
+        def fetchall(self):
+            return []
+
+    class _FakeConnection:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+        def cursor(self):
+            return _FakeCursor()
+
+    client = LocalPgClient("postgresql://localhost/signal_noise_app")
+    monkeypatch.setattr(client, "_connect", lambda: _FakeConnection())
+
+    client.rpc(
+        "select_next_entity_cursor_candidate",
+        {"current_entity_id": "", "current_canonical_entity_id": ""},
+    ).execute()
+
+    assert "infrastructure_failure" in captured["sql"]
+    assert "failure_class" in captured["sql"]
+
+
 def test_select_next_entity_cursor_candidate_only_considers_latest_run_per_entity(monkeypatch):
     captured = {}
 

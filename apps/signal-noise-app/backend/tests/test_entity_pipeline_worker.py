@@ -1214,15 +1214,82 @@ def test_claim_next_batch_returns_none_when_pipeline_is_paused(monkeypatch):
     worker.recover_stale_batches = lambda: None
     worker.worker_id = "worker-1"
     worker.lease_seconds = 60
-    worker.supabase = SimpleNamespace(rpc=lambda *_args, **_kwargs: None)
+    worker.supabase = SimpleNamespace(
+        rpc=lambda *_args, **_kwargs: SimpleNamespace(data=[]),
+    )
     monkeypatch.setattr(
         "entity_pipeline_worker.read_pipeline_control_state",
-        lambda: {"is_paused": True, "pause_reason": "orchestrator unhealthy", "stop_reason": "orchestrator_unhealthy"},
+        lambda: {"is_paused": True, "pause_reason": "manual stop", "stop_reason": "manual_stop"},
     )
 
     claimed = worker.claim_next_batch()
 
     assert claimed is None
+
+
+def test_claim_next_batch_self_heals_orchestrator_pause_when_backend_is_healthy(monkeypatch):
+    worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
+    worker.recover_stale_batches = lambda: None
+    worker.worker_id = "worker-1"
+    worker.lease_seconds = 60
+    writes = []
+
+    class FakeRpcQuery:
+        def execute(self):
+            return SimpleNamespace(data=[{"id": "batch-1", "metadata": {}}])
+
+    class FakeSupabase:
+        def rpc(self, name, params):
+            assert name == "claim_next_entity_import_batch"
+            assert params["worker_id"] == "worker-1"
+            return FakeRpcQuery()
+
+        def table(self, *_args, **_kwargs):
+            class FakeTableQuery:
+                def select(self, *_args, **_kwargs):
+                    return self
+
+                def eq(self, *_args, **_kwargs):
+                    return self
+
+                def limit(self, *_args, **_kwargs):
+                    return self
+
+                def execute(self):
+                    return SimpleNamespace(data=[])
+
+            return FakeTableQuery()
+
+    worker.supabase = FakeSupabase()
+    worker._resolve_batch_cursor_identity = lambda batch: {
+        "current_entity_id": "entity-1",
+        "current_canonical_entity_id": "entity-1",
+        "current_entity_name": "Entity One",
+    }
+    monkeypatch.setattr(
+        "entity_pipeline_worker.read_pipeline_control_state",
+        lambda: {
+            "is_paused": True,
+            "pause_reason": "orchestrator unhealthy",
+            "stop_reason": "orchestrator_unhealthy",
+            "requested_state": "paused",
+            "observed_state": "paused",
+            "transition_state": "paused",
+        },
+    )
+    monkeypatch.setattr(
+        "entity_pipeline_worker.write_pipeline_control_state",
+        lambda payload: writes.append(payload) or payload,
+    )
+    monkeypatch.setattr("entity_pipeline_worker._heartbeat_supervisor_state", lambda: None)
+    worker._backend_preflight = lambda: (True, "")
+
+    claimed = worker.claim_next_batch()
+
+    assert claimed["id"] == "batch-1"
+    assert writes[-1]["is_paused"] is False
+    assert writes[-1]["stop_reason"] is None
+    assert writes[-1]["requested_state"] == "running"
 
 
 def test_claim_next_batch_marks_control_running_when_queue_is_idle(monkeypatch):
@@ -2118,6 +2185,31 @@ def test_claim_next_batch_uses_control_state_cursor_for_manifest_fallback(monkey
     assert writes[-1]["current_canonical_entity_id"] == "canonical-c"
 
 
+def test_claim_next_batch_backend_preflight_failure_pauses_before_claim(monkeypatch):
+    worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
+    worker.worker_id = "worker-preflight"
+    worker.lease_seconds = 60
+    worker._now_iso = lambda: "2026-04-24T03:00:00+00:00"
+    worker._backend_preflight = lambda: (False, "backend_route_missing")
+    worker.supabase = SimpleNamespace(
+        rpc=lambda name, params: (_ for _ in ()).throw(AssertionError("should not claim when backend preflight fails"))
+    )
+
+    writes = []
+    monkeypatch.setattr(
+        "entity_pipeline_worker.read_pipeline_control_state",
+        lambda: {"requested_state": "running", "observed_state": "running", "is_paused": False},
+    )
+    monkeypatch.setattr("entity_pipeline_worker.write_pipeline_control_state", lambda payload: writes.append(payload) or payload)
+
+    claimed = worker.claim_next_batch()
+
+    assert claimed is None
+    assert writes[-1]["is_paused"] is True
+    assert writes[-1]["stop_reason"] == "backend_route_missing"
+    assert writes[-1]["observed_state"] == "paused"
+
+
 def test_recover_stale_batches_uses_rpc_requeue():
     worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
     captured = {}
@@ -2688,7 +2780,20 @@ def test_process_batch_marks_batch_completed_after_successful_retry():
     assert batch_updates[-1]["metadata"]["lease_expires_at"] is None
 
 
-def test_process_batch_marks_exhausted_retrying_run_failed_and_fails_batch():
+def test_process_batch_marks_exhausted_timeout_run_failed_and_continues_pipeline(monkeypatch, tmp_path):
+    control_path = tmp_path / "pipeline-control-state.json"
+    monkeypatch.setattr("entity_pipeline_worker.PIPELINE_CONTROL_STATE_PATH", control_path)
+    monkeypatch.setattr("entity_pipeline_worker.should_use_local_pg", lambda: False)
+    monkeypatch.setattr(
+        "entity_pipeline_worker.read_pipeline_control_state",
+        lambda: {"requested_state": "running", "observed_state": "running", "is_paused": False},
+    )
+    control_writes = []
+    monkeypatch.setattr(
+        "entity_pipeline_worker.write_pipeline_control_state",
+        lambda payload: control_writes.append(payload) or payload,
+    )
+
     worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
     worker._now_iso = lambda: "2026-03-04T12:10:00+00:00"
     worker._batch_metadata = lambda batch: batch.get("metadata", {})
@@ -2725,8 +2830,28 @@ def test_process_batch_marks_exhausted_retrying_run_failed_and_fails_batch():
     worker.sync_cached_entity = lambda *args, **kwargs: sync_calls.append((args, kwargs))
     worker._get_run_metadata = lambda batch_id, entity_id: run["metadata"]
     worker._get_batch_record = lambda batch_id: {"id": batch_id, "status": "running", "metadata": {}}
+    worker._get_batch_metadata = lambda batch_id: {"queue_mode": "durable_worker"}
+    worker._has_active_pipeline_run = lambda *_args, **_kwargs: False
+    worker._load_manifest_entities = lambda: [
+        {
+            "entity_id": "icf",
+            "canonical_entity_id": "icf",
+            "entity_name": "International Canoe Federation",
+            "entity_type": "FEDERATION",
+            "properties": {},
+        },
+        {
+            "entity_id": "fifa",
+            "canonical_entity_id": "fifa",
+            "entity_name": "FIFA",
+            "entity_type": "FEDERATION",
+            "properties": {},
+        },
+    ]
 
     batch_updates = []
+    inserted_batches = []
+    inserted_runs = []
 
     class FakeRpcQuery:
         def __init__(self, name, params):
@@ -2737,6 +2862,13 @@ def test_process_batch_marks_exhausted_retrying_run_failed_and_fails_batch():
             return SimpleNamespace(data=[])
 
     class FakeTable:
+        def insert(self, payload):
+            if self._table_name == "entity_import_batches":
+                inserted_batches.append(payload)
+            elif self._table_name == "entity_pipeline_runs":
+                inserted_runs.append(payload)
+            return self
+
         def update(self, payload):
             batch_updates.append(payload)
             return self
@@ -2747,15 +2879,29 @@ def test_process_batch_marks_exhausted_retrying_run_failed_and_fails_batch():
         def execute(self):
             return SimpleNamespace(data=[])
 
+        def __init__(self, table_name):
+            self._table_name = table_name
+
     class FakeSupabase:
         def rpc(self, name, params):
             return FakeRpcQuery(name, params)
 
         def table(self, _name):
-            return FakeTable()
+            return FakeTable(_name)
 
     worker.supabase = FakeSupabase()
-    states = [[run], [{"entity_id": "icf", "status": "failed", "metadata": run["metadata"]}]]
+    failed_run_snapshot = {
+        "entity_id": "icf",
+        "status": "failed",
+        "metadata": {
+            **run["metadata"],
+            "retry_state": "failed",
+            "continue_pipeline_on_failure": True,
+            "failure_class": "entity_pipeline_timeout",
+            "stop_reason": "entity_pipeline_timeout",
+        },
+    }
+    states = [[run], [failed_run_snapshot]]
     worker.get_batch_runs = lambda batch_id: states.pop(0)
 
     batch = {"id": "batch-1", "metadata": {"queue_mode": "durable_worker"}}
@@ -2763,23 +2909,31 @@ def test_process_batch_marks_exhausted_retrying_run_failed_and_fails_batch():
 
     assert run_updates[-1]["status"] == "failed"
     assert run_updates[-1]["metadata"]["retry_state"] == "failed"
+    assert run_updates[-1]["metadata"]["continue_pipeline_on_failure"] is True
+    assert run_updates[-1]["metadata"]["failure_class"] == "entity_pipeline_timeout"
+    assert run_updates[-1]["metadata"]["stop_reason"] == "entity_pipeline_timeout"
     assert run_updates[-1]["error_message"] == "timed out"
     assert sync_calls, "expected failed cached-entity sync for exhausted retry"
-    assert batch_updates[-1]["status"] == "failed"
-    assert batch_updates[-1]["metadata"]["retry_state"] == "failed"
+    assert any(update.get("status") == "failed" for update in batch_updates)
+    assert any(update.get("metadata", {}).get("retry_state") == "failed" for update in batch_updates)
+    assert any(update.get("metadata", {}).get("auto_advance_next_entity_id") == "fifa" for update in batch_updates)
+    assert not any(state.get("is_paused") for state in control_writes)
+    assert inserted_batches, "expected manifest auto-advance batch to be queued"
+    assert inserted_runs, "expected manifest auto-advance run to be queued"
+    assert inserted_runs[-1][0]["entity_id"] == "fifa"
 
 
 @pytest.mark.parametrize(
     ("status_code", "error_type"),
     [
         (403, "http_403"),
-        (404, "http_404"),
         (422, "http_422"),
     ],
 )
 def test_process_batch_nonblocking_http_client_failure_keeps_pipeline_running_and_auto_advances(monkeypatch, tmp_path, status_code, error_type):
     control_path = tmp_path / "pipeline-control-state.json"
     monkeypatch.setattr("entity_pipeline_worker.PIPELINE_CONTROL_STATE_PATH", control_path)
+    monkeypatch.setattr("entity_pipeline_worker.should_use_local_pg", lambda: False)
 
     worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
     worker._now_iso = lambda: "2026-04-24T03:00:00+00:00"
@@ -2798,6 +2952,7 @@ def test_process_batch_nonblocking_http_client_failure_keeps_pipeline_running_an
     worker.max_run_attempts = 1
     worker.sync_cached_entity = lambda *args, **kwargs: None
     worker._has_active_pipeline_run = lambda *_args, **_kwargs: False
+    worker._backend_preflight = lambda: (True, "")
     worker._load_manifest_entities = lambda: [
         {
             "entity_id": "fc-porto",
@@ -2923,6 +3078,116 @@ def test_process_batch_nonblocking_http_client_failure_keeps_pipeline_running_an
     assert inserted_runs[-1][0]["entity_id"] == "fifa"
     assert any(call[0] == "fail_entity_pipeline_run" for call in rpc_calls)
     assert any(update.get("metadata", {}).get("auto_advance_next_entity_id") == "fifa" for update in batch_updates)
+
+
+def test_process_batch_pipeline_route_404_pauses_without_failing_entity(monkeypatch, tmp_path):
+    control_path = tmp_path / "pipeline-control-state.json"
+    monkeypatch.setattr("entity_pipeline_worker.PIPELINE_CONTROL_STATE_PATH", control_path)
+    monkeypatch.setattr("entity_pipeline_worker.should_use_local_pg", lambda: False)
+    control_writes = []
+    monkeypatch.setattr(
+        "entity_pipeline_worker.write_pipeline_control_state",
+        lambda payload: control_writes.append(payload) or payload,
+    )
+
+    worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
+    worker._now_iso = lambda: "2026-04-24T03:00:00+00:00"
+    worker._batch_metadata = lambda batch: batch.get("metadata", {})
+    worker._get_batch_metadata = lambda batch_id: {"queue_mode": "durable_worker"}
+    worker.refresh_batch_heartbeat = lambda batch_id, metadata=None: {
+        **(metadata or {}),
+        "heartbeat_at": "2026-04-24T03:00:00+00:00",
+    }
+    worker._start_batch_heartbeat = lambda batch_id, metadata=None: (
+        SimpleNamespace(set=lambda: None),
+        SimpleNamespace(join=lambda timeout=1: None),
+    )
+    worker.worker_id = "worker-backend-missing"
+    worker.lease_seconds = 60
+    worker.max_run_attempts = 1
+    worker.sync_cached_entity = lambda *args, **kwargs: (_ for _ in ()).throw(AssertionError("should not sync entity failure"))
+    worker._get_run_metadata = lambda batch_id, entity_id: {
+        "attempt_count": 0,
+        "canonical_entity_id": "fc-porto",
+    }
+    worker._get_batch_record = lambda batch_id: {"id": batch_id, "status": "running", "metadata": {"queue_mode": "durable_worker"}}
+    worker.call_pipeline = lambda run, batch_id: (_ for _ in ()).throw(
+        worker_module.HTTPError(
+            url="http://127.0.0.1:8000/api/pipeline/run-entity",
+            code=404,
+            msg="Not Found",
+            hdrs=None,
+            fp=None,
+        )
+    )
+
+    run_updates = []
+    batch_updates = []
+    rpc_calls = []
+
+    class FakeRpcQuery:
+        def __init__(self, name, params):
+            self.name = name
+            self.params = params
+
+        def execute(self):
+            rpc_calls.append((self.name, self.params))
+            return SimpleNamespace(data=[])
+
+    class FakeQuery:
+        def __init__(self, table_name):
+            self.table_name = table_name
+            self.action = None
+            self.payload = None
+
+        def update(self, payload):
+            self.action = "update"
+            self.payload = payload
+            return self
+
+        def select(self, *_args, **_kwargs):
+            return self
+
+        def eq(self, *_args, **_kwargs):
+            return self
+
+        def limit(self, *_args, **_kwargs):
+            return self
+
+        def execute(self):
+            if self.table_name == "entity_import_batches" and self.action == "update":
+                batch_updates.append(self.payload)
+            return SimpleNamespace(data=[])
+
+    worker.supabase = SimpleNamespace(
+        table=lambda name: FakeQuery(name),
+        rpc=lambda name, params: FakeRpcQuery(name, params),
+    )
+    worker.update_run = lambda batch_id, entity_id, payload: run_updates.append(payload)
+    worker.get_batch_runs = lambda batch_id: [
+        {
+            "batch_id": "batch-404",
+            "entity_id": "fc-porto",
+            "canonical_entity_id": "fc-porto",
+            "entity_name": "FC Porto",
+            "status": "running",
+            "phase": "entity_registration",
+            "metadata": {"canonical_entity_id": "fc-porto"},
+        }
+    ]
+
+    worker.process_batch({"id": "batch-404", "metadata": {"queue_mode": "durable_worker"}})
+
+    control_state = control_writes[-1]
+    assert control_state["is_paused"] is True
+    assert control_state["stop_reason"] == "backend_route_missing"
+    assert run_updates[-1]["status"] == "queued"
+    assert run_updates[-1]["error_message"] == "backend_route_missing"
+    assert run_updates[-1]["metadata"]["infrastructure_failure"] is True
+    assert run_updates[-1]["metadata"]["failure_class"] == "backend_route_missing"
+    assert batch_updates[-1]["status"] == "queued"
+    assert batch_updates[-1]["metadata"]["blocked_by_infrastructure"] is True
+    assert not any(call[0] == "fail_entity_pipeline_run" for call in rpc_calls)
 
 
 def test_process_batch_marks_run_completed_when_supabase_publishes_but_falkordb_requires_reconciliation():

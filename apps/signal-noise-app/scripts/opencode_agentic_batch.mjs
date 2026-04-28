@@ -1054,8 +1054,8 @@ async function _writeTrackerFile(trackerPath, tracker) {
   await _writeJsonFile(trackerPath, tracker);
 }
 
-const FASTMCP_HEALTH_URL = 'http://127.0.0.1:8000/health';
-const FASTMCP_MCP_URL = 'http://127.0.0.1:8000/mcp/';
+const FASTMCP_HEALTH_URL = 'http://127.0.0.1:8014/health';
+const FASTMCP_MCP_URL = 'http://127.0.0.1:8014/mcp/';
 
 export async function ensureBrightDataFastMcpService({
   fetchImpl = globalThis.fetch,
@@ -1087,7 +1087,7 @@ export async function ensureBrightDataFastMcpService({
       ...serviceEnv,
       BRIGHTDATA_FASTMCP_URL: serviceUrl,
       BRIGHTDATA_FASTMCP_HOST: serviceEnv.BRIGHTDATA_FASTMCP_HOST || '127.0.0.1',
-      BRIGHTDATA_FASTMCP_PORT: serviceEnv.BRIGHTDATA_FASTMCP_PORT || '8000',
+      BRIGHTDATA_FASTMCP_PORT: serviceEnv.BRIGHTDATA_FASTMCP_PORT || '8014',
       BRIGHTDATA_MCP_USE_HOSTED: 'false',
       BRIGHTDATA_MCP_HOSTED_URL: '',
     },

@@ -29,6 +29,8 @@ from dataclasses import dataclass, asdict
 from enum import Enum
 from pathlib import Path
 
+from canonical_ids import normalize_canonical_entity_id
+
 # Load environment variables from .env.local
 project_root = Path(__file__).parent.parent
 env_files = [
@@ -616,12 +618,12 @@ class GraphitiService:
             or run_payload.get("entity_type")
             or "CLUB"
         ).strip().upper() or "CLUB"
-        canonical_entity_id = str(
+        canonical_entity_id = normalize_canonical_entity_id(
             dossier.get("canonical_entity_id")
             or metadata.get("canonical_entity_id")
             or run_payload.get("canonical_entity_id")
-            or ""
-        ).strip() or None
+            or entity_id
+        )
 
         record = {
             "entity_id": entity_id,

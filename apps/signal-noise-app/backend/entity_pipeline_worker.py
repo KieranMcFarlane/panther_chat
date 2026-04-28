@@ -40,8 +40,16 @@ TERMINAL_STOP_REASONS = {
     "question_skipped_and_next_failed",
     "orchestrator_unhealthy",
     "worker_heartbeat_stale",
+    "backend_route_missing",
     "queue_exhausted",
     "manual_stop",
+}
+RECOVERABLE_PIPELINE_PAUSE_REASONS = {
+    "orchestrator_unhealthy",
+    "question_retry_exhausted",
+    "entity_pipeline_timeout",
+    "question_skipped_and_next_failed",
+    "queue_exhausted",
 }
 
 
@@ -348,6 +356,13 @@ def _extract_pipeline_cursor_state(control_state: Dict[str, Any]) -> tuple[Optio
     return None, None
 
 
+def _should_auto_resume_from_pause(control_state: Dict[str, Any]) -> bool:
+    stop_reason = str(control_state.get("stop_reason") or "").strip().lower()
+    pause_reason = str(control_state.get("pause_reason") or "").strip().lower()
+    reason = stop_reason or pause_reason
+    return reason in RECOVERABLE_PIPELINE_PAUSE_REASONS
+
+
 def normalize_pipeline_control_state_for_worker_start(now_iso: Optional[str] = None) -> Dict[str, Any]:
     control_state = read_pipeline_control_state()
     next_state = {
@@ -618,6 +633,22 @@ def build_run_exhausted_retry_metadata(
     return metadata
 
 
+def build_run_timeout_failure_metadata(
+    existing_metadata: Optional[Dict[str, Any]],
+    *,
+    now_iso: str,
+) -> Dict[str, Any]:
+    metadata = deepcopy(existing_metadata or {})
+    metadata["retryable"] = False
+    metadata["retry_state"] = "failed"
+    metadata["failure_class"] = "entity_pipeline_timeout"
+    metadata["continue_pipeline_on_failure"] = True
+    metadata["last_error"] = "timed out"
+    metadata["last_error_type"] = metadata.get("last_error_type") or "timeout"
+    metadata["last_error_at"] = metadata.get("last_error_at") or now_iso
+    return metadata
+
+
 def _derive_skip_note(metadata: Dict[str, Any]) -> str:
     note = str(metadata.get("last_error") or "").strip()
     if note:
@@ -713,6 +744,91 @@ class EntityPipelineWorker:
         )
         return state
 
+    def _backend_preflight(self) -> tuple[bool, str]:
+        try:
+            with urlopen(f"{FASTAPI_URL}/health", timeout=5) as response:
+                health = json.loads(response.read().decode("utf-8"))
+            if health.get("status") != "healthy" or health.get("version") != "2.0.0":
+                return False, "backend_route_missing"
+            with urlopen(f"{FASTAPI_URL}/openapi.json", timeout=5) as response:
+                openapi = json.loads(response.read().decode("utf-8"))
+            if "/api/pipeline/run-entity" not in (openapi.get("paths") or {}):
+                return False, "backend_route_missing"
+            return True, ""
+        except Exception:
+            return False, "backend_route_missing"
+
+    def _is_backend_route_missing_error(self, error: Exception) -> bool:
+        if not isinstance(error, HTTPError):
+            return False
+        return error.code == 404 and "/api/pipeline/run-entity" in str(getattr(error, "url", ""))
+
+    def _requeue_infrastructure_blocked_batch(
+        self,
+        *,
+        batch_id: str,
+        batch: Dict[str, Any],
+        run: Dict[str, Any],
+        run_metadata: Dict[str, Any],
+        error: Exception,
+    ) -> None:
+        latest_metadata = self._get_run_metadata(batch_id, run["entity_id"])
+        now_iso = self._now_iso()
+        metadata_source = latest_metadata if isinstance(latest_metadata, dict) and latest_metadata else run_metadata
+        run_update_metadata = {
+            **(metadata_source if isinstance(metadata_source, dict) else {}),
+            "retry_state": "queued",
+            "infrastructure_failure": True,
+            "failure_class": "backend_route_missing",
+            "last_error_type": "backend_route_missing",
+            "last_error": str(error),
+            "last_error_at": now_iso,
+        }
+        self.update_run(
+            batch_id,
+            run["entity_id"],
+            {
+                "status": "queued",
+                "phase": run.get("phase") or "entity_registration",
+                "error_message": "backend_route_missing",
+                "completed_at": None,
+                "metadata": run_update_metadata,
+            },
+        )
+        batch_metadata = self._batch_metadata(batch)
+        blocked_batch_metadata = {
+            **batch_metadata,
+            "blocked_by_infrastructure": True,
+            "failure_class": "backend_route_missing",
+            "last_error": str(error),
+            "last_error_at": now_iso,
+        }
+        self._safe_execute(
+            lambda: self.supabase.table("entity_import_batches").update(
+                {
+                    "status": "queued",
+                    "completed_at": None,
+                    "metadata": blocked_batch_metadata,
+                }
+            ).eq("id", batch_id).execute(),
+            context=f"requeue infrastructure blocked batch {batch_id}",
+        )
+        self._write_terminal_stop_state(
+            reason="backend_route_missing",
+            pause_reason="backend pipeline route missing",
+            details=build_stop_reason_details(
+                reason="backend_route_missing",
+                entity_id=run.get("entity_id"),
+                canonical_entity_id=run.get("canonical_entity_id") or run_metadata.get("canonical_entity_id"),
+                entity_name=run.get("entity_name"),
+                question_id=run_metadata.get("question_id") or run_metadata.get("current_question_id"),
+                phase=run.get("phase"),
+                error_type="backend_route_missing",
+                error_message=str(error),
+                batch_id=batch_id,
+            ),
+        )
+
     def _safe_execute(self, operation, *, context: str) -> bool:
         try:
             operation()
@@ -797,29 +913,81 @@ class EntityPipelineWorker:
     def claim_next_batch(self) -> Optional[Dict[str, Any]]:
         control_state = read_pipeline_control_state()
         cursor_entity_id, cursor_canonical_entity_id = _extract_pipeline_cursor_state(control_state)
+        backend_ready = False
+        backend_stop_reason = None
         if control_state.get("is_paused") is True:
-            write_pipeline_control_state(
-                {
-                    **control_state,
-                    "requested_state": "paused",
-                    "observed_state": "paused",
-                    "transition_state": "paused",
-                    "updated_at": self._now_iso(),
-                }
-            )
-            logger.info(
-                "Pipeline intake is paused; skipping queue claim. reason=%s",
-                control_state.get("pause_reason") or "unspecified",
-            )
-            log_worker_transition(
-                "claim_skipped_paused",
-                worker_id=getattr(self, "worker_id", "worker-test"),
-                status="paused",
-                stop_reason=control_state.get("stop_reason"),
-                message=control_state.get("pause_reason") or "paused",
-            )
-            return None
-        write_pipeline_control_state(
+            if _should_auto_resume_from_pause(control_state):
+                backend_ready, backend_stop_reason = self._backend_preflight()
+                if backend_ready:
+                    control_state = write_pipeline_control_state(
+                        {
+                            **control_state,
+                            "requested_state": "running",
+                            "observed_state": "running",
+                            "transition_state": "running",
+                            "is_paused": False,
+                            "pause_reason": None,
+                            "stop_reason": None,
+                            "stop_details": None,
+                            "updated_at": self._now_iso(),
+                        }
+                    )
+                    logger.info(
+                        "Pipeline intake self-healed from pause; reason=%s",
+                        control_state.get("pause_reason") or control_state.get("stop_reason") or "unspecified",
+                    )
+                    log_worker_transition(
+                        "claim_auto_resumed",
+                        worker_id=getattr(self, "worker_id", "worker-test"),
+                        status="running",
+                        stop_reason=control_state.get("stop_reason"),
+                        message=control_state.get("pause_reason") or "auto-resumed",
+                    )
+                else:
+                    self._write_terminal_stop_state(
+                        reason=backend_stop_reason,
+                        pause_reason="backend pipeline route missing",
+                        details={
+                            "backend_url": FASTAPI_URL,
+                            "pipeline_route": "/api/pipeline/run-entity",
+                        },
+                    )
+                    return None
+            else:
+                write_pipeline_control_state(
+                    {
+                        **control_state,
+                        "requested_state": "paused",
+                        "observed_state": "paused",
+                        "transition_state": "paused",
+                        "updated_at": self._now_iso(),
+                    }
+                )
+                logger.info(
+                    "Pipeline intake is paused; skipping queue claim. reason=%s",
+                    control_state.get("pause_reason") or "unspecified",
+                )
+                log_worker_transition(
+                    "claim_skipped_paused",
+                    worker_id=getattr(self, "worker_id", "worker-test"),
+                    status="paused",
+                    stop_reason=control_state.get("stop_reason"),
+                    message=control_state.get("pause_reason") or "paused",
+                )
+                return None
+        if not backend_ready:
+            backend_ready, backend_stop_reason = self._backend_preflight()
+            if not backend_ready:
+                self._write_terminal_stop_state(
+                    reason=backend_stop_reason,
+                    pause_reason="backend pipeline route missing",
+                    details={
+                        "backend_url": FASTAPI_URL,
+                        "pipeline_route": "/api/pipeline/run-entity",
+                    },
+                )
+                return None
+        control_state = write_pipeline_control_state(
             {
                 **control_state,
                 "requested_state": "running",
@@ -2329,6 +2497,38 @@ class EntityPipelineWorker:
                     run_metadata,
                     now_iso=self._now_iso(),
                 )
+                if str(run_metadata.get("last_error_type") or "").strip().lower() == "timeout":
+                    exhausted_metadata = build_run_timeout_failure_metadata(
+                        exhausted_metadata,
+                        now_iso=self._now_iso(),
+                    )
+                    exhausted_metadata["stop_reason"] = "entity_pipeline_timeout"
+                    exhausted_metadata["stop_details"] = build_stop_reason_details(
+                        reason="entity_pipeline_timeout",
+                        entity_id=run.get("entity_id"),
+                        canonical_entity_id=run.get("canonical_entity_id") or run_metadata.get("canonical_entity_id"),
+                        entity_name=run.get("entity_name"),
+                        phase=run.get("phase"),
+                        error_type="timeout",
+                        error_message=str(run_metadata.get("last_error") or "timed out"),
+                        batch_id=batch_id,
+                        attempts=attempt_count,
+                    )
+                    log_worker_transition(
+                        "run_failed_nonblocking",
+                        worker_id=worker_id,
+                        batch_id=batch_id,
+                        entity_id=run.get("entity_id"),
+                        entity_name=run.get("entity_name"),
+                        phase=run.get("phase"),
+                        status="failed",
+                        retry_state="failed",
+                        stop_reason="entity_pipeline_timeout",
+                        error_type="timeout",
+                        attempts=attempt_count,
+                        current_action=run.get("phase"),
+                        message="timed out",
+                    )
                 self.sync_cached_entity(batch_id, run, None, "failed")
                 self.update_run(
                     batch_id,
@@ -2509,6 +2709,18 @@ class EntityPipelineWorker:
                     },
                 )
             except (HTTPError, URLError, TimeoutError, json.JSONDecodeError, ValueError) as error:
+                if self._is_backend_route_missing_error(error):
+                    self._requeue_infrastructure_blocked_batch(
+                        batch_id=batch_id,
+                        batch=batch,
+                        run=run,
+                        run_metadata=run_metadata,
+                        error=error,
+                    )
+                    heartbeat_stop.set()
+                    heartbeat_thread.join(timeout=1)
+                    _clear_supervisor_activity()
+                    return
                 retryable, error_type = self._classify_error(error)
                 latest_metadata = self._get_run_metadata(batch_id, run["entity_id"])
                 retry_metadata = build_run_retry_metadata(
@@ -2724,16 +2936,67 @@ class EntityPipelineWorker:
                         message=str(error),
                     )
                 if next_status == "failed":
-                    self.sync_cached_entity(batch_id, run, None, "failed")
-                    retry_metadata["retry_state"] = retry_metadata.get("retry_state") or "failed"
-                    if stop_reason:
-                        retry_metadata["stop_reason"] = stop_reason
-                        retry_metadata["stop_details"] = stop_details
-                        self._write_terminal_stop_state(
-                            reason=stop_reason,
-                            pause_reason=f"{stop_reason.replace('_', ' ')}",
-                            details=stop_details,
+                    if error_type == "timeout":
+                        retry_metadata = build_run_timeout_failure_metadata(
+                            retry_metadata,
+                            now_iso=self._now_iso(),
                         )
+                        retry_metadata["stop_reason"] = "entity_pipeline_timeout"
+                        retry_metadata["stop_details"] = build_stop_reason_details(
+                            reason="entity_pipeline_timeout",
+                            entity_id=run.get("entity_id"),
+                            canonical_entity_id=canonical_entity_id,
+                            entity_name=run.get("entity_name"),
+                            question_id=question_id or None,
+                            phase=run.get("phase"),
+                            error_type=error_type,
+                            error_message=str(error),
+                            batch_id=batch_id,
+                            attempts=attempts,
+                        )
+                        log_worker_transition(
+                            "run_failed_nonblocking",
+                            worker_id=worker_id,
+                            batch_id=batch_id,
+                            entity_id=run.get("entity_id"),
+                            entity_name=run.get("entity_name"),
+                            question_id=question_id or None,
+                            phase=run.get("phase"),
+                            status="failed",
+                            retry_state="failed",
+                            stop_reason="entity_pipeline_timeout",
+                            error_type=error_type,
+                            attempts=attempts,
+                            current_action=f"question {question_id}" if question_id else run.get("phase"),
+                            message="timed out",
+                        )
+                    elif _is_nonblocking_terminal_failure(error_type):
+                        retry_metadata["continue_pipeline_on_failure"] = True
+                        log_worker_transition(
+                            "run_failed_nonblocking",
+                            worker_id=worker_id,
+                            batch_id=batch_id,
+                            entity_id=run.get("entity_id"),
+                            entity_name=run.get("entity_name"),
+                            question_id=question_id or None,
+                            phase=run.get("phase"),
+                            status="failed",
+                            error_type=error_type,
+                            attempts=attempts,
+                            current_action=f"question {question_id}" if question_id else run.get("phase"),
+                            message=str(error),
+                        )
+                    else:
+                        retry_metadata["retry_state"] = retry_metadata.get("retry_state") or "failed"
+                        if stop_reason:
+                            retry_metadata["stop_reason"] = stop_reason
+                            retry_metadata["stop_details"] = stop_details
+                            self._write_terminal_stop_state(
+                                reason=stop_reason,
+                                pause_reason=f"{stop_reason.replace('_', ' ')}",
+                                details=stop_details,
+                            )
+                    self.sync_cached_entity(batch_id, run, None, "failed")
                 self.update_run(
                     batch_id,
                     run["entity_id"],

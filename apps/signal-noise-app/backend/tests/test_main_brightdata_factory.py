@@ -6,6 +6,7 @@ Tests for BrightData client selection in the API pipeline.
 import sys
 import types
 from pathlib import Path
+from uuid import UUID, uuid5
 
 import pytest
 from fastapi.testclient import TestClient
@@ -15,6 +16,19 @@ sys.path.insert(0, str(backend_dir))
 
 import main
 from main import EntityPipelineRequest, run_entity_pipeline
+
+
+ENTITY_PUBLIC_ID_NAMESPACE = UUID("f5c2b2b8-9cf2-4e66-a1c2-38cde7bc3f4e")
+
+
+def test_normalize_canonical_entity_id_falls_back_to_deterministic_uuid5_for_slug():
+    value = main.normalize_canonical_entity_id("arsenal-fc")
+    assert value == str(uuid5(ENTITY_PUBLIC_ID_NAMESPACE, "arsenal-fc"))
+
+
+def test_normalize_canonical_entity_id_preserves_uuid_inputs():
+    value = main.normalize_canonical_entity_id("f66b9c56-7a38-44d0-8923-6993b7b33926")
+    assert value == "f66b9c56-7a38-44d0-8923-6993b7b33926"
 
 
 @pytest.fixture(autouse=True)
@@ -434,7 +448,7 @@ async def test_run_entity_pipeline_creates_missing_run_record_for_direct_api_bat
 @pytest.mark.asyncio
 async def test_run_entity_pipeline_uses_pipeline_brightdata_factory(monkeypatch):
     monkeypatch.setenv("BRIGHTDATA_API_TOKEN", "test-token")
-    monkeypatch.setenv("BRIGHTDATA_FASTMCP_URL", "http://127.0.0.1:8000/mcp")
+    monkeypatch.setenv("BRIGHTDATA_FASTMCP_URL", "http://127.0.0.1:8014/mcp")
     monkeypatch.setenv("PIPELINE_USE_BRIGHTDATA_FASTMCP", "true")
     monkeypatch.setenv("PIPELINE_BRIGHTDATA_SHARED_CLIENT", "true")
 
@@ -631,6 +645,79 @@ async def test_run_entity_pipeline_passes_canonical_entity_id_into_dossier_reque
 
     assert captured_request["canonical_entity_id"] == "fc-porto-canonical"
     assert captured_request["metadata"]["canonical_entity_id"] == "fc-porto-canonical"
+
+
+@pytest.mark.asyncio
+async def test_run_entity_pipeline_falls_back_to_entity_id_for_missing_canonical_entity_id(monkeypatch):
+    captured_request = {}
+
+    monkeypatch.setenv("BRIGHTDATA_API_TOKEN", "test-token")
+    monkeypatch.setenv("PIPELINE_PHASE0_MODE", "legacy_python")
+
+    class _FakeBrightDataClient:
+        async def search_engine(self, *args, **kwargs):
+            return {"status": "success", "results": []}
+
+        async def scrape_as_markdown(self, *args, **kwargs):
+            return {"status": "success", "content": ""}
+
+    monkeypatch.setattr(main, "create_pipeline_brightdata_client", lambda *args, **kwargs: _FakeBrightDataClient(), raising=False)
+
+    orchestrator_module = types.ModuleType("backend.pipeline_orchestrator")
+
+    class _DummyOrchestrator:
+        def __init__(self, *args, **kwargs):
+            pass
+
+        async def run_entity_pipeline(self, **kwargs):
+            return {
+                "entity_id": kwargs.get("entity_id", "unknown"),
+                "entity_name": kwargs.get("entity_name", "unknown"),
+                "phases": {"dossier_generation": {"status": "completed"}},
+                "validated_signal_count": 0,
+                "capability_signal_count": 0,
+                "rfp_count": 0,
+                "sales_readiness": "MONITOR",
+                "artifacts": {"dossier": kwargs.get("initial_dossier", {})},
+                "completed_at": "2026-03-25T00:00:00+00:00",
+            }
+
+    orchestrator_module.PipelineOrchestrator = _DummyOrchestrator
+    monkeypatch.setitem(sys.modules, "backend.pipeline_orchestrator", orchestrator_module)
+
+    async def _fake_generate_dossier(request):
+        captured_request["canonical_entity_id"] = getattr(request, "canonical_entity_id", None)
+        return types.SimpleNamespace(
+            metadata={
+                "hypothesis_count": 0,
+                "signal_count": 0,
+                "generation_time_seconds": 0,
+                "tier": "STANDARD",
+                "source_count": 0,
+                "sources_used": [],
+                "source_timings": {},
+                "canonical_sources": {},
+                "generation_mode": "test",
+                "collection_timed_out": False,
+                "model_max_tokens": 0,
+                "inference_runtime": {},
+            },
+            dossier_data={"metadata": {}},
+        )
+
+    monkeypatch.setattr(main, "generate_dossier", _fake_generate_dossier)
+
+    entity_id = "f66b9c56-7a38-44d0-8923-6993b7b33926"
+    await run_entity_pipeline(
+        EntityPipelineRequest(
+            entity_id=entity_id,
+            entity_name="Yuasa Battery Grottazzolina",
+            entity_type="CLUB",
+            priority_score=85,
+        )
+    )
+
+    assert captured_request["canonical_entity_id"] == entity_id
 
 
 @pytest.mark.asyncio
@@ -873,7 +960,7 @@ async def test_run_entity_pipeline_does_not_construct_legacy_claude_for_opencode
 @pytest.mark.asyncio
 async def test_run_entity_pipeline_emits_phase_boundary_logs(monkeypatch, caplog):
     monkeypatch.setenv("BRIGHTDATA_API_TOKEN", "test-token")
-    monkeypatch.setenv("BRIGHTDATA_FASTMCP_URL", "http://127.0.0.1:8000/mcp")
+    monkeypatch.setenv("BRIGHTDATA_FASTMCP_URL", "http://127.0.0.1:8014/mcp")
     monkeypatch.setenv("PIPELINE_USE_BRIGHTDATA_FASTMCP", "true")
     monkeypatch.setenv("PIPELINE_PHASE0_MODE", "legacy_python")
 

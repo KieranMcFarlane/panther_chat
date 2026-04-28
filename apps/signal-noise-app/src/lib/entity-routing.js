@@ -149,7 +149,7 @@ function resolveCanonicalDossierId(entity) {
     const canonicalAlias = resolveCanonicalEntityUuidAlias(text)
     if (canonicalAlias) return canonicalAlias
     if (looksLikeUuid(text)) return text
-    return text
+    return uuidv5FromSeed(text, ENTITY_PUBLIC_ID_NAMESPACE)
   }
 
   const candidateValues = [
@@ -166,6 +166,7 @@ function resolveCanonicalDossierId(entity) {
     entity.id,
   ]
 
+  let fallbackSeed = null
   for (const candidate of candidateValues) {
     const text = toValidId(candidate)
     if (!text) continue
@@ -173,9 +174,11 @@ function resolveCanonicalDossierId(entity) {
     const canonicalAlias = resolveCanonicalEntityUuidAlias(text)
     if (canonicalAlias) return canonicalAlias
     if (looksLikeUuid(text)) return text
+    fallbackSeed = fallbackSeed || text
   }
 
   const seed =
+    fallbackSeed ||
     toValidId(entity.canonical_entity_id) ||
     toValidId(entity.properties?.canonical_entity_id) ||
     toValidId(entity.uuid) ||
