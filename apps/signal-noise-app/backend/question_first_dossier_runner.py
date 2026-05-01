@@ -213,6 +213,7 @@ async def _launch_opencode_question_first_batch(
     worktree_root: Optional[Path] = None,
     opencode_timeout_ms: int = 300000,
     progress_callback: Optional[Any] = None,
+    resume: bool = False,
 ) -> Path:
     backend_root = Path(__file__).resolve().parent
     app_root = backend_root.parent
@@ -237,6 +238,8 @@ async def _launch_opencode_question_first_batch(
         ]
         if preset:
             command.extend(["--preset", preset])
+        if resume:
+            command.append("--resume")
 
         proc = await asyncio.create_subprocess_exec(
             *command,
@@ -801,12 +804,24 @@ async def run_question_first_dossier_from_payload(
     preset: Optional[str] = None,
     question_source_label: Optional[str] = None,
     progress_callback: Optional[Any] = None,
+    question_first_checkpoint: Optional[Dict[str, Any]] = None,
+    resume: bool = False,
     **_legacy_kwargs: Any,
 ) -> Dict[str, Any]:
     source = dict(source_payload or {})
+    if isinstance(question_first_checkpoint, dict) and question_first_checkpoint:
+        source["question_first_checkpoint"] = question_first_checkpoint
+        metadata = source.get("metadata") if isinstance(source.get("metadata"), dict) else {}
+        metadata["question_first_checkpoint"] = question_first_checkpoint
+        source["metadata"] = metadata
     if isinstance(source.get("questions"), list):
         source["questions"] = enrich_question_specs(source.get("questions") or [])
     launch_source = dict(launch_source_payload or source)
+    if isinstance(question_first_checkpoint, dict) and question_first_checkpoint:
+        launch_source["question_first_checkpoint"] = question_first_checkpoint
+        launch_metadata = launch_source.get("metadata") if isinstance(launch_source.get("metadata"), dict) else {}
+        launch_metadata["question_first_checkpoint"] = question_first_checkpoint
+        launch_source["metadata"] = launch_metadata
     if isinstance(launch_source.get("questions"), list):
         launch_source["questions"] = enrich_question_specs(launch_source.get("questions") or [])
     artifact_path_value = question_first_run_path or source.get("question_first_run_path")
@@ -821,6 +836,7 @@ async def run_question_first_dossier_from_payload(
             worktree_root=worktree_root,
             opencode_timeout_ms=opencode_timeout_ms,
             progress_callback=progress_callback,
+            resume=resume or bool(question_first_checkpoint),
         )
 
     artifact = _load_question_first_run_artifact(artifact_path)

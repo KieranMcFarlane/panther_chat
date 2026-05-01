@@ -1602,19 +1602,37 @@ async def run_entity_pipeline(request: EntityPipelineRequest):
             normalized_payload = normalize_phase_callback_payload(phase, payload)
 
             existing_metadata: Dict[str, Any] = {}
+            existing_status = ""
             existing_rows: List[Dict[str, Any]] = []
             try:
-                existing_query = pipeline_supabase.table("entity_pipeline_runs").select("metadata").eq("batch_id", request.batch_id)
+                existing_query = pipeline_supabase.table("entity_pipeline_runs").select("status, completed_at, metadata").eq("batch_id", request.batch_id)
                 if canonical_entity_id:
                     existing = existing_query.eq("canonical_entity_id", canonical_entity_id).limit(1).execute()
                 else:
                     existing = existing_query.eq("entity_id", request.entity_id).limit(1).execute()
                 existing_rows = existing.data or []
-                current_metadata = ((existing_rows or [{}])[0]).get("metadata")
+                existing_row = (existing_rows or [{}])[0]
+                existing_status = str(existing_row.get("status") or "").strip().lower()
+                current_metadata = existing_row.get("metadata")
                 if isinstance(current_metadata, dict):
                     existing_metadata = current_metadata
             except Exception as fetch_error:
                 logger.warning(f"⚠️ Failed to fetch existing phase metadata for {request.entity_id}/{phase}: {fetch_error}")
+
+            terminal_retry_state = str(existing_metadata.get("retry_state") or "").strip().lower() == "failed"
+            nonblocking_timeout_failure = (
+                str(existing_metadata.get("failure_class") or "").strip().lower() == "entity_pipeline_timeout"
+                and existing_metadata.get("continue_pipeline_on_failure") is True
+            )
+            if existing_status in {"failed", "completed"} or (terminal_retry_state and nonblocking_timeout_failure):
+                logger.info(
+                    "Skipping late phase update for terminal pipeline run batch=%s entity=%s phase=%s status=%s",
+                    request.batch_id,
+                    request.entity_id,
+                    phase,
+                    existing_status or existing_metadata.get("retry_state"),
+                )
+                return
 
             normalized_status = normalize_phase_status(normalized_payload.get("status"), default="running")
             if not existing_rows and not run_record_seeded:
@@ -1640,6 +1658,8 @@ async def run_entity_pipeline(request: EntityPipelineRequest):
                     update_query = update_query.eq("canonical_entity_id", canonical_entity_id)
                 else:
                     update_query = update_query.eq("entity_id", request.entity_id)
+                if hasattr(update_query, "neq"):
+                    update_query = update_query.neq("status", "failed").neq("status", "completed")
                 update_query.execute()
             except Exception as phase_error:
                 logger.warning(f"⚠️ Failed to emit phase update for {request.entity_id}/{phase}: {phase_error}")

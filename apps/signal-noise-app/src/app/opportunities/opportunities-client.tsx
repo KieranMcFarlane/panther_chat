@@ -21,6 +21,12 @@ type OpportunityTaxonomy = {
   theme: string;
 };
 
+type OpportunityTemporalReasoning = NonNullable<GraphitiOpportunityCard['temporal_reasoning']>;
+type OpportunityPatternReasoning = NonNullable<GraphitiOpportunityCard['pattern_reasoning']>;
+type OpportunityFinding = NonNullable<GraphitiOpportunityCard['findings']>[number];
+type OpportunityTimelineEvent = NonNullable<GraphitiOpportunityCard['timeline']>[number];
+type OpportunityRelatedPattern = NonNullable<GraphitiOpportunityCard['related_patterns']>[number];
+
 interface OpportunityCard {
   id: string;
   title: string;
@@ -42,6 +48,15 @@ interface OpportunityCard {
   signalSummary: string;
   readMoreContext: string;
   lastUpdated: string;
+  temporalReasoning?: OpportunityTemporalReasoning;
+  patternReasoning?: OpportunityPatternReasoning;
+  ypFitReasoning: string;
+  recommendedAction: string;
+  findings: OpportunityFinding[];
+  timeline: OpportunityTimelineEvent[];
+  relatedPatterns: OpportunityRelatedPattern[];
+  temporalStatus: string;
+  signalType: string;
   criticalOpportunityScore: number;
   priorityScore: number;
   trustScore: number;
@@ -57,45 +72,80 @@ interface OpportunityCard {
   taxonomy: OpportunityTaxonomy;
 }
 
-type PipelineStatusRecord = {
-  entity_id: string;
-  entity_name: string;
-  quality_state: 'complete' | 'partial' | 'blocked' | 'client_ready' | 'missing';
-  lifecycle_label: string;
-  lifecycle_summary: string;
-  latest_activity_at: string | null;
-  artifact_path: string | null;
-  dossier_path: string | null;
-  source_objective: string | null;
-}
+function objectToText(value: Record<string, unknown>): string {
+  const fields = [
+    value.finding,
+    value.summary,
+    value.answer,
+    value.value,
+    value.text,
+    value.title,
+    value.description,
+    value.reason,
+    value.label,
+  ];
 
-type PipelineStatusResponse = {
-  source: 'entity_pipeline_runs';
-  status: 'ready' | 'empty' | 'degraded';
-  generated_at: string;
-  snapshot: {
-    runs_scanned: number;
-    unique_entities: number;
-    completed: number;
-    partial: number;
-    blocked: number;
-    client_ready: number;
-    missing: number;
-    published_degraded: number;
-    running: number;
-    retrying: number;
-    stalled: number;
-    resume_needed: number;
-  };
-  completed_entities: PipelineStatusRecord[];
-  partial_entities: PipelineStatusRecord[];
-  blocked_entities: PipelineStatusRecord[];
-  client_ready_entities: PipelineStatusRecord[];
-  warnings: string[];
+  for (const field of fields) {
+    const text = toText(field);
+    if (text) return text;
+  }
+
+  return '';
 }
 
 function toText(value: unknown): string {
-  return value === null || value === undefined ? '' : String(value).trim();
+  if (value === null || value === undefined) return '';
+  if (Array.isArray(value)) {
+    return value.map(toText).filter(Boolean).join(' · ').trim();
+  }
+  if (typeof value === 'object') {
+    return objectToText(value as Record<string, unknown>);
+  }
+
+  const text = String(value).trim();
+  return text === '[object Object]' ? '' : text;
+}
+
+function stripPlaceholderFragments(value: string): string {
+  return value
+    .replace(/,\s*No deterministic answer was produced for this question\.?/gi, '')
+    .replace(/No deterministic answer was produced for this question\.?,?\s*/gi, '')
+    .replace(/,\s*No BrightData tool or service is available in this session[^.]*\.?/gi, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function conciseText(value: unknown, maxLength = 260): string {
+  const cleaned = stripPlaceholderFragments(toText(value));
+  if (!cleaned || cleaned.toLowerCase() === 'n/a') return '';
+  if (cleaned.length <= maxLength) return cleaned;
+
+  const sentence = cleaned.split(/(?<=[.!?])\s+/)[0]?.trim();
+  if (sentence && sentence.length <= maxLength) return sentence;
+  return `${cleaned.slice(0, Math.max(40, maxLength - 1)).trim()}...`;
+}
+
+function conciseBlockText(value: unknown, maxLength = 520): string {
+  const cleaned = stripPlaceholderFragments(toText(value));
+  if (!cleaned || cleaned.toLowerCase() === 'n/a') return '';
+  if (cleaned.length <= maxLength) return cleaned;
+  return `${cleaned.slice(0, Math.max(80, maxLength - 1)).trim()}...`;
+}
+
+function conciseList(values: unknown[], limit = 3): string[] {
+  const seen = new Set<string>();
+  const output: string[] = [];
+
+  for (const value of values) {
+    const text = conciseText(value);
+    const key = text.toLowerCase();
+    if (!text || seen.has(key)) continue;
+    seen.add(key);
+    output.push(text);
+    if (output.length >= limit) break;
+  }
+
+  return output;
 }
 
 function normalizeOpportunity(opp: GraphitiOpportunityCard): OpportunityCard {
@@ -113,6 +163,22 @@ function normalizeOpportunity(opp: GraphitiOpportunityCard): OpportunityCard {
     metadata: opp.metadata || undefined,
   });
   const displayTaxonomy = getOpportunityTaxonomyDisplayValues(taxonomy);
+  const temporalReasoning = opp.temporal_reasoning || undefined;
+  const patternReasoning = opp.pattern_reasoning || undefined;
+  const findings = Array.isArray(opp.findings) ? opp.findings : [];
+  const timeline = Array.isArray(opp.timeline) ? opp.timeline : [];
+  const relatedPatterns = Array.isArray(opp.related_patterns) ? opp.related_patterns : [];
+  const findingTexts = findings.slice(0, 3).map((finding) => conciseText(finding.finding));
+  const rawNextSteps = Array.isArray(opp.next_steps) ? opp.next_steps : [];
+  const recommendedAction = conciseBlockText(opp.recommended_action)
+    || conciseBlockText(rawNextSteps[0])
+    || 'Open the dossier and review the buyer hypothesis.';
+  const conciseSupportingSignals = conciseList([
+    ...findingTexts,
+    ...(Array.isArray(opp.supporting_signals) ? opp.supporting_signals : []),
+  ], 4);
+  const conciseReadMoreContext = conciseText(opp.read_more_context, 360) || conciseText(opp.description, 360);
+  const conciseWhy = conciseText(opp.why_this_is_an_opportunity, 320) || conciseText(opp.description, 320) || 'No description available';
 
   return {
     id: opp.id,
@@ -126,18 +192,24 @@ function normalizeOpportunity(opp: GraphitiOpportunityCard): OpportunityCard {
     theme: displayTaxonomy.theme,
     deadline: opp.deadline || undefined,
     value: opp.value || undefined,
-    description: toText(opp.why_this_is_an_opportunity) || toText(opp.description) || 'No description available',
-    whyItMatters: toText(opp.why_this_is_an_opportunity) || toText(opp.description),
-    fitFeedback: toText(opp.yellow_panther_fit_feedback) || 'Yellow Panther fit is inferred from the dossier-level commercial signal and the closest service adjacency.',
-    suggestedAction: toText(opp.description) || 'Open the dossier and review the buyer hypothesis.',
-    nextSteps: Array.isArray(opp.next_steps) && opp.next_steps.length > 0 ? opp.next_steps.map(toText).filter(Boolean)[0] : 'Open the dossier and review the buyer hypothesis.',
-    supportingSignals: Array.isArray(opp.supporting_signals) ? opp.supporting_signals.map(toText).filter(Boolean) : [],
-    signalSummary: [
-      ...(Array.isArray(opp.supporting_signals) ? opp.supporting_signals.slice(0, 3).map(toText) : []),
-      toText(opp.yellow_panther_fit_feedback),
-    ].filter(Boolean).join(' · '),
-    readMoreContext: toText(opp.read_more_context) || toText(opp.description),
+    description: conciseWhy,
+    whyItMatters: conciseWhy,
+    fitFeedback: conciseBlockText(opp.yp_fit_reasoning) || conciseBlockText(opp.yellow_panther_fit_feedback) || 'Yellow Panther fit is inferred from the dossier evidence and fit score.',
+    suggestedAction: recommendedAction,
+    nextSteps: recommendedAction,
+    supportingSignals: conciseSupportingSignals,
+    signalSummary: conciseSupportingSignals.join(' · '),
+    readMoreContext: conciseReadMoreContext,
     lastUpdated: opp.detected_at || 'Unknown',
+    temporalReasoning,
+    patternReasoning,
+    ypFitReasoning: conciseBlockText(opp.yp_fit_reasoning) || 'Yellow Panther relevance is inferred from the dossier evidence and fit score.',
+    recommendedAction,
+    findings,
+    timeline,
+    relatedPatterns,
+    temporalStatus: temporalReasoning?.status || 'unknown',
+    signalType: patternReasoning?.signal_type || 'market',
     criticalOpportunityScore: Math.round(fit / 10),
     priorityScore: Math.max(0, Math.round(priority)),
     trustScore: Math.max(0, Math.round(confidence / 10)),
@@ -167,12 +239,11 @@ function OpportunitiesContent() {
   const [opportunityKindFilter, setOpportunityKindFilter] = useState('all');
   const [themeFilter, setThemeFilter] = useState('all');
   const [scoreFilter, setScoreFilter] = useState('all');
+  const [temporalStatusFilter, setTemporalStatusFilter] = useState('all');
+  const [signalTypeFilter, setSignalTypeFilter] = useState('all');
   const [openOpportunityId, setOpenOpportunityId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
-  const [pipelineStatus, setPipelineStatus] = useState<PipelineStatusResponse | null>(null);
-  const [pipelineStatusLoading, setPipelineStatusLoading] = useState(true);
-  const [pipelineStatusError, setPipelineStatusError] = useState<string | null>(null);
 
   useEffect(() => {
     setSearchQuery(focusedEntityName);
@@ -210,34 +281,6 @@ function OpportunitiesContent() {
     void loadOpportunities();
   }, []);
 
-  useEffect(() => {
-    async function loadPipelineStatus() {
-      try {
-        setPipelineStatusLoading(true);
-        setPipelineStatusError(null);
-
-        const response = await fetch('/api/home/pipeline-status?limit=6', {
-          cache: 'no-store',
-        });
-
-        if (!response.ok) {
-          throw new Error(`Failed to load pipeline status (${response.status})`);
-        }
-
-        const payload = await response.json() as PipelineStatusResponse;
-        setPipelineStatus(payload);
-      } catch (error) {
-        console.error('Error loading pipeline status:', error);
-        setPipelineStatusError(error instanceof Error ? error.message : 'Failed to load pipeline status');
-        setPipelineStatus(null);
-      } finally {
-        setPipelineStatusLoading(false);
-      }
-    }
-
-    void loadPipelineStatus();
-  }, []);
-
   const filteredOpportunities = useMemo(() => {
     let filtered = [...opportunities];
 
@@ -260,16 +303,47 @@ function OpportunitiesContent() {
     if (entityRoleFilter !== 'all') filtered = filtered.filter((opp) => opp.entityRole === entityRoleFilter);
     if (opportunityKindFilter !== 'all') filtered = filtered.filter((opp) => opp.opportunityKind === opportunityKindFilter);
     if (themeFilter !== 'all') filtered = filtered.filter((opp) => opp.theme === themeFilter);
+    if (temporalStatusFilter !== 'all') filtered = filtered.filter((opp) => opp.temporalStatus === temporalStatusFilter);
+    if (signalTypeFilter !== 'all') filtered = filtered.filter((opp) => opp.signalType === signalTypeFilter);
 
     if (scoreFilter !== 'all') {
       const minScore = scoreFilter === 'high' ? 8 : scoreFilter === 'medium' ? 6 : 0;
       filtered = filtered.filter((opp) => opp.criticalOpportunityScore >= minScore);
     }
 
-    return filtered.sort((a, b) => b.criticalOpportunityScore - a.criticalOpportunityScore);
-  }, [competitionFilter, entityRoleFilter, focusedEntityId, focusedEntityName, opportunityKindFilter, opportunities, scoreFilter, searchQuery, sportFilter, themeFilter]);
+    const temporalWeight = (status: string) => {
+      switch (status) {
+        case 'accelerating': return 5;
+        case 'active': return 4;
+        case 'emerging': return 3;
+        case 'unknown': return 2;
+        case 'stale': return 1;
+        case 'expired': return 0;
+        default: return 2;
+      }
+    };
+
+    return filtered.sort((a, b) => {
+      const temporalDelta = temporalWeight(b.temporalStatus) - temporalWeight(a.temporalStatus);
+      return temporalDelta || b.criticalOpportunityScore - a.criticalOpportunityScore;
+    });
+  }, [competitionFilter, entityRoleFilter, focusedEntityId, focusedEntityName, opportunityKindFilter, opportunities, scoreFilter, searchQuery, signalTypeFilter, sportFilter, temporalStatusFilter, themeFilter]);
 
   const taxonomyFacetOptions = useMemo(() => buildOpportunityFacetOptions(opportunities), [opportunities]);
+  const temporalStatusOptions = useMemo(() => {
+    const statuses = [...new Set(opportunities.map((opp) => opp.temporalStatus).filter(Boolean))];
+    return [
+      { value: 'all', label: 'All temporal states' },
+      ...statuses.map((status) => ({ value: status, label: status.charAt(0).toUpperCase() + status.slice(1) })),
+    ];
+  }, [opportunities]);
+  const signalTypeOptions = useMemo(() => {
+    const signalTypes = [...new Set(opportunities.map((opp) => opp.signalType).filter(Boolean))];
+    return [
+      { value: 'all', label: 'All signal types' },
+      ...signalTypes.map((signalType) => ({ value: signalType, label: signalType.charAt(0).toUpperCase() + signalType.slice(1) })),
+    ];
+  }, [opportunities]);
 
   const filterFields: FacetFilterField[] = [
     {
@@ -325,6 +399,22 @@ function OpportunitiesContent() {
       ],
       onValueChange: setScoreFilter,
     },
+    {
+      key: 'temporal-status',
+      label: 'Temporal Status',
+      value: temporalStatusFilter,
+      placeholder: 'Temporal Status',
+      options: temporalStatusOptions,
+      onValueChange: setTemporalStatusFilter,
+    },
+    {
+      key: 'signal-type',
+      label: 'Signal Type',
+      value: signalTypeFilter,
+      placeholder: 'Signal Type',
+      options: signalTypeOptions,
+      onValueChange: setSignalTypeFilter,
+    },
   ];
 
   const filterChips = [
@@ -335,6 +425,8 @@ function OpportunitiesContent() {
     opportunityKindFilter !== 'all' ? { key: 'opportunity-kind', label: `Opportunity Kind: ${opportunityKindFilter}`, onRemove: () => setOpportunityKindFilter('all') } : null,
     themeFilter !== 'all' ? { key: 'theme', label: `Theme: ${themeFilter}`, onRemove: () => setThemeFilter('all') } : null,
     scoreFilter !== 'all' ? { key: 'score', label: `Score: ${scoreFilter}`, onRemove: () => setScoreFilter('all') } : null,
+    temporalStatusFilter !== 'all' ? { key: 'temporal-status', label: `Temporal: ${temporalStatusFilter}`, onRemove: () => setTemporalStatusFilter('all') } : null,
+    signalTypeFilter !== 'all' ? { key: 'signal-type', label: `Signal: ${signalTypeFilter}`, onRemove: () => setSignalTypeFilter('all') } : null,
   ].filter(Boolean) as { key: string; label: string; onRemove: () => void }[];
 
   const resetFilters = () => {
@@ -345,6 +437,8 @@ function OpportunitiesContent() {
     setOpportunityKindFilter('all');
     setThemeFilter('all');
     setScoreFilter('all');
+    setTemporalStatusFilter('all');
+    setSignalTypeFilter('all');
   };
 
   const highConvictionCount = filteredOpportunities.filter((opp) => opp.criticalOpportunityScore >= 8).length;
@@ -372,18 +466,28 @@ function OpportunitiesContent() {
     }
   };
 
+  const getTemporalStatusColor = (status: string) => {
+    switch (status) {
+      case 'accelerating':
+        return 'border-emerald-300/60 bg-emerald-400/15 text-emerald-100';
+      case 'active':
+        return 'border-green-300/60 bg-green-400/15 text-green-100';
+      case 'emerging':
+        return 'border-cyan-300/60 bg-cyan-400/15 text-cyan-100';
+      case 'stale':
+        return 'border-amber-300/60 bg-amber-400/15 text-amber-100';
+      case 'expired':
+        return 'border-red-300/60 bg-red-400/15 text-red-100';
+      default:
+        return 'border-slate-300/40 bg-slate-400/10 text-slate-100';
+    }
+  };
+
   const getCanonicalContext = (parts: Array<string | null | undefined>) =>
     parts
       .map((part) => String(part || '').trim())
       .filter(Boolean)
       .join(' · ');
-
-  const pipelineStatusCards = [
-    { key: 'completed', label: 'Completed', value: pipelineStatus?.snapshot.completed ?? 0, tone: 'text-emerald-300' },
-    { key: 'partial', label: 'Partial', value: pipelineStatus?.snapshot.partial ?? 0, tone: 'text-yellow-300' },
-    { key: 'blocked', label: 'Blocked', value: pipelineStatus?.snapshot.blocked ?? 0, tone: 'text-red-300' },
-    { key: 'client-ready', label: 'Client Ready', value: pipelineStatus?.snapshot.client_ready ?? 0, tone: 'text-cyan-300' },
-  ];
 
   if (loading) {
     return (
@@ -455,110 +559,6 @@ function OpportunitiesContent() {
           </div>
         )}
 
-        <div className="rounded-2xl border border-custom-border bg-custom-box p-5">
-          <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-            <div>
-              <div className="text-xs uppercase tracking-[0.16em] text-fm-medium-grey">Canonical pipeline status</div>
-              <h3 className="mt-1 text-lg font-semibold text-white">Completed and partial entities since the pipeline started</h3>
-              <p className="mt-1 max-w-3xl text-sm text-fm-light-grey">
-                This panel reads the canonical Supabase pipeline ledger. Dossier artifacts remain on disk as pipeline outputs, but the UI is now showing DB-backed status only.
-              </p>
-            </div>
-            <div className="flex items-center gap-2">
-              <Badge
-                variant="outline"
-                className={pipelineStatus?.status === 'ready'
-                  ? 'border-emerald-400/50 text-emerald-200'
-                  : pipelineStatus?.status === 'degraded'
-                    ? 'border-amber-400/50 text-amber-200'
-                    : 'border-custom-border text-fm-medium-grey'}
-              >
-                {pipelineStatusLoading ? 'Loading' : pipelineStatus?.status || 'empty'}
-              </Badge>
-              <Badge variant="outline" className="border-custom-border text-fm-medium-grey">
-                {pipelineStatus?.source || 'entity_pipeline_runs'}
-              </Badge>
-            </div>
-          </div>
-
-          <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-            {pipelineStatusCards.map((item) => (
-              <div key={item.key} className="rounded-xl border border-custom-border bg-black/10 p-4">
-                <div className="text-xs uppercase tracking-[0.14em] text-fm-medium-grey">{item.label}</div>
-                <div className={`mt-2 text-3xl font-semibold ${item.tone}`}>{item.value}</div>
-              </div>
-            ))}
-          </div>
-
-          {pipelineStatusError && (
-            <div className="mt-4 rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-100">
-              {pipelineStatusError}
-            </div>
-          )}
-
-          {pipelineStatus?.warnings?.length ? (
-            <div className="mt-4 rounded-lg border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-100">
-              {pipelineStatus.warnings[0]}
-            </div>
-          ) : null}
-
-          <div className="mt-5 grid gap-4 lg:grid-cols-2">
-            <div className="rounded-xl border border-custom-border bg-black/10 p-4">
-              <div className="text-xs uppercase tracking-[0.14em] text-fm-medium-grey">Latest completed</div>
-              <div className="mt-3 space-y-3">
-                {(pipelineStatus?.completed_entities || []).slice(0, 3).map((record) => (
-                  <div key={record.entity_id} className="rounded-lg border border-custom-border/70 bg-black/10 p-3">
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <div className="font-medium text-white">{record.entity_name}</div>
-                        <div className="text-xs uppercase tracking-[0.14em] text-emerald-200">{record.lifecycle_label}</div>
-                      </div>
-                      <Badge variant="outline" className="border-emerald-400/40 text-emerald-200">
-                        {record.quality_state}
-                      </Badge>
-                    </div>
-                    <p className="mt-2 text-sm text-fm-light-grey">{record.lifecycle_summary}</p>
-                    <div className="mt-2 text-xs text-fm-medium-grey">
-                      {record.source_objective ? `Objective: ${record.source_objective}` : 'Canonical DB row'}
-                    </div>
-                  </div>
-                ))}
-                {!pipelineStatusLoading && (pipelineStatus?.completed_entities?.length ?? 0) === 0 && (
-                  <div className="text-sm text-fm-medium-grey">No completed entities yet.</div>
-                )}
-              </div>
-            </div>
-
-            <div className="rounded-xl border border-custom-border bg-black/10 p-4">
-              <div className="text-xs uppercase tracking-[0.14em] text-fm-medium-grey">Partial or blocked</div>
-              <div className="mt-3 space-y-3">
-                {[...(pipelineStatus?.partial_entities || []), ...(pipelineStatus?.blocked_entities || [])]
-                  .slice(0, 3)
-                  .map((record) => (
-                    <div key={record.entity_id} className="rounded-lg border border-custom-border/70 bg-black/10 p-3">
-                      <div className="flex items-start justify-between gap-3">
-                        <div>
-                          <div className="font-medium text-white">{record.entity_name}</div>
-                          <div className="text-xs uppercase tracking-[0.14em] text-yellow-200">{record.lifecycle_label}</div>
-                        </div>
-                        <Badge variant="outline" className="border-yellow-400/40 text-yellow-200">
-                          {record.quality_state}
-                        </Badge>
-                      </div>
-                      <p className="mt-2 text-sm text-fm-light-grey">{record.lifecycle_summary}</p>
-                      <div className="mt-2 text-xs text-fm-medium-grey">
-                        {record.dossier_path || record.artifact_path || 'Canonical DB row'}
-                      </div>
-                    </div>
-                  ))}
-                {!pipelineStatusLoading && ((pipelineStatus?.partial_entities?.length ?? 0) + (pipelineStatus?.blocked_entities?.length ?? 0) === 0) && (
-                  <div className="text-sm text-fm-medium-grey">No partial or blocked entities surfaced yet.</div>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-
         <FacetFilterBar
           searchSlot={(
             <Command className="overflow-visible rounded-md border border-input bg-background shadow-sm">
@@ -606,6 +606,12 @@ function OpportunitiesContent() {
                   <h3 className="break-words text-lg font-semibold text-white">{opportunity.title}</h3>
                   <div className="flex flex-wrap items-center gap-2 text-sm text-fm-medium-grey">
                     <span>{opportunity.organization}</span>
+                    <Badge variant="outline" className={`${getTemporalStatusColor(opportunity.temporalStatus)} text-xs`}>
+                      {opportunity.temporalStatus}
+                    </Badge>
+                    <Badge variant="outline" className="border-yellow-300/40 text-yellow-100 text-xs">
+                      {opportunity.criticalOpportunityScore * 10}% YP fit
+                    </Badge>
                   </div>
                   <div className="mt-1 text-sm text-fm-light-grey">
                     <span className="font-medium text-fm-medium-grey">Canonical context:</span>{' '}
@@ -621,6 +627,22 @@ function OpportunitiesContent() {
                 <p className="text-sm text-fm-light-grey">{opportunity.description}</p>
 
                 <div className="grid gap-3 sm:grid-cols-2">
+                  <div className="rounded-md border border-custom-border bg-black/10 p-3">
+                    <div className="text-[11px] uppercase tracking-[0.14em] text-fm-medium-grey">Why now</div>
+                    <div className="mt-1 text-sm text-white">{opportunity.temporalReasoning?.reason || 'Graphiti does not yet have enough timestamped evidence to explain timing.'}</div>
+                  </div>
+                  <div className="rounded-md border border-custom-border bg-black/10 p-3">
+                    <div className="text-[11px] uppercase tracking-[0.14em] text-fm-medium-grey">Why it fits</div>
+                    <div className="mt-1 text-sm text-white">{opportunity.ypFitReasoning}</div>
+                  </div>
+                  <div className="rounded-md border border-custom-border bg-black/10 p-3">
+                    <div className="text-[11px] uppercase tracking-[0.14em] text-fm-medium-grey">Graphiti pattern</div>
+                    <div className="mt-1 text-sm text-white">{opportunity.patternReasoning?.summary || 'Graphiti has not identified a repeatable pattern yet.'}</div>
+                  </div>
+                  <div className="rounded-md border border-custom-border bg-black/10 p-3">
+                    <div className="text-[11px] uppercase tracking-[0.14em] text-fm-medium-grey">Recommended action</div>
+                    <div className="mt-1 text-sm text-white">{opportunity.recommendedAction}</div>
+                  </div>
                   <div className="rounded-md border border-custom-border bg-black/10 p-3">
                     <div className="text-[11px] uppercase tracking-[0.14em] text-fm-medium-grey">Why this is an opportunity</div>
                     <div className="mt-1 text-sm text-white">{opportunity.whyItMatters}</div>
@@ -671,6 +693,50 @@ function OpportunitiesContent() {
                       <div className="mt-1 text-fm-light-grey">{opportunity.nextSteps}</div>
                     </div>
                   </div>
+                  {opportunity.timeline.length > 0 && (
+                    <div className="mt-4 rounded-md border border-custom-border/70 bg-black/10 p-3">
+                      <div className="font-medium text-yellow-100">Temporal timeline</div>
+                      <div className="mt-2 flex flex-wrap gap-2 text-xs text-fm-light-grey">
+                        {opportunity.timeline.slice(0, 5).map((event) => (
+                          <span key={`${opportunity.id}-${event.at}-${event.label}`} className="rounded-full border border-custom-border bg-black/20 px-2 py-1">
+                            {event.at}: {event.label}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {opportunity.findings.length > 0 && (
+                    <div className="mt-4 rounded-md border border-custom-border/70 bg-black/10 p-3">
+                      <div className="font-medium text-yellow-100">Graphiti findings</div>
+                      <ul className="mt-2 space-y-2 text-sm text-fm-light-grey">
+                        {opportunity.findings.slice(0, 5).map((finding, index) => (
+                          <li key={`${opportunity.id}-finding-${index}`} className="flex gap-2">
+                            <span className="mt-2 h-1.5 w-1.5 rounded-full bg-yellow-300" />
+                            <span>
+                              {finding.source_url ? (
+                                <a href={finding.source_url} className="text-yellow-100 underline decoration-yellow-300/40 underline-offset-2">
+                                  {finding.finding}
+                                </a>
+                              ) : finding.finding}
+                              {finding.observed_at ? <span className="text-fm-medium-grey"> ({finding.observed_at})</span> : null}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {opportunity.relatedPatterns.length > 0 && (
+                    <div className="mt-4 rounded-md border border-custom-border/70 bg-black/10 p-3">
+                      <div className="font-medium text-yellow-100">Related pattern cluster</div>
+                      <div className="mt-2 flex flex-wrap gap-2">
+                        {opportunity.relatedPatterns.slice(0, 4).map((pattern, index) => (
+                          <Badge key={`${opportunity.id}-pattern-${index}`} variant="outline" className="border-custom-border text-fm-light-grey">
+                            {pattern.entity_name}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
 

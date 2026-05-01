@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { materializeGraphitiOpportunities } from '@/lib/graphiti-opportunity-persistence'
 import { loadGraphitiOpportunitySourceRows } from '@/lib/graphiti-opportunity-persistence'
+import { backfillGraphitiDossierIngestions } from '@/lib/graphiti-dossier-ingestion'
 import { getSupabaseAdmin } from '@/lib/supabase-client'
 import { requireApiSession, UnauthorizedError } from '@/lib/server-auth'
 
@@ -50,16 +51,52 @@ function toParentInsightRow(source: Awaited<ReturnType<typeof loadGraphitiOpport
   }
 }
 
+function dedupeParentInsightRows(rows: ReturnType<typeof toParentInsightRow>[]) {
+  const byInsightId = new Map<string, ReturnType<typeof toParentInsightRow>>()
+
+  for (const row of rows) {
+    const key = String(row.insight_id || '').trim()
+    if (!key) continue
+    byInsightId.set(key, row)
+  }
+
+  return Array.from(byInsightId.values())
+}
+
 export async function POST(request: NextRequest) {
   try {
     await requireApiSession(request)
     const body = await request.json().catch(() => ({}))
     const limit = Number(body?.limit || 500)
     const effectiveLimit = Number.isFinite(limit) && limit > 0 ? limit : 500
+    const dryRun = body?.dry_run === true || body?.dryRun === true
+    const dossierIngestion = await backfillGraphitiDossierIngestions({
+      limit: effectiveLimit,
+      dryRun,
+    })
     const sourceRows = await loadGraphitiOpportunitySourceRows(effectiveLimit)
 
+    if (dryRun) {
+      return NextResponse.json({
+        ok: true,
+        dry_run: true,
+        dossier_ingestion: dossierIngestion.stats,
+        dossiers_ingested_entities: dossierIngestion.stats.would_ingest,
+        failed_only_opportunities_deactivated: 0,
+        source_count: sourceRows.length,
+        stats: {
+          source_count: sourceRows.length,
+          upserted_count: 0,
+          changed_count: 0,
+          failed_only_dossier_opportunities_deactivated: 0,
+        },
+        warnings: [],
+        last_updated_at: new Date().toISOString(),
+      })
+    }
+
     if (sourceRows.length > 0) {
-      const parentRows = sourceRows.map(toParentInsightRow)
+      const parentRows = dedupeParentInsightRows(sourceRows.map(toParentInsightRow))
       const supabase = getSupabaseAdmin()
       const parentResponse = await supabase
         .from('graphiti_materialized_insights')
@@ -74,6 +111,10 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       ok: true,
+      dry_run: dryRun,
+      dossier_ingestion: dossierIngestion.stats,
+      dossiers_ingested_entities: dossierIngestion.stats.ingested,
+      failed_only_opportunities_deactivated: result.stats.failed_only_dossier_opportunities_deactivated,
       source_count: sourceRows.length,
       stats: result.stats,
       warnings: result.warnings,

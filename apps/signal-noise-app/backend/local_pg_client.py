@@ -306,7 +306,12 @@ class LocalPgRpc:
                         FROM entity_import_batches
                         WHERE status = 'queued'
                           AND completed_at IS NULL
-                        ORDER BY started_at ASC
+                        ORDER BY
+                          CASE
+                            WHEN metadata->>'source' = 'question_first_timeout_continuation' THEN 0
+                            ELSE 1
+                          END,
+                          started_at ASC
                         LIMIT 1
                         FOR UPDATE SKIP LOCKED
                     )

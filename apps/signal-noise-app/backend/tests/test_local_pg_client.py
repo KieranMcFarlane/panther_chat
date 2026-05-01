@@ -46,6 +46,47 @@ def test_claim_next_batch_uses_typed_interval_expression(monkeypatch):
     assert captured["params"] == ["worker-1", 300]
 
 
+def test_claim_next_batch_prioritizes_question_first_continuations(monkeypatch):
+    captured = {}
+
+    class _FakeCursor:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+        def execute(self, sql, params):
+            captured["sql"] = sql
+            captured["params"] = params
+
+        def fetchall(self):
+            return []
+
+    class _FakeConnection:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+        def cursor(self):
+            return _FakeCursor()
+
+    client = LocalPgClient("postgresql://localhost/signal_noise_app")
+    monkeypatch.setattr(client, "_connect", lambda: _FakeConnection())
+
+    client.rpc(
+        "claim_next_entity_import_batch",
+        {"worker_id": "worker-1", "lease_seconds": 300},
+    ).execute()
+
+    assert "question_first_timeout_continuation" in captured["sql"]
+    assert "ORDER BY" in captured["sql"]
+    assert "CASE" in captured["sql"]
+    assert captured["sql"].index("CASE") < captured["sql"].index("started_at ASC")
+
+
 def test_select_next_entity_cursor_candidate_prefers_resumable_work(monkeypatch):
     captured = {}
 

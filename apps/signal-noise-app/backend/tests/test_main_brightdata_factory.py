@@ -446,6 +446,107 @@ async def test_run_entity_pipeline_creates_missing_run_record_for_direct_api_bat
 
 
 @pytest.mark.asyncio
+async def test_run_entity_pipeline_phase_updates_do_not_overwrite_terminal_timeout_rows(monkeypatch):
+    updated_rows = []
+
+    class _FakeTable:
+        def __init__(self, name):
+            self.name = name
+            self._mode = "select"
+
+        def select(self, *_args, **_kwargs):
+            self._mode = "select"
+            return self
+
+        def insert(self, *_args, **_kwargs):
+            raise AssertionError("terminal run rows should not be recreated")
+
+        def update(self, payload):
+            self._mode = "update"
+            updated_rows.append((self.name, payload))
+            return self
+
+        def eq(self, *_args, **_kwargs):
+            return self
+
+        def limit(self, *_args, **_kwargs):
+            return self
+
+        def execute(self):
+            if self._mode == "select":
+                return types.SimpleNamespace(
+                    data=[
+                        {
+                            "status": "failed",
+                            "completed_at": "2026-04-28T15:00:00+00:00",
+                            "metadata": {
+                                "retry_state": "failed",
+                                "failure_class": "entity_pipeline_timeout",
+                                "continue_pipeline_on_failure": True,
+                            },
+                        }
+                    ]
+                )
+            return types.SimpleNamespace(data=[])
+
+    class _FakePersistenceClient:
+        def table(self, name):
+            return _FakeTable(name)
+
+    monkeypatch.setenv("PIPELINE_QUESTION_FIRST_ENABLED", "true")
+    monkeypatch.delenv("PIPELINE_PHASE0_MODE", raising=False)
+    monkeypatch.setattr(main, "create_pipeline_persistence_client", lambda: _FakePersistenceClient(), raising=False)
+
+    class _FakeBrightDataClient:
+        async def search_engine(self, *args, **kwargs):
+            return {"status": "success", "results": []}
+
+        async def scrape_as_markdown(self, *args, **kwargs):
+            return {"status": "success", "content": ""}
+
+    monkeypatch.setattr(main, "create_pipeline_brightdata_client", lambda *args, **kwargs: _FakeBrightDataClient(), raising=False)
+
+    orchestrator_module = types.ModuleType("backend.pipeline_orchestrator")
+
+    class _DummyOrchestrator:
+        def __init__(self, *args, **kwargs):
+            pass
+
+        async def run_entity_pipeline(self, **kwargs):
+            phase_callback = kwargs.get("phase_callback")
+            if phase_callback is not None:
+                await phase_callback("dossier_generation", {"status": "question_first_running"})
+            return {
+                "entity_id": kwargs.get("entity_id", "unknown"),
+                "entity_name": kwargs.get("entity_name", "unknown"),
+                "phases": {"dossier_generation": {"status": "question_first_running"}},
+                "validated_signal_count": 0,
+                "capability_signal_count": 0,
+                "rfp_count": 0,
+                "sales_readiness": "MONITOR",
+                "artifacts": {"dossier": kwargs.get("initial_dossier", {})},
+                "completed_at": "2026-04-28T15:05:00+00:00",
+            }
+
+    orchestrator_module.PipelineOrchestrator = _DummyOrchestrator
+    monkeypatch.setitem(sys.modules, "backend.pipeline_orchestrator", orchestrator_module)
+
+    await run_entity_pipeline(
+        EntityPipelineRequest(
+            entity_id="kieran-scott",
+            entity_name="Kieran Scott",
+            entity_type="PERSON",
+            priority_score=50,
+            batch_id="import-timeout-row",
+            run_objective="dossier_core",
+            metadata={"canonical_entity_id": "1fdf772d-62d1-412a-97de-52d4cb96e38e"},
+        )
+    )
+
+    assert updated_rows == []
+
+
+@pytest.mark.asyncio
 async def test_run_entity_pipeline_uses_pipeline_brightdata_factory(monkeypatch):
     monkeypatch.setenv("BRIGHTDATA_API_TOKEN", "test-token")
     monkeypatch.setenv("BRIGHTDATA_FASTMCP_URL", "http://127.0.0.1:8014/mcp")

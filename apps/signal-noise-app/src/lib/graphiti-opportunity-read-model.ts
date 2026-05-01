@@ -5,6 +5,7 @@ import type {
   GraphitiOpportunityResponse,
 } from '@/lib/graphiti-opportunity-contract'
 import { rankGraphitiOpportunities } from '@/lib/graphiti-opportunity-materializer'
+import { buildGraphitiOpportunityReasoning } from '@/lib/graphiti-opportunity-reasoning.mjs'
 
 const PERSISTED_COLUMNS = [
   'opportunity_id',
@@ -78,14 +79,33 @@ type PersistedGraphitiOpportunityRow = GraphitiOpportunityCard & {
   last_seen_at?: string | null
 }
 
-function isDemoOriginOpportunityRow(row: Pick<PersistedGraphitiOpportunityRow, 'source_objective' | 'raw_payload'>) {
+function hasLegacyMarker(value: unknown): boolean {
+  const text = String(value || '').trim().toLowerCase()
+  if (!text) return false
+  return (
+    text === 'client_demo_seed'
+    || text === 'demo_fallback_materialization'
+    || /(^|[_/\-\s])(demo|mock|legacy)([_/\-\s]|$)/.test(text)
+  )
+}
+
+function isLegacyOrDemoOriginOpportunityRow(row: Pick<PersistedGraphitiOpportunityRow, 'source_objective' | 'raw_payload'>) {
   const sourceObjective = String(row.source_objective || '').trim().toLowerCase()
   const rawPayload = row.raw_payload && typeof row.raw_payload === 'object'
     ? row.raw_payload as Record<string, unknown>
     : {}
   const rawSource = String(rawPayload.source || '').trim().toLowerCase()
+  const dossierPath = String(rawPayload.dossier_path || '').trim().toLowerCase()
 
-  return sourceObjective === 'client_demo_seed' || rawSource === 'demo_fallback_materialization'
+  return [
+    sourceObjective,
+    rawSource,
+    rawPayload.source_objective,
+    rawPayload.origin,
+    rawPayload.source_run_id,
+    rawPayload.fixture,
+    dossierPath,
+  ].some(hasLegacyMarker)
 }
 
 function isGenericOpportunityText(value: string) {
@@ -94,9 +114,47 @@ function isGenericOpportunityText(value: string) {
     !text
     || /validated a .* trigger/.test(text)
     || /qualified yellow panther fit signal/.test(text)
+    || /points to a live opening rather than passive monitoring/.test(text)
     || /open the canonical dossier and review the buyer hypothesis/.test(text)
     || /review question first evidence and prepare outreach/.test(text)
   )
+}
+
+function isFailedOnlyOpportunityRow(row: PersistedGraphitiOpportunityRow) {
+  const failedQuestionMessage = 'question execution failed before a safe answer could be produced'
+  const fields = [
+    row.title,
+    row.summary,
+    row.why_it_matters,
+    row.suggested_action,
+    row.why_this_is_an_opportunity,
+    row.read_more_context,
+    row.raw_payload?.source_objective,
+    row.raw_payload?.outreach_angle,
+    row.raw_payload?.outreach_target,
+  ].map((value) => String(value || '').toLowerCase())
+
+  return fields.some((value) => value.includes(failedQuestionMessage))
+}
+
+function isCurrentDossierShortlistOpportunityRow(row: PersistedGraphitiOpportunityRow) {
+  const rawPayload = asRecord(row.raw_payload)
+  const source = String(rawPayload.source || '').trim()
+  const sourceLedgerId = String(rawPayload.source_ledger_id || '').trim()
+  const temporalStatus = String(asRecord(rawPayload.temporal_reasoning).status || '').trim().toLowerCase()
+  const commercialQualification = asRecord(rawPayload.commercial_qualification)
+  const commercialStatus = String(commercialQualification.status || '').trim().toLowerCase()
+  const buyingTriggers = asArray<Record<string, unknown>>(commercialQualification.buying_triggers)
+
+  if (source !== 'entity_dossiers') return false
+  if (!sourceLedgerId) return false
+  if (rawPayload.shortlist_opportunity !== true) return false
+  if (rawPayload.watch_item === true) return false
+  if (temporalStatus === 'stale' || temporalStatus === 'expired') return false
+  if (commercialStatus === 'context_only' || commercialStatus === 'watch' || commercialStatus === 'blocked' || commercialStatus === 'no_buying_trigger') return false
+  if ((commercialStatus === 'active' || commercialStatus === 'accelerating') && buyingTriggers.length === 0) return false
+
+  return true
 }
 
 function firstSentence(value: string) {
@@ -105,8 +163,128 @@ function firstSentence(value: string) {
   return text.split(/(?<=[.!?])\s+/)[0].trim()
 }
 
+function stripQuotes(value: string) {
+  return value.replace(/^['"]+|['"]+$/g, '').trim()
+}
+
+function isPlaceholderText(value: string) {
+  const text = String(value || '').trim().toLowerCase()
+  return (
+    !text
+    || text === 'n/a'
+    || text === 'no_signal'
+    || /^no deterministic answer was produced for this question\.?$/i.test(text)
+    || text.includes('question execution failed before a safe answer could be produced')
+    || text.includes('no brightdata tool or service is available in this session')
+  )
+}
+
+function isQuestionIdLike(value: unknown): boolean {
+  const text = String(value || '').trim()
+  return /^q\d+[_a-z0-9-]*$/i.test(text) || /^[a-z_]+_signal$/i.test(text) || /^[a-z_]+_docs$/i.test(text)
+}
+
+function extractStructuredText(value: unknown): string {
+  if (value === null || value === undefined) return ''
+  if (Array.isArray(value)) {
+    return value
+      .map((item) => extractStructuredText(item))
+      .filter(Boolean)
+      .join(' · ')
+      .trim()
+  }
+  if (typeof value === 'object') {
+    const record = value as Record<string, unknown>
+    return [
+      extractStructuredText(record.summary),
+      extractStructuredText(asRecord(record.commercial_interpretation).summary),
+      extractStructuredText(record.value),
+      extractStructuredText(record.answer),
+      extractStructuredText(record.context),
+    ].find(Boolean) || ''
+  }
+
+  const text = String(value).trim()
+  if (!text) return ''
+
+  const embeddedDoubleQuotedSummary = text.match(/"summary"\s*:\s*"([^"]+)"/i)?.[1]
+  if (embeddedDoubleQuotedSummary) return stripQuotes(embeddedDoubleQuotedSummary)
+  const embeddedSingleQuotedSummary = text.match(/'summary'\s*:\s*'([^']+)'/i)?.[1]
+  if (embeddedSingleQuotedSummary) return stripQuotes(embeddedSingleQuotedSummary)
+  const looseSummary = text.match(/summary['"]?\s*:\s*['"]([^'"]{20,})/i)?.[1]
+  if (looseSummary) return stripQuotes(looseSummary)
+  const embeddedDoubleQuotedValue = text.match(/"value"\s*:\s*"([^"]+)"/i)?.[1]
+  if (embeddedDoubleQuotedValue) return stripQuotes(embeddedDoubleQuotedValue)
+  const embeddedSingleQuotedValue = text.match(/'value'\s*:\s*'([^']+)'/i)?.[1]
+  if (embeddedSingleQuotedValue) return stripQuotes(embeddedSingleQuotedValue)
+
+  if ((text.startsWith('{') && text.endsWith('}')) || (text.startsWith('[') && text.endsWith(']'))) {
+    try {
+      return extractStructuredText(JSON.parse(text))
+    } catch {
+      return ''
+    }
+  }
+
+  return text
+}
+
+function sanitizeNarrativeText(value: unknown): string {
+  const text = extractStructuredText(value)
+  if (!text) return ''
+  if (isPlaceholderText(text)) return ''
+
+  const cleaned = text
+    .replace(/,\s*No deterministic answer was produced for this question\.?/gi, '')
+    .replace(/No deterministic answer was produced for this question\.?,?\s*/gi, '')
+    .replace(/,\s*No BrightData tool or service is available in this session[^.]*\.?/gi, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+
+  return isPlaceholderText(cleaned) ? '' : cleaned
+}
+
+function sanitizeReadMoreContext(value: unknown): string {
+  return String(value || '')
+    .split(' · ')
+    .map((part) => sanitizeNarrativeText(part))
+    .filter((part) => part && !isQuestionIdLike(part))
+    .join(' · ')
+}
+
+function sanitizeFindingRows(value: unknown): unknown[] {
+  return asArray<Record<string, unknown>>(value)
+    .map((finding) => ({
+      ...finding,
+      label: sanitizeNarrativeText(finding.label),
+      finding: sanitizeNarrativeText(finding.finding),
+      source_url: /^https?:\/\//i.test(String(finding.source_url || '')) ? finding.source_url : null,
+      source: isQuestionIdLike(finding.source) ? 'dossier-derived, source pending' : sanitizeNarrativeText(finding.source),
+    }))
+    .filter((finding) => finding.finding && !isQuestionIdLike(finding.finding))
+}
+
+function asRecord(value: unknown): Record<string, unknown> {
+  return value && typeof value === 'object' && !Array.isArray(value) ? value as Record<string, unknown> : {}
+}
+
+function asArray<T = unknown>(value: unknown): T[] {
+  return Array.isArray(value) ? value as T[] : []
+}
+
 function synthesizeOpportunityNarrative(row: PersistedGraphitiOpportunityRow) {
-  const summary = firstSentence(row.summary || '')
+  const rawPayload = asRecord(row.raw_payload)
+  const commercialQualification = asRecord(rawPayload.commercial_qualification)
+  const ypFitBreakdown = asRecord(commercialQualification.yp_fit_breakdown)
+  const triggerEvidence = asArray<Record<string, unknown>>(commercialQualification.trigger_evidence)
+  const buyingTriggers = asArray<Record<string, unknown>>(commercialQualification.buying_triggers)
+  const primaryTrigger = triggerEvidence.find((trigger) => trigger.is_current === true) || triggerEvidence[0] || buyingTriggers[0]
+  const triggerFamily = sanitizeNarrativeText(primaryTrigger?.family) || buildOpportunityLabel(row)
+  const triggerSummary = sanitizeNarrativeText(primaryTrigger?.text)
+  const capabilityMatch = sanitizeNarrativeText(ypFitBreakdown.capability_match)
+  const buyerRoute = sanitizeNarrativeText(ypFitBreakdown.buyer_route)
+  const outreachAngle = sanitizeNarrativeText(ypFitBreakdown.outreach_angle)
+  const summary = firstSentence(sanitizeNarrativeText(row.summary))
   const contextBits = [
     row.entity_name,
     row.opportunity_kind || row.category,
@@ -116,10 +294,18 @@ function synthesizeOpportunityNarrative(row: PersistedGraphitiOpportunityRow) {
     .map((value) => String(value || '').trim())
     .filter((value) => value && !['other', 'unknown', 'n/a', 'na'].includes(value.toLowerCase()))
   const context = contextBits.length > 0 ? contextBits.join(' · ') : row.entity_name || 'canonical dossier'
-  const whyItMatters = `${context} points to a live opening rather than passive monitoring.${summary ? ` ${summary}` : ''}`.trim()
-  const suggestedAction = row.read_more_context?.includes('Open the dossier')
-    ? 'Open the dossier, confirm the buyer hypothesis, and draft targeted outreach around the confirmed opening.'
-    : 'Open the dossier, confirm the buyer hypothesis, and act on the live opening.'
+  const whyItMatters = [
+    `${context} has a ${triggerFamily} worth pursuing because it indicates a concrete operating priority, not just static club context.`,
+    triggerSummary || summary,
+    capabilityMatch ? `Yellow Panther angle: ${capabilityMatch}.` : '',
+    buyerRoute ? `Likely route: ${buyerRoute}.` : '',
+  ].filter(Boolean).join(' ').trim()
+  const suggestedAction = [
+    triggerFamily.toLowerCase().includes('hiring') ? 'Use the hiring signal as the outreach wedge.' : `Use the ${triggerFamily} as the outreach wedge.`,
+    outreachAngle,
+    buyerRoute ? `Route the first hypothesis through ${buyerRoute}.` : '',
+    'Verify recency, source evidence, and buyer ownership before outreach.',
+  ].filter(Boolean).join(' ').trim()
 
   return {
     whyItMatters,
@@ -128,23 +314,126 @@ function synthesizeOpportunityNarrative(row: PersistedGraphitiOpportunityRow) {
   }
 }
 
+function buildOpportunityLabel(row: PersistedGraphitiOpportunityRow): string {
+  const rawPayload = asRecord(row.raw_payload)
+  const commercialQualification = asRecord(rawPayload.commercial_qualification)
+  const buyingTriggers = asArray<Record<string, unknown>>(commercialQualification.buying_triggers)
+  const triggerFamily = String(buyingTriggers[0]?.family || '').trim().toLowerCase()
+  if (triggerFamily === 'hiring') return 'hiring signal'
+  if (triggerFamily === 'procurement') return 'procurement/tender signal'
+  if (triggerFamily === 'digital') return 'digital platform opportunity'
+  if (triggerFamily === 'leadership') return 'decision-owner signal'
+  if (triggerFamily === 'sponsorship') return 'sponsorship signal'
+  if (triggerFamily === 'yp_fit') return 'Yellow Panther fit signal'
+
+  const rawKind = [
+    row.opportunity_kind,
+    row.theme,
+    row.category,
+    rawPayload.signal_basis,
+  ]
+    .map((value) => String(value || '').trim())
+    .find(Boolean)
+
+  const kind = String(rawKind || 'commercial').trim().toLowerCase()
+  if (kind.includes('digital')) return 'digital signal'
+  if (kind.includes('procurement')) return 'procurement signal'
+  if (kind.includes('sponsor')) return 'sponsorship signal'
+  if (kind.includes('hiring')) return 'hiring signal'
+  if (kind.includes('leadership') || kind.includes('owner')) return 'leadership signal'
+  if (kind.includes('market') || kind.includes('launch') || kind.includes('media')) return 'market signal'
+  if (kind.includes('question first')) return 'live commercial opening'
+  return 'live commercial opening'
+}
+
 function toRecord(row: PersistedGraphitiOpportunityRow): GraphitiOpportunityCard {
-  const title = row.title
-  const summary = row.summary
-  const whyItMatters = row.why_it_matters
-  const suggestedAction = row.suggested_action
-  const synthesized = isGenericOpportunityText(whyItMatters) || isGenericOpportunityText(suggestedAction) || isGenericOpportunityText(row.why_this_is_an_opportunity || '')
+  const rawPayload = asRecord(row.raw_payload)
+  const title = sanitizeNarrativeText(row.title)
+  const summary = sanitizeNarrativeText(row.summary)
+  const whyItMatters = sanitizeNarrativeText(row.why_it_matters)
+  const suggestedAction = sanitizeNarrativeText(row.suggested_action)
+  const existingWhy = sanitizeNarrativeText(row.why_this_is_an_opportunity)
+  const synthesized = isGenericOpportunityText(whyItMatters) || isGenericOpportunityText(suggestedAction) || isGenericOpportunityText(existingWhy || '')
     ? synthesizeOpportunityNarrative(row)
     : null
-  const whyThisIsAnOpportunity = synthesized?.description || row.why_this_is_an_opportunity || summary || whyItMatters || suggestedAction
-  const yellowPantherFitFeedback = row.yellow_panther_fit_feedback
-  const nextSteps = Array.isArray(row.next_steps) ? row.next_steps : []
-  const supportingSignals = Array.isArray(row.supporting_signals) ? row.supporting_signals : []
-  const readMoreContext = row.read_more_context
+  const whyThisIsAnOpportunity = synthesized?.description || existingWhy || summary || whyItMatters || suggestedAction
+  const yellowPantherFitFeedback = sanitizeNarrativeText(row.yellow_panther_fit_feedback)
+  const commercialQualification = asRecord(rawPayload.commercial_qualification)
+  const ypFitBreakdown = asRecord(commercialQualification.yp_fit_breakdown)
+  const triggerEvidence = asArray<Record<string, unknown>>(commercialQualification.trigger_evidence)
+  const buyingTriggers = asArray<Record<string, unknown>>(commercialQualification.buying_triggers)
+  const primaryTrigger = triggerEvidence.find((trigger) => trigger.is_current === true) || triggerEvidence[0] || buyingTriggers[0]
+  const triggerSummary = sanitizeNarrativeText(primaryTrigger?.text)
+  const breakdownFeedback = [
+    triggerSummary ? `Trigger: ${triggerSummary}` : '',
+    ypFitBreakdown.capability_match ? `Capability match: ${sanitizeNarrativeText(ypFitBreakdown.capability_match)}` : '',
+    ypFitBreakdown.buyer_route ? `Buyer route: ${sanitizeNarrativeText(ypFitBreakdown.buyer_route)}` : '',
+    ypFitBreakdown.outreach_angle && sanitizeNarrativeText(ypFitBreakdown.outreach_angle) !== sanitizeNarrativeText(ypFitBreakdown.buyer_route) ? `Outreach angle: ${sanitizeNarrativeText(ypFitBreakdown.outreach_angle)}` : '',
+    ypFitBreakdown.verification_needed ? `Verification needed: ${sanitizeNarrativeText(ypFitBreakdown.verification_needed)}` : '',
+  ].filter(Boolean).join(' ')
+  const nextSteps = (Array.isArray(row.next_steps) ? row.next_steps : [])
+    .map((value) => sanitizeNarrativeText(value))
+    .filter(Boolean)
+  const supportingSignals = (Array.isArray(row.supporting_signals) ? row.supporting_signals : [])
+    .map((value) => sanitizeNarrativeText(value))
+    .filter(Boolean)
+  const readMoreContext = sanitizeReadMoreContext(row.read_more_context)
   const displayNextSteps = synthesized
-    ? [synthesized.suggestedAction, ...nextSteps.map((value) => String(value || '').trim()).filter(Boolean)]
+    ? [synthesized.suggestedAction, ...nextSteps]
     : nextSteps
-  const displayTitle = synthesized ? `${row.organization}: live commercial opening` : title
+  const titleNeedsCompression = (
+    !title
+    || title.length > 160
+    || title.includes('. ')
+    || title.includes('; ')
+    || title.includes('No deterministic answer')
+    || /question first opportunity signal/i.test(title)
+    || /has a dossier-backed opportunity signal/i.test(title)
+  )
+  const personTitleNeedsTriggerLabel = (
+    Boolean(title)
+    && !titleNeedsCompression
+    && ['hiring', 'procurement', 'digital', 'sponsorship'].includes(String(primaryTrigger?.family || buyingTriggers[0]?.family || '').toLowerCase())
+    && !/(hiring|vacancy|procurement|tender|rfp|app|platform|sponsor|partnership|commercial signal|opportunity)/i.test(title)
+  )
+  const displayTitle = titleNeedsCompression
+    ? `${row.organization}: ${buildOpportunityLabel(row)}`
+    : personTitleNeedsTriggerLabel
+    ? `${row.organization}: ${buildOpportunityLabel(row)}`
+    : title
+  const computedReasoning = buildGraphitiOpportunityReasoning({
+    entityName: row.canonical_entity_name || row.entity_name || row.organization,
+    detectedAt: row.detected_at,
+    lastSeenAt: row.last_seen_at,
+    materializedAt: row.materialized_at,
+    deadline: row.deadline,
+    confidence: row.confidence,
+    yellowPantherFit: row.yellow_panther_fit,
+    supportingSignals,
+    evidence: Array.isArray(row.evidence) ? row.evidence : [],
+    relationships: Array.isArray(row.relationships) ? row.relationships : [],
+    rawPayload,
+  })
+  const temporalReasoning = asRecord(rawPayload.temporal_reasoning).status
+    ? rawPayload.temporal_reasoning
+    : computedReasoning.temporal_reasoning
+  const patternReasoning = asRecord(rawPayload.pattern_reasoning).pattern_status
+    ? rawPayload.pattern_reasoning
+    : computedReasoning.pattern_reasoning
+  const findings = sanitizeFindingRows(asArray(rawPayload.findings).length > 0 ? asArray(rawPayload.findings) : computedReasoning.findings)
+  const timeline = asArray(rawPayload.timeline).length > 0 ? asArray(rawPayload.timeline) : computedReasoning.timeline
+  const relatedPatterns = asArray(rawPayload.related_patterns).length > 0 ? asArray(rawPayload.related_patterns) : computedReasoning.related_patterns
+  const enrichedMetadata = {
+    ...rawPayload,
+    temporal_reasoning: temporalReasoning,
+    pattern_reasoning: patternReasoning,
+    yp_fit_reasoning: rawPayload.yp_fit_reasoning || computedReasoning.yp_fit_reasoning,
+      recommended_action: computedReasoning.recommended_action || rawPayload.recommended_action,
+      commercial_qualification: rawPayload.commercial_qualification || computedReasoning.commercial_qualification,
+      findings,
+    timeline,
+    related_patterns: relatedPatterns,
+  }
 
   return {
     id: row.opportunity_id,
@@ -152,7 +441,7 @@ function toRecord(row: PersistedGraphitiOpportunityRow): GraphitiOpportunityCard
     organization: row.organization,
     description: synthesized?.description || whyThisIsAnOpportunity || summary || whyItMatters || suggestedAction || '',
     why_this_is_an_opportunity: synthesized?.whyItMatters || whyThisIsAnOpportunity || summary || whyItMatters || '',
-    yellow_panther_fit_feedback: yellowPantherFitFeedback || '',
+    yellow_panther_fit_feedback: breakdownFeedback || yellowPantherFitFeedback || '',
     next_steps: Array.from(new Set(displayNextSteps)),
     supporting_signals: supportingSignals,
     read_more_context: readMoreContext || '',
@@ -176,13 +465,20 @@ function toRecord(row: PersistedGraphitiOpportunityRow): GraphitiOpportunityCard
     opportunity_kind: row.opportunity_kind,
     theme: row.theme,
     taxonomy: row.taxonomy,
-    metadata: row.raw_payload || {},
+    metadata: enrichedMetadata,
     source_url: row.source_url,
     tags: Array.isArray(row.tags) ? row.tags : [],
     detected_at: row.detected_at,
     status: row.status,
     evidence: Array.isArray(row.evidence) ? row.evidence : [],
     relationships: Array.isArray(row.relationships) ? row.relationships : [],
+    temporal_reasoning: temporalReasoning as GraphitiOpportunityCard['temporal_reasoning'],
+    pattern_reasoning: patternReasoning as GraphitiOpportunityCard['pattern_reasoning'],
+    yp_fit_reasoning: String(computedReasoning.yp_fit_reasoning || rawPayload.yp_fit_reasoning || ''),
+    recommended_action: String(computedReasoning.recommended_action || rawPayload.recommended_action || ''),
+    findings: findings as GraphitiOpportunityCard['findings'],
+    timeline: timeline as GraphitiOpportunityCard['timeline'],
+    related_patterns: relatedPatterns as GraphitiOpportunityCard['related_patterns'],
   }
 }
 
@@ -234,7 +530,7 @@ export async function loadGraphitiOpportunitiesFromDb(limit = 25): Promise<Graph
     .from('graphiti_materialized_opportunities')
     .select(PERSISTED_COLUMNS)
     .order('last_seen_at', { ascending: false })
-    .limit(Math.max(limit, 25))
+    .limit(Math.max(limit * 8, 500))
 
   if (response.error) {
     warnings.push(`Persisted Graphiti opportunities query failed: ${response.error.message}`)
@@ -255,7 +551,12 @@ export async function loadGraphitiOpportunitiesFromDb(limit = 25): Promise<Graph
   }
 
   const rows = Array.isArray(response.data) ? (response.data as PersistedGraphitiOpportunityRow[]) : []
-  const activeRows = rows.filter((row) => row.is_active === true && !isDemoOriginOpportunityRow(row))
+  const activeRows = rows.filter((row) => (
+    row.is_active === true
+    && !isLegacyOrDemoOriginOpportunityRow(row)
+    && !isFailedOnlyOpportunityRow(row)
+    && isCurrentDossierShortlistOpportunityRow(row)
+  ))
   const bestRowsByEntity = new Map<string, PersistedGraphitiOpportunityRow>()
 
   for (const row of activeRows) {

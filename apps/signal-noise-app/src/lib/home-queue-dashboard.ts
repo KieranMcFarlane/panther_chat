@@ -9,6 +9,7 @@ import { mergeQuestionFirstRunArtifactIntoDossier, normalizeQuestionFirstDossier
 import { resolveOperationalHeartbeatDetails } from '@/lib/operational-heartbeat'
 import { query as queryPostgres } from '@/lib/pg-client'
 import { readPipelineControlState } from '@/lib/pipeline-control-state'
+import { loadGraphitiDossierIngestionStats } from '@/lib/graphiti-dossier-ingestion'
 import { buildPipelineRuntimeSnapshot, loadPipelineRuntimeReadSet, type PipelineRuntimeRunRecord } from '@/lib/pipeline-runtime'
 import { loadQuestionFirstLiveQueueSnapshot, loadQuestionFirstScaleManifest } from '@/lib/question-first-manifest'
 import { describeQuestionFirstQueueOrder, sortQuestionFirstManifestEntities } from '@/lib/question-first-queue-order'
@@ -184,6 +185,14 @@ export type HomeQueueDashboardPayload = {
     status: 'available' | 'empty'
     highlights: SalesSummaryItem[]
   }
+  graphiti_dossier_ingestion: {
+    canonical_entities_total: number
+    dossiers_persisted_entities: number
+    dossiers_ingested_entities: number
+    partial_dossiers_ingested: number
+    opportunity_worthy_entities: number
+    failed_only_opportunities_active: number
+  }
   dossier_quality: {
     counts: Record<DossierQualityState, number>
     incomplete_entities: DossierQualityCard[]
@@ -205,6 +214,8 @@ type LiveQueueSnapshot = {
   loop_status?: HomeQueueDashboardPayload['loop_status']
   queue?: HomeQueueDashboardPayload['queue']
 }
+
+type HomeQueueState = HomeQueueDashboardPayload['queue']
 
 type PipelineRunRecord = {
   entity_id: string
@@ -337,7 +348,7 @@ function mapProcessedDossierRowsToQueueEntities(rows: ProcessedDossierRow[]): Qu
     state: 'completed',
     client_ready: false,
     promoted: true,
-    summary: extractProcessedDossierSummary(row.dossier_data),
+    summary: extractProcessedDossierSummary(row.dossier_data ?? null),
     generated_at: row.generated_at,
     started_at: row.generated_at,
     current_question_id: 'completed',
@@ -658,7 +669,7 @@ async function buildQueueState(
   manifestEntities: ManifestEntity[],
   runs: PipelineRunRecord[],
   clientReadyIds: Set<string>,
-): HomeQueueDashboardPayload['queue'] {
+): Promise<HomeQueueState> {
   const latestRunById = new Map<string, PipelineRunRecord>()
   for (const run of runs) {
     const existing = latestRunById.get(run.entity_id)
@@ -691,7 +702,7 @@ async function buildQueueState(
         run.entity_id,
         await deriveEntityPipelineLifecycle({
           entityId: run.entity_id,
-          run,
+          run: run as any,
         }),
       )
     }),
@@ -899,8 +910,8 @@ async function loadActiveRepairFocusRuns(): Promise<PipelineRunRecord[]> {
   }
 
   return (data || [])
-    .map((row) => row as PipelineRunRecord)
-    .filter((run) => {
+    .map((row: unknown) => row as PipelineRunRecord)
+    .filter((run: PipelineRunRecord) => {
       const metadata = (run.metadata && typeof run.metadata === 'object') ? run.metadata as Record<string, unknown> : {}
       const rerunMode = toText(metadata.rerun_mode).toLowerCase()
       const repairState = toText(metadata.repair_state).toLowerCase()
@@ -1339,6 +1350,7 @@ function selectQueueSource(options: {
       runtime_counts: EMPTY_RUNTIME_COUNTS,
     },
     last_activity_at: null,
+    priority: 0,
   }
 }
 
@@ -1346,7 +1358,7 @@ async function buildQueueStateFromDiagnostics(
   outputRoot: string,
   manifestEntities: ManifestEntity[],
   clientReadyIds: Set<string>,
-): HomeQueueDashboardPayload['queue'] {
+): Promise<HomeQueueState> {
   const stateById = new Map<string, Record<string, any>>()
   const runArtifactById = new Map<string, string | null>()
 
@@ -1552,6 +1564,16 @@ export async function buildHomeQueueDashboardPayload(options: BuildOptions = {})
   let activeRepairRuns: PipelineRunRecord[] = []
   const processedDossierRows = await loadProcessedDossierRows(200)
   const processedEntities = mapProcessedDossierRowsToQueueEntities(processedDossierRows)
+  const graphitiDossierIngestion = await loadGraphitiDossierIngestionStats().catch(() => ({
+    canonical_entities_total: universeCount,
+    dossiers_persisted_entities: 0,
+    dossiers_ingested_entities: 0,
+    partial_dossiers_ingested: 0,
+    skipped_empty_entities: 0,
+    failed_ingestions: 0,
+    opportunity_worthy_entities: 0,
+    failed_only_opportunities_active: 0,
+  }))
 
   try {
     const runtimeReadSet = await loadPipelineRuntimeReadSet()
@@ -1654,6 +1676,14 @@ export async function buildHomeQueueDashboardPayload(options: BuildOptions = {})
     sales_summary: {
       status: includeSalesSummary && sales.length > 0 ? 'available' : 'empty',
       highlights: includeSalesSummary ? sales.slice(0, 6) : [],
+    },
+    graphiti_dossier_ingestion: {
+      canonical_entities_total: graphitiDossierIngestion.canonical_entities_total,
+      dossiers_persisted_entities: graphitiDossierIngestion.dossiers_persisted_entities,
+      dossiers_ingested_entities: graphitiDossierIngestion.dossiers_ingested_entities,
+      partial_dossiers_ingested: graphitiDossierIngestion.partial_dossiers_ingested,
+      opportunity_worthy_entities: graphitiDossierIngestion.opportunity_worthy_entities,
+      failed_only_opportunities_active: graphitiDossierIngestion.failed_only_opportunities_active,
     },
     dossier_quality: dossierQuality,
     rollout_proof_set: rolloutProofSet,

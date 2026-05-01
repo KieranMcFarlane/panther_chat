@@ -4,6 +4,7 @@ import sys
 from pathlib import Path
 from types import SimpleNamespace
 import time
+from datetime import datetime, timedelta, timezone
 
 import pytest
 
@@ -23,6 +24,7 @@ from entity_pipeline_worker import (
     build_run_retry_metadata,
     choose_supabase_key,
     build_run_detail_url,
+    should_defer_retry_for_fresh_backend_heartbeat,
     load_worker_environment,
     merge_pipeline_run_metadata,
     merge_cached_entity_properties,
@@ -71,6 +73,44 @@ def test_build_run_detail_url_points_to_import_run_detail_page():
         build_run_detail_url("batch-1", "entity-1")
         == "/entity-import/batch-1/entity-1"
     )
+
+
+def test_should_defer_retry_for_fresh_backend_heartbeat_on_client_timeout():
+    now_iso = datetime.now(timezone.utc).isoformat()
+
+    assert should_defer_retry_for_fresh_backend_heartbeat(
+        error_type="timeout",
+        metadata={
+            "backend_run_token": "backend-run-1",
+            "backend_heartbeat_at": now_iso,
+        },
+        now_iso=now_iso,
+        stale_seconds=300,
+    ) is True
+
+
+def test_should_not_defer_retry_without_fresh_backend_heartbeat():
+    now_iso = datetime.now(timezone.utc).isoformat()
+    stale_iso = (datetime.now(timezone.utc) - timedelta(minutes=10)).isoformat()
+
+    assert should_defer_retry_for_fresh_backend_heartbeat(
+        error_type="timeout",
+        metadata={
+            "backend_run_token": "backend-run-1",
+            "backend_heartbeat_at": stale_iso,
+        },
+        now_iso=now_iso,
+        stale_seconds=300,
+    ) is False
+    assert should_defer_retry_for_fresh_backend_heartbeat(
+        error_type="value_error",
+        metadata={
+            "backend_run_token": "backend-run-1",
+            "backend_heartbeat_at": now_iso,
+        },
+        now_iso=now_iso,
+        stale_seconds=300,
+    ) is False
 
 
 def test_merge_cached_entity_properties_persists_pipeline_status_fields():
@@ -719,6 +759,36 @@ def test_build_run_start_metadata_sets_lease_state():
     assert metadata["lease_expires_at"] is not None
     assert metadata["retry_state"] == "running"
     assert metadata["attempt_count"] == 2
+
+
+def test_build_run_start_metadata_clears_terminal_failure_markers():
+    metadata = build_run_start_metadata(
+        {
+            "attempt_count": 1,
+            "failure_class": "infrastructure_disk_full",
+            "infrastructure_failure": True,
+            "continue_pipeline_on_failure": True,
+            "stop_reason": "infrastructure_disk_full",
+            "stop_details": {"reason": "infrastructure_disk_full"},
+            "last_error": "no space left on device",
+            "last_error_type": "http_500",
+            "last_error_at": "2026-03-02T15:00:00+00:00",
+        },
+        worker_id="worker-1",
+        now_iso="2026-03-02T15:01:00+00:00",
+        lease_seconds=60,
+    )
+
+    assert metadata["retry_state"] == "running"
+    assert metadata["attempt_count"] == 2
+    assert "failure_class" not in metadata
+    assert "infrastructure_failure" not in metadata
+    assert "continue_pipeline_on_failure" not in metadata
+    assert "stop_reason" not in metadata
+    assert "stop_details" not in metadata
+    assert metadata["last_error"] is None
+    assert metadata["last_error_type"] is None
+    assert metadata["last_error_at"] is None
 
 
 def test_build_run_success_metadata_clears_retry_error_fields():
@@ -1610,8 +1680,10 @@ def test_claim_next_batch_materializes_resumable_candidate_when_queue_is_idle(mo
             self.table_name = table_name
             self.payload = None
             self.filters = {}
+            self.action = None
 
         def select(self, *_args, **_kwargs):
+            self.action = "select"
             return self
 
         def eq(self, key, value):
@@ -1860,11 +1932,12 @@ def test_restart_matrix_completed_batch_with_resumable_metadata_resumes_from_run
             return self
 
         def insert(self, payload):
+            self.action = "insert"
             self.payload = payload
             return self
 
         def execute(self):
-            if self.table_name == "entity_pipeline_runs":
+            if self.table_name == "entity_pipeline_runs" and self.action == "insert":
                 inserted_runs.append(self.payload)
                 return SimpleNamespace(data=self.payload)
             return SimpleNamespace(data=[self.payload] if self.payload is not None else [])
@@ -2252,6 +2325,7 @@ def test_process_batch_persists_discovery_context(monkeypatch):
     worker.sync_cached_entity = lambda batch_id, run, result, status: None
     persisted_monitoring = []
     worker.persist_monitoring_outputs = lambda batch_id, run, result: persisted_monitoring.append((batch_id, run, result))
+    worker._queue_manifest_auto_advance = lambda **_kwargs: None
 
     updates = []
     worker.update_run = lambda batch_id, entity_id, payload: updates.append((batch_id, entity_id, payload))
@@ -2921,6 +2995,146 @@ def test_process_batch_marks_exhausted_timeout_run_failed_and_continues_pipeline
     assert inserted_batches, "expected manifest auto-advance batch to be queued"
     assert inserted_runs, "expected manifest auto-advance run to be queued"
     assert inserted_runs[-1][0]["entity_id"] == "fifa"
+
+
+def test_process_batch_queues_question_first_continuation_before_manifest_advance(monkeypatch, tmp_path):
+    control_path = tmp_path / "pipeline-control-state.json"
+    monkeypatch.setattr("entity_pipeline_worker.PIPELINE_CONTROL_STATE_PATH", control_path)
+    monkeypatch.setattr("entity_pipeline_worker.should_use_local_pg", lambda: False)
+    monkeypatch.setattr(
+        "entity_pipeline_worker.read_pipeline_control_state",
+        lambda: {"requested_state": "running", "observed_state": "running", "is_paused": False},
+    )
+
+    worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
+    worker._now_iso = lambda: "2026-04-30T04:10:00+01:00"
+    worker._batch_metadata = lambda batch: batch.get("metadata", {})
+    worker.refresh_batch_heartbeat = lambda batch_id, metadata=None: {
+        **(metadata or {}),
+        "heartbeat_at": "2026-04-30T04:10:00+01:00",
+    }
+    worker._start_batch_heartbeat = lambda batch_id, metadata=None: (
+        SimpleNamespace(set=lambda: None),
+        SimpleNamespace(join=lambda timeout=1: None),
+    )
+    worker.worker_id = "worker-1"
+    worker.lease_seconds = 60
+    worker.max_run_attempts = 2
+    worker.max_question_first_continuation_attempts = 2
+    worker._build_follow_on_repair_batch_id = lambda: "batch-continuation"
+    worker._has_active_pipeline_run = lambda *_args, **_kwargs: False
+    worker._get_batch_record = lambda batch_id: {"id": batch_id, "status": "running", "metadata": {"queue_mode": "durable_worker"}}
+    worker._get_batch_metadata = lambda batch_id: {"queue_mode": "durable_worker"}
+    worker._load_persisted_question_first_checkpoint = lambda *, entity_id, canonical_entity_id: {
+        "schema_version": "question_first_checkpoint_v1",
+        "questions_answered": 7,
+        "questions_total": 15,
+        "last_completed_question_id": "q9_news_signal",
+        "current_question_id": "q9_news_signal",
+        "next_question_id": "q10_hiring_signal",
+        "answer_records": [{"question_id": f"q{i}"} for i in range(1, 8)],
+    }
+
+    run = {
+        "id": "batch-1_icf",
+        "batch_id": "batch-1",
+        "entity_id": "icf",
+        "canonical_entity_id": "canonical-icf",
+        "entity_name": "International Canoe Federation",
+        "status": "retrying",
+        "phase": "dossier_generation",
+        "metadata": {
+            "entity_type": "FEDERATION",
+            "attempt_count": 2,
+            "retryable": True,
+            "retry_state": "retrying",
+            "last_error": "timed out",
+            "last_error_type": "timeout",
+            "question_first_checkpoint": {
+                "questions_answered": 6,
+                "questions_total": 15,
+                "last_completed_question_id": "q8_explicit_rfp",
+                "next_question_id": "q9_news_signal",
+            },
+        },
+    }
+
+    run_updates = []
+    batch_updates = []
+    inserted_batches = []
+    inserted_runs = []
+    worker.update_run = lambda batch_id, entity_id, payload: run_updates.append(payload)
+    worker.sync_cached_entity = lambda *args, **kwargs: None
+    worker._get_run_metadata = lambda batch_id, entity_id: run["metadata"]
+
+    class FakeTable:
+        def __init__(self, table_name):
+            self.table_name = table_name
+            self.payload = None
+            self.action = None
+
+        def insert(self, payload):
+            self.action = "insert"
+            self.payload = payload
+            return self
+
+        def update(self, payload):
+            self.action = "update"
+            self.payload = payload
+            return self
+
+        def eq(self, *_args, **_kwargs):
+            return self
+
+        def execute(self):
+            if self.table_name == "entity_import_batches" and self.action == "insert":
+                inserted_batches.append(self.payload)
+            if self.table_name == "entity_pipeline_runs" and self.action == "insert":
+                inserted_runs.append(self.payload)
+            if self.table_name == "entity_import_batches" and self.action == "update":
+                batch_updates.append(self.payload)
+            return SimpleNamespace(data=[])
+
+    worker.supabase = SimpleNamespace(
+        table=lambda name: FakeTable(name),
+        rpc=lambda *_args, **_kwargs: SimpleNamespace(execute=lambda: SimpleNamespace(data=[])),
+    )
+
+    failed_run_snapshot = {
+        **run,
+        "status": "failed",
+        "metadata": {
+            **run["metadata"],
+            "retry_state": "failed",
+            "continue_pipeline_on_failure": True,
+            "failure_class": "entity_pipeline_timeout",
+            "stop_reason": "entity_pipeline_timeout",
+        },
+    }
+    states = [[run], [failed_run_snapshot]]
+    worker.get_batch_runs = lambda batch_id: states.pop(0)
+
+    worker.process_batch({"id": "batch-1", "metadata": {"queue_mode": "durable_worker"}})
+
+    assert run_updates[-1]["status"] == "failed"
+    assert inserted_batches, "expected same-entity continuation batch to be queued"
+    assert inserted_batches[-1]["metadata"]["source"] == "question_first_timeout_continuation"
+    assert inserted_batches[-1]["metadata"]["entity_id"] == "icf"
+    assert inserted_batches[-1]["metadata"]["question_first_resume_from_question_id"] == "q10_hiring_signal"
+    assert inserted_runs, "expected same-entity continuation run to be queued"
+    continuation_run = inserted_runs[-1][0]
+    assert continuation_run["entity_id"] == "icf"
+    assert continuation_run["metadata"]["source"] == "question_first_timeout_continuation"
+    assert continuation_run["metadata"]["question_first_checkpoint"]["questions_answered"] == 7
+    assert continuation_run["metadata"]["question_first_resume_from_question_id"] == "q10_hiring_signal"
+    assert any(
+        update.get("metadata", {}).get("question_first_continuation_next_entity_id") == "icf"
+        for update in batch_updates
+    )
+    assert not any(
+        update.get("metadata", {}).get("auto_advance_next_entity_id") == "fifa"
+        for update in batch_updates
+    )
 
 
 @pytest.mark.parametrize(

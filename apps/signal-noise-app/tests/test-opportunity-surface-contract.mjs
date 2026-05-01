@@ -3,19 +3,18 @@ import { readFile } from 'node:fs/promises'
 import { test } from 'node:test'
 
 test('opportunities page is framed as a shortlist and decision surface', async () => {
-  const source = await readFile(new URL('../src/app/opportunities/page.tsx', import.meta.url), 'utf8')
+  const source = await readFile(new URL('../src/app/opportunities/opportunities-client.tsx', import.meta.url), 'utf8')
 
   assert.match(source, /Opportunity Shortlist/)
   assert.match(source, /Review Fit|Focused decision view/)
   assert.match(source, /useSearchParams/)
-  assert.match(source, /\/api\/tenders\?action=opportunities/)
-  assert.match(source, /promoted_only=true/)
+  assert.match(source, /\/api\/opportunities/)
   assert.match(source, /canonical_entity_id|canonicalEntityId/)
   assert.match(source, /No intake-linked opportunities found|No entity-linked opportunities yet/)
-  assert.match(source, /Open RFP&apos;s\/Tenders|Open RFP's\/Tenders/)
+  assert.match(source, /Open dossier workspace/)
   assert.match(source, /buildOpportunityFacetOptions/)
   assert.match(source, /Competition/)
-  assert.match(source, /Entity Role/)
+  assert.match(source, /Role/)
   assert.match(source, /Opportunity Kind/)
   assert.match(source, /Theme/)
   assert.match(source, /promoted shortlist|Nothing has been promoted into the shortlist|shortlist will populate once intake is promoted/i)

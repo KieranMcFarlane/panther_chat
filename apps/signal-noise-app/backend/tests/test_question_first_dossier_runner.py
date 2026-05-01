@@ -416,6 +416,79 @@ async def test_run_question_first_dossier_from_payload_uses_launch_source_payloa
 
 
 @pytest.mark.asyncio
+async def test_run_question_first_dossier_from_payload_passes_checkpoint_and_resume_flag(tmp_path, monkeypatch):
+    artifact_path = tmp_path / "question_first_run.json"
+    _write_question_first_run_artifact(
+        artifact_path,
+        entity_id="arsenal-fc",
+        entity_name="Arsenal FC",
+        questions=[{"question_id": "q2", "question_text": "Digital question"}],
+        answers=[],
+        categories=[],
+    )
+
+    captured = {}
+
+    class _FakeStream:
+        def __init__(self, lines):
+            self._lines = [line.encode("utf-8") for line in lines]
+
+        async def readline(self):
+            if not self._lines:
+                return b""
+            return self._lines.pop(0)
+
+    class _FakeProcess:
+        stdout = _FakeStream([json.dumps({"question_first_run_path": str(artifact_path)}) + "\n"])
+        stderr = _FakeStream([])
+        returncode = 0
+
+        async def wait(self):
+            return self.returncode
+
+    async def fake_create_subprocess_exec(*args, **kwargs):
+        source_path = Path(args[args.index("--question-source") + 1])
+        captured["args"] = list(args)
+        captured["launched_source"] = json.loads(source_path.read_text(encoding="utf-8"))
+        return _FakeProcess()
+
+    monkeypatch.setattr(asyncio, "create_subprocess_exec", fake_create_subprocess_exec)
+
+    checkpoint = {
+        "questions_total": 15,
+        "questions_answered": 1,
+        "last_completed_question_id": "q1_identity",
+        "next_question_id": "q2_digital_stack",
+        "answer_records": [
+            {
+                "question_id": "q1_identity",
+                "validation_state": "validated",
+                "status": "answered",
+            }
+        ],
+    }
+    source_payload = {
+        "entity_id": "arsenal-fc",
+        "entity_name": "Arsenal FC",
+        "questions": [
+            {"question_id": "q1_identity", "question_text": "Identity question"},
+            {"question_id": "q2_digital_stack", "question_text": "Digital question"},
+        ],
+    }
+
+    await runner.run_question_first_dossier_from_payload(
+        source_payload=source_payload,
+        output_dir=tmp_path,
+        question_first_checkpoint=checkpoint,
+        resume=True,
+    )
+
+    assert "--resume" in captured["args"]
+    assert captured["launched_source"]["question_first_checkpoint"] == checkpoint
+    assert captured["launched_source"]["metadata"]["question_first_checkpoint"] == checkpoint
+
+
+@pytest.mark.asyncio
 async def test_question_first_runner_streams_opencode_progress_events(tmp_path, monkeypatch):
     artifact_path = tmp_path / "major-league-cricket_question_first_run_v1.json"
     _write_question_first_run_artifact(

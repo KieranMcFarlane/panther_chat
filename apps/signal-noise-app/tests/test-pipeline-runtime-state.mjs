@@ -13,6 +13,7 @@ async function loadPipelineRuntimeModule() {
   const stubPaths = {
     cachedEntitiesSupabase: path.join(tempDir, 'cached-entities-supabase.ts'),
     operationalHeartbeat: path.join(tempDir, 'operational-heartbeat.ts'),
+    pgClient: path.join(tempDir, 'pg-client.ts'),
     pipelineControlState: path.join(tempDir, 'pipeline-control-state.ts'),
     pipelineWorkerSupervisor: path.join(tempDir, 'pipeline-worker-supervisor.ts'),
     questionTextResolver: path.join(tempDir, 'question-text-resolver.ts'),
@@ -37,6 +38,13 @@ async function loadPipelineRuntimeModule() {
     '    heartbeat_at: heartbeatAt,',
     '    heartbeat_age_seconds: ageSeconds,',
     '  }',
+    '}',
+    '',
+  ].join('\n'), 'utf8')
+
+  await writeFile(stubPaths.pgClient, [
+    'export async function query() {',
+    '  return { rows: [] }',
     '}',
     '',
   ].join('\n'), 'utf8')
@@ -70,6 +78,10 @@ async function loadPipelineRuntimeModule() {
     .replaceAll(
       "'@/lib/operational-heartbeat'",
       JSON.stringify(pathToFileURL(stubPaths.operationalHeartbeat).href),
+    )
+    .replaceAll(
+      "'@/lib/pg-client'",
+      JSON.stringify(pathToFileURL(stubPaths.pgClient).href),
     )
     .replaceAll(
       "'@/lib/pipeline-control-state'",

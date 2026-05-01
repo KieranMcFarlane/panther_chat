@@ -25,6 +25,7 @@ import {
   runOpenCodePresetBatch,
   spawnOpenCodeRunForTesting,
 } from '../scripts/opencode_agentic_batch.mjs';
+import questionProgressFramework from '../backend/question_progress_framework.json' with { type: 'json' };
 
 const TEST_DIR = fileURLToPath(new URL('.', import.meta.url));
 const APP_ROOT = join(TEST_DIR, '..');
@@ -248,7 +249,28 @@ test('resolveQuestionSourceOrder varies source ranking by entity type and questi
 
   assert.deepEqual(clubDecisionOwner.slice(0, 3), ['official_site', 'linkedin_posts', 'news']);
   assert.deepEqual(leagueDigital.slice(0, 4), ['official_site', 'app_store', 'press_release', 'news']);
-  assert.deepEqual(federationProcurement.slice(0, 4), ['official_site', 'tender_portal', 'board_minutes', 'strategic_plan']);
+  assert.deepEqual(federationProcurement.slice(0, 4), ['official_site', 'tender_portal', 'press_release', 'partner_announcement']);
+  assert.equal(federationProcurement.includes('linkedin_posts'), true);
+  assert.equal(federationProcurement.includes('linkedin_people_search'), false);
+  assert.equal(federationProcurement.includes('linkedin_person_profile'), false);
+  assert.equal(federationProcurement.includes('google_serp'), false);
+});
+
+test('q7 progress framework uses a bounded procurement sweep with one LinkedIn signal check', () => {
+  const q7Config = questionProgressFramework.questions.q7_procurement_signal;
+
+  assert.match(q7Config.strategy_label, /bounded/i);
+  assert.deepEqual(q7Config.source_order, [
+    'official_site',
+    'tender_portal',
+    'press_release',
+    'partner_announcement',
+    'linkedin_posts',
+  ]);
+  assert.equal(q7Config.source_order.includes('google_serp'), false);
+  assert.equal(q7Config.source_order.includes('linkedin_posts'), true);
+  assert.equal(q7Config.source_order.includes('linkedin_people_search'), false);
+  assert.equal(q7Config.source_order.includes('linkedin_person_profile'), false);
 });
 
 test('buildOpenCodeQuestionPrompt includes entity-type-aware source guidance when source order is available', () => {
@@ -350,10 +372,133 @@ test('buildOpenCodeRetrievalPrompt and buildOpenCodeSynthesisPrompt split q7 int
   assert.match(retrievalPrompt, /retrieval pass/i);
   assert.match(retrievalPrompt, /Return only JSON with these keys: question, query, leads, retrieval_summary/i);
   assert.match(retrievalPrompt, /Do not classify or decide validation_state/i);
+  assert.match(retrievalPrompt, /maximum two BrightData tool calls/i);
+  assert.match(retrievalPrompt, /at most one LinkedIn signal check/i);
+  assert.match(retrievalPrompt, /post\/company search only/i);
+  assert.match(retrievalPrompt, /Do not inspect LinkedIn people, personal profiles/i);
   assert.match(synthesisPrompt, /synthesis pass/i);
   assert.match(synthesisPrompt, /Use only the supplied retrieval evidence/i);
   assert.match(synthesisPrompt, /validation_state/i);
   assert.match(synthesisPrompt, /structured_signal/i);
+});
+
+test('runOpenCodeCliQuestion short-circuits q7 when retrieval times out with no recoverable leads', async () => {
+  const question = {
+    question_id: 'q7_procurement_signal',
+    question_text: 'Is there evidence LiveScore Group is buying, reshaping vendors, or changing its ecosystem?',
+    question_type: 'procurement_signal',
+    query: '"LiveScore Group" platform migration provider partnership',
+  };
+  const seenTimeouts = [];
+
+  const result = await runOpenCodeCliQuestion(question, {
+    worktreeRoot: mkdtempSync(join(tmpdir(), 'opencode-q7-timeout-worktree-')),
+    opencodeTimeoutMs: 300000,
+    standaloneHarness: false,
+    spawnRunner: async (_args, options) => {
+      seenTimeouts.push(options.timeoutMs);
+      const error = new Error('opencode run timed out after 90000ms');
+      error.name = 'OpenCodeTimeoutError';
+      error.code = 124;
+      error.stdout = '';
+      error.stderr = 'OpenCodeTimeoutError: opencode run timed out after 90000ms';
+      throw error;
+    },
+  });
+
+  assert.deepEqual(seenTimeouts, [90000]);
+  assert.equal(result.structuredOutput.validation_state, 'no_signal');
+  assert.match(result.structuredOutput.context, /No completed BrightData leads/i);
+  assert.equal(result.promptTrace.stage_count, 1);
+  assert.equal(result.promptTrace.retrieval_recovered_from_failure, true);
+  assert.equal(result.promptTrace.synthesis_skipped, true);
+});
+
+test('runOpenCodeCliQuestion short-circuits q10 when retrieval has no leads', async () => {
+  const question = {
+    question_id: 'q10_hiring_signal',
+    question_text: 'What hiring signals suggest current investment priorities for KK Šibenik?',
+    question_type: 'hiring_signal',
+    query: '"KK Šibenik" careers jobs product engineering data',
+  };
+  const prompts = [];
+
+  const result = await runOpenCodeCliQuestion(question, {
+    worktreeRoot: mkdtempSync(join(tmpdir(), 'opencode-q10-empty-retrieval-')),
+    opencodeTimeoutMs: 300000,
+    standaloneHarness: false,
+    spawnRunner: async (_args, _options) => {
+      prompts.push(_args.at(-1));
+      if (prompts.length > 1) {
+        throw new Error('empty retrieval should not call synthesis');
+      }
+      return {
+        code: 0,
+        stdout: JSON.stringify({
+          question: question.question_text,
+          query: question.query,
+          leads: [],
+          retrieval_summary: 'No hiring leads found in bounded retrieval.',
+        }),
+        stderr: '',
+      };
+    },
+  });
+
+  assert.equal(prompts.length, 1);
+  assert.equal(result.structuredOutput.validation_state, 'no_signal');
+  assert.match(result.structuredOutput.context, /No hiring leads/i);
+  assert.equal(result.promptTrace.stage_count, 1);
+  assert.equal(result.promptTrace.synthesis_skipped, true);
+});
+
+test('runOpenCodeCliQuestion degrades q10 synthesis provider failure into no_signal output', async () => {
+  const question = {
+    question_id: 'q10_hiring_signal',
+    question_text: 'What hiring signals suggest current investment priorities for David Lowe?',
+    question_type: 'hiring_signal',
+    query: '"David Lowe" careers jobs product engineering data',
+  };
+  let callCount = 0;
+
+  const result = await runOpenCodeCliQuestion(question, {
+    worktreeRoot: mkdtempSync(join(tmpdir(), 'opencode-q10-provider-failure-')),
+    opencodeTimeoutMs: 300000,
+    standaloneHarness: false,
+    spawnRunner: async () => {
+      callCount += 1;
+      if (callCount === 1) {
+        const retrievalEvent = JSON.stringify({
+          type: 'text',
+          part: {
+            text: JSON.stringify({
+              question: question.question_text,
+              query: question.query,
+              leads: [{ title: 'Jobs page', url: 'https://example.com/jobs' }],
+              retrieval_summary: 'Found one hiring lead.',
+            }),
+          },
+        });
+        return {
+          code: 0,
+          stdout: `${retrievalEvent}\n`,
+          stderr: '',
+        };
+      }
+      const error = new Error('provider failed');
+      error.name = 'OpenCodeProviderInsufficientBalanceError';
+      error.stdout = '';
+      error.stderr = '{"error":{"code":"1113","message":"Insufficient balance or no resource package. Please recharge."}}';
+      throw error;
+    },
+  });
+
+  assert.equal(callCount, 2);
+  assert.equal(result.structuredOutput.validation_state, 'no_signal');
+  assert.match(result.structuredOutput.context, /Found one hiring lead|synthesis failed/i);
+  assert.equal(result.promptTrace.stage_count, 2);
+  assert.equal(result.promptTrace.synthesis_failed, true);
+  assert.equal(result.promptTrace.failure_name, 'OpenCodeProviderInsufficientBalanceError');
 });
 
 test('runOpenCodeCliQuestion uses separate retrieval and synthesis passes for q7 questions', async () => {
@@ -2166,10 +2311,10 @@ test('runOpenCodeQuestionSourceBatch emits per-question progress events before c
   });
 
   assert.equal(result.questions_total, 2);
-  assert.equal(events.length, 3);
+  assert.equal(events.length, 5);
   assert.deepEqual(
     events.map((event) => event.event_type),
-    ['question_progress', 'question_progress', 'batch_complete'],
+    ['question_progress', 'question_completed', 'question_progress', 'question_completed', 'batch_complete'],
   );
   assert.equal(events[0].current_question_id, 'q1');
   assert.equal(events[0].current_question_text, 'When was Major League Cricket founded?');
@@ -2177,9 +2322,15 @@ test('runOpenCodeQuestionSourceBatch emits per-question progress events before c
   assert.deepEqual(events[0].current_source_order, ['google_serp']);
   assert.equal(events[0].current_substep, 'question_first_running');
   assert.equal(events[0].current_substep_progress, '1/2 questions');
-  assert.equal(events[1].current_question_id, 'q2');
-  assert.equal(events[2].current_substep, 'question_first_completed');
-  assert.equal(events[2].questions_total, 2);
+  assert.equal(events[1].current_question_id, 'q1');
+  assert.equal(events[1].completed_question.question_id, 'q1');
+  assert.equal(events[1].completed_question.validation_state, 'no_signal');
+  assert.equal(events[1].questions_answered, 1);
+  assert.equal(events[2].current_question_id, 'q2');
+  assert.equal(events[3].completed_question.question_id, 'q2');
+  assert.equal(events[3].questions_answered, 2);
+  assert.equal(events[4].current_substep, 'question_first_completed');
+  assert.equal(events[4].questions_total, 2);
 });
 
 // Parity inventory for the old dossier-backed path:
@@ -2252,7 +2403,7 @@ test('runOpenCodeQuestionSourceBatch preserves old matrix metadata and framework
   assert.equal(procurementAnswer.execution_class, 'commercial_signal');
   assert.equal(procurementAnswer.rollout_phase, 'phase_1_core');
 
-  assert.equal(events.length, 3);
+  assert.equal(events.length, 5);
   assert.equal(events[0].current_question_id, 'q1_foundation');
   assert.equal(events[0].current_question_text, 'When was Arsenal FC founded?');
   assert.equal(events[0].current_section_label, 'Core Information');
@@ -2260,10 +2411,20 @@ test('runOpenCodeQuestionSourceBatch preserves old matrix metadata and framework
   assert.deepEqual(events[0].current_source_order, ['google_serp', 'official_site', 'wikipedia']);
   assert.equal(events[0].current_question_index, 1);
   assert.equal(events[0].current_question_total, 1);
-  assert.equal(events[1].current_question_id, 'q7_procurement_signal');
-  assert.equal(events[1].current_section_label, 'Strategic Opportunities');
-  assert.equal(events[1].current_strategy_label, 'Broad web-first procurement signal discovery');
-  assert.deepEqual(events[1].current_source_order, ['google_serp', 'news', 'press_release', 'linkedin_posts', 'official_site']);
+  assert.equal(events[1].event_type, 'question_completed');
+  assert.equal(events[1].completed_question.question_id, 'q1_foundation');
+  assert.equal(events[2].current_question_id, 'q7_procurement_signal');
+  assert.equal(events[2].current_section_label, 'Strategic Opportunities');
+  assert.equal(events[2].current_strategy_label, 'Bounded procurement signal sweep with optional LinkedIn signal check');
+  assert.deepEqual(events[2].current_source_order, [
+    'official_site',
+    'tender_portal',
+    'press_release',
+    'partner_announcement',
+    'linkedin_posts',
+  ]);
+  assert.equal(events[3].event_type, 'question_completed');
+  assert.equal(events[3].completed_question.question_id, 'q7_procurement_signal');
 });
 
 test('buildQuestionState uses evidence extension confidence thresholds from the old matrix when provided', () => {
@@ -2800,6 +2961,144 @@ test('runOpenCodePresetBatch resumes from persisted validated state without re-r
     assert.equal(state.questions[1].status, 'validated');
     assert.equal(state.questions[0].best_answer, 'stub-entity_founded_year');
     assert.equal(state.questions[1].best_answer, 'stub-sl_league_mobile_app');
+  } finally {
+    if (previousZaiApiKey === undefined) {
+      delete process.env.ZAI_API_KEY;
+    } else {
+      process.env.ZAI_API_KEY = previousZaiApiKey;
+    }
+  }
+});
+
+test('runOpenCodePresetBatch treats checkpointed tool-call-missing questions as terminal on resume', async () => {
+  const outputDir = mkdtempSync(join(tmpdir(), 'opencode-batch-checkpoint-resume-'));
+  const previousZaiApiKey = process.env.ZAI_API_KEY;
+  delete process.env.ZAI_API_KEY;
+  process.env.ZAI_API_KEY = 'test-zai-token';
+  const questions = buildMajorLeagueCricketSmokeQuestions();
+  questions.__question_first_checkpoint = {
+    schema_version: 'question_first_checkpoint_v1',
+    questions_total: 2,
+    questions_answered: 2,
+    last_completed_question_id: 'sl_league_mobile_app',
+    next_question_id: null,
+    updated_at: '2026-04-30T00:00:00.000Z',
+    terminal_states: {
+      entity_founded_year: 'tool_call_missing',
+      sl_league_mobile_app: 'no_signal',
+    },
+    answer_records: [
+      {
+        question_id: 'entity_founded_year',
+        question_type: 'foundation',
+        question: 'When was Major League Cricket founded?',
+        answer: '',
+        validation_state: 'tool_call_missing',
+        confidence: 0,
+        sources: [],
+        prompt_trace: { status: 'atomic_retrieval_tool_call_missing' },
+        message_trace: [{ role: 'assistant', completed: false, type: 'cli-run' }],
+      },
+      {
+        question_id: 'sl_league_mobile_app',
+        question_type: 'digital_stack',
+        question: 'What is the digital stack?',
+        answer: '',
+        validation_state: 'no_signal',
+        confidence: 0,
+        sources: [],
+      },
+    ],
+  };
+  const events = [];
+
+  try {
+    const resumed = await runOpenCodePresetBatch({
+      outputDir,
+      preset: 'major-league-cricket-smoke',
+      questionsOverride: questions,
+      resume: true,
+      onProgress: (event) => {
+        events.push(event);
+      },
+      questionRunner: async () => {
+        throw new Error('checkpointed terminal questions should not re-run');
+      },
+    });
+
+    assert.equal(resumed.questions_total, 2);
+    assert.deepEqual(events.map((event) => event.event_type), ['batch_complete']);
+    const state = JSON.parse(readFileSync(resumed.state_path, 'utf8'));
+    assert.equal(state.questions[0].status, 'tool_call_missing');
+    assert.equal(state.questions[1].status, 'no_signal');
+  } finally {
+    if (previousZaiApiKey === undefined) {
+      delete process.env.ZAI_API_KEY;
+    } else {
+      process.env.ZAI_API_KEY = previousZaiApiKey;
+    }
+  }
+});
+
+test('runOpenCodePresetBatch prefers a richer checkpoint over a stale local resume state', async () => {
+  const outputDir = mkdtempSync(join(tmpdir(), 'opencode-batch-checkpoint-over-state-'));
+  const previousZaiApiKey = process.env.ZAI_API_KEY;
+  delete process.env.ZAI_API_KEY;
+  process.env.ZAI_API_KEY = 'test-zai-token';
+  const questions = buildMajorLeagueCricketSmokeQuestions();
+  const staleStatePath = join(outputDir, 'major-league-cricket_major-league-cricket-smoke_state.json');
+  writeFileSync(staleStatePath, JSON.stringify({
+    run_id: 'stale',
+    run_started_at: '2026-04-29T00:00:00.000Z',
+    last_run_at: '2026-04-29T00:00:00.000Z',
+    preset: 'major-league-cricket-smoke',
+    questions: questions.map((question) => buildQuestionState(question, {
+      runId: 'stale',
+      timestamp: '2026-04-29T00:00:00.000Z',
+    })),
+  }, null, 2));
+  questions.__question_first_checkpoint = {
+    schema_version: 'question_first_checkpoint_v1',
+    questions_total: 2,
+    questions_answered: 2,
+    last_completed_question_id: 'sl_league_mobile_app',
+    next_question_id: null,
+    updated_at: '2026-04-30T00:00:00.000Z',
+    terminal_states: {
+      entity_founded_year: 'tool_call_missing',
+      sl_league_mobile_app: 'no_signal',
+    },
+    answer_records: [
+      {
+        question_id: 'entity_founded_year',
+        validation_state: 'tool_call_missing',
+        confidence: 0,
+        sources: [],
+      },
+      {
+        question_id: 'sl_league_mobile_app',
+        validation_state: 'no_signal',
+        confidence: 0,
+        sources: [],
+      },
+    ],
+  };
+
+  try {
+    const resumed = await runOpenCodePresetBatch({
+      outputDir,
+      preset: 'major-league-cricket-smoke',
+      questionsOverride: questions,
+      resume: true,
+      questionRunner: async () => {
+        throw new Error('stale local state should not override the checkpoint');
+      },
+    });
+
+    assert.equal(resumed.questions_total, 2);
+    const state = JSON.parse(readFileSync(resumed.state_path, 'utf8'));
+    assert.equal(state.questions[0].status, 'tool_call_missing');
+    assert.equal(state.questions[1].status, 'no_signal');
   } finally {
     if (previousZaiApiKey === undefined) {
       delete process.env.ZAI_API_KEY;

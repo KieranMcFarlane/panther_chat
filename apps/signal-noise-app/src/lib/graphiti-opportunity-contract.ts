@@ -10,6 +10,56 @@ export type GraphitiOpportunityTaxonomy = {
   theme: string
 }
 
+export type GraphitiOpportunityTemporalStatus =
+  | 'emerging'
+  | 'active'
+  | 'accelerating'
+  | 'stale'
+  | 'expired'
+  | 'unknown'
+
+export type GraphitiOpportunityTemporalReasoning = {
+  status: GraphitiOpportunityTemporalStatus
+  reason: string
+  recency_label: string
+  first_seen_at: string | null
+  last_seen_at: string | null
+  detected_at: string | null
+  deadline: string | null
+}
+
+export type GraphitiOpportunityPatternReasoning = {
+  pattern_status: 'pattern_detected' | 'isolated_signal' | 'no_pattern'
+  signal_type: string
+  signal_count: number
+  summary: string
+  supporting_signals: string[]
+}
+
+export type GraphitiOpportunityFinding = {
+  label: string
+  finding: string
+  source_url: string | null
+  observed_at: string | null
+  confidence: number | null
+  signal_type: string
+  source: string
+}
+
+export type GraphitiOpportunityTimelineEvent = {
+  at: string
+  label: string
+  signal_type: string
+  source_url: string | null
+}
+
+export type GraphitiOpportunityRelatedPattern = {
+  entity_id: string | null
+  entity_name: string
+  relationship_type: string
+  reason: string
+}
+
 export type GraphitiOpportunityCard = {
   id: string
   title: string
@@ -47,6 +97,13 @@ export type GraphitiOpportunityCard = {
   status?: string | null
   evidence?: HomeGraphitiInsightEvidence[]
   relationships?: HomeGraphitiInsightRelationship[]
+  temporal_reasoning?: GraphitiOpportunityTemporalReasoning | null
+  pattern_reasoning?: GraphitiOpportunityPatternReasoning | null
+  yp_fit_reasoning?: string | null
+  recommended_action?: string | null
+  findings?: GraphitiOpportunityFinding[]
+  timeline?: GraphitiOpportunityTimelineEvent[]
+  related_patterns?: GraphitiOpportunityRelatedPattern[]
 }
 
 export type GraphitiOpportunitySourceRow = {

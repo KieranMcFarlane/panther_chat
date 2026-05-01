@@ -108,6 +108,10 @@ function formatRelativeTimestamp(value: string | null | undefined, prefix: strin
   return `${prefix} just now`
 }
 
+function shouldHidePlaceholderValue(value: string) {
+  return /unavailable/i.test(value) || /not available/i.test(value)
+}
+
 function formatExactTimestamp(value: string | null | undefined) {
   if (!value) return 'Not available'
   const timestamp = new Date(value)
@@ -141,6 +145,7 @@ export function buildOperationalStatusHero(input: {
   const controlUpdatedExactLabel = formatExactTimestamp(input.controlState?.updated_at ?? null)
   const requestedState = input.controlState?.requested_state ?? (input.controlState?.is_paused === true ? 'paused' : 'running')
   const transitionState = input.controlState?.transition_state ?? input.controlState?.observed_state ?? null
+  const liveOperationalState = input.drilldown?.operational_state ?? liveState?.operational_state ?? null
   const { isSafetyStop, stopReason, stopDetails } = getOperationalStopDetails(
     input.drilldown,
     input.controlState,
@@ -176,9 +181,9 @@ export function buildOperationalStatusHero(input: {
     : null
   const checkpointSummary = buildCheckpointSummary(currentCheckpoint)
   const questionProgressLabel = formatCheckpointQuestionProgress(currentCheckpoint)
-  const currentSectionLabel = toText(currentCheckpoint?.current_section_label) || 'Unavailable'
-  const currentExecutionState = toText(currentCheckpoint?.current_execution_state) || 'Unavailable'
-  const currentStrategyLabel = toText(currentCheckpoint?.current_strategy_label) || 'Unavailable'
+  const currentSectionLabel = toText(currentCheckpoint?.current_section_label) || null
+  const currentExecutionState = toText(currentCheckpoint?.current_execution_state) || null
+  const currentStrategyLabel = toText(currentCheckpoint?.current_strategy_label) || null
   const currentSourceOrder = formatCheckpointSourceOrder(currentCheckpoint?.current_source_order)
   const elapsedLabel = activeExecutionCheckpoint && inProgressEntity
     ? formatRunningDuration(inProgressEntity.started_at || inProgressEntity.generated_at)
@@ -299,32 +304,45 @@ export function buildOperationalStatusHero(input: {
       ? 'Stop pipeline intake after the current work item finishes.'
       : 'Stop pipeline intake.'
 
-  const detailRows = [
-    { label: 'Requested', value: requestedState },
-    { label: 'Worker process', value: workerState },
-    { label: 'Activity', value: pipelinePaused ? 'paused' : currentLiveRun && inProgressEntity ? (repairFocus ? 'repairing' : 'running') : isStopped ? 'stopped' : 'waiting' },
-    { label: 'Current question', value: activeQuestionLabel || 'Question unavailable' },
-    { label: 'Elapsed', value: elapsedLabel || 'Not running' },
-    { label: 'Last completed', value: completedEntities[0]
-      ? `${completedEntities[0].entity_name} · ${formatQuestionLabel(completedEntities[0].last_completed_question_text || completedEntities[0].current_question_text, completedEntities[0].current_question_id || completedEntities[0].active_question_id)}`
-      : 'No recent completions' },
-    { label: 'Last activity', value: formatRelativeTimestamp(lastActivityAt, 'Activity') },
-    { label: 'Freshness', value: freshnessState },
-    { label: 'Control updated', value: controlUpdatedLabel },
-    { label: 'Updated at', value: controlUpdatedExactLabel },
-  ]
+  const detailRows: OperationalStatusHeroDetailRow[] = []
+  const pushDetailRow = (label: string, value: string | null | undefined) => {
+    const text = toText(value)
+    if (!text) return
+    if (shouldHidePlaceholderValue(text)) return
+    detailRows.push({ label, value: text })
+  }
+
+  pushDetailRow('Pipeline intake', requestedState)
+  pushDetailRow('Worker process', workerState)
+  pushDetailRow('Current activity', pipelinePaused
+    ? 'paused'
+    : liveOperationalState || (currentLiveRun && inProgressEntity ? (repairFocus ? 'repairing' : 'running') : isStopped ? 'stopped' : 'waiting'))
 
   if (activeExecutionCheckpoint && inProgressEntity) {
-    detailRows.splice(3, 0,
-      { label: 'Current section', value: currentSectionLabel },
-      { label: 'Sub-step', value: substepLabel || 'Unavailable' },
-      { label: 'Question progress', value: questionProgressLabel || 'Unavailable' },
-      { label: 'Execution state', value: currentExecutionState },
-      { label: 'Strategy', value: currentStrategyLabel },
-      { label: 'Source order', value: currentSourceOrder },
-      { label: 'Sub-step progress', value: substepProgress || 'Unavailable' },
-    )
+    pushDetailRow('Current section', currentSectionLabel)
+    pushDetailRow('Sub-step', substepLabel)
+    pushDetailRow('Question progress', questionProgressLabel)
+    pushDetailRow('Execution state', currentExecutionState)
+    pushDetailRow('Strategy', currentStrategyLabel)
+    pushDetailRow('Source order', currentSourceOrder)
+    pushDetailRow('Sub-step progress', substepProgress)
   }
+
+  pushDetailRow('Current question', activeQuestionLabel)
+  pushDetailRow('Elapsed', elapsedLabel || 'Not running')
+  pushDetailRow(
+    'Last completed',
+    completedEntities[0]
+      ? `${completedEntities[0].entity_name} · ${formatQuestionLabel(
+          completedEntities[0].last_completed_question_text || completedEntities[0].current_question_text,
+          completedEntities[0].current_question_id || completedEntities[0].active_question_id,
+        )}`
+      : 'No recent completions',
+  )
+  pushDetailRow('Last activity', formatRelativeTimestamp(lastActivityAt, 'Activity'))
+  pushDetailRow('Freshness', freshnessState)
+  pushDetailRow('Control updated', controlUpdatedLabel)
+  pushDetailRow('Updated at', controlUpdatedExactLabel)
 
   const debugSummary = activeExecutionCheckpoint && inProgressEntity
     ? `${inProgressEntity.entity_name} · ${checkpointSummary || inProgressEntity.run_phase || inProgressEntity.current_stage || 'entity_registration'}`

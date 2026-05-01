@@ -30,8 +30,8 @@ export function hasDistinctActiveFollowOnBatch(
   return activeBatchIds.has(nextBatchId)
 }
 
-export function normalizeTerminalFollowOnMetadata(
-  record: FollowOnStateRecord,
+export function normalizeTerminalFollowOnMetadata<T extends FollowOnStateRecord>(
+  record: T,
   activeBatchIds: Set<string>,
 ) {
   const currentBatchId = toText(record.batch_id) || null
@@ -48,7 +48,7 @@ export function normalizeTerminalFollowOnMetadata(
       next_repair_status: null,
       next_repair_batch_id: null,
       next_repair_batch_status: null,
-    }
+    } as T
   }
 
   return record

@@ -18,4 +18,17 @@ test('graphiti opportunities admin routes exist and wire to the materialization 
   assert.match(backfillSource, /materializeGraphitiOpportunities/)
   assert.match(statusSource, /requireApiSession/)
   assert.match(statusSource, /loadGraphitiOpportunitiesFromDb/)
+  assert.match(statusSource, /ingested_not_opportunity_worthy/)
+  assert.match(statusSource, /watch_items/)
+  assert.match(statusSource, /active_opportunities/)
+  assert.match(statusSource, /accelerating_opportunities/)
+})
+
+test('graphiti opportunities backfill de-duplicates parent insights before upsert', () => {
+  const backfillSource = readFileSync(backfillRoutePath, 'utf8')
+
+  assert.match(backfillSource, /dedupeParentInsightRows/)
+  assert.match(backfillSource, /new Map/)
+  assert.match(backfillSource, /row\.insight_id/)
+  assert.match(backfillSource, /parentRows = dedupeParentInsightRows/)
 })

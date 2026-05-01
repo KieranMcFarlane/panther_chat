@@ -77,6 +77,7 @@ STALE_MINUTES = int(os.getenv("ENTITY_PIPELINE_STALE_MINUTES", "5"))
 LEASE_SECONDS = int(os.getenv("ENTITY_PIPELINE_LEASE_SECONDS", "90"))
 MAX_RUN_ATTEMPTS = int(os.getenv("ENTITY_PIPELINE_MAX_RUN_ATTEMPTS", "3"))
 DEFAULT_REPAIR_RETRY_BUDGET = int(os.getenv("ENTITY_PIPELINE_REPAIR_RETRY_BUDGET", "3"))
+MAX_QUESTION_FIRST_CONTINUATION_ATTEMPTS = int(os.getenv("ENTITY_PIPELINE_MAX_QF_CONTINUATION_ATTEMPTS", "2"))
 TERMINAL_BATCH_STATUSES = {"completed", "failed"}
 WORKER_PID_PATH = Path(__file__).resolve().parents[1] / "tmp" / "entity-pipeline-worker.pid"
 WORKER_STATE_PATH = Path(__file__).resolve().parents[1] / "tmp" / "entity-pipeline-worker-state.json"
@@ -459,6 +460,42 @@ def is_uuid_like(value: str) -> bool:
         return False
 
 
+def _parse_iso_datetime(value: Any) -> Optional[datetime]:
+    text = str(value or "").strip()
+    if not text:
+        return None
+    try:
+        parsed = datetime.fromisoformat(text.replace("Z", "+00:00"))
+    except (TypeError, ValueError):
+        return None
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=timezone.utc)
+    return parsed.astimezone(timezone.utc)
+
+
+def should_defer_retry_for_fresh_backend_heartbeat(
+    *,
+    error_type: str,
+    metadata: Optional[Dict[str, Any]],
+    now_iso: Optional[str] = None,
+    stale_seconds: int = LEASE_SECONDS,
+) -> bool:
+    if str(error_type or "").strip().lower() != "timeout":
+        return False
+    run_metadata = metadata if isinstance(metadata, dict) else {}
+    if not str(run_metadata.get("backend_run_token") or "").strip():
+        return False
+    heartbeat_at = _parse_iso_datetime(
+        run_metadata.get("backend_heartbeat_at")
+        or run_metadata.get("backend_last_heartbeat_at")
+        or run_metadata.get("backend_run_heartbeat_at")
+    )
+    if heartbeat_at is None:
+        return False
+    now = _parse_iso_datetime(now_iso) or datetime.now(timezone.utc)
+    return (now - heartbeat_at) <= timedelta(seconds=max(1, int(stale_seconds or 1)))
+
+
 def build_batch_claim_metadata(existing_metadata: Optional[Dict[str, Any]], *, worker_id: str, now_iso: str) -> Dict[str, Any]:
     metadata = deepcopy(existing_metadata or {})
     metadata["attempt_count"] = int(metadata.get("attempt_count", 0) or 0) + 1
@@ -597,11 +634,22 @@ def build_run_start_metadata(
     lease_seconds: int,
 ) -> Dict[str, Any]:
     metadata = deepcopy(existing_metadata or {})
+    for key in (
+        "failure_class",
+        "infrastructure_failure",
+        "continue_pipeline_on_failure",
+        "stop_reason",
+        "stop_details",
+    ):
+        metadata.pop(key, None)
     metadata["attempt_count"] = int(metadata.get("attempt_count", 0) or 0) + 1
     metadata["lease_owner"] = worker_id
     metadata["lease_expires_at"] = (datetime.fromisoformat(now_iso) + timedelta(seconds=lease_seconds)).isoformat()
     metadata["retryable"] = False
     metadata["retry_state"] = "running"
+    metadata["last_error"] = None
+    metadata["last_error_type"] = None
+    metadata["last_error_at"] = None
     if str(metadata.get("rerun_mode") or "").strip().lower() == "question" or str(metadata.get("repair_state") or "").strip().lower() == "queued":
         metadata["repair_state"] = "repairing"
         metadata["next_repair_status"] = "running"
@@ -647,6 +695,99 @@ def build_run_timeout_failure_metadata(
     metadata["last_error_type"] = metadata.get("last_error_type") or "timeout"
     metadata["last_error_at"] = metadata.get("last_error_at") or now_iso
     return metadata
+
+
+def question_first_checkpoint_answer_count(checkpoint: Optional[Dict[str, Any]]) -> int:
+    if not isinstance(checkpoint, dict):
+        return 0
+    raw_count = checkpoint.get("questions_answered")
+    if raw_count is not None:
+        try:
+            return max(0, int(raw_count or 0))
+        except (TypeError, ValueError):
+            pass
+    answer_records = checkpoint.get("answer_records")
+    if isinstance(answer_records, list):
+        return len([record for record in answer_records if isinstance(record, dict)])
+    answers = checkpoint.get("answers")
+    if isinstance(answers, list):
+        return len([answer for answer in answers if isinstance(answer, dict)])
+    return 0
+
+
+def extract_question_first_checkpoint_from_payload(payload: Any) -> Optional[Dict[str, Any]]:
+    if not isinstance(payload, dict):
+        return None
+
+    direct = payload.get("question_first_checkpoint")
+    if isinstance(direct, dict):
+        return deepcopy(direct)
+
+    metadata = payload.get("metadata")
+    if isinstance(metadata, dict) and isinstance(metadata.get("question_first_checkpoint"), dict):
+        return deepcopy(metadata["question_first_checkpoint"])
+
+    dossier_data = payload.get("dossier_data")
+    if isinstance(dossier_data, dict):
+        extracted = extract_question_first_checkpoint_from_payload(dossier_data)
+        if extracted:
+            return extracted
+
+    question_first = payload.get("question_first")
+    if isinstance(question_first, dict):
+        answers = question_first.get("answers")
+        if isinstance(answers, list) and answers:
+            last_answer = next((answer for answer in reversed(answers) if isinstance(answer, dict)), {})
+            return {
+                "schema_version": "question_first_checkpoint_v1",
+                "questions_answered": int(question_first.get("questions_answered") or len(answers)),
+                "questions_total": question_first.get("questions_total"),
+                "last_completed_question_id": str(last_answer.get("question_id") or "").strip() or None,
+                "current_question_id": str(last_answer.get("question_id") or "").strip() or None,
+                "answer_records": deepcopy(answers),
+            }
+
+    question_first_run = payload.get("question_first_run")
+    if isinstance(question_first_run, dict):
+        answer_records = question_first_run.get("answer_records")
+        if isinstance(answer_records, list) and answer_records:
+            last_answer = next((answer for answer in reversed(answer_records) if isinstance(answer, dict)), {})
+            return {
+                "schema_version": "question_first_checkpoint_v1",
+                "questions_answered": int(question_first_run.get("questions_answered") or len(answer_records)),
+                "questions_total": question_first_run.get("questions_total"),
+                "last_completed_question_id": str(last_answer.get("question_id") or "").strip() or None,
+                "current_question_id": str(last_answer.get("question_id") or "").strip() or None,
+                "answer_records": deepcopy(answer_records),
+            }
+
+    return None
+
+
+def should_queue_question_first_continuation(
+    *,
+    run_metadata: Optional[Dict[str, Any]],
+    checkpoint: Optional[Dict[str, Any]],
+    max_attempts: int,
+) -> bool:
+    if not isinstance(checkpoint, dict):
+        return False
+    next_question_id = str(checkpoint.get("next_question_id") or "").strip()
+    if not next_question_id:
+        return False
+    questions_answered = question_first_checkpoint_answer_count(checkpoint)
+    try:
+        questions_total = int(checkpoint.get("questions_total") or 0)
+    except (TypeError, ValueError):
+        questions_total = 0
+    if questions_total > 0 and questions_answered >= questions_total:
+        return False
+    metadata = run_metadata if isinstance(run_metadata, dict) else {}
+    try:
+        attempts = int(metadata.get("question_first_continuation_attempts") or 0)
+    except (TypeError, ValueError):
+        attempts = 0
+    return attempts < max(0, int(max_attempts or 0))
 
 
 def _derive_skip_note(metadata: Dict[str, Any]) -> str:
@@ -1694,7 +1835,10 @@ class EntityPipelineWorker:
             "metadata": {
                 "source": "entity_cursor_resume",
                 "queue_mode": normalized_queue_mode,
+                "entity_id": entity_id,
                 "canonical_entity_id": canonical_entity_id,
+                "entity_name": entity_name,
+                "entity_type": entity_type,
                 "rerun_mode": rerun_mode,
                 "question_id": question_id,
                 "cascade_dependents": cascade_dependents,
@@ -1798,6 +1942,15 @@ class EntityPipelineWorker:
                 "auto_advance_target_entity_id": next_entity_id,
                 "auto_advance_target_entity_name": next_entity_name,
                 "auto_advance_target_entity_type": next_entity_type,
+                "entity_id": next_entity_id,
+                "canonical_entity_id": canonical_entity_id or next_entity_id,
+                "entity_name": next_entity_name,
+                "entity_type": next_entity_type,
+                "priority_score": next_properties.get("priority_score"),
+                "sport": next_properties.get("sport"),
+                "country": next_properties.get("country"),
+                "website": next_properties.get("website"),
+                "league": next_properties.get("league"),
             },
         }
         run_row = {
@@ -1881,6 +2034,156 @@ class EntityPipelineWorker:
             return None, None
         dossier = row.get("dossier_data")
         return (row.get("id") if row.get("id") else None), (dossier if isinstance(dossier, dict) else None)
+
+    def _load_persisted_question_first_checkpoint(
+        self,
+        *,
+        entity_id: str,
+        canonical_entity_id: Optional[str],
+    ) -> Optional[Dict[str, Any]]:
+        _row_id, dossier = self._load_persisted_dossier(entity_id, canonical_entity_id)
+        return extract_question_first_checkpoint_from_payload(dossier)
+
+    def _queue_question_first_continuation(
+        self,
+        *,
+        batch_id: str,
+        source_run: Dict[str, Any],
+        batch_metadata: Optional[Dict[str, Any]] = None,
+    ) -> Optional[Dict[str, Any]]:
+        run_metadata = source_run.get("metadata") if isinstance(source_run.get("metadata"), dict) else {}
+        entity_id = str(source_run.get("entity_id") or "").strip()
+        if not entity_id:
+            return None
+        canonical_entity_id = str(
+            source_run.get("canonical_entity_id")
+            or run_metadata.get("canonical_entity_id")
+            or (batch_metadata or {}).get("canonical_entity_id")
+            or ""
+        ).strip() or None
+
+        source_checkpoint = (
+            run_metadata.get("question_first_checkpoint")
+            if isinstance(run_metadata.get("question_first_checkpoint"), dict)
+            else None
+        )
+        try:
+            persisted_checkpoint = self._load_persisted_question_first_checkpoint(
+                entity_id=entity_id,
+                canonical_entity_id=canonical_entity_id,
+            )
+        except Exception as error:
+            logger.warning(
+                "Failed to load persisted question-first checkpoint for timeout continuation %s: %s",
+                entity_id,
+                error,
+            )
+            persisted_checkpoint = None
+        checkpoint_candidates = [
+            checkpoint
+            for checkpoint in (source_checkpoint, persisted_checkpoint)
+            if isinstance(checkpoint, dict)
+        ]
+        checkpoint = max(
+            checkpoint_candidates,
+            key=question_first_checkpoint_answer_count,
+            default=None,
+        )
+        max_attempts = int(
+            getattr(
+                self,
+                "max_question_first_continuation_attempts",
+                MAX_QUESTION_FIRST_CONTINUATION_ATTEMPTS,
+            )
+            or 0
+        )
+        if not should_queue_question_first_continuation(
+            run_metadata=run_metadata,
+            checkpoint=checkpoint,
+            max_attempts=max_attempts,
+        ):
+            return None
+
+        if self._has_active_pipeline_run(entity_id=entity_id, canonical_entity_id=canonical_entity_id):
+            return None
+
+        now_iso = self._now_iso()
+        continuation_batch_id = self._build_follow_on_repair_batch_id()
+        queue_mode = str((batch_metadata or {}).get("queue_mode") or run_metadata.get("queue_mode") or QUEUE_MODE)
+        entity_name = str(source_run.get("entity_name") or run_metadata.get("entity_name") or entity_id).strip()
+        entity_type = str(run_metadata.get("entity_type") or (batch_metadata or {}).get("entity_type") or "ENTITY").strip() or "ENTITY"
+        next_question_id = str((checkpoint or {}).get("next_question_id") or "").strip()
+        continuation_attempts = int(run_metadata.get("question_first_continuation_attempts") or 0) + 1
+        checkpoint_count = question_first_checkpoint_answer_count(checkpoint)
+        common_metadata = {
+            "source": "question_first_timeout_continuation",
+            "queue_mode": queue_mode,
+            "entity_id": entity_id,
+            "canonical_entity_id": canonical_entity_id,
+            "entity_name": entity_name,
+            "entity_type": entity_type,
+            "run_objective": str(run_metadata.get("run_objective") or "dossier_core"),
+            "question_first_checkpoint": deepcopy(checkpoint),
+            "question_first_resume": True,
+            "question_first_resume_from_question_id": next_question_id,
+            "question_first_continuation_attempts": continuation_attempts,
+            "question_first_continuation_from_batch_id": batch_id,
+            "question_first_continuation_from_run_id": source_run.get("id"),
+            "question_first_continuation_from_questions_answered": checkpoint_count,
+            "question_first_continuation_reason": "entity_pipeline_timeout",
+            "last_completed_question_id": (checkpoint or {}).get("last_completed_question_id"),
+            "current_question_id": next_question_id,
+        }
+
+        batch_row = {
+            "id": continuation_batch_id,
+            "filename": None,
+            "status": "queued",
+            "total_rows": 1,
+            "created_rows": 0,
+            "updated_rows": 0,
+            "invalid_rows": 0,
+            "started_at": now_iso,
+            "completed_at": None,
+            "metadata": common_metadata,
+        }
+        run_row = {
+            "id": f"{continuation_batch_id}_{entity_id}",
+            "batch_id": continuation_batch_id,
+            "entity_id": entity_id,
+            "canonical_entity_id": canonical_entity_id,
+            "entity_name": entity_name,
+            "status": "queued",
+            "phase": "entity_registration",
+            "error_message": None,
+            "dossier_id": None,
+            "sales_readiness": None,
+            "rfp_count": 0,
+            "started_at": now_iso,
+            "completed_at": None,
+            "metadata": common_metadata,
+        }
+
+        batch_inserted = self._safe_execute(
+            lambda: self.supabase.table("entity_import_batches").insert(batch_row).execute(),
+            context=f"insert question-first continuation batch {continuation_batch_id}",
+        )
+        run_inserted = self._safe_execute(
+            lambda: self.supabase.table("entity_pipeline_runs").insert([run_row]).execute(),
+            context=f"insert question-first continuation run {continuation_batch_id}/{entity_id}",
+        )
+        if not (batch_inserted and run_inserted):
+            return None
+
+        return {
+            "batch_id": continuation_batch_id,
+            "entity_id": entity_id,
+            "canonical_entity_id": canonical_entity_id,
+            "entity_name": entity_name,
+            "entity_type": entity_type,
+            "next_question_id": next_question_id,
+            "questions_answered": checkpoint_count,
+        }
 
     def _apply_skip_to_dossier_payload(
         self,
@@ -2572,6 +2875,19 @@ class EntityPipelineWorker:
                     ),
                 },
             )
+            run = {
+                **run,
+                "status": "running",
+                "phase": "dossier_generation",
+                "error_message": None,
+                "metadata": build_run_start_metadata(
+                    run_metadata,
+                    worker_id=worker_id,
+                    now_iso=now_iso,
+                    lease_seconds=lease_seconds,
+                ),
+            }
+            run_metadata = run.get("metadata") if isinstance(run.get("metadata"), dict) else {}
             _set_supervisor_activity(
                 current_batch_id=batch_id,
                 current_entity_id=str(run.get("entity_id") or "").strip() or None,
@@ -2730,6 +3046,41 @@ class EntityPipelineWorker:
                     error_message=str(error),
                     now_iso=self._now_iso(),
                 )
+                if should_defer_retry_for_fresh_backend_heartbeat(
+                    error_type=error_type,
+                    metadata=latest_metadata if isinstance(latest_metadata, dict) else run_metadata,
+                    now_iso=self._now_iso(),
+                    stale_seconds=max(lease_seconds, STALE_MINUTES * 60),
+                ):
+                    retry_metadata["retry_state"] = "backend_still_processing"
+                    retry_metadata["current_execution_state"] = "backend still processing"
+                    retry_metadata["backend_timeout_observed_at"] = self._now_iso()
+                    retry_metadata["retryable"] = True
+                    log_worker_transition(
+                        "run_timeout_deferred",
+                        worker_id=worker_id,
+                        batch_id=batch_id,
+                        entity_id=run.get("entity_id"),
+                        entity_name=run.get("entity_name"),
+                        phase=run.get("phase"),
+                        status="running",
+                        retry_state="backend_still_processing",
+                        error_type=error_type,
+                        current_action=run.get("phase"),
+                        message="client timeout observed while backend heartbeat is fresh",
+                    )
+                    self.update_run(
+                        batch_id,
+                        run["entity_id"],
+                        {
+                            "status": "running",
+                            "phase": run.get("phase") or "dossier_generation",
+                            "error_message": str(error),
+                            "completed_at": None,
+                            "metadata": retry_metadata,
+                        },
+                    )
+                    continue
                 attempts = int(retry_metadata.get("attempt_count", 0) or 0)
                 should_retry = retryable and attempts < max_run_attempts
                 rerun_mode = str(run_metadata.get("rerun_mode") or retry_metadata.get("rerun_mode") or "").strip().lower()
@@ -3063,26 +3414,51 @@ class EntityPipelineWorker:
                         latest_batch_metadata = fetched_batch_metadata
                 except Exception as error:
                     logger.warning("Failed to fetch batch metadata for failed auto-advance %s: %s", batch_id, error)
-                auto_advance_result = self._queue_manifest_auto_advance(
-                    batch_id=batch_id,
-                    source_run=failed_source_run,
-                    batch_metadata=latest_batch_metadata,
-                )
-                if auto_advance_result:
+                continuation_result = None
+                if str(failed_metadata.get("failure_class") or "").strip().lower() == "entity_pipeline_timeout":
+                    continuation_result = self._queue_question_first_continuation(
+                        batch_id=batch_id,
+                        source_run=failed_source_run,
+                        batch_metadata=latest_batch_metadata,
+                    )
+                if continuation_result:
                     failed_batch_metadata = {
                         **latest_batch_metadata,
-                        "auto_advance_next_batch_id": auto_advance_result["batch_id"],
-                        "auto_advance_next_entity_id": auto_advance_result["entity_id"],
-                        "auto_advance_next_entity_name": auto_advance_result["entity_name"],
-                        "auto_advance_next_entity_type": auto_advance_result["entity_type"],
-                        "auto_advance_state": "queued",
+                        "question_first_continuation_next_batch_id": continuation_result["batch_id"],
+                        "question_first_continuation_next_entity_id": continuation_result["entity_id"],
+                        "question_first_continuation_next_entity_name": continuation_result["entity_name"],
+                        "question_first_continuation_next_entity_type": continuation_result["entity_type"],
+                        "question_first_continuation_next_question_id": continuation_result["next_question_id"],
+                        "question_first_continuation_questions_answered": continuation_result["questions_answered"],
+                        "question_first_continuation_state": "queued",
                     }
                     self._safe_execute(
                         lambda: self.supabase.table("entity_import_batches").update(
                             {"metadata": failed_batch_metadata}
                         ).eq("id", batch_id).execute(),
-                        context=f"mark failed auto-advance batch {batch_id}",
+                        context=f"mark failed question-first continuation batch {batch_id}",
                     )
+                else:
+                    auto_advance_result = self._queue_manifest_auto_advance(
+                        batch_id=batch_id,
+                        source_run=failed_source_run,
+                        batch_metadata=latest_batch_metadata,
+                    )
+                    if auto_advance_result:
+                        failed_batch_metadata = {
+                            **latest_batch_metadata,
+                            "auto_advance_next_batch_id": auto_advance_result["batch_id"],
+                            "auto_advance_next_entity_id": auto_advance_result["entity_id"],
+                            "auto_advance_next_entity_name": auto_advance_result["entity_name"],
+                            "auto_advance_next_entity_type": auto_advance_result["entity_type"],
+                            "auto_advance_state": "queued",
+                        }
+                        self._safe_execute(
+                            lambda: self.supabase.table("entity_import_batches").update(
+                                {"metadata": failed_batch_metadata}
+                            ).eq("id", batch_id).execute(),
+                            context=f"mark failed auto-advance batch {batch_id}",
+                        )
         else:
             self._safe_execute(
                 lambda: self.supabase.rpc(

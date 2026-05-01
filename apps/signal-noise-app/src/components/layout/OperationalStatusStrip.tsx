@@ -75,6 +75,10 @@ function toText(value: unknown): string {
   return String(value).trim()
 }
 
+function shouldHidePlaceholderValue(value: string) {
+  return /unavailable/i.test(value) || /not available/i.test(value)
+}
+
 function getEntityHref(entityId: string) {
   return `/entity-browser/${encodeURIComponent(entityId)}/dossier?from=1`
 }
@@ -173,45 +177,55 @@ function buildRuntimeLabelValuePairs(input: {
     const errorType = toText(input.stopDetails?.error_type || input.currentRun?.error_type).replaceAll('_', ' ')
     const errorMessage = toText(input.stopDetails?.error_message || input.currentRun?.error_message)
     const attempts = toText(input.stopDetails?.attempts)
-    const rows = [
-      ['Worker process', toText(input.runtime?.worker?.worker_process_state) || 'unknown'],
-      ['Fast MCP', input.fastmcpHealth],
-      ['Live state', toText(input.liveOperationalState) || 'unknown'],
-      ['Current entity', toText(input.stopDetails?.entity_name || input.currentRun?.entity_name) || 'n/a'],
-      ['Current question', toText(input.currentRun?.current_question_text) || toText(input.currentRun?.current_question_id) || 'unavailable'],
-      ['Question ID', toText(input.stopDetails?.question_id || input.currentRun?.current_question_id) || 'unavailable'],
-      ['Current action', toText(input.currentRun?.current_action || input.currentRun?.current_stage || input.currentRun?.phase) || 'unavailable'],
-      ['Stop reason', input.stopReason || 'unavailable'],
-      ['Error type', errorType || 'unavailable'],
-      ['Error message', errorMessage || 'unavailable'],
-      ['Attempts', attempts || 'unavailable'],
-      ['Last heartbeat', input.currentRun?.heartbeat_at ? formatRelativeTimestamp(input.currentRun.heartbeat_at, 'Heartbeat') : 'Heartbeat unavailable'],
-      ['Freshness', input.freshnessState],
-      ['Last activity', input.lastActivityAt ? formatRelativeTimestamp(input.lastActivityAt, 'Activity') : 'Unavailable'],
-    ] as Array<[string, string]>
+    const rows: Array<[string, string]> = []
+    const pushRow = (label: string, value: string | null | undefined) => {
+      const text = toText(value)
+      if (!text || shouldHidePlaceholderValue(text)) return
+      rows.push([label, text])
+    }
+    pushRow('Worker process', toText(input.runtime?.worker?.worker_process_state) || 'unknown')
+    pushRow('Fast MCP', input.fastmcpHealth)
+    pushRow('Live state', toText(input.liveOperationalState) || 'unknown')
+    pushRow('Current entity', toText(input.stopDetails?.entity_name || input.currentRun?.entity_name) || 'n/a')
+    pushRow('Current question', toText(input.currentRun?.current_question_text) || toText(input.currentRun?.current_question_id))
+    pushRow('Question ID', toText(input.stopDetails?.question_id || input.currentRun?.current_question_id))
+    pushRow('Current action', toText(input.currentRun?.current_action || input.currentRun?.current_stage || input.currentRun?.phase))
+    pushRow('Stop reason', input.stopReason)
+    pushRow('Error type', errorType)
+    pushRow('Error message', errorMessage)
+    pushRow('Attempts', attempts)
+    pushRow('Last heartbeat', input.currentRun?.heartbeat_at ? formatRelativeTimestamp(input.currentRun.heartbeat_at, 'Heartbeat') : null)
+    pushRow('Freshness', input.freshnessState)
+    pushRow('Last activity', input.lastActivityAt ? formatRelativeTimestamp(input.lastActivityAt, 'Activity') : null)
     return rows
   }
 
-  return [
-    ['Worker process', toText(input.runtime?.worker?.worker_process_state) || 'unknown'],
-    ['Worker pid', String(input.runtime?.worker?.worker_pid ?? 'n/a')],
-    ['Fast MCP', input.fastmcpHealth],
-    ['Live state', toText(input.liveOperationalState) || 'unknown'],
-    ['Current entity', toText(input.currentRun?.entity_name) || toText(input.currentRun?.entity_id) || 'n/a'],
-    ['Current section', toText(input.currentRun?.current_section_label) || 'unavailable'],
-    ['Question progress', formatCheckpointQuestionProgress(input.currentRun) || 'unavailable'],
-    ['Execution state', toText(input.currentRun?.current_execution_state) || 'unavailable'],
-    ['Execution backend', toText(input.currentRun?.execution_backend) || 'unavailable'],
-    ['Model', toText(input.currentRun?.execution_model) || 'unavailable'],
-    ['BrightData transport', toText(input.currentRun?.brightdata_transport) || 'unavailable'],
-    ['Strategy', toText(input.currentRun?.current_strategy_label) || 'unavailable'],
-    ['Source order', formatCheckpointSourceOrder(input.currentRun?.current_source_order)],
-    ['Current sub-step', toText(input.currentRun?.current_substep_label) || toText(input.currentRun?.current_substep) || 'unavailable'],
-    ['Sub-step progress', toText(input.currentRun?.current_substep_progress) || 'unavailable'],
-    ['Current question', toText(input.currentRun?.current_question_text) || toText(input.currentRun?.current_question_id) || 'unavailable'],
-    ['Question ID', toText(input.currentRun?.current_question_id) || 'unavailable'],
-    ['Current action', toText(input.currentRun?.current_action) || toText(input.currentRun?.phase) || 'unavailable'],
-  ] as Array<[string, string]>
+  const rows: Array<[string, string]> = []
+  const pushRow = (label: string, value: string | null | undefined) => {
+    const text = toText(value)
+    if (!text || shouldHidePlaceholderValue(text)) return
+    rows.push([label, text])
+  }
+
+  pushRow('Worker process', toText(input.runtime?.worker?.worker_process_state) || 'unknown')
+  pushRow('Worker pid', String(input.runtime?.worker?.worker_pid ?? 'n/a'))
+  pushRow('Fast MCP', input.fastmcpHealth)
+  pushRow('Live state', toText(input.liveOperationalState) || 'unknown')
+  pushRow('Current entity', toText(input.currentRun?.entity_name) || toText(input.currentRun?.entity_id) || 'n/a')
+  pushRow('Current section', toText(input.currentRun?.current_section_label))
+  pushRow('Question progress', formatCheckpointQuestionProgress(input.currentRun))
+  pushRow('Execution state', toText(input.currentRun?.current_execution_state))
+  pushRow('Execution backend', toText(input.currentRun?.execution_backend))
+  pushRow('Model', toText(input.currentRun?.execution_model))
+  pushRow('BrightData transport', toText(input.currentRun?.brightdata_transport))
+  pushRow('Strategy', toText(input.currentRun?.current_strategy_label))
+  pushRow('Source order', formatCheckpointSourceOrder(input.currentRun?.current_source_order))
+  pushRow('Current sub-step', toText(input.currentRun?.current_substep_label) || toText(input.currentRun?.current_substep))
+  pushRow('Sub-step progress', toText(input.currentRun?.current_substep_progress))
+  pushRow('Current question', toText(input.currentRun?.current_question_text) || toText(input.currentRun?.current_question_id))
+  pushRow('Question ID', toText(input.currentRun?.current_question_id))
+  pushRow('Current action', toText(input.currentRun?.current_action) || toText(input.currentRun?.phase))
+  return rows
 }
 
 function SnapshotLane({
@@ -571,7 +585,7 @@ export function OperationalStatusStrip({
                   Failure buckets: worker stale {String(failureBuckets.worker_stale ?? 0)}, retrying {String(failureBuckets.retrying ?? 0)}, reconciling {String(failureBuckets.reconciling ?? 0)}, degraded {String(failureBuckets.published_degraded ?? 0)}, terminal {String(failureBuckets.failed_terminal ?? 0)}
                 </div>
                 <div className="mt-2 text-slate-300">
-                  Backlog diagnostics: stale rows {String(backlogHealth?.stale_active_count ?? 0)}, retrying {String(backlogHealth?.retrying_count ?? 0)}, reconciling {String(backlogHealth?.reconciling_count ?? 0)}, degraded completions {String(backlogHealth?.published_degraded_count ?? 0)}
+                  Historical stale rows: {String(backlogHealth?.stale_active_count ?? 0)} · retrying {String(backlogHealth?.retrying_count ?? 0)} · reconciling {String(backlogHealth?.reconciling_count ?? 0)} · degraded completions {String(backlogHealth?.published_degraded_count ?? 0)}
                 </div>
                 <div className="mt-2 text-slate-300">
                   Snapshot age: {snapshotAt ? formatRelativeTimestamp(snapshotAt, 'Snapshot') : 'Unavailable'}

@@ -9,9 +9,11 @@ import { resolveOperationalHeartbeatDetails, type OperationalHeartbeatFreshness 
 import { getNormalizedUniverseCount } from '@/lib/normalized-universe-count'
 import { query as queryPostgres } from '@/lib/pg-client'
 import {
+  buildPipelineRuntimeRunRecord,
   buildPipelineRuntimeSnapshot,
   loadPipelineRuntimeReadSet,
   type PipelineDossierRow,
+  type PipelineRunRow,
   type PipelineRuntimeSnapshot,
 } from '@/lib/pipeline-runtime'
 import { deriveOperationalFreshnessCheckpoint } from '@/lib/operational-freshness'
@@ -88,6 +90,7 @@ type QueueEntityRecord = {
   next_repair_batch_id?: string | null
   last_completed_question?: string | null
   last_completed_question_text?: string | null
+  next_action?: string | null
   lifecycle_stage?: string | null
   lifecycle_label?: string | null
   lifecycle_summary?: string | null
@@ -150,7 +153,10 @@ function carryForwardRecentActiveEntity(
   if (String(payload.operational_state || '') !== 'waiting') return payload
   if (String(nextControl.requested_state || '') === 'paused' || nextControl.is_paused === true) return payload
 
-  const workerState = String(nextLiveState.worker_process_state || nextRuntime.worker?.worker_process_state || '')
+  const nextRuntimeWorker = nextRuntime.worker && typeof nextRuntime.worker === 'object'
+    ? nextRuntime.worker as Record<string, unknown>
+    : null
+  const workerState = String(nextLiveState.worker_process_state || nextRuntimeWorker?.worker_process_state || '')
   if (workerState !== 'running' && workerState !== 'starting') return payload
 
   const previousLiveState = previousPayload.live_state && typeof previousPayload.live_state === 'object'
@@ -203,7 +209,7 @@ function carryForwardRecentActiveEntity(
   }
 }
 
-export function __resetQueueDrilldownRouteCacheForTests() {
+function __resetQueueDrilldownRouteCacheForTests() {
   cachedQueueDrilldownPayload = null
   cachedQueueDrilldownFetchedAt = 0
   inFlightQueueDrilldownBuild = null
@@ -245,19 +251,54 @@ function normalizeType(value: unknown): string {
   return toText(value).toLowerCase()
 }
 
+function normalizeQueueIdentity(record: {
+  entity_id?: unknown
+  canonical_entity_id?: unknown
+  entity_name?: unknown
+  entity_type?: unknown
+  metadata?: unknown
+}) {
+  const metadata = record.metadata && typeof record.metadata === 'object'
+    ? record.metadata as Record<string, unknown>
+    : {}
+  const entityId = toText(record.entity_id) || toText(metadata.entity_id) || toText(metadata.auto_advance_target_entity_id)
+  const canonicalEntityId = toText(record.canonical_entity_id)
+    || toText(metadata.canonical_entity_id)
+    || toText(metadata.auto_advance_target_entity_id)
+    || entityId
+  const entityName = toText(record.entity_name)
+    || toText(metadata.entity_name)
+    || toText(metadata.auto_advance_target_entity_name)
+    || canonicalEntityId
+    || entityId
+  const entityType = toText(record.entity_type)
+    || toText(metadata.entity_type)
+    || toText(metadata.auto_advance_target_entity_type)
+    || 'Entity'
+
+  return {
+    entity_id: entityId,
+    canonical_entity_id: canonicalEntityId,
+    entity_name: entityName,
+    entity_type: entityType,
+  }
+}
+
 function resolveCanonicalQueueEntity(
   record: {
     entity_id?: unknown
     canonical_entity_id?: unknown
     entity_name?: unknown
     entity_type?: unknown
+    metadata?: unknown
   },
   canonicalEntities: any[],
 ) {
-  const sourceEntityId = toText(record.entity_id)
-  const explicitCanonicalEntityId = toText(record.canonical_entity_id)
-  const sourceEntityName = toText(record.entity_name)
-  const sourceEntityType = toText(record.entity_type)
+  const normalizedRecord = normalizeQueueIdentity(record)
+  const sourceEntityId = normalizedRecord.entity_id
+  const explicitCanonicalEntityId = normalizedRecord.canonical_entity_id
+  const sourceEntityName = normalizedRecord.entity_name
+  const sourceEntityType = normalizedRecord.entity_type
 
   const exactIdCandidates = [explicitCanonicalEntityId, sourceEntityId].filter(Boolean)
   let canonicalMatch = exactIdCandidates
@@ -299,11 +340,13 @@ function resolveCanonicalQueueEntityObject(record: {
   canonical_entity_id?: unknown
   entity_name?: unknown
   entity_type?: unknown
+  metadata?: unknown
 }, canonicalEntities: any[]) {
-  const sourceEntityId = toText(record.entity_id)
-  const explicitCanonicalEntityId = toText(record.canonical_entity_id)
-  const sourceEntityName = toText(record.entity_name).toLowerCase()
-  const sourceEntityType = toText(record.entity_type).toLowerCase()
+  const normalizedRecord = normalizeQueueIdentity(record)
+  const sourceEntityId = normalizedRecord.entity_id
+  const explicitCanonicalEntityId = normalizedRecord.canonical_entity_id
+  const sourceEntityName = normalizedRecord.entity_name.toLowerCase()
+  const sourceEntityType = normalizedRecord.entity_type.toLowerCase()
 
   const exactIdCandidates = [explicitCanonicalEntityId, sourceEntityId].filter(Boolean)
   const idMatch = exactIdCandidates
@@ -325,9 +368,10 @@ async function buildCanonicalQueueEntity(
     canonical_entity_id?: unknown
     entity_name?: unknown
     entity_type?: unknown
-    started_at?: unknown
-    completed_at?: unknown
-    metadata?: unknown
+	    started_at?: unknown
+	    completed_at?: unknown
+	    generated_at?: unknown
+	    metadata?: unknown
     phase?: unknown
     status?: unknown
   },
@@ -408,6 +452,21 @@ function toQueueRecord(row: Record<string, unknown>): QueueEntityRecord {
   const metadata = row.metadata && typeof row.metadata === 'object'
     ? row.metadata as Record<string, unknown>
     : {}
+  const queueIdentity = normalizeQueueIdentity({ ...row, metadata })
+  const runtimeRecord = buildPipelineRuntimeRunRecord(
+    {
+      batch_id: toText(row.batch_id ?? row.id) || null,
+      entity_id: queueIdentity.entity_id,
+      canonical_entity_id: queueIdentity.canonical_entity_id || null,
+      entity_name: queueIdentity.entity_name || 'Unknown entity',
+      status: toText(row.status) || null,
+      phase: toText(row.phase) || null,
+      started_at: toText(row.started_at) || null,
+      completed_at: toText(row.completed_at) || null,
+      metadata,
+    } satisfies PipelineRunRow,
+    true,
+  )
   const heartbeat = resolveOperationalHeartbeatDetails({
     heartbeat_at: metadata.heartbeat_at || row.heartbeat_at,
     started_at: row.started_at,
@@ -417,13 +476,14 @@ function toQueueRecord(row: Record<string, unknown>): QueueEntityRecord {
   return {
     batch_id: toText(row.batch_id ?? row.id) || null,
     status: toText(row.status) || null,
-    entity_id: toText(row.entity_id),
-    entity_name: toText(row.entity_name) || 'Unknown entity',
-    entity_type: toText(metadata.entity_type) || 'entity',
-    summary: toText(metadata.summary)
-      || toText(metadata.current_question_text)
-      || toText(metadata.current_execution_state)
-      || toText(metadata.current_substep_label)
+    entity_id: queueIdentity.canonical_entity_id || queueIdentity.entity_id,
+    entity_name: queueIdentity.entity_name || 'Unknown entity',
+    entity_type: queueIdentity.entity_type || 'entity',
+    summary: runtimeRecord.current_question_text
+      || runtimeRecord.current_execution_state
+      || runtimeRecord.current_substep_label
+      || runtimeRecord.current_action
+      || toText(metadata.summary)
       || toText(metadata.quality_summary)
       || toText(metadata.error_message)
       || toText((metadata.stop_details && typeof metadata.stop_details === 'object'
@@ -442,39 +502,28 @@ function toQueueRecord(row: Record<string, unknown>): QueueEntityRecord {
     stop_details: metadata.stop_details && typeof metadata.stop_details === 'object'
       ? metadata.stop_details as Record<string, unknown>
       : null,
-    active_question_id: toText(
-      metadata.active_question_id
-      || metadata.current_question_id
-      || metadata.next_repair_question_id
-      || metadata.last_completed_question
-    ) || null,
-    current_question_id: toText(
-      metadata.current_question_id
-      || metadata.active_question_id
-      || metadata.next_repair_question_id
-      || metadata.last_completed_question
-    ) || null,
-    current_section_id: toText(metadata.current_section_id) || null,
-    current_section_label: toText(metadata.current_section_label) || null,
-    current_section_index: Number.isFinite(Number(metadata.current_section_index)) ? Number(metadata.current_section_index) : null,
-    current_section_total: Number.isFinite(Number(metadata.current_section_total)) ? Number(metadata.current_section_total) : null,
-    current_question_index: Number.isFinite(Number(metadata.current_question_index)) ? Number(metadata.current_question_index) : null,
-    current_question_total: Number.isFinite(Number(metadata.current_question_total)) ? Number(metadata.current_question_total) : null,
-    current_strategy_label: toText(metadata.current_strategy_label) || null,
-    current_execution_state: toText(metadata.current_execution_state) || null,
-    current_source_order: Array.isArray(metadata.current_source_order)
-      ? metadata.current_source_order.map((item) => toText(item)).filter(Boolean)
-      : null,
-    execution_backend: toText(metadata.execution_backend || metadata.question_first_backend) || null,
-    execution_model: toText(metadata.execution_model || metadata.opencode_model) || null,
-    execution_provider: toText(metadata.execution_provider || metadata.opencode_provider) || null,
-    brightdata_transport: toText(metadata.brightdata_transport) || null,
-    current_substep: toText(metadata.current_substep) || null,
-    current_substep_label: toText(metadata.current_substep_label) || null,
-    current_substep_progress: toText(metadata.current_substep_progress) || null,
-    current_action: toText(metadata.current_execution_state) || toText(metadata.current_action) || toText(metadata.next_action) || toText(metadata.run_phase) || null,
-    run_phase: toText(row.phase ?? metadata.run_phase ?? row.status) || null,
-    current_stage: toText(metadata.current_stage || metadata.run_phase || row.phase || row.status) || null,
+    active_question_id: runtimeRecord.current_question_id || null,
+    current_question_id: runtimeRecord.current_question_id || null,
+    current_question_text: runtimeRecord.current_question_text || null,
+    current_section_id: runtimeRecord.current_section_id || null,
+    current_section_label: runtimeRecord.current_section_label || null,
+    current_section_index: runtimeRecord.current_section_index,
+    current_section_total: runtimeRecord.current_section_total,
+    current_question_index: runtimeRecord.current_question_index,
+    current_question_total: runtimeRecord.current_question_total,
+    current_strategy_label: runtimeRecord.current_strategy_label || null,
+    current_execution_state: runtimeRecord.current_execution_state || null,
+    current_source_order: runtimeRecord.current_source_order || null,
+    execution_backend: runtimeRecord.execution_backend || null,
+    execution_model: runtimeRecord.execution_model || null,
+    execution_provider: runtimeRecord.execution_provider || null,
+    brightdata_transport: runtimeRecord.brightdata_transport || null,
+    current_substep: runtimeRecord.current_substep || null,
+    current_substep_label: runtimeRecord.current_substep_label || null,
+    current_substep_progress: runtimeRecord.current_substep_progress || null,
+    current_action: runtimeRecord.current_execution_state || runtimeRecord.current_action || null,
+    run_phase: runtimeRecord.phase || null,
+    current_stage: runtimeRecord.current_stage || null,
     publication_status: toText(metadata.publication_status) || null,
     next_repair_question_id: toText(metadata.next_repair_question_id) || null,
     next_repair_status: toText(metadata.next_repair_status) || null,
@@ -738,6 +787,7 @@ async function loadWorkerActivityOverlay(workerStatePath: unknown) {
 
 function buildBacklogHealth(runtime: PipelineRuntimeSnapshot, staleActiveRows: QueueEntityRecord[]) {
   const failureBuckets = runtime.failure_buckets
+  const hasFreshLiveRun = Boolean(runtime.current_live_run)
   return {
     stale_active_count: staleActiveRows.length,
     worker_stale_count: failureBuckets.worker_stale ?? 0,
@@ -745,7 +795,10 @@ function buildBacklogHealth(runtime: PipelineRuntimeSnapshot, staleActiveRows: Q
     reconciling_count: failureBuckets.reconciling ?? 0,
     published_degraded_count: failureBuckets.published_degraded ?? 0,
     failed_terminal_count: failureBuckets.failed_terminal ?? 0,
-    healthy: staleActiveRows.length === 0
+    healthy: hasFreshLiveRun
+      ? (failureBuckets.retrying ?? 0) === 0
+        && (failureBuckets.reconciling ?? 0) === 0
+      : staleActiveRows.length === 0
       && (failureBuckets.worker_stale ?? 0) === 0
       && (failureBuckets.retrying ?? 0) === 0
       && (failureBuckets.reconciling ?? 0) === 0
@@ -832,7 +885,7 @@ function mapProcessedDossierRowsToQueueEntities(rows: ProcessedDossierRow[]): Qu
     entity_id: row.canonical_entity_id || row.entity_id,
     entity_name: row.entity_name || row.canonical_entity_id || row.entity_id,
     entity_type: row.entity_type || 'Entity',
-    summary: extractProcessedDossierSummary(row.dossier_data),
+    summary: extractProcessedDossierSummary(row.dossier_data ?? null),
     generated_at: row.generated_at,
     heartbeat_at: row.generated_at,
     heartbeat_age_seconds: null,
@@ -903,7 +956,10 @@ async function buildQueueDrilldownPayload() {
     : runtimeSnapshot.worker
   const control = runtimeSnapshot.control
   const activeRuns = runtimeReadSet.rows
-    .filter((row) => ['queued', 'claiming', 'running', 'retrying'].includes(toText(row.status).toLowerCase()))
+    .filter((row) => ['claiming', 'running', 'retrying'].includes(toText(row.status).toLowerCase()))
+    .slice(0, 8) as Record<string, unknown>[]
+  const queuedRuns = runtimeReadSet.rows
+    .filter((row) => toText(row.status).toLowerCase() === 'queued')
     .slice(0, 8) as Record<string, unknown>[]
   const completedRuns = runtimeReadSet.rows
     .filter((row) => {
@@ -959,6 +1015,20 @@ async function buildQueueDrilldownPayload() {
       ...enrichQuestionTextFields(queueRecord, dossierRow?.dossier_data ?? null),
     }
   })))
+  const queuedEntities = dedupeByEntityId(await Promise.all(queuedRuns.map(async (row, index) => {
+    const queueRecord = toQueueRecord(row)
+    const canonicalRecord = await buildCanonicalQueueEntity(row, canonicalEntities)
+    const dossierRow = findDossierForRow(row, dossierLookup)
+    return {
+      ...queueRecord,
+      ...canonicalRecord,
+      ...enrichQuestionTextFields(queueRecord, dossierRow?.dossier_data ?? null),
+      current_stage: 'queued',
+      run_phase: 'queued',
+      next_action: queueRecord.next_action || 'Waiting for claim',
+      queue_position: index + 1,
+    }
+  })))
   const resumeNeededEntities = dedupeByEntityId(
     completedEntities
       .filter((item) => item.continue_pipeline_on_failure !== true)
@@ -977,6 +1047,7 @@ async function buildQueueDrilldownPayload() {
       ...staleActiveRows.map((item) => item.entity_id),
       ...completedEntities.map((item) => item.entity_id),
       ...resumeNeededEntities.map((item) => item.entity_id),
+      ...queuedEntities.map((item) => item.entity_id),
     ].filter(Boolean) as string[],
   )
   const canonicalManifestEntities = orderedManifestEntities.map((entity) => ({
@@ -990,16 +1061,15 @@ async function buildQueueDrilldownPayload() {
   )
   const positionedCompletedEntities = applyCanonicalQueuePositions(completedEntities, canonicalQueuePositionByEntityId)
   const positionedResumeNeededEntities = applyCanonicalQueuePositions(resumeNeededEntities, canonicalQueuePositionByEntityId)
-  const upcomingEntities = canonicalManifestEntities
+  const manifestUpcomingEntities = canonicalManifestEntities
     .filter((entity) => !seenEntityIds.has(entity.entity_id))
-    .slice(0, 8)
-    .map((entity, index) => ({
+    .map((entity) => ({
       ...entity,
       summary: 'Waiting in the serialized live loop.',
       generated_at: null,
       started_at: null,
       heartbeat_at: null,
-      queue_position: index + 1,
+      queue_position: canonicalQueuePositionByEntityId.get(entity.entity_id) ?? null,
       current_question_id: null,
       current_question_text: null,
       current_action: null,
@@ -1013,6 +1083,10 @@ async function buildQueueDrilldownPayload() {
       next_repair_question_text: null,
       run_phase: 'queued',
     }))
+  const upcomingEntities = dedupeByEntityId([
+    ...queuedEntities,
+    ...manifestUpcomingEntities,
+  ]).slice(0, 24)
 
   const blockedEntities = await Promise.all(dossierRows
     .filter((row) => inferQualityState(row.dossier_data) === 'blocked')
@@ -1045,9 +1119,9 @@ async function buildQueueDrilldownPayload() {
           row.dossier_data,
           toText(extractQuestionFirstState(row.dossier_data).active_question_id || extractQuestionFirstState(row.dossier_data).question_id) || null,
         ) || null)
-        || (toText(extractQuestionFirstState(row.dossier_data).active_question_id || extractQuestionFirstState(row.dossier_data).question_id)
-          ? `Question ${toText(extractQuestionFirstState(row.dossier_data).active_question_id || extractQuestionFirstState(row.dossier_data).question_id)}`
-          : toText(row.phase) || null),
+	        || (toText(extractQuestionFirstState(row.dossier_data).active_question_id || extractQuestionFirstState(row.dossier_data).question_id)
+	          ? `Question ${toText(extractQuestionFirstState(row.dossier_data).active_question_id || extractQuestionFirstState(row.dossier_data).question_id)}`
+	          : null),
       last_completed_question: toText(extractQuestionFirstState(row.dossier_data).last_completed_question) || null,
       last_completed_question_text: resolveQuestionTextFromDossierData(
         row.dossier_data,
@@ -1086,6 +1160,9 @@ async function buildQueueDrilldownPayload() {
         ...(liveEntityFromActiveRuns || buildQueueEntityFromRuntimeRun(runtimeCurrentLiveRun)),
         current_section_id: runtimeCurrentLiveRun.current_section_id || liveEntityFromActiveRuns?.current_section_id || null,
         current_section_label: runtimeCurrentLiveRun.current_section_label || liveEntityFromActiveRuns?.current_section_label || null,
+        active_question_id: runtimeCurrentLiveRun.current_question_id || liveEntityFromActiveRuns?.active_question_id || null,
+        current_question_id: runtimeCurrentLiveRun.current_question_id || liveEntityFromActiveRuns?.current_question_id || null,
+        current_question_text: runtimeCurrentLiveRun.current_question_text || liveEntityFromActiveRuns?.current_question_text || null,
         current_section_index: runtimeCurrentLiveRun.current_section_index ?? liveEntityFromActiveRuns?.current_section_index ?? null,
         current_section_total: runtimeCurrentLiveRun.current_section_total ?? liveEntityFromActiveRuns?.current_section_total ?? null,
         current_question_index: runtimeCurrentLiveRun.current_question_index ?? liveEntityFromActiveRuns?.current_question_index ?? null,
@@ -1124,7 +1201,7 @@ async function buildQueueDrilldownPayload() {
     ? null
     : hasActiveProcessingEvidence
       ? null
-      : controlStopReason || ((workerStopped || workerProcessState === 'crashed') && hasStaleOnlyActiveRows && !observedStarting && !observedStopping ? 'worker_heartbeat_stale' : null)
+      : controlStopReason || (workerStopped && hasStaleOnlyActiveRows && !observedStarting && !observedStopping ? 'worker_heartbeat_stale' : null)
   const operationalState: OperationalState = observedStarting
     ? 'starting'
     : observedStopping
@@ -1273,7 +1350,7 @@ async function buildQueueDrilldownPayload() {
   }
 }
 
-export async function GET(request?: Request) {
+export async function GET(request: Request) {
   const requestUrl = request?.url ? new URL(request.url) : null
   const forceRefresh = requestUrl?.searchParams.get('refresh') === '1'
   const runBuild = () => {

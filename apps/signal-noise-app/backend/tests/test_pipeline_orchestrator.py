@@ -364,6 +364,52 @@ class CapturingPersistenceCoordinator(FakePersistenceCoordinator):
         return await super().persist_run_artifacts(**kwargs)
 
 
+class _QuestionCheckpointResult:
+    def __init__(self, data):
+        self.data = data
+
+
+class _QuestionCheckpointTable:
+    def __init__(self, rows):
+        self.rows = rows
+        self.filters = []
+
+    def select(self, _columns="*"):
+        return self
+
+    def eq(self, column, value):
+        self.filters.append((column, value))
+        return self
+
+    def contains(self, _column, _value):
+        return self
+
+    def order(self, _column, desc=False, **_kwargs):
+        return self
+
+    def limit(self, _count):
+        return self
+
+    def execute(self):
+        rows = self.rows
+        for column, value in self.filters:
+            rows = [row for row in rows if row.get(column) == value]
+        return _QuestionCheckpointResult(rows)
+
+
+class _QuestionCheckpointSupabase:
+    def __init__(self, *, dossier_rows=None, temporal_rows=None):
+        self.dossier_rows = dossier_rows or []
+        self.temporal_rows = temporal_rows or []
+
+    def table(self, table_name):
+        if table_name == "entity_dossiers":
+            return _QuestionCheckpointTable(self.dossier_rows)
+        if table_name == "temporal_episodes":
+            return _QuestionCheckpointTable(self.temporal_rows)
+        return _QuestionCheckpointTable([])
+
+
 @pytest.mark.asyncio
 async def test_pipeline_orchestrator_runs_phases_and_returns_artifacts():
     phase_events = []
@@ -860,6 +906,8 @@ async def test_pipeline_orchestrator_forwards_live_question_progress_from_openco
                     "current_substep_label": "Question-first running",
                     "current_question_id": "q1",
                     "current_question_text": "When was Leeds United founded?",
+                    "next_question_id": "q2_digital_stack",
+                    "next_question_text": "What digital stack does Leeds United expose?",
                     "questions_answered": 1,
                     "questions_total": 1,
                     "current_substep_progress": "1/1 questions",
@@ -925,6 +973,181 @@ async def test_pipeline_orchestrator_forwards_live_question_progress_from_openco
 
 
 @pytest.mark.asyncio
+async def test_pipeline_orchestrator_persists_partial_question_first_checkpoint_on_completed_question(monkeypatch):
+    monkeypatch.setenv("PIPELINE_QUESTION_FIRST_ENABLED", "true")
+    monkeypatch.setenv("PIPELINE_QUESTION_FIRST_PERSIST_REPORTS", "false")
+
+    import question_first_dossier_runner as question_first_runner
+    try:
+        import backend.question_first_dossier_runner as backend_question_first_runner
+    except ModuleNotFoundError:
+        import question_first_dossier_runner as backend_question_first_runner
+
+    async def fake_run_question_first_dossier_from_payload(**kwargs):
+        progress_callback = kwargs.get("progress_callback")
+        if progress_callback is not None:
+            await progress_callback(
+                {
+                    "event_type": "question_completed",
+                    "phase": "dossier_generation",
+                    "current_substep": "question_first_running",
+                    "current_question_id": "q1_foundation",
+                    "current_question_text": "When was Leeds United founded?",
+                    "next_question_id": "q2_digital_stack",
+                    "next_question_text": "What digital stack does Leeds United expose?",
+                    "questions_answered": 1,
+                    "questions_total": 15,
+                    "current_substep_progress": "1/15 questions",
+                    "completed_question": {
+                        "question_id": "q1_foundation",
+                        "question_text": "When was Leeds United founded?",
+                        "answer": "Leeds United was founded in 1919.",
+                        "validation_state": "validated",
+                        "confidence": 0.91,
+                        "sources": ["https://www.leedsunited.com/club/history"],
+                    },
+                }
+            )
+            await progress_callback(
+                {
+                    "event_type": "question_completed",
+                    "phase": "dossier_generation",
+                    "current_substep": "question_first_running",
+                    "current_question_id": "q2_digital_stack",
+                    "current_question_text": "What digital stack does Leeds United expose?",
+                    "next_question_id": "q3_leadership",
+                    "next_question_text": "Who leads Leeds United commercially?",
+                    "questions_answered": 2,
+                    "questions_total": 15,
+                    "current_substep_progress": "2/15 questions",
+                    "completed_question": {
+                        "question_id": "q2_digital_stack",
+                        "question_text": "What digital stack does Leeds United expose?",
+                        "answer": "Leeds United exposes official web, ticketing, and app channels.",
+                        "validation_state": "provisional",
+                        "confidence": 0.7,
+                        "sources": ["https://www.leedsunited.com/"],
+                    },
+                }
+            )
+        payload = dict(kwargs["source_payload"])
+        payload["question_first"] = {
+            "enabled": True,
+            "schema_version": "question_first_run_v1",
+            "questions_answered": 2,
+            "answers": [
+                {
+                    "question_id": "q1_foundation",
+                    "answer": "Leeds United was founded in 1919.",
+                    "validation_state": "validated",
+                },
+                {
+                    "question_id": "q2_digital_stack",
+                    "answer": "Leeds United exposes official web, ticketing, and app channels.",
+                    "validation_state": "provisional",
+                }
+            ],
+            "categories": [],
+        }
+        return payload
+
+    monkeypatch.setattr(question_first_runner, "run_question_first_dossier_from_payload", fake_run_question_first_dossier_from_payload)
+    monkeypatch.setattr(backend_question_first_runner, "run_question_first_dossier_from_payload", fake_run_question_first_dossier_from_payload)
+
+    phase_events = []
+    persistence = CapturingPersistenceCoordinator()
+
+    async def phase_callback(phase, payload):
+        phase_events.append((phase, dict(payload)))
+
+    orchestrator = PipelineOrchestrator(
+        dossier_generator=FakeDossierGenerator(),
+        discovery=FakeDiscovery(),
+        ralph_validator=FakeRalph(),
+        graphiti_service=FakeGraphiti(),
+        dashboard_scorer=FakeDashboardScorer(),
+        persistence_coordinator=persistence,
+        brightdata_client=None,
+        claude_client=None,
+    )
+
+    await orchestrator.run_entity_pipeline(
+        entity_id="leedsunited",
+        entity_name="Leeds United",
+        entity_type="CLUB",
+        priority_score=95,
+        phase_callback=phase_callback,
+    )
+
+    checkpoint_events = [
+        payload for phase, payload in phase_events
+        if phase == "dossier_generation" and isinstance(payload.get("question_first_checkpoint"), dict)
+    ]
+    assert checkpoint_events
+    checkpoint = checkpoint_events[0]["question_first_checkpoint"]
+    assert checkpoint["last_completed_question_id"] == "q1_foundation"
+    assert checkpoint["next_question_id"] == "q2_digital_stack"
+    assert checkpoint["questions_answered"] == 1
+    assert checkpoint["questions_total"] == 15
+    assert checkpoint["answer_records"][0]["answer"] == "Leeds United was founded in 1919."
+
+    partial_payloads = [
+        item for item in persistence.run_payloads
+        if item.get("record_type") == "question_first_partial_dossier"
+    ]
+    assert len(partial_payloads) == 2
+    assert [item["record_id"] for item in partial_payloads] == [
+        "leedsunited:q1_foundation",
+        "leedsunited:q2_digital_stack",
+    ]
+    partial_dossier = partial_payloads[-1]["payload"]["dossier"]
+    assert partial_dossier["quality_state"] == "partial"
+    assert partial_dossier["publication_status"] == "published_partial"
+    assert partial_dossier["question_first"]["questions_answered"] == 2
+    assert partial_dossier["question_first_checkpoint"]["last_completed_question_id"] == "q2_digital_stack"
+    assert partial_dossier["question_first_checkpoint"]["next_question_id"] == "q3_leadership"
+
+
+def test_canonical_publication_dossier_infers_quality_state_from_question_first():
+    orchestrator = PipelineOrchestrator(
+        dossier_generator=FakeDossierGenerator(),
+        discovery=FakeDiscovery(),
+        ralph_validator=FakeRalph(),
+        graphiti_service=FakeGraphiti(),
+        dashboard_scorer=FakeDashboardScorer(),
+        persistence_coordinator=CapturingPersistenceCoordinator(),
+        brightdata_client=None,
+        claude_client=None,
+    )
+
+    dossier = orchestrator._build_canonical_publication_dossier(
+        dossier={
+            "question_first": {
+                "questions_answered": 3,
+                "questions_total": 15,
+                "answers": [
+                    {"question_id": "q1_foundation"},
+                    {"question_id": "q2_digital_stack"},
+                    {"question_id": "q3_leadership"},
+                ],
+            }
+        },
+        entity_id="red-star",
+        entity_name="Red Star Belgrade",
+        entity_type="CLUB",
+        run_id="run-red-star",
+    )
+
+    assert dossier["quality_state"] == "partial"
+    assert dossier["publication_status"] == "published"
+    assert dossier["metadata"]["quality_state"] == "partial"
+    assert dossier["metadata"]["question_first"]["quality_state"] == "partial"
+    assert dossier["question_first_checkpoint"]["questions_answered"] == 3
+    assert dossier["question_first_checkpoint"]["last_completed_question_id"] == "q3_leadership"
+    assert dossier["metadata"]["question_first_checkpoint"]["questions_answered"] == 3
+
+
+@pytest.mark.asyncio
 async def test_pipeline_orchestrator_converts_question_first_timeout_seconds_to_batch_milliseconds(monkeypatch):
     monkeypatch.setenv("PIPELINE_QUESTION_FIRST_ENABLED", "true")
     monkeypatch.setenv("PIPELINE_QUESTION_FIRST_PERSIST_REPORTS", "false")
@@ -984,6 +1207,91 @@ async def test_pipeline_orchestrator_converts_question_first_timeout_seconds_to_
     )
 
     assert captured["opencode_timeout_ms"] == 60_000
+
+
+@pytest.mark.asyncio
+async def test_pipeline_orchestrator_resumes_from_richest_persisted_question_checkpoint(monkeypatch):
+    monkeypatch.setenv("PIPELINE_QUESTION_FIRST_ENABLED", "true")
+    monkeypatch.setenv("PIPELINE_QUESTION_FIRST_PERSIST_REPORTS", "false")
+
+    import question_first_dossier_runner as question_first_runner
+    try:
+        import backend.question_first_dossier_runner as backend_question_first_runner
+    except ModuleNotFoundError:
+        import question_first_dossier_runner as backend_question_first_runner
+
+    captured = {}
+
+    async def fake_run_question_first_dossier_from_payload(**kwargs):
+        captured["checkpoint"] = kwargs.get("question_first_checkpoint")
+        captured["resume"] = kwargs.get("resume")
+        payload = dict(kwargs["source_payload"])
+        payload["question_first"] = {
+            "enabled": True,
+            "questions_answered": 7,
+            "answers": [
+                {"question_id": "q9_news_signal", "validation_state": "provisional"}
+            ],
+        }
+        return payload
+
+    monkeypatch.setattr(question_first_runner, "run_question_first_dossier_from_payload", fake_run_question_first_dossier_from_payload)
+    monkeypatch.setattr(backend_question_first_runner, "run_question_first_dossier_from_payload", fake_run_question_first_dossier_from_payload)
+
+    graphiti = FakeGraphiti()
+    graphiti.supabase_client = _QuestionCheckpointSupabase(
+        dossier_rows=[
+            {
+                "entity_id": "jason",
+                "dossier_data": {
+                    "question_first_checkpoint": {
+                        "schema_version": "question_first_checkpoint_v1",
+                        "questions_answered": 7,
+                        "questions_total": 15,
+                        "last_completed_question_id": "q9_news_signal",
+                        "next_question_id": "q10_hiring_signal",
+                        "answer_records": [
+                            {"question_id": "q9_news_signal", "validation_state": "provisional"}
+                        ],
+                    }
+                },
+            }
+        ]
+    )
+    orchestrator = PipelineOrchestrator(
+        dossier_generator=FakeDossierGenerator(),
+        discovery=FakeDiscovery(),
+        ralph_validator=FakeRalph(),
+        graphiti_service=graphiti,
+        dashboard_scorer=FakeDashboardScorer(),
+        persistence_coordinator=FakePersistenceCoordinator(),
+        brightdata_client=None,
+        claude_client=None,
+    )
+
+    await orchestrator.run_entity_pipeline(
+        entity_id="jason",
+        entity_name="Jason Whittingham",
+        entity_type="PERSON",
+        priority_score=50,
+        request_metadata={
+            "question_first_checkpoint": {
+                "schema_version": "question_first_checkpoint_v1",
+                "questions_answered": 1,
+                "questions_total": 15,
+                "last_completed_question_id": "q1_foundation",
+                "next_question_id": "q2_digital_stack",
+                "answer_records": [
+                    {"question_id": "q1_foundation", "validation_state": "tool_call_missing"}
+                ],
+            }
+        },
+    )
+
+    assert captured["resume"] is True
+    assert captured["checkpoint"]["questions_answered"] == 7
+    assert captured["checkpoint"]["last_completed_question_id"] == "q9_news_signal"
+    assert captured["checkpoint"]["next_question_id"] == "q10_hiring_signal"
 
 
 def test_pipeline_orchestrator_defaults_question_first_timeout_to_five_minutes(monkeypatch):
