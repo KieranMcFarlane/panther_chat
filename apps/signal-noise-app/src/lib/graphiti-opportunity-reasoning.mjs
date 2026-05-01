@@ -867,12 +867,20 @@ export function buildGraphitiOpportunityReasoning(input = {}) {
       reason: `Related through ${toText(record.type) || 'Graphiti relationship'} evidence.`,
     }
   })
+  let recencyLabel = recencyHours === null ? 'unknown' : recencyHours <= FRESH_WINDOW_HOURS ? 'fresh' : recencyHours <= staleHours ? 'recent' : 'stale'
+  if ((status === 'active' || status === 'accelerating') && hasCurrentTrigger) {
+    recencyLabel = triggerRecencyHours === null || triggerRecencyHours > staleHours
+      ? 'fresh'
+      : triggerRecencyHours <= FRESH_WINDOW_HOURS
+        ? 'fresh'
+        : 'recent'
+  }
 
   return {
     temporal_reasoning: {
       status,
       reason,
-      recency_label: recencyHours === null ? 'unknown' : recencyHours <= FRESH_WINDOW_HOURS ? 'fresh' : recencyHours <= staleHours ? 'recent' : 'stale',
+      recency_label: recencyLabel,
       first_seen_at: isoOrNull(input.detectedAt) || isoOrNull(input.materializedAt),
       last_seen_at: isoOrNull(input.lastSeenAt) || isoOrNull(input.materializedAt) || isoOrNull(input.detectedAt),
       detected_at: isoOrNull(input.detectedAt),

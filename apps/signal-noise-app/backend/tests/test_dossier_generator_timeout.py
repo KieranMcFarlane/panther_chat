@@ -539,6 +539,72 @@ def test_should_replace_persisted_dossier_accepts_better_complete_candidate():
     assert main.should_replace_persisted_dossier(existing=existing, candidate=candidate) is True
 
 
+def test_enrich_persisted_dossier_marks_provider_failures_failed():
+    provider_failure_answer = {
+        "question_id": "q1_foundation",
+        "answer": None,
+        "validation_state": "tool_call_missing",
+        "prompt_trace": {
+            "failure_name": "OpenCodeProviderInsufficientBalanceError",
+            "status": "atomic_retrieval_tool_call_missing",
+        },
+    }
+
+    dossier = main.enrich_persisted_dossier_payload(
+        {
+            "question_first": {
+                "questions_answered": 1,
+                "questions_total": 15,
+                "answers": [provider_failure_answer],
+            },
+            "question_first_checkpoint": {
+                "schema_version": "question_first_checkpoint_v1",
+                "questions_answered": 1,
+                "questions_total": 15,
+                "answer_records": [provider_failure_answer],
+            },
+        },
+        entity_id="provider-failed",
+        entity_name="Provider Failed FC",
+        entity_type="CLUB",
+    )
+
+    assert dossier["quality_state"] == "failed"
+    assert dossier["publish_status"] == "failed"
+    assert dossier["publication_status"] == "failed"
+    assert dossier["metadata"]["failure_class"] == "provider_infrastructure_failure"
+    assert dossier["question_first"]["quality_state"] == "failed"
+
+
+def test_should_replace_persisted_dossier_rejects_provider_failure_candidate():
+    existing = {
+        "publish_status": "published",
+        "quality_state": "partial",
+        "questions": [{"question_id": "q1_foundation", "terminal_state": "answered"}],
+    }
+    candidate = main.enrich_persisted_dossier_payload(
+        {
+            "question_first": {
+                "questions_answered": 1,
+                "answers": [
+                    {
+                        "question_id": "q1_foundation",
+                        "validation_state": "tool_call_missing",
+                        "prompt_trace": {
+                            "failure_name": "OpenCodeProviderInsufficientBalanceError",
+                        },
+                    }
+                ],
+            }
+        },
+        entity_id="provider-failed",
+        entity_name="Provider Failed FC",
+        entity_type="CLUB",
+    )
+
+    assert main.should_replace_persisted_dossier(existing=existing, candidate=candidate) is False
+
+
 def test_build_question_repair_source_dossier_response_synthesizes_q14_from_q13_and_q7(monkeypatch, tmp_path):
     repair_root = tmp_path / "question-first-diagnostics" / "fc-porto-2027"
     repair_root.mkdir(parents=True)

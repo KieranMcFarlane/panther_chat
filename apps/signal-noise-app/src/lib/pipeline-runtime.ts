@@ -366,7 +366,11 @@ function classifyQueueState(row: PipelineRunRow, workerRunning: boolean): Pipeli
   const publicationStatus = toText(metadata.publication_status).toLowerCase()
   const reconciliationState = toText(metadata.reconciliation_state).toLowerCase()
   const retryState = toText(metadata.retry_state).toLowerCase()
-  if (!workerRunning && (status === 'running' || status === 'claiming' || status === 'queued' || status === 'retrying')) {
+  const activeStatus = status === 'running' || status === 'retrying' || status === 'reconciling'
+  if (!workerRunning && (activeStatus || status === 'claiming' || status === 'queued')) {
+    return 'worker_stale'
+  }
+  if (activeStatus && !hasFreshExecutionHeartbeat(row)) {
     return 'worker_stale'
   }
   if (publicationStatus === 'published_partial' || toText(metadata.quality_state).toLowerCase() === 'partial') {
@@ -648,7 +652,7 @@ function selectWorkerReferencedRun(
   if (!workerBatchId && !workerEntityId) return null
 
   return records.find((record) => {
-    if (!isLiveQueueState(record.queue_state)) return false
+    if (!isCurrentLiveRun(record)) return false
     if (workerBatchId && toText(record.batch_id) === workerBatchId) return true
     if (workerEntityId && toText(record.canonical_entity_id || record.entity_id) === workerEntityId) return true
     return false

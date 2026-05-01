@@ -1147,6 +1147,138 @@ def test_canonical_publication_dossier_infers_quality_state_from_question_first(
     assert dossier["metadata"]["question_first_checkpoint"]["questions_answered"] == 3
 
 
+def test_canonical_publication_dossier_marks_provider_infrastructure_failure_as_failed():
+    orchestrator = PipelineOrchestrator(
+        dossier_generator=FakeDossierGenerator(),
+        discovery=FakeDiscovery(),
+        ralph_validator=FakeRalph(),
+        graphiti_service=FakeGraphiti(),
+        dashboard_scorer=FakeDashboardScorer(),
+        persistence_coordinator=CapturingPersistenceCoordinator(),
+        brightdata_client=None,
+        claude_client=None,
+    )
+
+    provider_failure_answer = {
+        "question_id": "q1_foundation",
+        "answer": None,
+        "validation_state": "tool_call_missing",
+        "prompt_trace": {
+            "failure_name": "OpenCodeProviderInsufficientBalanceError",
+            "status": "atomic_retrieval_tool_call_missing",
+        },
+    }
+
+    dossier = orchestrator._build_canonical_publication_dossier(
+        dossier={
+            "question_first": {
+                "questions_answered": 1,
+                "questions_total": 15,
+                "answers": [provider_failure_answer],
+            },
+            "question_first_checkpoint": {
+                "schema_version": "question_first_checkpoint_v1",
+                "questions_answered": 1,
+                "questions_total": 15,
+                "answer_records": [provider_failure_answer],
+            },
+        },
+        entity_id="provider-failed",
+        entity_name="Provider Failed FC",
+        entity_type="CLUB",
+        run_id="run-provider-failed",
+    )
+
+    assert dossier["quality_state"] == "failed"
+    assert dossier["publication_status"] == "failed"
+    assert dossier["publish_status"] == "failed"
+    assert dossier["metadata"]["quality_state"] == "failed"
+    assert dossier["metadata"]["failure_class"] == "provider_infrastructure_failure"
+    assert dossier["metadata"]["question_first"]["quality_state"] == "failed"
+
+
+@pytest.mark.asyncio
+async def test_pipeline_orchestrator_skips_partial_snapshot_for_provider_infrastructure_failure(monkeypatch):
+    monkeypatch.setenv("PIPELINE_QUESTION_FIRST_ENABLED", "true")
+    monkeypatch.setenv("PIPELINE_QUESTION_FIRST_PERSIST_REPORTS", "false")
+
+    import question_first_dossier_runner as question_first_runner
+    try:
+        import backend.question_first_dossier_runner as backend_question_first_runner
+    except ModuleNotFoundError:
+        import question_first_dossier_runner as backend_question_first_runner
+
+    provider_failure_answer = {
+        "question_id": "q1_foundation",
+        "question_text": "What is the canonical identity?",
+        "answer": None,
+        "validation_state": "tool_call_missing",
+        "prompt_trace": {
+            "failure_name": "OpenCodeProviderInsufficientBalanceError",
+            "status": "atomic_retrieval_tool_call_missing",
+        },
+    }
+
+    async def fake_run_question_first_dossier_from_payload(**kwargs):
+        progress_callback = kwargs.get("progress_callback")
+        if progress_callback is not None:
+            await progress_callback(
+                {
+                    "event_type": "question_completed",
+                    "phase": "dossier_generation",
+                    "current_substep": "question_first_running",
+                    "current_question_id": "q1_foundation",
+                    "current_question_text": "What is the canonical identity?",
+                    "questions_answered": 1,
+                    "questions_total": 15,
+                    "completed_question": provider_failure_answer,
+                }
+            )
+        payload = dict(kwargs["source_payload"])
+        payload["question_first"] = {
+            "enabled": True,
+            "schema_version": "question_first_run_v1",
+            "questions_answered": 1,
+            "questions_total": 15,
+            "answers": [provider_failure_answer],
+        }
+        payload["question_first_checkpoint"] = {
+            "schema_version": "question_first_checkpoint_v1",
+            "questions_answered": 1,
+            "questions_total": 15,
+            "answer_records": [provider_failure_answer],
+        }
+        return payload
+
+    monkeypatch.setattr(question_first_runner, "run_question_first_dossier_from_payload", fake_run_question_first_dossier_from_payload)
+    monkeypatch.setattr(backend_question_first_runner, "run_question_first_dossier_from_payload", fake_run_question_first_dossier_from_payload)
+
+    persistence = CapturingPersistenceCoordinator()
+    orchestrator = PipelineOrchestrator(
+        dossier_generator=FakeDossierGenerator(),
+        discovery=FakeDiscovery(),
+        ralph_validator=FakeRalph(),
+        graphiti_service=FakeGraphiti(),
+        dashboard_scorer=FakeDashboardScorer(),
+        persistence_coordinator=persistence,
+        brightdata_client=None,
+        claude_client=None,
+    )
+
+    await orchestrator.run_entity_pipeline(
+        entity_id="provider-failed",
+        entity_name="Provider Failed FC",
+        entity_type="CLUB",
+        priority_score=95,
+    )
+
+    partial_payloads = [
+        item for item in persistence.run_payloads
+        if item.get("record_type") == "question_first_partial_dossier"
+    ]
+    assert partial_payloads == []
+
+
 @pytest.mark.asyncio
 async def test_pipeline_orchestrator_converts_question_first_timeout_seconds_to_batch_milliseconds(monkeypatch):
     monkeypatch.setenv("PIPELINE_QUESTION_FIRST_ENABLED", "true")

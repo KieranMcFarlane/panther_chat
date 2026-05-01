@@ -330,3 +330,65 @@ test('pipeline runtime does not treat a claiming row without fresh heartbeat as 
   assert.equal(snapshot.current_run?.queue_state, 'worker_stale')
   assert.equal(snapshot.failure_buckets.worker_stale, 1)
 })
+
+test('pipeline runtime does not expose stale running rows as live work when the worker process is running', () => {
+  const staleHeartbeatAt = new Date(Date.now() - 24 * 60 * 60_000).toISOString()
+  const snapshot = buildPipelineRuntimeSnapshot({
+    snapshot_at: '2026-04-23T12:00:00.000Z',
+    control: {
+      is_paused: false,
+      pause_reason: null,
+      stop_reason: null,
+      stop_details: null,
+      updated_at: '2026-04-23T11:59:59.000Z',
+      desired_state: 'running',
+      requested_state: 'running',
+      observed_state: 'running',
+      transition_state: 'running',
+    },
+    worker: {
+      worker_process_state: 'running',
+      worker_health: 'healthy',
+      worker_pid: 123,
+      worker_command: 'npm run worker:entity-pipeline',
+      worker_state_path: '/tmp/entity-pipeline-worker-state.json',
+      worker_pid_path: '/tmp/entity-pipeline-worker.pid',
+      started_at: '2026-04-23T11:58:00.000Z',
+      stopped_at: null,
+      updated_at: '2026-04-23T11:59:59.000Z',
+      last_error: null,
+      current_batch_id: 'import_stale',
+      current_canonical_entity_id: 'pge-skra',
+    },
+    fastmcp: {
+      url: 'http://127.0.0.1:8001/health',
+      reachable: true,
+      status_code: 200,
+      latency_ms: 10,
+      error: null,
+    },
+    rows: [
+      {
+        batch_id: 'import_stale',
+        entity_id: 'pge-skra',
+        canonical_entity_id: 'pge-skra',
+        entity_name: 'PGE Skra Belchatow',
+        status: 'running',
+        phase: 'dossier_generation',
+        started_at: staleHeartbeatAt,
+        completed_at: null,
+        metadata: {
+          heartbeat_at: staleHeartbeatAt,
+          current_question_id: 'q1_foundation',
+          current_question_text: 'What is the canonical identity?',
+        },
+      },
+    ],
+    dossiers: [],
+  })
+
+  assert.equal(snapshot.worker.worker_process_state, 'running')
+  assert.equal(snapshot.current_live_run, null)
+  assert.equal(snapshot.current_run?.queue_state, 'worker_stale')
+  assert.equal(snapshot.failure_buckets.worker_stale, 1)
+})

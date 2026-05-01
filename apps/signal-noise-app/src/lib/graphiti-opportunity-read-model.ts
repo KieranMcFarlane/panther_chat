@@ -414,9 +414,7 @@ function toRecord(row: PersistedGraphitiOpportunityRow): GraphitiOpportunityCard
     relationships: Array.isArray(row.relationships) ? row.relationships : [],
     rawPayload,
   })
-  const temporalReasoning = asRecord(rawPayload.temporal_reasoning).status
-    ? rawPayload.temporal_reasoning
-    : computedReasoning.temporal_reasoning
+  const temporalReasoning = computedReasoning.temporal_reasoning
   const patternReasoning = asRecord(rawPayload.pattern_reasoning).pattern_status
     ? rawPayload.pattern_reasoning
     : computedReasoning.pattern_reasoning

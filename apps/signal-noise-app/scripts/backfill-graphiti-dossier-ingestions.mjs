@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 config({ path: resolve(__dirname, '..', '.env'), quiet: true })
+const OPENCODE_PROVIDER_INSUFFICIENT_BALANCE_ERROR = 'OpenCodeProviderInsufficientBalanceError'
 
 export function parseArgs(argv = process.argv.slice(2)) {
   return {
@@ -48,8 +49,28 @@ function isPlaceholderText(value) {
     || text === 'unknown'
     || text.includes('no deterministic answer was produced for this question')
     || text.includes('question execution failed before a safe answer could be produced')
-    || text.includes('opencodeproviderinsufficientbalanceerror')
+    || text.includes(OPENCODE_PROVIDER_INSUFFICIENT_BALANCE_ERROR.toLowerCase())
   )
+}
+
+function isProviderInfrastructureFailure(value) {
+  if (value === null || value === undefined) return false
+  if (typeof value === 'string') {
+    const text = value.toLowerCase()
+    return text.includes(OPENCODE_PROVIDER_INSUFFICIENT_BALANCE_ERROR.toLowerCase())
+      || text.includes('providerinsufficientbalance')
+      || text.includes('insufficient balance')
+  }
+  if (typeof value === 'number' || typeof value === 'boolean') return false
+  if (Array.isArray(value)) return value.some(isProviderInfrastructureFailure)
+  if (typeof value !== 'object') return false
+  const failureName = toText(value.failure_name || value.error_name || value.name).toLowerCase()
+  const errorType = toText(value.error_type || value.failure_type).toLowerCase()
+  const message = toText(value.message || value.error_message || value.stderr || value.error).toLowerCase()
+  return failureName.includes(OPENCODE_PROVIDER_INSUFFICIENT_BALANCE_ERROR.toLowerCase())
+    || errorType.includes('provider_infrastructure_failure')
+    || message.includes(OPENCODE_PROVIDER_INSUFFICIENT_BALANCE_ERROR.toLowerCase())
+    || Object.values(value).some(isProviderInfrastructureFailure)
 }
 
 function stableJson(value) {
@@ -144,7 +165,13 @@ function buildEpisode(row) {
   const discoverySummary = asRecord(asRecord(dossier.question_first).discovery_summary || dossier.discovery_summary)
   const graphitiSalesBrief = asRecord(discoverySummary.graphiti_sales_brief || dossier.graphiti_sales_brief)
   const yellowPanther = asRecord(discoverySummary.yellow_panther_opportunity || dossier.yellow_panther_opportunity)
-  const hasContent = questionFacts.some((fact) => fact.summary) || evidenceUrls.length > 0 || Object.keys(graphitiSalesBrief).length > 0 || Object.keys(yellowPanther).length > 0
+  const providerInfrastructureFailure = answers.some(isProviderInfrastructureFailure) || isProviderInfrastructureFailure(dossier)
+  const hasContent = !providerInfrastructureFailure && (
+    questionFacts.some((fact) => fact.summary)
+    || evidenceUrls.length > 0
+    || Object.keys(graphitiSalesBrief).length > 0
+    || Object.keys(yellowPanther).length > 0
+  )
   const qualityState = inferQualityState(dossier, answers.length, hasContent)
   const referenceTime = row.generated_at || row.created_at || new Date().toISOString()
   const body = {
@@ -169,13 +196,14 @@ function buildEpisode(row) {
     promoted_summary: discoverySummary.summary || dossier.executive_summary || dossier.recommended_approach || null,
   }
   return {
-    status: hasContent ? 'ingested' : 'skipped_empty',
-    quality_state: hasContent ? qualityState : 'empty',
+    status: providerInfrastructureFailure ? 'failed' : hasContent ? 'ingested' : 'skipped_empty',
+    quality_state: providerInfrastructureFailure ? 'failed' : hasContent ? qualityState : 'empty',
     answer_count: answers.length,
     evidence_count: evidenceUrls.length,
     content_hash: contentHash(body),
     episode_body: body,
     reference_time: referenceTime,
+    failure_reason: providerInfrastructureFailure ? 'provider_infrastructure_failure' : null,
   }
 }
 
@@ -210,12 +238,12 @@ async function upsertLedger(pool, row, episode) {
     insert into graphiti_dossier_ingestions (
       canonical_entity_id, dossier_id, entity_id, entity_name, entity_type,
       content_hash, status, quality_state, answer_count, evidence_count,
-      source_created_at, source_generated_at, ingested_at, source_description,
+      source_created_at, source_generated_at, ingested_at, last_error, source_description,
       reference_time, episode_body, raw_metadata, updated_at
     ) values (
       $1, $2::uuid, $3, $4, $5, $6, $7, $8, $9, $10,
       $11, $12, case when $7 = 'ingested' then now() else null end,
-      'entity_dossiers', $13, $14::jsonb, $15::jsonb, now()
+      $13, 'entity_dossiers', $14, $15::jsonb, $16::jsonb, now()
     )
     on conflict (canonical_entity_id, content_hash)
     do update set
@@ -230,6 +258,7 @@ async function upsertLedger(pool, row, episode) {
       source_created_at = excluded.source_created_at,
       source_generated_at = excluded.source_generated_at,
       ingested_at = excluded.ingested_at,
+      last_error = excluded.last_error,
       reference_time = excluded.reference_time,
       episode_body = excluded.episode_body,
       raw_metadata = excluded.raw_metadata,
@@ -247,9 +276,13 @@ async function upsertLedger(pool, row, episode) {
     episode.evidence_count,
     row.created_at,
     row.generated_at,
+    episode.failure_reason,
     episode.reference_time,
     JSON.stringify(episode.episode_body),
-    JSON.stringify({ backfilled_by: 'backfill-graphiti-dossier-ingestions' }),
+    JSON.stringify({
+      backfilled_by: 'backfill-graphiti-dossier-ingestions',
+      failure_reason: episode.failure_reason,
+    }),
   ])
 }
 
@@ -304,6 +337,7 @@ async function main() {
         const episode = buildEpisode(row)
         if (episode.status === 'ingested') stats.would_ingest += 1
         if (episode.status === 'skipped_empty') stats.would_skip_empty += 1
+        if (episode.status === 'failed') stats.failed += 1
         if (stats.sample.length < 10) {
           stats.sample.push({
             entity_name: row.entity_name,

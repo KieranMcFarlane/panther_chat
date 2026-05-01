@@ -410,9 +410,9 @@ test('undated buying trigger is watch-only unless it contains a current explicit
     ],
   }))
   const currentText = buildGraphitiOpportunityReasoning(baseInput({
-    detectedAt: '2026-04-30T10:00:00.000Z',
-    lastSeenAt: '2026-04-30T11:00:00.000Z',
-    materializedAt: '2026-04-30T11:00:00.000Z',
+    detectedAt: '2026-04-20T10:00:00.000Z',
+    lastSeenAt: '2026-04-20T11:00:00.000Z',
+    materializedAt: '2026-04-20T11:00:00.000Z',
     confidence: 90,
     yellowPantherFit: 90,
     supportingSignals: ['Official 2026 app launch creates a current digital platform opportunity.'],
@@ -425,6 +425,7 @@ test('undated buying trigger is watch-only unless it contains a current explicit
   assert.equal(undated.temporal_reasoning.status, 'emerging')
   assert.equal(currentText.commercial_qualification.status, 'active')
   assert.equal(currentText.temporal_reasoning.status, 'active')
+  assert.notEqual(currentText.temporal_reasoning.recency_label, 'stale')
 })
 
 test('Doncaster-style hiring signal produces client-ready YP fit breakdown', () => {

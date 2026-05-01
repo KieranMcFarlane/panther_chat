@@ -48,6 +48,7 @@ except ImportError:
 
 logger = logging.getLogger(__name__)
 DEFAULT_OPENCODE_MODEL = "zai-coding-plan/glm-5.1"
+OPENCODE_PROVIDER_INSUFFICIENT_BALANCE_ERROR = "OpenCodeProviderInsufficientBalanceError"
 
 
 @dataclass
@@ -137,6 +138,34 @@ class PipelineOrchestrator:
                 }
             )
         return metadata
+
+    @classmethod
+    def _has_provider_infrastructure_failure(cls, value: Any) -> bool:
+        if value is None:
+            return False
+        if isinstance(value, str):
+            text = value.lower()
+            return (
+                OPENCODE_PROVIDER_INSUFFICIENT_BALANCE_ERROR.lower() in text
+                or "providerinsufficientbalance" in text
+                or "insufficient balance" in text
+            )
+        if isinstance(value, (int, float, bool)):
+            return False
+        if isinstance(value, list):
+            return any(cls._has_provider_infrastructure_failure(item) for item in value)
+        if not isinstance(value, dict):
+            return False
+
+        failure_name = str(value.get("failure_name") or value.get("error_name") or value.get("name") or "").lower()
+        error_type = str(value.get("error_type") or value.get("failure_type") or "").lower()
+        message = str(value.get("message") or value.get("error_message") or value.get("stderr") or value.get("error") or "").lower()
+        return (
+            OPENCODE_PROVIDER_INSUFFICIENT_BALANCE_ERROR.lower() in failure_name
+            or "provider_infrastructure_failure" in error_type
+            or OPENCODE_PROVIDER_INSUFFICIENT_BALANCE_ERROR.lower() in message
+            or any(cls._has_provider_infrastructure_failure(item) for item in value.values())
+        )
 
     def _build_question_first_seed_dossier(
         self,
@@ -383,13 +412,26 @@ class PipelineOrchestrator:
             }
         )
         metadata = payload.get("metadata") if isinstance(payload.get("metadata"), dict) else {}
+        provider_failure = self._has_provider_infrastructure_failure(checkpoint)
+        if provider_failure:
+            payload["quality_state"] = "failed"
+            payload["publication_status"] = "failed"
+            payload["publish_status"] = "failed"
         payload["metadata"] = {
             **metadata,
             "entity_id": entity_id,
             "entity_name": entity_name,
             "entity_type": entity_type,
-            "quality_state": "partial",
-            "publication_status": "published_partial",
+            "quality_state": "failed" if provider_failure else "partial",
+            "publication_status": "failed" if provider_failure else "published_partial",
+            **(
+                {
+                    "failure_class": "provider_infrastructure_failure",
+                    "failure_reason": "provider_infrastructure_failure",
+                }
+                if provider_failure
+                else {}
+            ),
             "question_first_checkpoint": deepcopy(checkpoint),
             **self._question_first_runtime_metadata(request_metadata=request_metadata),
         }
@@ -462,8 +504,11 @@ class PipelineOrchestrator:
 
         question_first = payload.get("question_first") if isinstance(payload.get("question_first"), dict) else {}
         if question_first:
+            provider_failure = self._has_provider_infrastructure_failure(payload)
             payload["question_first"] = question_first
             quality_state = str(question_first.get("quality_state") or payload.get("quality_state") or "").strip() or None
+            if provider_failure:
+                quality_state = "failed"
             if not quality_state:
                 answers = question_first.get("answers") if isinstance(question_first.get("answers"), list) else []
                 try:
@@ -473,6 +518,11 @@ class PipelineOrchestrator:
                 if questions_answered > 0:
                     quality_state = "partial"
             payload["quality_state"] = quality_state
+            if provider_failure:
+                payload["publication_status"] = "failed"
+                payload["publish_status"] = "failed"
+                metadata["failure_class"] = "provider_infrastructure_failure"
+                metadata["failure_reason"] = "provider_infrastructure_failure"
             metadata["quality_state"] = quality_state
             checkpoint = payload.get("question_first_checkpoint")
             if not isinstance(checkpoint, dict):
@@ -518,10 +568,13 @@ class PipelineOrchestrator:
                 **metadata_question_first,
                 "generated_at": now_iso,
                 "run_id": run_id,
-                "publish_status": "published",
+                "publish_status": "failed" if provider_failure else "published",
                 "quality_state": quality_state,
             }
             question_first["quality_state"] = question_first.get("quality_state") or quality_state
+            if provider_failure:
+                question_first["publish_status"] = "failed"
+                question_first["failure_class"] = "provider_infrastructure_failure"
 
             if str((request_metadata or {}).get("rerun_mode") or "").strip().lower() == "question":
                 repair_meta = {
@@ -1582,6 +1635,22 @@ class PipelineOrchestrator:
             )
             if event.get("event_type") == "question_completed":
                 try:
+                    if self._has_provider_infrastructure_failure(question_first_checkpoint):
+                        await self._emit_phase_update(
+                            phase_callback,
+                            "dossier_generation",
+                            {
+                                "status": "provider_infrastructure_failure",
+                                **runtime_metadata,
+                                "failure_class": "provider_infrastructure_failure",
+                                "failure_reason": "provider_infrastructure_failure",
+                                "current_question_id": event.get("current_question_id"),
+                                "questions_answered": event.get("questions_answered"),
+                                "questions_total": event.get("questions_total"),
+                                "question_first_checkpoint": deepcopy(question_first_checkpoint),
+                            },
+                        )
+                        return
                     completed_question = event.get("completed_question")
                     if not isinstance(completed_question, dict):
                         completed_question = {}

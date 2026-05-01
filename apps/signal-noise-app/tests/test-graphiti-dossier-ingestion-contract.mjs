@@ -50,6 +50,17 @@ test('dossier ingestion module separates all-dossier ingestion from opportunity 
   assert.ok(ingestionSource.includes("typeof value === 'string' && /^https?:\\/\\//i.test(value.trim())"))
 })
 
+test('dossier ingestion classifies OpenCode provider failures as failed infrastructure, not partial content', () => {
+  const ingestionSource = readFileSync(ingestionModulePath, 'utf8')
+
+  assert.match(ingestionSource, /function isProviderInfrastructureFailure/)
+  assert.match(ingestionSource, /OpenCodeProviderInsufficientBalanceError/)
+  assert.match(ingestionSource, /provider_infrastructure_failure/)
+  assert.match(ingestionSource, /status: providerInfrastructureFailure \? 'failed'/)
+  assert.match(ingestionSource, /quality_state: providerInfrastructureFailure \? 'failed'/)
+  assert.match(ingestionSource, /last_error: episode\.failure_reason/)
+})
+
 test('opportunity materialization deactivates failed-only dossier rows instead of keeping them active', () => {
   assert.match(persistenceSource, /deactivateFailedOnlyDossierOpportunities/)
   assert.match(persistenceSource, /title\.ilike\('Question execution failed before a safe answer could be produced%'\)/)

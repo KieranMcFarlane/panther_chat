@@ -27,7 +27,10 @@ type NormalizedDossierIngestion = {
   evidence_urls: string[]
   has_informative_content: boolean
   failed_only: boolean
+  failure_reason: string | null
 }
+
+const OPENCODE_PROVIDER_INSUFFICIENT_BALANCE_ERROR = 'OpenCodeProviderInsufficientBalanceError'
 
 function asRecord(value: unknown): JsonRecord {
   return value && typeof value === 'object' && !Array.isArray(value) ? value as JsonRecord : {}
@@ -74,10 +77,32 @@ function isFailedOnlyText(value: unknown): boolean {
   const text = toText(value).toLowerCase()
   return Boolean(text) && (
     text.includes('question execution failed before a safe answer could be produced')
-    || text.includes('opencodeproviderinsufficientbalanceerror')
+    || text.includes(OPENCODE_PROVIDER_INSUFFICIENT_BALANCE_ERROR.toLowerCase())
     || text.includes('tool/runtime failure')
     || text.includes('failed before a safe answer')
   )
+}
+
+function isProviderInfrastructureFailure(value: unknown): boolean {
+  if (value === null || value === undefined) return false
+  if (typeof value === 'string') {
+    const text = value.toLowerCase()
+    return text.includes(OPENCODE_PROVIDER_INSUFFICIENT_BALANCE_ERROR.toLowerCase())
+      || text.includes('providerinsufficientbalance')
+      || text.includes('insufficient balance')
+  }
+  if (typeof value === 'number' || typeof value === 'boolean') return false
+  if (Array.isArray(value)) return value.some(isProviderInfrastructureFailure)
+  if (typeof value !== 'object') return false
+
+  const record = value as JsonRecord
+  const failureName = toText(record.failure_name || record.error_name || record.name).toLowerCase()
+  const errorType = toText(record.error_type || record.failure_type).toLowerCase()
+  const message = toText(record.message || record.error_message || record.stderr || record.error).toLowerCase()
+  return failureName.includes(OPENCODE_PROVIDER_INSUFFICIENT_BALANCE_ERROR.toLowerCase())
+    || errorType.includes('provider_infrastructure_failure')
+    || message.includes(OPENCODE_PROVIDER_INSUFFICIENT_BALANCE_ERROR.toLowerCase())
+    || Object.values(record).some(isProviderInfrastructureFailure)
 }
 
 function isPlaceholderText(value: unknown): boolean {
@@ -211,6 +236,7 @@ export function normalizeDossierIngestionState(dossier: JsonRecord): NormalizedD
   const answerRecords = collectAnswerRecords(dossier)
   const questionFacts = buildQuestionFacts(answerRecords)
   const evidenceUrls = Array.from(collectEvidenceUrls(dossier))
+  const providerInfrastructureFailure = answerRecords.some(isProviderInfrastructureFailure) || isProviderInfrastructureFailure(dossier)
   const failedOnly = questionFacts.length > 0 && questionFacts.every((fact) => !toText(fact.summary) && (fact.evidence_urls as string[]).length === 0)
   const hasNarrativeFact = questionFacts.some((fact) => Boolean(toText(fact.summary)))
   const hasEvidence = evidenceUrls.length > 0 || questionFacts.some((fact) => (fact.evidence_urls as string[]).length > 0)
@@ -218,18 +244,19 @@ export function normalizeDossierIngestionState(dossier: JsonRecord): NormalizedD
   const graphitiSalesBrief = asRecord(discoverySummary.graphiti_sales_brief || dossier.graphiti_sales_brief)
   const yellowPanther = asRecord(discoverySummary.yellow_panther_opportunity || dossier.yellow_panther_opportunity)
   const hasCommercialContext = Object.keys(graphitiSalesBrief).length > 0 || Object.keys(yellowPanther).length > 0
-  const hasInformativeContent = (hasNarrativeFact || hasEvidence || hasCommercialContext) && !failedOnly
+  const hasInformativeContent = (hasNarrativeFact || hasEvidence || hasCommercialContext) && !failedOnly && !providerInfrastructureFailure
   const qualityState = inferQualityState(dossier, answerRecords.length, failedOnly)
 
   return {
-    status: hasInformativeContent ? 'ingested' : 'skipped_empty',
-    quality_state: hasInformativeContent ? qualityState : 'empty',
+    status: providerInfrastructureFailure ? 'failed' : hasInformativeContent ? 'ingested' : 'skipped_empty',
+    quality_state: providerInfrastructureFailure ? 'failed' : hasInformativeContent ? qualityState : 'empty',
     answer_count: answerRecords.length,
     evidence_count: evidenceUrls.length,
     question_facts: questionFacts,
     evidence_urls: evidenceUrls,
     has_informative_content: hasInformativeContent,
-    failed_only: failedOnly,
+    failed_only: failedOnly || providerInfrastructureFailure,
+    failure_reason: providerInfrastructureFailure ? 'provider_infrastructure_failure' : null,
   }
 }
 
@@ -311,13 +338,14 @@ export async function upsertDossierIngestionLedger(row: CanonicalDossierRow, dry
     source_created_at: sourceCreatedAt,
     source_generated_at: sourceGeneratedAt,
     ingested_at: ingestedAt,
-    last_error: null,
+    last_error: episode.failure_reason,
     source_description: episode.source_description,
     reference_time: episode.reference_time,
     episode_body: episode.episode_body,
     raw_metadata: {
       failed_only: episode.failed_only,
       has_informative_content: episode.has_informative_content,
+      failure_reason: episode.failure_reason,
     },
   }
 
@@ -492,6 +520,8 @@ export async function backfillGraphitiDossierIngestions(options: { limit?: numbe
       } else if (result.payload.status === 'skipped_empty') {
         stats.would_skip_empty += 1
         if (!dryRun) stats.skipped_empty += 1
+      } else if (result.payload.status === 'failed') {
+        stats.failed += 1
       }
       await materializeOpportunityFromIngestedDossier(row, dryRun)
     } catch {

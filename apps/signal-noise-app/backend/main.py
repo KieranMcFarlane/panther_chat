@@ -68,6 +68,7 @@ _pipeline_phase_callback_ctx: ContextVar[Optional[PipelinePhaseCallback]] = Cont
     "pipeline_phase_callback_ctx",
     default=None,
 )
+OPENCODE_PROVIDER_INSUFFICIENT_BALANCE_ERROR = "OpenCodeProviderInsufficientBalanceError"
 
 
 def create_pipeline_persistence_client():
@@ -992,7 +993,46 @@ def enrich_persisted_dossier_payload(
         payload.setdefault("publish_status", "staged")
         payload.setdefault("run_id", "legacy-dossier-cache")
 
+    if has_provider_infrastructure_failure(payload):
+        payload["quality_state"] = "failed"
+        payload["publish_status"] = "failed"
+        payload["publication_status"] = "failed"
+        metadata["quality_state"] = "failed"
+        metadata["failure_class"] = "provider_infrastructure_failure"
+        metadata["failure_reason"] = "provider_infrastructure_failure"
+        if question_first:
+            question_first["quality_state"] = "failed"
+            question_first["publish_status"] = "failed"
+            question_first["failure_class"] = "provider_infrastructure_failure"
+
     return payload
+
+
+def has_provider_infrastructure_failure(value: Any) -> bool:
+    if value is None:
+        return False
+    if isinstance(value, str):
+        text = value.lower()
+        return (
+            OPENCODE_PROVIDER_INSUFFICIENT_BALANCE_ERROR.lower() in text
+            or "providerinsufficientbalance" in text
+            or "insufficient balance" in text
+        )
+    if isinstance(value, (int, float, bool)):
+        return False
+    if isinstance(value, list):
+        return any(has_provider_infrastructure_failure(item) for item in value)
+    if not isinstance(value, dict):
+        return False
+    failure_name = str(value.get("failure_name") or value.get("error_name") or value.get("name") or "").lower()
+    error_type = str(value.get("error_type") or value.get("failure_type") or "").lower()
+    message = str(value.get("message") or value.get("error_message") or value.get("stderr") or value.get("error") or "").lower()
+    return (
+        OPENCODE_PROVIDER_INSUFFICIENT_BALANCE_ERROR.lower() in failure_name
+        or "provider_infrastructure_failure" in error_type
+        or OPENCODE_PROVIDER_INSUFFICIENT_BALANCE_ERROR.lower() in message
+        or any(has_provider_infrastructure_failure(item) for item in value.values())
+    )
 
 
 def _persisted_dossier_question_count(dossier: Dict[str, Any]) -> int:
@@ -1052,8 +1092,12 @@ def _persisted_dossier_publish_status(dossier: Dict[str, Any]) -> str:
 
 
 def score_persisted_dossier_candidate(dossier: Dict[str, Any]) -> int:
+    if has_provider_infrastructure_failure(dossier):
+        return -10_000
+
     quality_priority = {
         "missing": 0,
+        "failed": 0,
         "partial": 1,
         "blocked": 2,
         "complete": 3,

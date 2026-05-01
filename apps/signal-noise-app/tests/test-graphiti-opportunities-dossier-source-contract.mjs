@@ -58,6 +58,11 @@ test('opportunities read model only serves current ledger-backed shortlist rows 
   assert.match(readModelSource, /&& isCurrentDossierShortlistOpportunityRow\(row\)/)
 })
 
+test('opportunities read model recomputes temporal reasoning instead of trusting stale raw payload labels', () => {
+  assert.match(readModelSource, /const temporalReasoning = computedReasoning\.temporal_reasoning/)
+  assert.doesNotMatch(readModelSource, /const temporalReasoning = asRecord\(rawPayload\.temporal_reasoning\)\.status/)
+})
+
 test('opportunity materialization does not rematerialize legacy, mock, demo, or parent insight sources', () => {
   assert.match(persistenceSource, /isLegacyOrDemoPersistedOpportunity/)
   assert.match(persistenceSource, /const persistedDossierRows = await loadPersistedDossierOpportunitySources\(limit\)/)
