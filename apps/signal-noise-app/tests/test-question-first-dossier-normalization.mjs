@@ -418,3 +418,132 @@ test('normalizeQuestionFirstDossier preserves useful negatives and failed states
   assert.match(String(normalized.timing_analysis.summary || ''), /private|partner-led/i)
   assert.match(String(normalized.executive_summary.summary || ''), /private|partner-led|tool call failed/i)
 })
+
+test('normalizeQuestionFirstDossier synthesizes YP fit and outreach from adjacent validated evidence', () => {
+  const normalized = normalizeQuestionFirstDossier(
+    {
+      entity_id: 'gauteng',
+      entity_name: 'Gauteng',
+      entity_type: 'Province',
+      publish_status: 'published',
+      question_first: {
+        answers: [
+          makeAnswer(
+            'q6_launch_signal',
+            'launch_signal',
+            'LAUNCH_SIGNAL',
+            {
+              kind: 'summary',
+              summary: 'Gauteng has launched a new public platform with digital service and commercial ecosystem implications.',
+              raw_structured_output: {
+                answer: 'Gauteng has launched a new public platform with digital service and commercial ecosystem implications.',
+                context: 'Fresh platform launch indicates active digital transformation and partner coordination.',
+                sources: ['https://example.com/platform-launch'],
+              },
+            },
+            { confidence: 0.91, validation_state: 'validated' },
+          ),
+          makeAnswer(
+            'q11_decision_owner',
+            'decision_owner',
+            'DECISION_OWNER',
+            {
+              kind: 'list',
+              summary: 'Digital Transformation Lead',
+              structured_signal: {
+                decision_owner_name: 'Digital Transformation Lead',
+                decision_owner_title: 'Programme Director',
+              },
+              raw_structured_output: {
+                answer: 'Digital Transformation Lead',
+                sources: ['https://example.com/owner'],
+              },
+            },
+            { confidence: 0.72, validation_state: 'provisional' },
+          ),
+          makeAnswer(
+            'q14_yp_fit',
+            'yp_fit',
+            'YP_FIT',
+            {
+              kind: 'summary',
+              summary: '',
+              raw_structured_output: {
+                summary: '',
+                notes: "No web evidence found connecting 'Yellow Panther' to Gauteng.",
+              },
+            },
+            { confidence: 0, validation_state: 'no_signal' },
+          ),
+          makeAnswer(
+            'q15_outreach_strategy',
+            'outreach_strategy',
+            'OUTREACH_STRATEGY',
+            {
+              kind: 'summary',
+              summary: '',
+              raw_structured_output: {
+                summary: '',
+              },
+            },
+            { confidence: 0, validation_state: 'no_signal' },
+          ),
+        ],
+      },
+    },
+    'gauteng',
+    {
+      properties: {
+        name: 'Gauteng',
+        type: 'Province',
+      },
+    },
+  )
+
+  const summary = normalized.question_first.discovery_summary
+  assert.equal(summary.graphiti_sales_brief.status, 'available')
+  assert.match(String(summary.graphiti_sales_brief.yp_fit_service || ''), /digital|platform|transformation/i)
+  assert.match(String(summary.graphiti_sales_brief.outreach_angle || ''), /platform|digital|launch/i)
+  assert.doesNotMatch(JSON.stringify(summary), /No web evidence found connecting 'Yellow Panther'|Panther results/i)
+  assert.match(String(summary.recommended_approach || ''), /digital|platform|launch|Transformation/i)
+})
+
+test('normalizeQuestionFirstDossier demotes mechanically complete but commercially empty dossiers from published to published_partial', () => {
+  const normalized = normalizeQuestionFirstDossier(
+    {
+      entity_id: 'gauteng-empty',
+      entity_name: 'Gauteng Empty',
+      entity_type: 'Province',
+      publish_status: 'published',
+      question_first: {
+        quality_state: 'complete',
+        answers: Array.from({ length: 15 }, (_, index) =>
+          makeAnswer(
+            `q${index + 1}`,
+            'generic',
+            'GENERIC',
+            {
+              kind: 'summary',
+              summary: '',
+              raw_structured_output: {
+                summary: '',
+                sources: [],
+              },
+            },
+            { confidence: 0, validation_state: 'no_signal' },
+          ),
+        ),
+      },
+    },
+    'gauteng-empty',
+    {
+      properties: {
+        name: 'Gauteng Empty',
+        type: 'Province',
+      },
+    },
+  )
+
+  assert.equal(normalized.publish_status, 'published_partial')
+  assert.equal(normalized.question_first.discovery_summary.graphiti_sales_brief.status, 'insufficient_signal')
+})

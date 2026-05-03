@@ -143,8 +143,21 @@ def test_universal_atomic_matrix_marks_commercial_subset_and_uses_real_world_que
         "q9_news_signal",
         "q10_hiring_signal",
     ]
-    assert questions["q14_yp_fit"]["depends_on"] == ["q13_capability_gap", "q7_procurement_signal"]
+    assert questions["q14_yp_fit"]["depends_on"] == [
+        "q2_digital_stack",
+        "q6_launch_signal",
+        "q7_procurement_signal",
+        "q9_news_signal",
+        "q10_hiring_signal",
+        "q11_decision_owner",
+        "q12_connections",
+        "q13_capability_gap",
+    ]
     assert questions["q15_outreach_strategy"]["depends_on"] == [
+        "q6_launch_signal",
+        "q7_procurement_signal",
+        "q9_news_signal",
+        "q10_hiring_signal",
         "q11_decision_owner",
         "q12_connections",
         "q14_yp_fit",
@@ -296,6 +309,8 @@ def test_universal_atomic_matrix_keeps_deterministic_and_derived_questions_out_o
     assert questions["q13_capability_gap"]["fallback_to_retrieval"] is False
     assert questions["q14_yp_fit"]["fallback_to_retrieval"] is False
     assert questions["q15_outreach_strategy"]["fallback_to_retrieval"] is False
+    assert questions["q14_yp_fit"]["query"] == ""
+    assert questions["q15_outreach_strategy"]["query"] == ""
 
 
 def test_universal_atomic_matrix_allows_default_rollout_phase_override():

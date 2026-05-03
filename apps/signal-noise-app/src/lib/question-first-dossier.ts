@@ -630,7 +630,7 @@ function buildQuestionFirstPromotionEntry(question: Record<string, any>, promoti
   const answerText = getQuestionAnswerText(question)
   const evidenceUrls = getQuestionEvidenceUrls(question)
 
-  if (!answerText && evidenceUrls.length === 0) {
+  if ((!answerText || !isMeaningfulCommercialText(answerText)) && evidenceUrls.length === 0) {
     return null
   }
 
@@ -653,6 +653,113 @@ function buildQuestionFirstPromotionEntry(question: Record<string, any>, promoti
     execution_class: toText(question.execution_class || answerRecord.execution_class || ''),
     structured_output_schema: toText(question.structured_output_schema || answerRecord.structured_output_schema || rawStructuredOutput.schema_version || ''),
     commercial_implication: toText(answerRecord.commercial_implication || question.commercial_implication || ''),
+  }
+}
+
+function isMeaningfulCommercialText(value: unknown): boolean {
+  const text = toDisplayText(value)
+  if (!text) {
+    return false
+  }
+  return !/(^no_signal$|^no signal$|source pending$|question execution failed|no web evidence found|insufficient signal|^\[object object\]$)/i.test(text)
+}
+
+function firstMeaningfulCommercialText(values: unknown[]): string {
+  return values.map((value) => toDisplayText(value)).find((value) => isMeaningfulCommercialText(value)) || ''
+}
+
+function inferYellowPantherService(signalText: string, capabilityGapText: string): string {
+  const combined = `${signalText} ${capabilityGapText}`.toLowerCase()
+  if (/\b(app|platform|digital|ott|product|launch|website|fan experience|stack)\b/.test(combined)) {
+    return 'DIGITAL_TRANSFORMATION'
+  }
+  if (/\b(procurement|vendor|rfp|tender|commercial|partnership|sponsor|revenue)\b/.test(combined)) {
+    return 'COMMERCIAL_PARTNERSHIPS'
+  }
+  if (/\b(hiring|recruitment|delivery|programme|project)\b/.test(combined)) {
+    return 'PROJECT_DELIVERY'
+  }
+  if (/\b(strategy|growth|planning|positioning)\b/.test(combined)) {
+    return 'STRATEGY'
+  }
+  return 'STAKEHOLDER_ENGAGEMENT'
+}
+
+function buildSynthesizedYpFit(
+  strongestSignalText: string,
+  capabilityGapText: string,
+  buyerName: string,
+  buyerTitle: string,
+): Record<string, any> {
+  const evidenceBasis = uniqueStrings([strongestSignalText, capabilityGapText]).join(' ')
+  if (!isMeaningfulCommercialText(evidenceBasis)) {
+    return {
+      best_service: '',
+      service_fit: [],
+      fit_rationale: 'insufficient_signal',
+      buyer_context: buyerName || null,
+      evidence_basis: [],
+      confidence_caveat: 'Need at least one validated commercial trigger before fit can be recommended.',
+      status: 'insufficient_signal',
+    }
+  }
+
+  const bestService = inferYellowPantherService(strongestSignalText, capabilityGapText)
+  return {
+    best_service: bestService,
+    service_fit: [bestService],
+    fit_rationale: `${bestService.replace(/_/g, ' ')} is the strongest capability match because current dossier evidence points to ${toDisplayText(capabilityGapText || strongestSignalText).toLowerCase()}.`,
+    buyer_context: uniqueStrings([buyerName, buyerTitle]).join(', ') || null,
+    evidence_basis: uniqueStrings([strongestSignalText, capabilityGapText]),
+    confidence_caveat: buyerName
+      ? `Verify recency and confirm ${buyerName} is still the right route before outreach.`
+      : 'Verify the current buyer route before outreach.',
+    status: 'available',
+  }
+}
+
+function buildSynthesizedOutreachStrategy(
+  strongestSignalText: string,
+  buyerName: string,
+  connectionOwner: string,
+  connectionPathType: string,
+  ypFit: Record<string, any>,
+): Record<string, any> {
+  const bestService = toDisplayText(ypFit.best_service || ypFit.recommended_service)
+  const evidenceBasis = uniqueStrings([
+    strongestSignalText,
+    toDisplayText(ypFit.fit_rationale),
+  ])
+  if (!buyerName && evidenceBasis.length === 0) {
+    return {
+      recommended_target: null,
+      recommended_route: null,
+      recommended_angle: '',
+      first_message_strategy: '',
+      verification_needed: 'Need a clearer buyer hypothesis before outreach.',
+      why_now: '',
+      status: 'insufficient_signal',
+    }
+  }
+
+  const route = connectionPathType || (connectionOwner ? 'warm_intro' : 'cold')
+  const angle = firstMeaningfulCommercialText([
+    strongestSignalText,
+    `Lead with a ${bestService ? bestService.replace(/_/g, ' ').toLowerCase() : 'current commercial trigger'} angle tied to the active signal.`,
+  ])
+
+  return {
+    recommended_target: buyerName || null,
+    recommended_route: route,
+    recommended_angle: angle,
+    first_message_strategy: buyerName
+      ? `Open with the fresh trigger, connect it to ${bestService ? bestService.replace(/_/g, ' ').toLowerCase() : 'Yellow Panther capability'}, and ask for a short discovery call with ${buyerName}.`
+      : 'Open with the fresh trigger, explain the relevant Yellow Panther capability, and verify the right owner before deeper outreach.',
+    verification_needed: connectionOwner
+      ? `Confirm ${connectionOwner} is still the best intro route and validate signal recency.`
+      : 'Validate signal recency and confirm the right buyer route before outreach.',
+    why_now: strongestSignalText || angle,
+    status: 'available',
   }
 }
 
@@ -738,9 +845,67 @@ function buildQuestionFirstDiscoverySummary(questions: Record<string, any>[], an
 
   const ypFitRecord = getQuestionAnswerRecord(ensureObject(questions.find((question) => toText(question.question_id) === 'q14_yp_fit') || ypFitAnswer || {}))
   const ypFitRaw = ensureObject(ensureObject(ypFitRecord.answer).raw_structured_output)
+  const ypFitValidationState = toText(ypFitRecord.validation_state || ypFitAnswer.validation_state).toLowerCase()
 
   const outreachStrategyRecord = getQuestionAnswerRecord(ensureObject(questions.find((question) => toText(question.question_id) === 'q15_outreach_strategy') || outreachStrategyAnswer || {}))
   const outreachStrategyRaw = ensureObject(ensureObject(outreachStrategyRecord.answer).raw_structured_output)
+  const outreachValidationState = toText(outreachStrategyRecord.validation_state || outreachStrategyAnswer.validation_state).toLowerCase()
+  const launchSignalQuestion = ensureObject(questions.find((question) => toText(question.question_id) === 'q6_launch_signal') || answerByQuestionId.get('q6_launch_signal') || {})
+  const procurementSignalQuestion = ensureObject(questions.find((question) => toText(question.question_id) === 'q7_procurement_signal') || answerByQuestionId.get('q7_procurement_signal') || {})
+  const budgetSignalQuestion = ensureObject(questions.find((question) => toText(question.question_id) === 'q9_budget_signal') || answerByQuestionId.get('q9_budget_signal') || answerByQuestionId.get('q9_news_signal') || {})
+  const timingSignalQuestion = ensureObject(questions.find((question) => toText(question.question_id) === 'q10_timing_window') || answerByQuestionId.get('q10_timing_window') || answerByQuestionId.get('q10_hiring_signal') || {})
+
+  const strongestSignalText = firstMeaningfulCommercialText([
+    getQuestionAnswerText(launchSignalQuestion),
+    getQuestionAnswerText(procurementSignalQuestion),
+    getQuestionAnswerText(budgetSignalQuestion),
+    getQuestionAnswerText(timingSignalQuestion),
+    capabilityGapRaw.answer,
+    capabilityGapRaw.summary,
+  ])
+  const capabilityGapText = firstMeaningfulCommercialText([
+    capabilityGapRaw.top_gap,
+    capabilityGapRaw.gap_label,
+    capabilityGapRaw.answer,
+    capabilityGapRaw.summary,
+  ])
+  const synthesizedYpFit = buildSynthesizedYpFit(
+    strongestSignalText,
+    capabilityGapText,
+    decisionOwnerName,
+    decisionOwnerTitle,
+  )
+  const resolvedYpFit = (ypFitValidationState && !['no_signal', 'failed', 'blocked'].includes(ypFitValidationState) && (toDisplayText(ypFitRaw.best_service || ypFitRaw.recommended_service) || isMeaningfulCommercialText(ypFitRaw.fit_rationale)))
+    ? {
+        ...synthesizedYpFit,
+        ...ypFitRaw,
+        best_service: toDisplayText(ypFitRaw.best_service || ypFitRaw.recommended_service) || synthesizedYpFit.best_service,
+        service_fit: Array.isArray(ypFitRaw.service_fit) && ypFitRaw.service_fit.length > 0 ? ypFitRaw.service_fit : synthesizedYpFit.service_fit,
+        fit_rationale: firstMeaningfulCommercialText([ypFitRaw.fit_rationale, ypFitRaw.answer, ypFitRaw.summary, synthesizedYpFit.fit_rationale]),
+        buyer_context: firstMeaningfulCommercialText([ypFitRaw.buyer_context, synthesizedYpFit.buyer_context]) || null,
+        evidence_basis: Array.isArray(ypFitRaw.evidence_basis) && ypFitRaw.evidence_basis.length > 0 ? ypFitRaw.evidence_basis : synthesizedYpFit.evidence_basis,
+        confidence_caveat: firstMeaningfulCommercialText([ypFitRaw.confidence_caveat, synthesizedYpFit.confidence_caveat]),
+      }
+    : synthesizedYpFit
+  const synthesizedOutreach = buildSynthesizedOutreachStrategy(
+    strongestSignalText,
+    decisionOwnerName,
+    toText(bestPath?.best_yp_owner || bestPath?.recommended_yp_owner || ''),
+    toText(bestPath?.path_type || ''),
+    resolvedYpFit,
+  )
+  const resolvedOutreach = (outreachValidationState && !['no_signal', 'failed', 'blocked'].includes(outreachValidationState) && (toDisplayText(outreachStrategyRaw.recommended_target || outreachStrategyRaw.recommended_angle || outreachStrategyRaw.recommended_route) || isMeaningfulCommercialText(outreachStrategyRaw.summary)))
+    ? {
+        ...synthesizedOutreach,
+        ...outreachStrategyRaw,
+        recommended_target: toDisplayText(outreachStrategyRaw.recommended_target || decisionOwnerName) || synthesizedOutreach.recommended_target,
+        recommended_route: toDisplayText(outreachStrategyRaw.recommended_route || bestPath?.path_type) || synthesizedOutreach.recommended_route,
+        recommended_angle: firstMeaningfulCommercialText([outreachStrategyRaw.recommended_angle, outreachStrategyRaw.answer, outreachStrategyRaw.summary, synthesizedOutreach.recommended_angle]),
+        first_message_strategy: firstMeaningfulCommercialText([outreachStrategyRaw.first_message_strategy, synthesizedOutreach.first_message_strategy]),
+        verification_needed: firstMeaningfulCommercialText([outreachStrategyRaw.verification_needed, synthesizedOutreach.verification_needed]),
+        why_now: firstMeaningfulCommercialText([outreachStrategyRaw.why_now, strongestSignalText, synthesizedOutreach.why_now]),
+      }
+    : synthesizedOutreach
 
   const strongestOpportunity = promoted
     .slice()
@@ -753,10 +918,10 @@ function buildQuestionFirstDiscoverySummary(questions: Record<string, any>[], an
     best_path_owner: toText(bestPath?.best_yp_owner || bestPath?.recommended_yp_owner || ''),
     path_type: toText(bestPath?.path_type || ''),
     capability_gap: toText(capabilityGapRaw.top_gap || capabilityGapRaw.gap_label || capabilityGapRaw.answer || ''),
-    yp_fit_service: toText(ypFitRaw.best_service || ypFitRaw.recommended_service || ''),
-    outreach_target: toText(outreachStrategyRaw.recommended_target || decisionOwnerName || ''),
-    outreach_route: toText(outreachStrategyRaw.recommended_route || bestPath?.path_type || ''),
-    outreach_angle: toText(outreachStrategyRaw.recommended_angle || strongestOpportunity?.answer || ''),
+    yp_fit_service: toText(resolvedYpFit.best_service || resolvedYpFit.recommended_service || ''),
+    outreach_target: toText(resolvedOutreach.recommended_target || decisionOwnerName || ''),
+    outreach_route: toText(resolvedOutreach.recommended_route || bestPath?.path_type || ''),
+    outreach_angle: firstMeaningfulCommercialText([resolvedOutreach.recommended_angle, strongestOpportunity?.answer, strongestSignalText]),
     source: 'question_first_normalizer',
   }
   const recommendedApproach = toText(
@@ -797,11 +962,16 @@ function buildQuestionFirstDiscoverySummary(questions: Record<string, any>[], an
     next_best_action: recommendedApproach || null,
     yellow_panther_opportunity: {
       estimated_probability: Number(strongestOpportunity?.confidence || 0),
-      service_fit: [graphitiSalesBrief.yp_fit_service].filter(Boolean),
+      service_fit: uniqueStrings([
+        ...(Array.isArray(resolvedYpFit.service_fit) ? resolvedYpFit.service_fit : [resolvedYpFit.service_fit]),
+        graphitiSalesBrief.yp_fit_service,
+      ]),
       entry_point: graphitiSalesBrief.outreach_target || decisionOwnerName || null,
       competitive_advantage: strongestOpportunity?.answer || graphitiSalesBrief.capability_gap || null,
-      fit_feedback: strongestOpportunity?.answer || graphitiSalesBrief.outreach_angle || null,
+      fit_feedback: firstMeaningfulCommercialText([resolvedYpFit.fit_rationale, strongestOpportunity?.answer, graphitiSalesBrief.outreach_angle]) || null,
     },
+    yellow_panther_fit: resolvedYpFit,
+    outreach_strategy: resolvedOutreach,
     ...grouped,
     evidence_items: qualitySupportQuestions
       .map((question) => ({
@@ -810,7 +980,7 @@ function buildQuestionFirstDiscoverySummary(questions: Record<string, any>[], an
         answer: getQuestionAnswerText(question),
         evidence_urls: getQuestionEvidenceUrls(question),
       }))
-      .filter((item) => Boolean(item.answer) || item.evidence_urls.length > 0),
+      .filter((item) => isMeaningfulCommercialText(item.answer) || item.evidence_urls.length > 0),
   }
 }
 
@@ -1424,6 +1594,15 @@ export function normalizeQuestionFirstDossier(
     executive_summary: executiveSummary,
     strategic_analysis: strategicAnalysis,
     recommended_approach: strategicAnalysis.recommended_approach,
+    graphiti_sales_brief: mergedDiscoverySummary.graphiti_sales_brief || null,
+    yellow_panther_fit: mergedDiscoverySummary.yellow_panther_fit || mergedDiscoverySummary.yellow_panther_opportunity || null,
+    sections: {
+      executive_summary: executiveSummary,
+      strategic_analysis: strategicAnalysis,
+      digital_transformation: digitalTransformation,
+      procurement_signals: procurementSignals,
+      connections_summary: connectionsSummary,
+    },
     run_rollup: runRollup,
     categories,
     answers,
@@ -1436,7 +1615,12 @@ export function normalizeQuestionFirstDossier(
     quality_state: qualityState,
     quality_summary: qualitySummary,
     quality_blockers: qualityBlockers,
-    publish_status: publishStatus || 'draft',
+    publish_status: (publishStatus.startsWith('published') && !dossierHasMeaningfulPublicationArtifacts({
+      question_first: { discovery_summary: mergedDiscoverySummary },
+      discovery_summary: mergedDiscoverySummary,
+      executive_summary: executiveSummary,
+      strategic_analysis: strategicAnalysis,
+    })) ? 'published_partial' : (publishStatus || 'draft'),
     run_id: runId || null,
     last_completed_question: lastCompletedQuestion || null,
     resume_from_question: resumeFromQuestion || null,
@@ -1463,7 +1647,7 @@ export function normalizeQuestionFirstDossier(
     quality_state: qualityState,
     quality_summary: qualitySummary,
     quality_blockers: qualityBlockers,
-    publish_status: publishStatus || 'draft',
+    publish_status: normalized.publish_status,
     run_id: runId || null,
     last_completed_question: lastCompletedQuestion || null,
     resume_from_question: resumeFromQuestion || null,
@@ -1480,6 +1664,27 @@ export function normalizeQuestionFirstDossier(
   }
   normalized.tabs = buildDossierTabs(normalized, { entityType: normalized.entity_type })
   return normalized
+}
+
+function dossierHasMeaningfulPublicationArtifacts(dossier: Record<string, any>): boolean {
+  const discoverySummary = ensureObject(dossier.question_first?.discovery_summary || dossier.discovery_summary)
+  const graphitiSalesBrief = ensureObject(discoverySummary.graphiti_sales_brief || dossier.graphiti_sales_brief)
+  const yellowPantherFit = ensureObject(discoverySummary.yellow_panther_fit || discoverySummary.yellow_panther_opportunity || dossier.yellow_panther_fit)
+  const executiveSummary = ensureObject(dossier.executive_summary)
+  const strategicAnalysis = ensureObject(dossier.strategic_analysis)
+  const promotedSignals = [
+    ...(Array.isArray(discoverySummary.opportunity_signals) ? discoverySummary.opportunity_signals : []),
+    ...(Array.isArray(discoverySummary.decision_owners) ? discoverySummary.decision_owners : []),
+  ]
+
+  return (
+    toText(graphitiSalesBrief.status).toLowerCase() === 'available'
+    && isMeaningfulCommercialText(graphitiSalesBrief.buyer_name || graphitiSalesBrief.outreach_angle || graphitiSalesBrief.outreach_target)
+    && isMeaningfulCommercialText(yellowPantherFit.fit_rationale || yellowPantherFit.fit_feedback || yellowPantherFit.competitive_advantage)
+    && isMeaningfulCommercialText(executiveSummary.summary || executiveSummary.headline)
+    && isMeaningfulCommercialText(strategicAnalysis.recommended_approach || strategicAnalysis.overall_assessment)
+    && promotedSignals.some((entry) => isMeaningfulCommercialText(entry?.answer || entry?.question_text || entry?.candidate_id))
+  )
 }
 
 function getPersistedDossierQuestionCount(dossier: unknown): number {
@@ -1671,7 +1876,14 @@ function applyCheckpointMetadata(
           ? 'published_shadow'
           : 'staged'
     )
-  const publishStatus = (!checkpointConsistent || nonTerminalQuestionIds.length > 0) ? 'draft' : requestedPublishStatus
+  const hasMeaningfulArtifacts = dossierHasMeaningfulPublicationArtifacts(dossier)
+  let publishStatus = (!checkpointConsistent || nonTerminalQuestionIds.length > 0) ? 'draft' : requestedPublishStatus
+  if (publishStatus.startsWith('published') && !hasMeaningfulArtifacts) {
+    publishStatus = qualityState === 'client_ready' ? 'published_partial' : 'published_partial'
+  }
+  if (publishStatus === 'draft' && hasMeaningfulArtifacts && qualityState === 'client_ready') {
+    publishStatus = 'published'
+  }
 
   return {
     ...dossier,
