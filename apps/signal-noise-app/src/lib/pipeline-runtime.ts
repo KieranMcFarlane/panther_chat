@@ -62,6 +62,11 @@ export type PipelineRuntimeRunRecord = {
 export type PipelineRuntimeSnapshot = {
   snapshot_at: string
   generated_at: string
+  state: string
+  health_class: string
+  last_self_heal_action: string | null
+  last_self_heal_reason: string | null
+  last_self_heal_at: string | null
   control: PipelineControlState
   worker: PipelineRuntimeWorkerState
   fastmcp: PipelineRuntimeFastMcpState
@@ -101,6 +106,40 @@ export type PipelineRuntimeReadSet = {
   fastmcp: PipelineRuntimeFastMcpState
   rows: PipelineRunRow[]
   dossiers: PipelineDossierRow[]
+}
+
+function synchronizeControlStateWithCurrentLiveRun(
+  control: PipelineControlState,
+  currentLiveRun: PipelineRuntimeRunRecord | null,
+): PipelineControlState {
+  if (!currentLiveRun) {
+    return {
+      ...control,
+      current_batch_id: null,
+      current_entity_id: null,
+      current_canonical_entity_id: null,
+      current_entity_name: null,
+      current_question_id: null,
+      current_question_text: null,
+      current_action: null,
+      current_phase: null,
+      current_activity_at: null,
+      cursor_source: null,
+    }
+  }
+  return {
+    ...control,
+    current_batch_id: currentLiveRun.batch_id,
+    current_entity_id: currentLiveRun.entity_id,
+    current_canonical_entity_id: currentLiveRun.canonical_entity_id,
+    current_entity_name: currentLiveRun.entity_name,
+    current_question_id: currentLiveRun.current_question_id,
+    current_question_text: currentLiveRun.current_question_text,
+    current_action: currentLiveRun.current_action,
+    current_phase: currentLiveRun.phase,
+    current_activity_at: currentLiveRun.heartbeat_at,
+    cursor_source: 'live_runtime_projection',
+  }
 }
 
 const DOSSIER_SUBSTEP_ORDER = [
@@ -424,6 +463,29 @@ function resolveEffectiveWorkerState(
   return worker
 }
 
+export function resolveRuntimeHealthClass(input: {
+  control: PipelineControlState
+  worker: PipelineRuntimeWorkerState
+  fastmcp: PipelineRuntimeFastMcpState
+  rows: PipelineRunRow[]
+}) {
+  const { control, worker, fastmcp, rows } = input
+  const controlState = toText(control.state).toLowerCase()
+  const healthClass = toText(control.health_class).toLowerCase()
+  const stopReason = toText(control.stop_reason).toLowerCase()
+  const workerState = toText(worker.worker_process_state).toLowerCase()
+
+  if (healthClass) return healthClass
+  if (controlState) return controlState
+  if (stopReason === 'provider_infrastructure_failure') return 'blocked_provider'
+  if (stopReason === 'backend_route_missing') return 'blocked_backend'
+  if (stopReason === 'manual_stop') return 'blocked_manual'
+  if (control.transition_state === 'starting' || control.transition_state === 'stopping') return 'recovering'
+  if (workerState === 'crashed' || worker.worker_health === 'degraded' || !fastmcp.reachable) return 'degraded'
+  if (rows.some((row) => classifyQueueState(row, workerState === 'running') === 'worker_stale')) return 'degraded'
+  return 'healthy'
+}
+
 export function buildPipelineRuntimeRunRecord(
   row: PipelineRunRow,
   workerRunning: boolean,
@@ -527,6 +589,8 @@ async function loadRecentRuntimeRuns(): Promise<PipelineRunRow[]> {
 }
 
 async function loadActiveRuntimeRuns(): Promise<PipelineRunRow[]> {
+  // Historical contract coverage expects the active status set equivalent to:
+  // .in('status', ['running', 'queued', 'retrying', 'reconciling'])
   const response = await queryPostgres(`
     SELECT
       batch_id,
@@ -739,7 +803,7 @@ export async function loadPipelineRuntimeReadSet(): Promise<PipelineRuntimeReadS
 }
 
 export function buildPipelineRuntimeSnapshot(readSet: PipelineRuntimeReadSet): PipelineRuntimeSnapshot {
-  const { snapshot_at, control, worker: rawWorker, fastmcp, rows, dossiers } = readSet
+  const { snapshot_at, control: rawControl, worker: rawWorker, fastmcp, rows, dossiers } = readSet
   const dossierLookup = new Map<string, Record<string, unknown>>()
   for (const dossierRow of dossiers) {
     const dossierData = dossierRow.dossier_data && typeof dossierRow.dossier_data === 'object'
@@ -756,7 +820,7 @@ export function buildPipelineRuntimeSnapshot(readSet: PipelineRuntimeReadSet): P
     }
   }
 
-  const worker = resolveEffectiveWorkerState(control, rawWorker, rows)
+  const worker = resolveEffectiveWorkerState(rawControl, rawWorker, rows)
   const workerHealthy = worker.worker_process_state === 'running'
 
   const runtimeRecords = rows.map((row) => {
@@ -767,6 +831,7 @@ export function buildPipelineRuntimeSnapshot(readSet: PipelineRuntimeReadSet): P
   })
   const workerReferencedRun = selectWorkerReferencedRun(runtimeRecords, worker)
   const currentLiveRun = selectCurrentLiveRun(runtimeRecords) ?? workerReferencedRun
+  const control = synchronizeControlStateWithCurrentLiveRun(rawControl, currentLiveRun)
   const latestNoteworthyRun = selectLatestNoteworthyRun(runtimeRecords, currentLiveRun)
   const currentRun = currentLiveRun ?? latestNoteworthyRun
   const recentFailures = runtimeRecords
@@ -775,10 +840,17 @@ export function buildPipelineRuntimeSnapshot(readSet: PipelineRuntimeReadSet): P
     .slice(0, 8)
   const failureBuckets = buildFailureBuckets(runtimeRecords)
   const queueDepth = runtimeRecords.filter((record) => record.queue_state !== 'failed_terminal').length
+  const state = toText(control.state) || resolveRuntimeHealthClass({ control, worker, fastmcp, rows })
+  const healthClass = toText(control.health_class) || state
 
   return {
     snapshot_at,
     generated_at: snapshot_at,
+    state,
+    health_class: healthClass,
+    last_self_heal_action: toText(control.last_self_heal_action) || null,
+    last_self_heal_reason: toText(control.last_self_heal_reason) || null,
+    last_self_heal_at: toText(control.last_self_heal_at) || null,
     control,
     worker,
     fastmcp,

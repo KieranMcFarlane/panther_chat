@@ -2,6 +2,14 @@ import { query } from '@/lib/pg-client'
 
 export type PipelineControlRequestedState = 'running' | 'paused'
 export type PipelineControlObservedState = 'starting' | 'running' | 'stopping' | 'paused'
+export type PipelineRecoveryState =
+  | 'healthy'
+  | 'degraded'
+  | 'recovering'
+  | 'blocked_backend'
+  | 'blocked_provider'
+  | 'blocked_manual'
+  | 'stale_state_repair'
 
 export type PipelineControlState = {
   is_paused: boolean
@@ -24,6 +32,12 @@ export type PipelineControlState = {
   current_started_at?: string | null
   current_activity_at?: string | null
   cursor_source?: string | null
+  state?: PipelineRecoveryState
+  health_class?: PipelineRecoveryState
+  recovery_source?: string | null
+  last_self_heal_action?: string | null
+  last_self_heal_reason?: string | null
+  last_self_heal_at?: string | null
 }
 
 const DEFAULT_CONTROL_STATE: PipelineControlState = {
@@ -47,10 +61,32 @@ const DEFAULT_CONTROL_STATE: PipelineControlState = {
   current_started_at: null,
   current_activity_at: null,
   cursor_source: null,
+  state: 'healthy',
+  health_class: 'healthy',
+  recovery_source: null,
+  last_self_heal_action: null,
+  last_self_heal_reason: null,
+  last_self_heal_at: null,
 }
 
 const PIPELINE_CONTROL_STATE_TABLE = 'pipeline_control_state'
 const PIPELINE_CONTROL_STATE_ROW_ID = 'pipeline'
+const PIPELINE_RECOVERY_STATE_VALUES: PipelineRecoveryState[] = [
+  'healthy',
+  'degraded',
+  'recovering',
+  'blocked_backend',
+  'blocked_provider',
+  'blocked_manual',
+  'stale_state_repair',
+]
+
+function normalizeRecoveryState(value: unknown, fallback: PipelineRecoveryState): PipelineRecoveryState {
+  const normalized = typeof value === 'string' ? value.trim().toLowerCase() : ''
+  return PIPELINE_RECOVERY_STATE_VALUES.includes(normalized as PipelineRecoveryState)
+    ? normalized as PipelineRecoveryState
+    : fallback
+}
 
 function isLegacyManualPauseState(parsed: Partial<PipelineControlState>) {
   const stopReason = typeof parsed.stop_reason === 'string' ? parsed.stop_reason.trim().toLowerCase() : ''
@@ -86,15 +122,23 @@ function normalizePipelineControlState(parsed: Partial<PipelineControlState>): P
     : parsed.desired_state === 'running'
       ? 'running'
       : requestedState
+  const stopReason = typeof parsed.stop_reason === 'string' && parsed.stop_reason.trim().length > 0
+    ? parsed.stop_reason.trim()
+    : null
+  const fallbackState: PipelineRecoveryState = stopReason?.toLowerCase() === 'manual_stop'
+    ? 'blocked_manual'
+    : transitionState === 'starting' || transitionState === 'stopping'
+      ? 'recovering'
+      : 'healthy'
+  const state = normalizeRecoveryState(parsed.state, fallbackState)
+  const healthClass = normalizeRecoveryState(parsed.health_class, state)
 
   return {
     is_paused: parsed.is_paused === true,
     pause_reason: typeof parsed.pause_reason === 'string' && parsed.pause_reason.trim().length > 0
       ? parsed.pause_reason.trim()
       : null,
-    stop_reason: typeof parsed.stop_reason === 'string' && parsed.stop_reason.trim().length > 0
-      ? parsed.stop_reason.trim()
-      : null,
+    stop_reason: stopReason,
     stop_details: parsed.stop_details && typeof parsed.stop_details === 'object'
       ? parsed.stop_details as Record<string, unknown>
       : null,
@@ -137,6 +181,20 @@ function normalizePipelineControlState(parsed: Partial<PipelineControlState>): P
       : null,
     cursor_source: typeof parsed.cursor_source === 'string' && parsed.cursor_source.trim().length > 0
       ? parsed.cursor_source.trim()
+      : null,
+    state,
+    health_class: healthClass,
+    recovery_source: typeof parsed.recovery_source === 'string' && parsed.recovery_source.trim().length > 0
+      ? parsed.recovery_source.trim()
+      : null,
+    last_self_heal_action: typeof parsed.last_self_heal_action === 'string' && parsed.last_self_heal_action.trim().length > 0
+      ? parsed.last_self_heal_action.trim()
+      : null,
+    last_self_heal_reason: typeof parsed.last_self_heal_reason === 'string' && parsed.last_self_heal_reason.trim().length > 0
+      ? parsed.last_self_heal_reason.trim()
+      : null,
+    last_self_heal_at: typeof parsed.last_self_heal_at === 'string' && parsed.last_self_heal_at.trim().length > 0
+      ? parsed.last_self_heal_at.trim()
       : null,
   }
 }
@@ -201,6 +259,12 @@ export async function writePipelineControlState(input: {
   current_started_at?: string | null
   current_activity_at?: string | null
   cursor_source?: string | null
+  state?: PipelineRecoveryState
+  health_class?: PipelineRecoveryState
+  recovery_source?: string | null
+  last_self_heal_action?: string | null
+  last_self_heal_reason?: string | null
+  last_self_heal_at?: string | null
 }): Promise<PipelineControlState> {
   const requestedState = input.requested_state
     ?? (input.is_paused ? 'paused' : 'running')
@@ -210,6 +274,13 @@ export async function writePipelineControlState(input: {
     ?? transitionState
   const desiredState = input.desired_state ?? requestedState
   const isPaused = input.is_paused ?? (requestedState === 'paused' || observedState === 'paused')
+  const fallbackState: PipelineRecoveryState = typeof input.stop_reason === 'string' && input.stop_reason.trim().toLowerCase() === 'manual_stop'
+    ? 'blocked_manual'
+    : transitionState === 'starting' || transitionState === 'stopping'
+      ? 'recovering'
+      : 'healthy'
+  const state = normalizeRecoveryState(input.state, fallbackState)
+  const healthClass = normalizeRecoveryState(input.health_class, state)
   const nextState: PipelineControlState = {
     is_paused: isPaused === true,
     pause_reason: isPaused && typeof input.pause_reason === 'string' && input.pause_reason.trim().length > 0
@@ -237,6 +308,12 @@ export async function writePipelineControlState(input: {
     current_started_at: input.current_started_at ?? null,
     current_activity_at: input.current_activity_at ?? null,
     cursor_source: input.cursor_source ?? null,
+    state,
+    health_class: healthClass,
+    recovery_source: input.recovery_source ?? null,
+    last_self_heal_action: input.last_self_heal_action ?? null,
+    last_self_heal_reason: input.last_self_heal_reason ?? null,
+    last_self_heal_at: input.last_self_heal_at ?? null,
   }
 
   await writePipelineControlStateToDatabase(nextState).catch(() => undefined)

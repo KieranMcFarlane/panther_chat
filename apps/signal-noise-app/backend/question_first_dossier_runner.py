@@ -24,10 +24,12 @@ from pydantic import BaseModel, Field, ValidationError
 try:
     from backend.brightdata_mcp_client import BrightDataMCPClient
     from backend.claude_client import ClaudeClient
+    from backend.question_first_promoter import build_question_first_promotions
     from backend.question_progress_framework import build_question_checkpoint_fields, enrich_question_specs
 except ImportError:
     from brightdata_mcp_client import BrightDataMCPClient  # type: ignore
     from claude_client import ClaudeClient  # type: ignore
+    from question_first_promoter import build_question_first_promotions  # type: ignore
     from question_progress_framework import build_question_checkpoint_fields, enrich_question_specs  # type: ignore
 
 logger = logging.getLogger(__name__)
@@ -863,6 +865,48 @@ async def run_question_first_dossier_from_payload(
             entity_id_for_log,
         )
     merged = merge_question_first_run_artifact_into_dossier(dossier_payload=source, artifact=artifact)
+    connections_graph_enricher = _legacy_kwargs.get("connections_graph_enricher")
+    if not isinstance(merged.get("connections_graph"), dict):
+        promotion_bundle = build_question_first_promotions(
+            answers=artifact.answers,
+            question_specs=artifact.questions or source.get("questions") or [],
+            evidence_items=artifact.evidence_items,
+            poi_graph=merged.get("poi_graph") if isinstance(merged.get("poi_graph"), dict) else None,
+            connections_graph=merged.get("connections_graph") if isinstance(merged.get("connections_graph"), dict) else None,
+        )
+        poi_graph = promotion_bundle.get("poi_graph") if isinstance(promotion_bundle.get("poi_graph"), dict) else {}
+        connections_graph = (
+            promotion_bundle.get("connections_graph")
+            if isinstance(promotion_bundle.get("connections_graph"), dict)
+            else {}
+        )
+        if connections_graph_enricher is not None and connections_graph:
+            enriched_connections_graph = await connections_graph_enricher.enrich(
+                connections_graph=connections_graph,
+                poi_graph=poi_graph,
+                entity_name=str(
+                    artifact.entity.get("entity_name")
+                    or source.get("entity_name")
+                    or source.get("entity_id")
+                    or "entity"
+                ),
+            )
+            if isinstance(enriched_connections_graph, dict):
+                connections_graph = enriched_connections_graph
+                promotion_bundle = build_question_first_promotions(
+                    answers=artifact.answers,
+                    question_specs=artifact.questions or source.get("questions") or [],
+                    evidence_items=artifact.evidence_items,
+                    poi_graph=poi_graph,
+                    connections_graph=connections_graph,
+                )
+        for key in ("dossier_promotions", "discovery_summary", "promotion_candidates", "poi_graph", "connections_graph"):
+            value = promotion_bundle.get(key)
+            if value is not None:
+                merged[key] = value
+                question_first = merged.get("question_first")
+                if isinstance(question_first, dict):
+                    question_first[key] = value
 
     if output_dir is not None:
       output_dir = Path(output_dir)

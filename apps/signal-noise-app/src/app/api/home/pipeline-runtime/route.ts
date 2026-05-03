@@ -8,6 +8,11 @@ export async function GET() {
   const runtime = await loadPipelineRuntimeSnapshot()
   return NextResponse.json({
     ...runtime,
+    state: runtime.state,
+    health_class: runtime.health_class,
+    last_self_heal_action: runtime.last_self_heal_action,
+    last_self_heal_reason: runtime.last_self_heal_reason,
+    last_self_heal_at: runtime.last_self_heal_at,
     worker_process_state: runtime.worker.worker_process_state,
     worker_pid: runtime.worker.worker_pid,
     fastmcp_health: runtime.fastmcp.reachable ? 'reachable' : 'unreachable',

@@ -61,6 +61,36 @@ test('full dev launcher supervises the worker and restarts it after crashes', ()
   assert.match(devFullScriptSource, /wait "\$\{worker_supervisor_pid\}"/)
 })
 
+test('full dev launcher resolves npm once and uses the resolved binary for detached restarts', () => {
+  assert.match(devFullScriptSource, /resolve_npm_bin\(\)/)
+  assert.match(devFullScriptSource, /resolve_node_bin\(\)/)
+  assert.match(devFullScriptSource, /command -v npm/)
+  assert.match(devFullScriptSource, /command -v node/)
+  assert.match(devFullScriptSource, /zsh -lic 'command -v npm/)
+  assert.match(devFullScriptSource, /zsh -lic 'command -v node/)
+  assert.match(devFullScriptSource, /Unable to locate npm for dev-full\.sh/)
+  assert.match(devFullScriptSource, /Unable to locate node for dev-full\.sh/)
+  assert.match(devFullScriptSource, /export NPM_BIN/)
+  assert.match(devFullScriptSource, /export NODE_BIN/)
+  assert.match(devFullScriptSource, /export PATH/)
+  assert.match(devFullScriptSource, /PATH="\$\(dirname "\$\{NODE_BIN\}"\)":"\$\(dirname "\$\{NPM_BIN\}"\)"/)
+  assert.match(devFullScriptSource, /"\$\{NPM_BIN\}" run backend:dev/)
+  assert.match(devFullScriptSource, /"\$\{NPM_BIN\}" run dev:frontend/)
+  assert.match(devFullScriptSource, /"\$\{NPM_BIN\}" run worker:entity-pipeline/)
+  assert.doesNotMatch(devFullScriptSource, /(^|[^\$"{])npm run backend:dev/m)
+  assert.doesNotMatch(devFullScriptSource, /(^|[^\$"{])npm run dev:frontend/m)
+  assert.doesNotMatch(devFullScriptSource, /(^|[^\$"{])npm run worker:entity-pipeline/m)
+})
+
+test('full dev launcher logs explicit restart failures and clears misleading pid files', () => {
+  assert.match(devFullScriptSource, /backend restart failed:/)
+  assert.match(devFullScriptSource, /frontend restart failed:/)
+  assert.match(devFullScriptSource, /worker restart failed:/)
+  assert.match(devFullScriptSource, /rm -f "\$\{backend_pid_file\}"/)
+  assert.match(devFullScriptSource, /rm -f "\$\{frontend_pid_file\}"/)
+  assert.match(devFullScriptSource, /rm -f "\$\{worker_supervisor_pid_file\}" "\$\{worker_pid_file\}"/)
+})
+
 test('direct component startup scripts are guarded behind the full launcher', () => {
   const pkg = JSON.parse(packageSource)
 

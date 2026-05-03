@@ -40,17 +40,22 @@ for (const line of fs.readFileSync(envFile, 'utf8').split(/\r?\n/)) {
   env[key] = value;
 }
 
-const baseUrl = env.ANTHROPIC_BASE_URL || 'https://api.z.ai/api/anthropic';
-const apiKey = env.ANTHROPIC_AUTH_TOKEN || env.ZAI_API_KEY || env.ANTHROPIC_API_KEY;
-const model = env.ANTHROPIC_DEFAULT_OPUS_MODEL || env.ANTHROPIC_DEFAULT_SONNET_MODEL || 'glm-5';
+const baseUrl = env.ANTHROPIC_BASE_URL || 'https://api.z.ai/api/anthropic/v1';
+const apiKey = env.ZAI_API_KEY || env.ANTHROPIC_AUTH_TOKEN || env.ANTHROPIC_API_KEY;
+const model = env.ANTHROPIC_DEFAULT_OPUS_MODEL || env.ANTHROPIC_DEFAULT_SONNET_MODEL || 'GLM-5.1';
+
+function messagesUrlForBaseUrl(rawBaseUrl) {
+  const normalized = String(rawBaseUrl || '').replace(/\/$/, '');
+  return normalized.endsWith('/v1') ? `${normalized}/messages` : `${normalized}/v1/messages`;
+}
 
 if (!apiKey) {
-  console.error(JSON.stringify({ ok: false, error: 'missing_api_key', hint: 'set ANTHROPIC_AUTH_TOKEN or ZAI_API_KEY in apps/signal-noise-app/.env' }, null, 2));
+  console.error(JSON.stringify({ ok: false, error: 'missing_api_key', hint: 'set ZAI_API_KEY or ANTHROPIC_AUTH_TOKEN in apps/signal-noise-app/.env' }, null, 2));
   process.exit(1);
 }
 
 (async () => {
-  const response = await fetch(`${baseUrl.replace(/\/$/, '')}/v1/messages`, {
+  const response = await fetch(messagesUrlForBaseUrl(baseUrl), {
     method: 'POST',
     headers: {
       'content-type': 'application/json',

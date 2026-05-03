@@ -605,6 +605,31 @@ def test_should_replace_persisted_dossier_rejects_provider_failure_candidate():
     assert main.should_replace_persisted_dossier(existing=existing, candidate=candidate) is False
 
 
+def test_enrich_persisted_dossier_payload_demotes_published_without_commercial_summary_artifacts():
+    dossier = main.enrich_persisted_dossier_payload(
+        {
+            "publish_status": "published",
+            "question_first": {
+                "quality_state": "complete",
+                "publish_status": "published",
+                "discovery_summary": {
+                    "graphiti_sales_brief": {"status": "insufficient_signal"},
+                    "yellow_panther_opportunity": {},
+                },
+            },
+            "executive_summary": {"summary": ""},
+            "strategic_analysis": {"recommended_approach": ""},
+        },
+        entity_id="gauteng-empty",
+        entity_name="Gauteng Empty",
+        entity_type="PROVINCE",
+    )
+
+    assert dossier["publish_status"] == "published_partial"
+    assert dossier["publication_status"] == "published_partial"
+    assert dossier["question_first"]["publish_status"] == "published_partial"
+
+
 def test_build_question_repair_source_dossier_response_synthesizes_q14_from_q13_and_q7(monkeypatch, tmp_path):
     repair_root = tmp_path / "question-first-diagnostics" / "fc-porto-2027"
     repair_root.mkdir(parents=True)

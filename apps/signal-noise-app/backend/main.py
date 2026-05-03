@@ -5,6 +5,8 @@ AI-powered dossier enrichment system with MCP server orchestration
 Enhanced with Graphiti temporal knowledge graph capabilities
 """
 
+from __future__ import annotations
+
 import os
 import sys
 import logging
@@ -992,6 +994,30 @@ def enrich_persisted_dossier_payload(
     else:
         payload.setdefault("publish_status", "staged")
         payload.setdefault("run_id", "legacy-dossier-cache")
+
+    discovery_summary = question_first.get("discovery_summary") if isinstance(question_first.get("discovery_summary"), dict) else {}
+    graphiti_sales_brief = discovery_summary.get("graphiti_sales_brief") if isinstance(discovery_summary.get("graphiti_sales_brief"), dict) else {}
+    yellow_panther_fit = (
+        discovery_summary.get("yellow_panther_fit")
+        if isinstance(discovery_summary.get("yellow_panther_fit"), dict)
+        else discovery_summary.get("yellow_panther_opportunity")
+        if isinstance(discovery_summary.get("yellow_panther_opportunity"), dict)
+        else {}
+    )
+    executive_summary = payload.get("executive_summary") if isinstance(payload.get("executive_summary"), dict) else {}
+    strategic_analysis = payload.get("strategic_analysis") if isinstance(payload.get("strategic_analysis"), dict) else {}
+    has_meaningful_publication_artifacts = (
+        str(graphiti_sales_brief.get("status") or "").strip().lower() == "available"
+        and any(str(graphiti_sales_brief.get(key) or "").strip() for key in ("buyer_name", "outreach_target", "outreach_angle"))
+        and any(str(yellow_panther_fit.get(key) or "").strip() for key in ("fit_rationale", "fit_feedback", "competitive_advantage"))
+        and any(str(executive_summary.get(key) or "").strip() for key in ("summary", "headline"))
+        and any(str(strategic_analysis.get(key) or "").strip() for key in ("recommended_approach", "overall_assessment"))
+    )
+    if str(payload.get("publish_status") or "").strip().lower().startswith("published") and not has_meaningful_publication_artifacts:
+        payload["publish_status"] = "published_partial"
+        payload["publication_status"] = "published_partial"
+        if question_first:
+            question_first["publish_status"] = "published_partial"
 
     if has_provider_infrastructure_failure(payload):
         payload["quality_state"] = "failed"
