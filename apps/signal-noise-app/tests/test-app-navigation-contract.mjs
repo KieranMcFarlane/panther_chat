@@ -35,3 +35,10 @@ test('app navigation keeps the sidebar fixed while the main pane scrolls', async
   assert.match(navigationSource, /min-h-0[\s\S]*flex-1[\s\S]*overflow-y-auto/)
   assert.doesNotMatch(navigationSource, /Client Path/)
 })
+
+test('app navigation exposes the YP team admin page in the shared sidebar', async () => {
+  const navItemsSource = await readFile(new URL('../src/components/layout/discovery-nav.ts', import.meta.url), 'utf8')
+
+  assert.match(navItemsSource, /label:\s*'YP Team'/)
+  assert.match(navItemsSource, /href:\s*'\/admin\/yp-team'/)
+})
