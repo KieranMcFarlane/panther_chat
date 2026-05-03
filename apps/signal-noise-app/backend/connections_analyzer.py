@@ -27,7 +27,6 @@ AUTHOR: Phase 0 Scalable Dossier System
 DATE: 2026-02-22
 """
 
-import os
 import csv
 import json
 import logging
@@ -36,73 +35,35 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from datetime import datetime, timezone
 
+try:
+    from backend.yp_team_roster import DEFAULT_YP_TEAM_ROSTER, load_active_yp_team
+except ImportError:
+    from yp_team_roster import DEFAULT_YP_TEAM_ROSTER, load_active_yp_team  # type: ignore
+
 logger = logging.getLogger(__name__)
 
 
-# =============================================================================
-# YELLOW PANTHER TEAM (Static Reference)
-#
-# Note: Gunjan Parikh is intentionally EXCLUDED from Connections analysis
-# as per business requirements. The 4 active UK members for network analysis are:
-# - Stuart Cope (Co-Founder & COO)
-# - Andrew Rapley (Head of Projects)
-# - Sarfraz Hussain (Head of Strategy)
-# - Elliott Hillman (Senior Client Partner)
-# =============================================================================
+def _normalize_name(value: Any) -> str:
+    return str(value or "").strip().lower()
 
-YELLOW_PANTHER_TEAM = [
-    {
-        "yp_name": "Stuart Cope",
-        "yp_role": "Co-Founder & COO",
-        "yp_linkedin": "https://uk.linkedin.com/in/stuart-cope-54392b16/",
-        "yp_weight": 1.5,
-        "yp_expertise_1": "Operations",
-        "yp_expertise_2": "Client Relationships",
-        "yp_expertise_3": "Strategic Partnerships"
-    },
-    {
-        "yp_name": "Andrew Rapley",
-        "yp_role": "Head of Projects",
-        "yp_linkedin": "https://uk.linkedin.com/in/andrew-rapley/",
-        "yp_weight": 1.3,
-        "yp_expertise_1": "Project Management",
-        "yp_expertise_2": "Delivery Excellence",
-        "yp_expertise_3": "Client Success"
-    },
-    {
-        "yp_name": "Sarfraz Hussain",
-        "yp_role": "Head of Strategy",
-        "yp_linkedin": "https://uk.linkedin.com/in/sarfraz-hussain/",
-        "yp_weight": 1.2,
-        "yp_expertise_1": "Strategic Planning",
-        "yp_expertise_2": "Market Analysis",
-        "yp_expertise_3": "Growth Strategy"
-    },
-    {
-        "yp_name": "Elliott Hillman",
-        "yp_role": "Senior Client Partner",
-        "yp_linkedin": "https://uk.linkedin.com/in/elliott-hillman/",
-        "yp_weight": 1.2,
-        "yp_expertise_1": "Client Partnerships",
-        "yp_expertise_2": "Sports Industry",
-        "yp_expertise_3": "Business Development"
-    }
-]
 
-# Full team including Gunjan Parikh (for reference, not used in Connections analysis)
-YELLOW_PANTHER_TEAM_FULL = [
-    *YELLOW_PANTHER_TEAM,
-    {
-        "yp_name": "Gunjan Parikh",
-        "yp_role": "Founder & CEO",
-        "yp_linkedin": "https://uk.linkedin.com/in/gunjan-parikh/",
-        "yp_weight": 1.3,
-        "yp_expertise_1": "Strategic Vision",
-        "yp_expertise_2": "Business Development",
-        "yp_expertise_3": "Client Strategy",
-        "_excluded_from_connections": True  # Intentionally excluded from network analysis
-    }
-]
+def _safe_float(value: Any) -> float:
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return 0.0
+
+
+def _bounded_unit(value: Any) -> float:
+    number = _safe_float(value)
+    if number > 1.0:
+        number = number / 100.0
+    return max(0.0, min(1.0, number))
+
+
+# Backward-compatible defaults for callers that still import the constants.
+YELLOW_PANTHER_TEAM_FULL = [dict(item) for item in DEFAULT_YP_TEAM_ROSTER]
+YELLOW_PANTHER_TEAM = [dict(item) for item in DEFAULT_YP_TEAM_ROSTER if item.get("status") == "active"]
 
 
 # =============================================================================
@@ -150,6 +111,15 @@ class YPConnectionAnalysis:
     path_type: str = ""
     recommended_yp_owner: str = ""
     q12_score: float = 0.0
+    q11_score: float = 0.0
+    decision_score: float = 0.0
+    target_person: str = ""
+    target_role: str = ""
+    relationship_evidence: List[str] = field(default_factory=list)
+    buyer_relevance: str = "general_contact"
+    route_confidence: float = 0.0
+    verification_needed: str = ""
+    route_score: float = 0.0
     talking_points: List[str] = field(default_factory=list)
 
 
@@ -190,7 +160,7 @@ class ConnectionsAnalyzer:
         Args:
             yp_team: Optional custom YP team list (uses default if None)
         """
-        self.yp_team = yp_team or YELLOW_PANTHER_TEAM
+        self.yp_team = yp_team or load_active_yp_team()
         self._load_static_data()
 
     def _load_static_data(self):
@@ -198,7 +168,7 @@ class ConnectionsAnalyzer:
         self.bridge_contacts = []
 
         # Try loading bridge contacts from CSV
-        bridge_csv_path = Path(__file__).parent.parent / "data" / "dossier_templates" / "bridge_contacts.csv"
+        bridge_csv_path = Path(__file__).parent / "data" / "dossier_templates" / "bridge_contacts.csv"
         if bridge_csv_path.exists():
             try:
                 with open(bridge_csv_path, 'r', encoding='utf-8') as f:
@@ -216,6 +186,100 @@ class ConnectionsAnalyzer:
                 logger.info(f"Loaded {len(self.bridge_contacts)} bridge contacts from CSV")
             except Exception as e:
                 logger.warning(f"Failed to load bridge contacts CSV: {e}")
+
+    def _buyer_relevance(self, person: Optional[TargetPerson]) -> str:
+        if not person:
+            return "general_contact"
+        edge_type = _normalize_name(person.path_type)
+        if edge_type == "primary_owner_of" or _bounded_unit(person.decision_score) >= 0.8 or _bounded_unit(person.q11_score) >= 0.8:
+            return "decision_owner"
+        if edge_type == "supports" or _bounded_unit(person.decision_score) >= 0.3 or _bounded_unit(person.q11_score) >= 0.3:
+            return "support_stakeholder"
+        return "general_contact"
+
+    def _bridge_matches_yp(self, bridge: BridgeContact, yp_name: str) -> bool:
+        relationship = _normalize_name(bridge.relationship_to_yp)
+        wanted = _normalize_name(yp_name)
+        if not relationship or not wanted:
+            return False
+        if relationship == wanted:
+            return True
+        split_relationship = bridge.relationship_to_yp
+        for separator in [",", ";", "/", "&"]:
+            split_relationship = split_relationship.replace(separator, "|")
+        parts = [_normalize_name(part) for part in split_relationship.split("|")]
+        return wanted in {part for part in parts if part}
+
+    def _path_quality_score(self, path_type: str) -> float:
+        normalized = _normalize_name(path_type)
+        if normalized == "direct_connection":
+            return 1.0
+        if normalized == "mutual_connection":
+            return 0.85
+        if normalized == "bridge_connection":
+            return 0.65
+        return 0.25
+
+    def _path_label(self, path_type: str, route_confidence: float) -> str:
+        normalized = _normalize_name(path_type)
+        if normalized == "direct_connection":
+            return "Direct (warm)" if route_confidence >= 0.75 else "Direct (lukewarm)"
+        if normalized == "mutual_connection":
+            return "Direct (lukewarm)"
+        if normalized == "bridge_connection":
+            return "Tier 2 bridge"
+        return "Cold"
+
+    def _yp_fit_score(self, yp_member: Dict[str, Any], person: Optional[TargetPerson]) -> float:
+        if not person:
+            return 0.35
+        role = _normalize_name(person.role)
+        yp_role = _normalize_name(yp_member.get("yp_role"))
+        expertise = " ".join(
+            _normalize_name(yp_member.get(key))
+            for key in ("yp_expertise_1", "yp_expertise_2", "yp_expertise_3")
+        )
+        if any(term in role for term in ("commercial", "partnership", "business development", "client", "marketing")) and (
+            "client" in yp_role or "partnership" in yp_role or "business development" in expertise or "sports industry" in expertise
+        ):
+            return 1.0
+        if any(term in role for term in ("strategy", "growth", "transformation")) and ("strategy" in yp_role or "strategic" in expertise):
+            return 0.9
+        if any(term in role for term in ("operations", "delivery", "project")) and ("operations" in yp_role or "projects" in yp_role or "delivery" in expertise):
+            return 0.85
+        return 0.55
+
+    def _route_score(
+        self,
+        *,
+        buyer_relevance: str,
+        path_type: str,
+        route_confidence: float,
+        person: Optional[TargetPerson],
+        yp_member: Dict[str, Any],
+    ) -> float:
+        buyer_score = {
+            "decision_owner": 1.0,
+            "support_stakeholder": 0.55,
+            "general_contact": 0.3,
+        }.get(buyer_relevance, 0.3)
+        decision_score = max(_bounded_unit(person.decision_score if person else 0.0), _bounded_unit(person.q11_score if person else 0.0))
+        path_score = self._path_quality_score(path_type)
+        yp_fit = 0.0 if (_normalize_name(path_type) == "cold" and route_confidence <= 0.2) else self._yp_fit_score(yp_member, person)
+        return round((buyer_score * 100.0) + (decision_score * 20.0) + (path_score * 15.0) + (route_confidence * 10.0) + (yp_fit * 5.0), 3)
+
+    def _verification_needed(self, *, buyer_relevance: str, path_type: str, person: Optional[TargetPerson]) -> str:
+        target_name = person.person_name if person else "the buyer route"
+        normalized = _normalize_name(path_type)
+        if buyer_relevance != "decision_owner":
+            return f"Verify that {target_name} can route to the commercial decision owner before outreach."
+        if normalized == "bridge_connection":
+            return f"Verify that the bridge contact can still introduce into {target_name}'s team."
+        if normalized == "mutual_connection":
+            return f"Verify the mutual connection to {target_name} is current and warm enough for an introduction."
+        if normalized == "direct_connection":
+            return f"Verify the direct relationship to {target_name} is current before outreach."
+        return f"Verify the buyer route to {target_name} before outreach."
 
     def analyze_connections(
         self,
@@ -298,6 +362,7 @@ class ConnectionsAnalyzer:
             YPConnectionAnalysis for this YP member
         """
         yp_name = yp_member["yp_name"]
+        people_by_name = {_normalize_name(person.person_name): person for person in target_personnel}
 
         analysis = YPConnectionAnalysis(
             yp_member=yp_member,
@@ -309,10 +374,13 @@ class ConnectionsAnalyzer:
             talking_points=[]
         )
 
+        matched_record: Dict[str, Any] = {}
+
         # Check for direct connections in yp_team_data
         if yp_team_data:
             for data in yp_team_data:
                 if data.get("yp_name") == yp_name:
+                    matched_record = data
                     analysis.direct_connections = data.get("direct_connections", 0)
                     analysis.mutual_connections = data.get("mutual_connections", [])
                     analysis.success_probability = data.get("success_probability", 0.0)
@@ -325,24 +393,106 @@ class ConnectionsAnalyzer:
                     analysis.mutual_connections.append(person.person_name)
                 analysis.direct_connections += person.count_second_degree_paths
 
-        # Determine connection strength
-        if analysis.direct_connections >= 3 or len(analysis.mutual_connections) >= 2:
-            analysis.connection_strength = "strong"
-            analysis.success_probability = max(analysis.success_probability, 70.0)
-        elif analysis.direct_connections >= 1 or len(analysis.mutual_connections) >= 1:
-            analysis.connection_strength = "medium"
-            analysis.success_probability = max(analysis.success_probability, 40.0)
-        elif analysis.direct_connections == 0 and len(analysis.mutual_connections) == 0:
-            analysis.connection_strength = "none"
-            analysis.success_probability = 10.0  # Base cold probability
+        candidate_person: Optional[TargetPerson] = None
+        candidate_name = _normalize_name(matched_record.get("target_person"))
+        if candidate_name:
+            candidate_person = people_by_name.get(candidate_name)
+        if candidate_person is None:
+            matched_people = [person for person in target_personnel if _normalize_name(person.mutual_connections_yp) == _normalize_name(yp_name)]
+            if matched_people:
+                candidate_person = max(
+                    matched_people,
+                    key=lambda person: (
+                        _bounded_unit(person.decision_score),
+                        _bounded_unit(person.q11_score),
+                        person.count_second_degree_paths,
+                    ),
+                )
+        if candidate_person is None and target_personnel:
+            candidate_person = max(
+                target_personnel,
+                key=lambda person: (
+                    1 if self._buyer_relevance(person) == "decision_owner" else 0,
+                    _bounded_unit(person.decision_score),
+                    _bounded_unit(person.q11_score),
+                ),
+            )
 
-        # Find relevant bridge contacts
+        bridge_targets: List[str] = []
         for bridge in bridge_contacts:
-            if yp_name in bridge.relationship_to_yp:
+            if self._bridge_matches_yp(bridge, yp_name):
                 analysis.tier_2_bridges.append(bridge.contact_name)
-                # Boost success probability if bridge contact available
-                if analysis.connection_strength == "none":
-                    analysis.success_probability = max(analysis.success_probability, 25.0)
+                bridge_targets.append(bridge.contact_name)
+
+        raw_path_type = str(matched_record.get("path_type") or "").strip()
+        if not raw_path_type:
+            if candidate_person and _normalize_name(candidate_person.mutual_connections_yp) == _normalize_name(yp_name):
+                raw_path_type = "mutual_connection"
+            elif bridge_targets:
+                raw_path_type = "bridge_connection"
+            else:
+                raw_path_type = "cold"
+
+        route_confidence = _bounded_unit(matched_record.get("route_confidence") or matched_record.get("success_probability") or analysis.success_probability)
+        if route_confidence == 0.0:
+            route_confidence = {
+                "direct_connection": 0.78,
+                "mutual_connection": 0.62,
+                "bridge_connection": 0.48,
+                "cold": 0.18,
+            }.get(_normalize_name(raw_path_type), 0.18)
+
+        buyer_relevance = str(matched_record.get("buyer_relevance") or "").strip() or self._buyer_relevance(candidate_person)
+        if buyer_relevance not in {"decision_owner", "support_stakeholder", "general_contact"}:
+            buyer_relevance = "general_contact"
+
+        analysis.path_type = raw_path_type
+        analysis.target_person = matched_record.get("target_person") or (candidate_person.person_name if candidate_person else "")
+        analysis.target_role = matched_record.get("target_role") or (candidate_person.role if candidate_person else "")
+        analysis.buyer_relevance = buyer_relevance
+        analysis.route_confidence = route_confidence
+        analysis.q11_score = max(_bounded_unit(matched_record.get("q11_score")), _bounded_unit(candidate_person.q11_score if candidate_person else 0.0))
+        analysis.q12_score = max(_bounded_unit(matched_record.get("q12_score")), route_confidence)
+        analysis.decision_score = max(_bounded_unit(matched_record.get("decision_score")), _bounded_unit(candidate_person.decision_score if candidate_person else 0.0))
+        analysis.relationship_evidence = [
+            evidence
+            for evidence in [
+                *analysis.mutual_connections,
+                *bridge_targets,
+            ]
+            if str(evidence).strip()
+        ]
+        analysis.recommended_yp_owner = yp_name
+        analysis.verification_needed = self._verification_needed(
+            buyer_relevance=buyer_relevance,
+            path_type=raw_path_type,
+            person=candidate_person,
+        )
+
+        analysis.route_score = self._route_score(
+            buyer_relevance=buyer_relevance,
+            path_type=raw_path_type,
+            route_confidence=route_confidence,
+            person=candidate_person,
+            yp_member=yp_member,
+        )
+        analysis.success_probability = round(
+            min(
+                100.0,
+                max(
+                    analysis.success_probability,
+                    (analysis.route_score / 1.5) * yp_member.get("yp_weight", 1.0),
+                ),
+            ),
+            1,
+        )
+        analysis.connection_strength = (
+            "strong"
+            if analysis.route_score >= 95.0 or _normalize_name(raw_path_type) == "direct_connection"
+            else "medium"
+            if analysis.route_score >= 60.0 or _normalize_name(raw_path_type) in {"mutual_connection", "bridge_connection"}
+            else "none"
+        )
 
         # Generate talking points based on YP expertise
         yp_role = yp_member.get("yp_role", "")
@@ -377,10 +527,6 @@ class ConnectionsAnalyzer:
                 "Relationship-building capabilities"
             ]
 
-        # Apply weight to success probability
-        yp_weight = yp_member.get("yp_weight", 1.0)
-        analysis.success_probability = min(100.0, analysis.success_probability * yp_weight)
-
         return analysis
 
     def _determine_recommended_approach(
@@ -400,10 +546,10 @@ class ConnectionsAnalyzer:
         Returns:
             Dict with recommended approach details
         """
-        # Find YP member with highest success probability
+        # Find YP member with highest route score first, then success probability.
         best_connection = max(
             primary_connections,
-            key=lambda c: c.success_probability,
+            key=lambda c: (c.route_score, c.success_probability),
             default=None
         )
 
@@ -414,32 +560,35 @@ class ConnectionsAnalyzer:
                 "mutual_connections": [],
                 "talking_points": [],
                 "success_probability": 10.0,
+                "route_confidence": 0.1,
+                "buyer_relevance": "general_contact",
+                "verification_needed": "Verify a buyer hypothesis before outreach.",
                 "rationale": "No connection data available - cold approach required"
             }
 
         yp_name = best_connection.yp_member["yp_name"]
         yp_role = best_connection.yp_member["yp_role"]
-
-        # Determine path type
-        if best_connection.connection_strength == "strong":
-            path_type = "Direct (warm)"
-        elif best_connection.connection_strength == "medium":
-            path_type = "Direct (lukewarm)"
-        elif best_connection.tier_2_bridges:
-            path_type = "Tier 2 bridge"
-        else:
-            path_type = "Cold"
+        path_type = self._path_label(best_connection.path_type, best_connection.route_confidence)
 
         return {
             "yp_member": yp_name,
             "yp_role": yp_role,
             "introduction_path": path_type,
+            "target_person": best_connection.target_person or None,
+            "target_role": best_connection.target_role or None,
+            "buyer_relevance": best_connection.buyer_relevance,
+            "route_confidence": round(best_connection.route_confidence, 2),
+            "route_type": best_connection.path_type or None,
+            "relationship_evidence": best_connection.relationship_evidence,
             "mutual_connections": best_connection.mutual_connections,
             "talking_points": best_connection.talking_points,
             "success_probability": round(best_connection.success_probability, 1),
-            "rationale": f"{yp_name} has {best_connection.connection_strength} connections "
-                       f"({best_connection.direct_connections} direct, "
-                       f"{len(best_connection.mutual_connections)} mutual)"
+            "verification_needed": best_connection.verification_needed,
+            "rationale": (
+                f"{yp_name} is the strongest route to "
+                f"{best_connection.target_person or 'the buyer route'} via {path_type.lower()} "
+                f"with {best_connection.buyer_relevance.replace('_', ' ')} relevance."
+            ),
         }
 
     def _calculate_overall_score(self, primary_connections: List[YPConnectionAnalysis]) -> float:
@@ -516,6 +665,7 @@ def _target_personnel_from_poi_graph(
         if dedupe_key in seen_people:
             continue
         seen_people.add(dedupe_key)
+        edge_type = str(edge.get("edge_type") or "").strip().lower()
         target_personnel.append(
             TargetPerson(
                 entity_id=entity_id,
@@ -524,6 +674,9 @@ def _target_personnel_from_poi_graph(
                 linkedin_url=str(person.get("linkedin_url") or "").strip(),
                 mutual_connections_yp="",
                 count_second_degree_paths=0,
+                q11_score=1.0 if edge_type == "primary_owner_of" else 0.45 if edge_type == "supports" else 0.2,
+                decision_score=1.0 if edge_type == "primary_owner_of" else 0.45 if edge_type == "supports" else 0.2,
+                path_type=edge_type,
             )
         )
 
@@ -552,26 +705,9 @@ def analyze_connections_from_csv(
     Returns:
         ConnectionsResult with analysis
     """
-    analyzer = ConnectionsAnalyzer()
-
-    # Load YP team from CSV if provided
-    yp_team = None
-    if yp_team_csv and Path(yp_team_csv).exists():
-        yp_team = []
-        with open(yp_team_csv, 'r') as f:
-            reader = csv.DictReader(f)
-            for row in reader:
-                if row.get('yp_name') and row.get('yp_name') != 'yp_name':
-                    yp_team.append({
-                        "yp_name": row['yp_name'],
-                        "yp_role": row.get('yp_role', ''),
-                        "yp_linkedin": row.get('yp_linkedin', ''),
-                        "yp_weight": float(row.get('yp_weight', 1.0)),
-                        "yp_expertise_1": row.get('yp_expertise_1', ''),
-                        "yp_expertise_2": row.get('yp_expertise_2', ''),
-                        "yp_expertise_3": row.get('yp_expertise_3', '')
-                    })
-        analyzer = ConnectionsAnalyzer(yp_team=yp_team)
+    analyzer = ConnectionsAnalyzer(
+        yp_team=load_active_yp_team(csv_path=yp_team_csv) if yp_team_csv else None
+    )
 
     # Load target personnel from CSV if provided
     target_personnel = []
@@ -646,23 +782,9 @@ def analyze_connections_from_question_first_dossier(
         else {}
     )
 
-    analyzer = ConnectionsAnalyzer()
-    if yp_team_csv and Path(yp_team_csv).exists():
-        yp_team = []
-        with open(yp_team_csv, 'r') as f:
-            reader = csv.DictReader(f)
-            for row in reader:
-                if row.get('yp_name') and row.get('yp_name') != 'yp_name':
-                    yp_team.append({
-                        "yp_name": row['yp_name'],
-                        "yp_role": row.get('yp_role', ''),
-                        "yp_linkedin": row.get('yp_linkedin', ''),
-                        "yp_weight": float(row.get('yp_weight', 1.0)),
-                        "yp_expertise_1": row.get('yp_expertise_1', ''),
-                        "yp_expertise_2": row.get('yp_expertise_2', ''),
-                        "yp_expertise_3": row.get('yp_expertise_3', '')
-                    })
-        analyzer = ConnectionsAnalyzer(yp_team=yp_team)
+    analyzer = ConnectionsAnalyzer(
+        yp_team=load_active_yp_team(csv_path=yp_team_csv) if yp_team_csv else None
+    )
 
     target_personnel = _target_personnel_from_poi_graph(entity_id=entity_id, poi_graph=poi_graph)
     bridge_contacts = _bridge_contacts_from_connections_graph(connections_graph)
@@ -693,17 +815,35 @@ def _merge_target_personnel(*collections: List[TargetPerson]) -> List[TargetPers
                     person_name=person.person_name,
                     role=person.role,
                     linkedin_url=person.linkedin_url,
+                    function_type=person.function_type,
+                    seniority_level=person.seniority_level,
                     mutual_connections_yp=person.mutual_connections_yp,
                     count_second_degree_paths=person.count_second_degree_paths,
+                    q11_score=person.q11_score,
+                    q12_score=person.q12_score,
+                    decision_score=person.decision_score,
+                    path_type=person.path_type,
+                    recommended_yp_owner=person.recommended_yp_owner,
                 )
                 continue
             if not existing.role and person.role:
                 existing.role = person.role
             if not existing.linkedin_url and person.linkedin_url:
                 existing.linkedin_url = person.linkedin_url
+            if not existing.function_type and person.function_type:
+                existing.function_type = person.function_type
+            if not existing.seniority_level and person.seniority_level:
+                existing.seniority_level = person.seniority_level
             if not existing.mutual_connections_yp and person.mutual_connections_yp:
                 existing.mutual_connections_yp = person.mutual_connections_yp
             existing.count_second_degree_paths = max(existing.count_second_degree_paths, person.count_second_degree_paths)
+            existing.q11_score = max(existing.q11_score, person.q11_score)
+            existing.q12_score = max(existing.q12_score, person.q12_score)
+            existing.decision_score = max(existing.decision_score, person.decision_score)
+            if not existing.path_type and person.path_type:
+                existing.path_type = person.path_type
+            if not existing.recommended_yp_owner and person.recommended_yp_owner:
+                existing.recommended_yp_owner = person.recommended_yp_owner
     merged.extend(index.values())
     return merged
 
@@ -755,6 +895,8 @@ def _target_personnel_from_connections_graph(
                 linkedin_url=str(person_node.get("linkedin_url") or "").strip(),
                 mutual_connections_yp="",
                 count_second_degree_paths=0,
+                q12_score=_bounded_unit(edge.get("confidence") or 0.0),
+                path_type=edge_type,
             )
         )
     return people
@@ -787,13 +929,73 @@ def _yp_team_data_from_connections_graph(
     graph = connections_graph if isinstance(connections_graph, dict) else {}
     nodes = _connections_graph_nodes(graph)
     edges = graph.get("edges") if isinstance(graph.get("edges"), list) else []
-    yp_team = yp_team or YELLOW_PANTHER_TEAM
-    yp_index = {str(member.get("yp_name") or "").strip(): {"yp_name": str(member.get("yp_name") or "").strip(), "direct_connections": 0, "mutual_connections": [], "success_probability": 0.0} for member in yp_team}
+    yp_team = yp_team or load_active_yp_team()
+    yp_index = {
+        str(member.get("yp_name") or "").strip(): {
+            "yp_name": str(member.get("yp_name") or "").strip(),
+            "direct_connections": 0,
+            "mutual_connections": [],
+            "success_probability": 0.0,
+            "route_confidence": 0.0,
+            "path_type": "",
+            "target_person": "",
+            "target_role": "",
+            "buyer_relevance": "",
+            "decision_score": 0.0,
+            "q11_score": 0.0,
+            "q12_score": 0.0,
+        }
+        for member in yp_team
+    }
+    person_nodes = {
+        node_id: node
+        for node_id, node in nodes.items()
+        if _normalize_name(node.get("node_type")) == "person"
+    }
+    bridge_targets: Dict[str, Dict[str, Any]] = {}
+    for edge in edges:
+        if not isinstance(edge, dict):
+            continue
+        edge_type = str(edge.get("edge_type") or "").strip().lower()
+        if edge_type != "bridge_to_target":
+            continue
+        from_id = str(edge.get("from_id") or "").strip()
+        to_id = str(edge.get("to_id") or "").strip()
+        person_node = person_nodes.get(to_id) or {}
+        bridge_targets[from_id] = {
+            "target_person": str(person_node.get("name") or edge.get("to_label") or "").strip(),
+            "target_role": str(person_node.get("title") or "").strip(),
+            "confidence": _safe_float(edge.get("confidence") or 0.0),
+            "path_type": "bridge_connection",
+        }
 
     def add_mutual(name: str, mutual: str) -> None:
         mutual = mutual.strip()
         if mutual and mutual not in yp_index[name]["mutual_connections"]:
             yp_index[name]["mutual_connections"].append(mutual)
+
+    def apply_route(name: str, *, path_type: str, target_person: str = "", target_role: str = "", confidence: float = 0.0, mutual_name: str = "") -> None:
+        candidate = yp_index[name]
+        route_confidence = _bounded_unit(confidence)
+        current_path = _normalize_name(candidate.get("path_type"))
+        candidate_path = _normalize_name(path_type)
+        path_rank = {"direct_connection": 3, "mutual_connection": 2, "bridge_connection": 1, "": 0}
+        should_replace = (
+            path_rank.get(candidate_path, 0) > path_rank.get(current_path, 0)
+            or (
+                path_rank.get(candidate_path, 0) == path_rank.get(current_path, 0)
+                and route_confidence > _bounded_unit(candidate.get("route_confidence"))
+            )
+        )
+        if should_replace:
+            candidate["path_type"] = path_type
+            candidate["target_person"] = target_person
+            candidate["target_role"] = target_role
+            candidate["route_confidence"] = max(route_confidence, _bounded_unit(candidate.get("route_confidence")))
+        candidate["success_probability"] = max(candidate["success_probability"], confidence)
+        candidate["q12_score"] = max(_bounded_unit(candidate.get("q12_score")), route_confidence)
+        if mutual_name:
+            add_mutual(name, mutual_name)
 
     for edge in edges:
         if not isinstance(edge, dict):
@@ -811,14 +1013,36 @@ def _yp_team_data_from_connections_graph(
 
         if edge_type == "direct_connection":
             yp_index[yp_name]["direct_connections"] += 1
-            yp_index[yp_name]["success_probability"] = max(yp_index[yp_name]["success_probability"], float(edge.get("confidence") or 60.0))
+            person_node = person_nodes.get(str(edge.get("to_id") or "").strip()) or {}
+            apply_route(
+                yp_name,
+                path_type="direct_connection",
+                target_person=str(person_node.get("name") or edge.get("to_label") or "").strip(),
+                target_role=str(person_node.get("title") or "").strip(),
+                confidence=_safe_float(edge.get("confidence") or 60.0),
+            )
         elif edge_type == "mutual_connection":
             yp_index[yp_name]["direct_connections"] += 1
-            add_mutual(yp_name, str(edge.get("mutual_name") or edge.get("to_label") or "").strip())
-            yp_index[yp_name]["success_probability"] = max(yp_index[yp_name]["success_probability"], float(edge.get("confidence") or 55.0))
+            person_node = person_nodes.get(str(edge.get("to_id") or "").strip()) or {}
+            apply_route(
+                yp_name,
+                path_type="mutual_connection",
+                target_person=str(person_node.get("name") or edge.get("to_label") or "").strip(),
+                target_role=str(person_node.get("title") or "").strip(),
+                confidence=_safe_float(edge.get("confidence") or 55.0),
+                mutual_name=str(edge.get("mutual_name") or edge.get("to_label") or "").strip(),
+            )
         elif edge_type == "bridge_connection":
-            add_mutual(yp_name, str(edge.get("to_label") or "").strip())
-            yp_index[yp_name]["success_probability"] = max(yp_index[yp_name]["success_probability"], float(edge.get("confidence") or 35.0))
+            bridge_name = str(edge.get("to_id") or "").strip()
+            bridge_target = bridge_targets.get(bridge_name) or {}
+            apply_route(
+                yp_name,
+                path_type="bridge_connection",
+                target_person=str(bridge_target.get("target_person") or "").strip(),
+                target_role=str(bridge_target.get("target_role") or "").strip(),
+                confidence=max(_safe_float(edge.get("confidence") or 35.0), _safe_float(bridge_target.get("confidence") or 0.0)),
+                mutual_name=str(edge.get("to_label") or nodes.get(bridge_name, {}).get("name") or "").strip(),
+            )
 
     return list(yp_index.values())
 
@@ -848,6 +1072,10 @@ def format_connections_for_dossier(result: ConnectionsResult) -> Dict[str, Any]:
         else:
             content_lines.append(f"- Mutual Connections: none detected")
         content_lines.append(f"- Connection Strength: {conn.connection_strength}")
+        if conn.target_person:
+            content_lines.append(f"- Best Route: {conn.path_type or 'cold'} to {conn.target_person} ({conn.target_role or 'role pending'})")
+        if conn.buyer_relevance:
+            content_lines.append(f"- Buyer Relevance: {conn.buyer_relevance}")
         content_lines.append("")
 
     if result.tier_2_bridges:
@@ -856,7 +1084,11 @@ def format_connections_for_dossier(result: ConnectionsResult) -> Dict[str, Any]:
             content_lines.append(f"- {bridge['contact_name']}: {bridge['introduction_capability']}")
         content_lines.append("")
 
-    content_lines.append(f"[Recommended Approach]: {result.recommended_approach.get('yp_member', 'Unknown')} should lead")
+    content_lines.append(
+        f"[Recommended Approach]: {result.recommended_approach.get('yp_member', 'Unknown')} should lead via "
+        f"{result.recommended_approach.get('introduction_path', 'Cold')} to "
+        f"{result.recommended_approach.get('target_person', 'target pending')}"
+    )
 
     # Build metrics
     metrics = [{
@@ -881,10 +1113,15 @@ def format_connections_for_dossier(result: ConnectionsResult) -> Dict[str, Any]:
     # Build recommendations
     recommendations = [{
         "yp_member": result.recommended_approach.get("yp_member"),
+        "target_person": result.recommended_approach.get("target_person"),
+        "target_role": result.recommended_approach.get("target_role"),
         "introduction_path": result.recommended_approach.get("introduction_path"),
+        "buyer_relevance": result.recommended_approach.get("buyer_relevance"),
+        "route_confidence": result.recommended_approach.get("route_confidence"),
         "mutual_connections": result.recommended_approach.get("mutual_connections", []),
         "talking_points": result.recommended_approach.get("talking_points", []),
         "success_probability": result.recommended_approach.get("success_probability", 0),
+        "verification_needed": result.recommended_approach.get("verification_needed", ""),
         "rationale": result.recommended_approach.get("rationale", "")
     }]
 

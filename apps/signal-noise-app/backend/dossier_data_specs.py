@@ -251,6 +251,8 @@ class LeadershipSpec:
 @dataclass
 class YPTeamMemberSpec:
     """Yellow Panther team member (static reference data)"""
+    member_id: str = ""
+    display_order: int = 0
     yp_name: str
     yp_role: str
     yp_linkedin: str
@@ -258,10 +260,12 @@ class YPTeamMemberSpec:
     yp_expertise_1: str = ""
     yp_expertise_2: str = ""
     yp_expertise_3: str = ""
-    excluded_from_connections: bool = False
+    status: str = "active"
 
     def to_csv_row(self) -> Dict[str, str]:
         return {
+            "member_id": self.member_id,
+            "display_order": str(self.display_order),
             "yp_name": self.yp_name,
             "yp_role": self.yp_role,
             "yp_linkedin": self.yp_linkedin,
@@ -269,7 +273,7 @@ class YPTeamMemberSpec:
             "yp_expertise_1": self.yp_expertise_1,
             "yp_expertise_2": self.yp_expertise_2,
             "yp_expertise_3": self.yp_expertise_3,
-            "excluded_from_connections": str(self.excluded_from_connections)
+            "status": self.status,
         }
 
 
@@ -449,7 +453,7 @@ CSV_TEMPLATES = {
         entity_id="", website_platform="", crm_system=""
     ).to_csv_row().keys(),
     "yp_team.csv": YPTeamMemberSpec(
-        yp_name="", yp_role="", yp_linkedin=""
+        member_id="", display_order=0, yp_name="", yp_role="", yp_linkedin=""
     ).to_csv_row().keys(),
     "bridge_contacts.csv": BridgeContactSpec(
         contact_name="", relationship_to_yp="", network_reach="", introduction_capability=""

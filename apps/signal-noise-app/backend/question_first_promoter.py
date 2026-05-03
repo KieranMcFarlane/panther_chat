@@ -6,9 +6,21 @@ from __future__ import annotations
 from typing import Any, Dict, List
 
 try:
-    from backend.connections_analyzer import ConnectionsAnalyzer, YELLOW_PANTHER_TEAM
+    from backend.connections_analyzer import (
+        ConnectionsAnalyzer,
+        _merge_target_personnel,
+        _target_personnel_from_poi_graph,
+        _yp_team_data_from_connections_graph,
+    )
+    from backend.yp_team_roster import load_active_yp_team
 except ImportError:
-    from connections_analyzer import ConnectionsAnalyzer, YELLOW_PANTHER_TEAM  # type: ignore
+    from connections_analyzer import (  # type: ignore
+        ConnectionsAnalyzer,
+        _merge_target_personnel,
+        _target_personnel_from_poi_graph,
+        _yp_team_data_from_connections_graph,
+    )
+    from yp_team_roster import load_active_yp_team  # type: ignore
 
 
 def _slugify(value: Any) -> str:
@@ -108,6 +120,116 @@ def _extract_raw_structured_output(answer: Dict[str, Any] | None) -> Dict[str, A
     return raw_structured_output if isinstance(raw_structured_output, dict) else {}
 
 
+def _target_personnel_from_connections_graph(connections_graph: Dict[str, Any] | None, *, entity_id: str) -> List[Any]:
+    if not isinstance(connections_graph, dict):
+        return []
+    nodes = {
+        str(node.get("node_id") or "").strip(): node
+        for node in (connections_graph.get("nodes") or [])
+        if isinstance(node, dict) and str(node.get("node_id") or "").strip()
+    }
+    people: List[Any] = []
+    seen = set()
+    for edge in connections_graph.get("edges") or []:
+        if not isinstance(edge, dict):
+            continue
+        to_id = str(edge.get("to_id") or "").strip()
+        person_node = nodes.get(to_id)
+        if not person_node or str(person_node.get("node_type") or "").strip().lower() != "person":
+            continue
+        name = str(person_node.get("name") or "").strip()
+        if not name or name.lower() in seen:
+            continue
+        seen.add(name.lower())
+        people.append(
+            {
+                "entity_id": entity_id,
+                "person_name": name,
+                "role": str(person_node.get("title") or "").strip(),
+                "linkedin_url": str(person_node.get("linkedin_url") or "").strip(),
+                "mutual_connections_yp": "",
+                "count_second_degree_paths": 0,
+            }
+        )
+    try:
+        from backend.connections_analyzer import TargetPerson  # type: ignore
+    except ImportError:
+        from connections_analyzer import TargetPerson  # type: ignore
+    return [TargetPerson(**person) for person in people]
+
+
+def _bridge_contacts_from_connections_graph(connections_graph: Dict[str, Any] | None) -> List[Any]:
+    if not isinstance(connections_graph, dict):
+        return []
+    try:
+        from backend.connections_analyzer import BridgeContact  # type: ignore
+    except ImportError:
+        from connections_analyzer import BridgeContact  # type: ignore
+    bridge_contacts: List[Any] = []
+    for node in connections_graph.get("nodes") or []:
+        if not isinstance(node, dict):
+            continue
+        if str(node.get("node_type") or "").strip().lower() != "bridge_contact":
+            continue
+        bridge_contacts.append(
+            BridgeContact(
+                contact_name=str(node.get("name") or "").strip(),
+                relationship_to_yp=str(node.get("relationship_to_yp") or "").strip(),
+                network_reach=str(node.get("network_reach") or "").strip(),
+                introduction_capability=str(node.get("introduction_capability") or "").strip(),
+                linkedin_url=str(node.get("linkedin_url") or "").strip(),
+                target_connections_count=int(node.get("target_connections_count") or 0),
+            )
+        )
+    return bridge_contacts
+
+
+def _build_deterministic_connections_summary(
+    *,
+    entity_id: str,
+    entity_name: str,
+    poi_graph: Dict[str, Any] | None = None,
+    connections_graph: Dict[str, Any] | None,
+) -> Dict[str, Any]:
+    if not isinstance(connections_graph, dict):
+        return {}
+    analyzer = ConnectionsAnalyzer()
+    target_personnel = _target_personnel_from_connections_graph(connections_graph, entity_id=entity_id)
+    if isinstance(poi_graph, dict):
+        target_personnel = _merge_target_personnel(
+            _target_personnel_from_poi_graph(entity_id=entity_id, poi_graph=poi_graph),
+            target_personnel,
+        )
+    bridge_contacts = _bridge_contacts_from_connections_graph(connections_graph)
+    yp_team_data = _yp_team_data_from_connections_graph(connections_graph, yp_team=analyzer.yp_team)
+    if not target_personnel and not bridge_contacts:
+        return {}
+    result = analyzer.analyze_connections(
+        entity_id=entity_id,
+        entity_name=entity_name,
+        target_personnel=target_personnel,
+        bridge_contacts=bridge_contacts or None,
+        yp_team_data=yp_team_data or None,
+    )
+    recommended = result.recommended_approach if isinstance(result.recommended_approach, dict) else {}
+    if not recommended:
+        return {}
+    return {
+        "best_path_owner": str(recommended.get("yp_member") or "").strip() or None,
+        "path_type": str(recommended.get("introduction_path") or "").strip() or None,
+        "route_type": str(recommended.get("route_type") or "").strip() or None,
+        "target_person": str(recommended.get("target_person") or "").strip() or None,
+        "target_role": str(recommended.get("target_role") or "").strip() or None,
+        "buyer_relevance": str(recommended.get("buyer_relevance") or "").strip() or None,
+        "route_confidence": recommended.get("route_confidence"),
+        "success_probability": recommended.get("success_probability"),
+        "talking_points": recommended.get("talking_points") or [],
+        "verification_needed": str(recommended.get("verification_needed") or "").strip() or None,
+        "rationale": str(recommended.get("rationale") or "").strip() or None,
+        "source": "connections_analyzer",
+    }
+
+
 def _build_client_ready_summary(answer_by_question: Dict[str, Dict[str, Any]]) -> Dict[str, Any]:
     required_questions = [
         "q1_foundation",
@@ -134,7 +256,11 @@ def _build_client_ready_summary(answer_by_question: Dict[str, Dict[str, Any]]) -
     }
 
 
-def _build_graphiti_sales_brief(answer_by_question: Dict[str, Dict[str, Any]]) -> Dict[str, Any]:
+def _build_graphiti_sales_brief(
+    answer_by_question: Dict[str, Dict[str, Any]],
+    *,
+    deterministic_connections: Dict[str, Any] | None = None,
+) -> Dict[str, Any]:
     decision_owner = answer_by_question.get("q11_decision_owner") or {}
     if not _question_is_validated(decision_owner):
         return {"status": "insufficient_signal"}
@@ -146,6 +272,7 @@ def _build_graphiti_sales_brief(answer_by_question: Dict[str, Dict[str, Any]]) -
     connections = _extract_raw_structured_output(answer_by_question.get("q12_connections"))
     candidate_paths = connections.get("candidate_paths") if isinstance(connections.get("candidate_paths"), list) else []
     best_path = candidate_paths[0] if candidate_paths and isinstance(candidate_paths[0], dict) else {}
+    deterministic_connections = deterministic_connections if isinstance(deterministic_connections, dict) else {}
 
     capability_gap = _extract_raw_structured_output(answer_by_question.get("q13_capability_gap"))
     outreach_strategy = _extract_raw_structured_output(answer_by_question.get("q15_outreach_strategy"))
@@ -155,13 +282,26 @@ def _build_graphiti_sales_brief(answer_by_question: Dict[str, Dict[str, Any]]) -
         "status": "available",
         "buyer_name": buyer_name or None,
         "buyer_title": buyer_title,
-        "best_path_owner": str(best_path.get("best_yp_owner") or best_path.get("recommended_yp_owner") or "").strip() or None,
-        "path_type": str(best_path.get("path_type") or "").strip() or None,
+        "best_path_owner": str(
+            best_path.get("best_yp_owner")
+            or best_path.get("recommended_yp_owner")
+            or deterministic_connections.get("best_path_owner")
+            or ""
+        ).strip() or None,
+        "path_type": str(best_path.get("path_type") or deterministic_connections.get("path_type") or "").strip() or None,
+        "buyer_relevance": str(best_path.get("buyer_relevance") or deterministic_connections.get("buyer_relevance") or "").strip() or None,
+        "route_confidence": best_path.get("route_confidence") or deterministic_connections.get("route_confidence"),
         "capability_gap": str(capability_gap.get("top_gap") or capability_gap.get("gap_label") or "").strip() or None,
         "yp_fit_service": str(yp_fit.get("best_service") or yp_fit.get("recommended_service") or "").strip() or None,
-        "outreach_target": str(outreach_strategy.get("recommended_target") or buyer_name or "").strip() or None,
-        "outreach_route": str(outreach_strategy.get("recommended_route") or best_path.get("path_type") or "").strip() or None,
+        "outreach_target": str(outreach_strategy.get("recommended_target") or deterministic_connections.get("target_person") or buyer_name or "").strip() or None,
+        "outreach_route": str(
+            outreach_strategy.get("recommended_route")
+            or best_path.get("path_type")
+            or deterministic_connections.get("path_type")
+            or ""
+        ).strip() or None,
         "outreach_angle": str(outreach_strategy.get("recommended_angle") or "").strip() or None,
+        "verification_needed": str(outreach_strategy.get("verification_needed") or deterministic_connections.get("verification_needed") or "").strip() or None,
         "source": "question_first_promotions",
     }
     if not any(summary.get(key) for key in ("best_path_owner", "capability_gap", "outreach_target", "outreach_angle")):
@@ -280,6 +420,7 @@ def build_question_first_connections_graph(
     *,
     poi_graph: Dict[str, Any] | None = None,
     bridge_contacts: List[Dict[str, Any]] | None = None,
+    yp_team: List[Dict[str, Any]] | None = None,
 ) -> Dict[str, Any]:
     graph = poi_graph if isinstance(poi_graph, dict) else {}
     entity_id = str(graph.get("entity_id") or "").strip() or None
@@ -315,7 +456,8 @@ def build_question_first_connections_graph(
         if isinstance(edge, dict):
             add_edge(dict(edge))
 
-    for member in YELLOW_PANTHER_TEAM:
+    configured_yp_team = yp_team or load_active_yp_team()
+    for member in configured_yp_team:
         yp_name = str(member.get("yp_name") or "").strip()
         if not yp_name:
             continue
@@ -388,6 +530,8 @@ def build_question_first_promotions(
     evidence_items: List[Dict[str, Any]] | None = None,
     promotion_candidates: List[Dict[str, Any]] | None = None,
     bridge_contacts: List[Dict[str, Any]] | None = None,
+    poi_graph: Dict[str, Any] | None = None,
+    connections_graph: Dict[str, Any] | None = None,
     min_confidence: float = 0.7,
     allowed_rollout_phase: str = "phase_1_core",
 ) -> Dict[str, Any]:
@@ -522,8 +666,18 @@ def build_question_first_promotions(
     for target in targets:
         grouped[target] = [item for item in promoted if item["promotion_target"] == target]
 
-    poi_graph = build_question_first_poi_graph(answers=answers)
-    connections_graph = build_question_first_connections_graph(poi_graph=poi_graph, bridge_contacts=bridge_contacts)
+    poi_graph = poi_graph if isinstance(poi_graph, dict) else build_question_first_poi_graph(answers=answers)
+    connections_graph = (
+        connections_graph
+        if isinstance(connections_graph, dict)
+        else build_question_first_connections_graph(poi_graph=poi_graph, bridge_contacts=bridge_contacts)
+    )
+    deterministic_connections = _build_deterministic_connections_summary(
+        entity_id=str((poi_graph or {}).get("entity_id") or ""),
+        entity_name=str((poi_graph or {}).get("entity_name") or ""),
+        poi_graph=poi_graph,
+        connections_graph=connections_graph,
+    )
 
     discovery_summary: Dict[str, Any] = {
         "promoted_count": len(promoted),
@@ -532,7 +686,12 @@ def build_question_first_promotions(
         "promotion_rollout_phase": allowed_rollout_phase,
     }
     discovery_summary.update(_build_client_ready_summary(answer_by_question))
-    discovery_summary["graphiti_sales_brief"] = _build_graphiti_sales_brief(answer_by_question)
+    discovery_summary["graphiti_sales_brief"] = _build_graphiti_sales_brief(
+        answer_by_question,
+        deterministic_connections=deterministic_connections,
+    )
+    if deterministic_connections:
+        discovery_summary["deterministic_connections"] = deterministic_connections
     discovery_summary.update(grouped)
 
     return {
