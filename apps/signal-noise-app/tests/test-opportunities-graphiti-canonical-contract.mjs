@@ -11,7 +11,7 @@ test('opportunities page reads the canonical Graphiti opportunities API and keep
   assert.match(clientSource, /fetch\(['"]\/api\/opportunities['"]/)
   assert.doesNotMatch(clientSource, /\/api\/tenders\?action=opportunities/)
   assert.doesNotMatch(pageSource, /useSearchParams/)
-  assert.match(readModelSource, /isDemoOriginOpportunityRow/)
+  assert.match(readModelSource, /isLegacyOrDemoOriginOpportunityRow/)
   assert.doesNotMatch(readModelSource, /readFile/)
   assert.doesNotMatch(readModelSource, /loadDossierNarrative/)
 })

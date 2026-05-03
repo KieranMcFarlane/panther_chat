@@ -9,7 +9,7 @@
 - `mcp-servers/`, `livekit-agents/`, `cli/`: auxiliary packages and tooling.
 
 ## Build, Test, and Development Commands
-- `npm run dev`: start Next.js dev server on port `3005`.
+- `bash scripts/dev-full.sh`: start the full app stack (backend, worker, frontend).
 - `npm run build`: production build.
 - `npm run start`: start production server on port `4328`.
 - `npm run lint`: run Next.js ESLint checks.

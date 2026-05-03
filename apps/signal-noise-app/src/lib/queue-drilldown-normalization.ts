@@ -1,6 +1,9 @@
 type FollowOnStateRecord = {
   batch_id?: string | null
   status?: string | null
+  continue_pipeline_on_failure?: boolean | null
+  current_question_id?: string | null
+  next_repair_question_id?: string | null
   next_repair_status?: string | null
   next_repair_batch_id?: string | null
   next_repair_batch_status?: string | null
@@ -27,8 +30,8 @@ export function hasDistinctActiveFollowOnBatch(
   return activeBatchIds.has(nextBatchId)
 }
 
-export function normalizeTerminalFollowOnMetadata(
-  record: FollowOnStateRecord,
+export function normalizeTerminalFollowOnMetadata<T extends FollowOnStateRecord>(
+  record: T,
   activeBatchIds: Set<string>,
 ) {
   const currentBatchId = toText(record.batch_id) || null
@@ -45,8 +48,28 @@ export function normalizeTerminalFollowOnMetadata(
       next_repair_status: null,
       next_repair_batch_id: null,
       next_repair_batch_status: null,
-    }
+    } as T
   }
 
   return record
+}
+
+export function shouldSurfaceResumeNeeded(
+  record: FollowOnStateRecord,
+  activeBatchIds: Set<string>,
+) {
+  const status = toText(record.status).toLowerCase() || null
+  if (!isTerminalStatus(status)) {
+    return false
+  }
+  if (record.continue_pipeline_on_failure === true) {
+    return false
+  }
+  if (hasDistinctActiveFollowOnBatch(record, activeBatchIds)) {
+    return false
+  }
+  return Boolean(
+    toText(record.next_repair_question_id)
+    || toText(record.current_question_id),
+  )
 }

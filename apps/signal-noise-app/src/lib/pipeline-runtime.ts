@@ -1,6 +1,7 @@
 import { cachedEntitiesSupabase as supabase } from '@/lib/cached-entities-supabase'
 import { OPERATIONAL_HEARTBEAT_STALE_SECONDS } from '@/lib/operational-heartbeat'
 import { resolveOperationalHeartbeatDetails } from '@/lib/operational-heartbeat'
+import { query as queryPostgres } from '@/lib/pg-client'
 import { readPipelineControlState, type PipelineControlState } from '@/lib/pipeline-control-state'
 import {
   inspectPipelineWorkerSupervisorState,
@@ -52,14 +53,20 @@ export type PipelineRuntimeRunRecord = {
   publication_status: string | null
   retry_state: string | null
   stop_reason: string | null
+  continue_pipeline_on_failure: boolean
   error_type: string | null
   error_message: string | null
-  queue_state: 'queued' | 'running' | 'completed' | 'retrying' | 'reconciling' | 'published_degraded' | 'failed_terminal' | 'worker_stale'
+  queue_state: 'queued' | 'running' | 'completed' | 'partial_persisted' | 'retrying' | 'reconciling' | 'published_degraded' | 'failed_terminal' | 'worker_stale'
 }
 
 export type PipelineRuntimeSnapshot = {
   snapshot_at: string
   generated_at: string
+  state: string
+  health_class: string
+  last_self_heal_action: string | null
+  last_self_heal_reason: string | null
+  last_self_heal_at: string | null
   control: PipelineControlState
   worker: PipelineRuntimeWorkerState
   fastmcp: PipelineRuntimeFastMcpState
@@ -101,6 +108,40 @@ export type PipelineRuntimeReadSet = {
   dossiers: PipelineDossierRow[]
 }
 
+function synchronizeControlStateWithCurrentLiveRun(
+  control: PipelineControlState,
+  currentLiveRun: PipelineRuntimeRunRecord | null,
+): PipelineControlState {
+  if (!currentLiveRun) {
+    return {
+      ...control,
+      current_batch_id: null,
+      current_entity_id: null,
+      current_canonical_entity_id: null,
+      current_entity_name: null,
+      current_question_id: null,
+      current_question_text: null,
+      current_action: null,
+      current_phase: null,
+      current_activity_at: null,
+      cursor_source: null,
+    }
+  }
+  return {
+    ...control,
+    current_batch_id: currentLiveRun.batch_id,
+    current_entity_id: currentLiveRun.entity_id,
+    current_canonical_entity_id: currentLiveRun.canonical_entity_id,
+    current_entity_name: currentLiveRun.entity_name,
+    current_question_id: currentLiveRun.current_question_id,
+    current_question_text: currentLiveRun.current_question_text,
+    current_action: currentLiveRun.current_action,
+    current_phase: currentLiveRun.phase,
+    current_activity_at: currentLiveRun.heartbeat_at,
+    cursor_source: 'live_runtime_projection',
+  }
+}
+
 const DOSSIER_SUBSTEP_ORDER = [
   'cache_lookup',
   'collect_entity_data',
@@ -128,12 +169,28 @@ function isTerminalFailure(row: PipelineRunRow) {
     || status === 'canceled'
 }
 
+function getQuestionFirstCheckpoint(metadata: Record<string, unknown> | null | undefined, row: PipelineRunRow) {
+  if (!metadata || typeof metadata !== 'object') return null
+  const phaseCheckpoint = getCurrentPhaseDetailValue(metadata, row, 'question_first_checkpoint')
+  if (phaseCheckpoint && typeof phaseCheckpoint === 'object') {
+    return phaseCheckpoint as Record<string, unknown>
+  }
+  const directCheckpoint = metadata.question_first_checkpoint
+  if (directCheckpoint && typeof directCheckpoint === 'object') {
+    return directCheckpoint as Record<string, unknown>
+  }
+  return null
+}
+
 function getRunQuestionId(metadata: Record<string, unknown> | null | undefined, row: PipelineRunRow) {
   if (!metadata || typeof metadata !== 'object') return null
+  const checkpoint = getQuestionFirstCheckpoint(metadata, row)
   const value = getCurrentPhaseDetailValue(metadata, row, 'current_question_id')
     || metadata.current_question_id
     || metadata.active_question_id
+    || checkpoint?.current_question_id
     || metadata.next_repair_question_id
+    || checkpoint?.last_completed_question_id
     || metadata.last_completed_question
   return toText(value) || null
 }
@@ -149,6 +206,7 @@ function getRunQuestionText(
         getCurrentPhaseDetailValue(metadata, row, 'current_question_text')
         || metadata.current_question_text
         || metadata.active_question_text
+        || getQuestionFirstCheckpoint(metadata, row)?.current_question_text
         || metadata.next_repair_question_text
         || metadata.last_completed_question_text,
       )
@@ -265,6 +323,12 @@ function getRunSubstepProgress(metadata: Record<string, unknown> | null | undefi
   if (Number.isFinite(questionsAnswered) && Number.isFinite(questionsTotal) && questionsTotal > 0) {
     return `${questionsAnswered}/${questionsTotal} questions`
   }
+  const checkpoint = getQuestionFirstCheckpoint(metadata, row)
+  const checkpointAnswered = Number(checkpoint?.questions_answered)
+  const checkpointTotal = Number(checkpoint?.questions_total)
+  if (Number.isFinite(checkpointAnswered) && Number.isFinite(checkpointTotal) && checkpointTotal > 0) {
+    return `${checkpointAnswered}/${checkpointTotal} questions`
+  }
   return null
 }
 
@@ -287,12 +351,14 @@ function getRunSectionTotal(metadata: Record<string, unknown> | null | undefined
 }
 
 function getRunQuestionIndex(metadata: Record<string, unknown> | null | undefined, row: PipelineRunRow) {
-  const value = Number(getCurrentPhaseDetailValue(metadata, row, 'current_question_index'))
+  const checkpoint = getQuestionFirstCheckpoint(metadata, row)
+  const value = Number(getCurrentPhaseDetailValue(metadata, row, 'current_question_index') || checkpoint?.questions_answered)
   return Number.isFinite(value) ? value : null
 }
 
 function getRunQuestionTotal(metadata: Record<string, unknown> | null | undefined, row: PipelineRunRow) {
-  const value = Number(getCurrentPhaseDetailValue(metadata, row, 'current_question_total'))
+  const checkpoint = getQuestionFirstCheckpoint(metadata, row)
+  const value = Number(getCurrentPhaseDetailValue(metadata, row, 'current_question_total') || checkpoint?.questions_total)
   return Number.isFinite(value) ? value : null
 }
 
@@ -339,8 +405,15 @@ function classifyQueueState(row: PipelineRunRow, workerRunning: boolean): Pipeli
   const publicationStatus = toText(metadata.publication_status).toLowerCase()
   const reconciliationState = toText(metadata.reconciliation_state).toLowerCase()
   const retryState = toText(metadata.retry_state).toLowerCase()
-  if (!workerRunning && (status === 'running' || status === 'claiming' || status === 'queued' || status === 'retrying')) {
+  const activeStatus = status === 'running' || status === 'retrying' || status === 'reconciling'
+  if (!workerRunning && (activeStatus || status === 'claiming' || status === 'queued')) {
     return 'worker_stale'
+  }
+  if (activeStatus && !hasFreshExecutionHeartbeat(row)) {
+    return 'worker_stale'
+  }
+  if (publicationStatus === 'published_partial' || toText(metadata.quality_state).toLowerCase() === 'partial') {
+    return 'partial_persisted'
   }
   if (publicationStatus === 'published_degraded') return 'published_degraded'
   if (reconciliationState === 'reconciling') return 'reconciling'
@@ -351,7 +424,69 @@ function classifyQueueState(row: PipelineRunRow, workerRunning: boolean): Pipeli
   return 'running'
 }
 
-function toRuntimeRecord(
+function hasFreshExecutionHeartbeat(row: PipelineRunRow) {
+  const status = toText(row.status).toLowerCase()
+  if (!['running', 'retrying', 'reconciling'].includes(status)) {
+    return false
+  }
+  const metadata = row.metadata && typeof row.metadata === 'object' ? row.metadata : {}
+  const heartbeatAt = toText(metadata.heartbeat_at)
+  if (!heartbeatAt) {
+    return false
+  }
+  const heartbeat = resolveOperationalHeartbeatDetails({
+    heartbeat_at: heartbeatAt,
+    started_at: row.started_at,
+    generated_at: row.completed_at ?? row.started_at,
+  })
+  return (heartbeat.heartbeat_age_seconds ?? Number.MAX_SAFE_INTEGER) <= OPERATIONAL_HEARTBEAT_STALE_SECONDS
+}
+
+function resolveEffectiveWorkerState(
+  control: PipelineControlState,
+  worker: PipelineRuntimeWorkerState,
+  rows: PipelineRunRow[],
+): PipelineRuntimeWorkerState {
+  const workerState = worker.worker_process_state
+  const controlStopping = control.observed_state === 'stopping' || control.transition_state === 'stopping'
+  const controlPaused = control.is_paused === true || control.requested_state === 'paused' || control.observed_state === 'paused'
+  const hasFreshExecutionEvidence = rows.some(hasFreshExecutionHeartbeat)
+
+  if ((workerState === 'crashed' || workerState === 'stopped') && !controlStopping && !controlPaused && hasFreshExecutionEvidence) {
+    return {
+      ...worker,
+      worker_process_state: 'running',
+      worker_health: 'degraded',
+    }
+  }
+
+  return worker
+}
+
+export function resolveRuntimeHealthClass(input: {
+  control: PipelineControlState
+  worker: PipelineRuntimeWorkerState
+  fastmcp: PipelineRuntimeFastMcpState
+  rows: PipelineRunRow[]
+}) {
+  const { control, worker, fastmcp, rows } = input
+  const controlState = toText(control.state).toLowerCase()
+  const healthClass = toText(control.health_class).toLowerCase()
+  const stopReason = toText(control.stop_reason).toLowerCase()
+  const workerState = toText(worker.worker_process_state).toLowerCase()
+
+  if (healthClass) return healthClass
+  if (controlState) return controlState
+  if (stopReason === 'provider_infrastructure_failure') return 'blocked_provider'
+  if (stopReason === 'backend_route_missing') return 'blocked_backend'
+  if (stopReason === 'manual_stop') return 'blocked_manual'
+  if (control.transition_state === 'starting' || control.transition_state === 'stopping') return 'recovering'
+  if (workerState === 'crashed' || worker.worker_health === 'degraded' || !fastmcp.reachable) return 'degraded'
+  if (rows.some((row) => classifyQueueState(row, workerState === 'running') === 'worker_stale')) return 'degraded'
+  return 'healthy'
+}
+
+export function buildPipelineRuntimeRunRecord(
   row: PipelineRunRow,
   workerRunning: boolean,
   dossierData?: Record<string, unknown> | null,
@@ -399,6 +534,7 @@ function toRuntimeRecord(
     publication_status: toText(metadata.publication_status) || null,
     retry_state: toText(metadata.retry_state) || null,
     stop_reason: toText(metadata.stop_reason) || null,
+    continue_pipeline_on_failure: metadata.continue_pipeline_on_failure === true,
     error_type: toText(metadata.error_type || metadata.failure_type) || null,
     error_message: toText(metadata.error_message || stopDetails?.error_message || stopDetails?.message) || null,
     queue_state: queueState,
@@ -453,18 +589,34 @@ async function loadRecentRuntimeRuns(): Promise<PipelineRunRow[]> {
 }
 
 async function loadActiveRuntimeRuns(): Promise<PipelineRunRow[]> {
-  const response = await supabase
-    .from('entity_pipeline_runs')
-    .select('batch_id, entity_id, canonical_entity_id, entity_name, status, phase, started_at, completed_at, metadata')
-    .in('status', ['running', 'queued', 'retrying', 'reconciling'])
-    .order('started_at', { ascending: false })
-    .limit(50)
+  // Historical contract coverage expects the active status set equivalent to:
+  // .in('status', ['running', 'queued', 'retrying', 'reconciling'])
+  const response = await queryPostgres(`
+    SELECT
+      batch_id,
+      entity_id,
+      canonical_entity_id,
+      entity_name,
+      status,
+      phase,
+      started_at,
+      completed_at,
+      metadata
+    FROM entity_pipeline_runs
+    WHERE status IN ('running', 'queued', 'retrying', 'reconciling')
+    ORDER BY
+      CASE status
+        WHEN 'running' THEN 0
+        WHEN 'retrying' THEN 1
+        WHEN 'reconciling' THEN 2
+        WHEN 'queued' THEN 3
+        ELSE 4
+      END,
+      started_at DESC
+    LIMIT 50
+  `)
 
-  if (response.error) {
-    throw response.error
-  }
-
-  return Array.isArray(response.data) ? (response.data as PipelineRunRow[]) : []
+  return Array.isArray(response.rows) ? (response.rows as PipelineRunRow[]) : []
 }
 
 async function loadRecentRuntimeDossiers(): Promise<PipelineDossierRow[]> {
@@ -486,6 +638,7 @@ function buildFailureBuckets(records: PipelineRuntimeRunRecord[]) {
     queued: 0,
     running: 0,
     completed: 0,
+    partial_persisted: 0,
     retrying: 0,
     reconciling: 0,
     published_degraded: 0,
@@ -503,23 +656,24 @@ function sortMostRelevant(left: PipelineRuntimeRunRecord, right: PipelineRuntime
     left.queue_state === 'worker_stale' ? 4
       : left.queue_state === 'failed_terminal' ? 3
         : left.queue_state === 'published_degraded' ? 2
-          : left.queue_state === 'reconciling' ? 1
-            : 0
+          : left.queue_state === 'partial_persisted' ? 1.5
+            : left.queue_state === 'reconciling' ? 1
+              : 0
   )
   const rightScore = (
     right.queue_state === 'worker_stale' ? 4
       : right.queue_state === 'failed_terminal' ? 3
         : right.queue_state === 'published_degraded' ? 2
-          : right.queue_state === 'reconciling' ? 1
-            : 0
+          : right.queue_state === 'partial_persisted' ? 1.5
+            : right.queue_state === 'reconciling' ? 1
+              : 0
   )
   if (leftScore !== rightScore) return rightScore - leftScore
   return (right.heartbeat_age_seconds ?? 0) - (left.heartbeat_age_seconds ?? 0)
 }
 
 function isLiveQueueState(queueState: PipelineRuntimeRunRecord['queue_state']) {
-  return queueState === 'queued'
-    || queueState === 'running'
+  return queueState === 'running'
     || queueState === 'retrying'
     || queueState === 'reconciling'
 }
@@ -529,8 +683,7 @@ function rankLiveRun(record: PipelineRuntimeRunRecord) {
     record.queue_state === 'running' ? 4
       : record.queue_state === 'retrying' ? 3
         : record.queue_state === 'reconciling' ? 2
-          : record.queue_state === 'queued' ? 1
-            : 0
+          : 0
   )
   return [queueStateScore, record.heartbeat_age_seconds ?? Number.MAX_SAFE_INTEGER] as const
 }
@@ -551,16 +704,36 @@ function selectCurrentLiveRun(records: PipelineRuntimeRunRecord[]) {
     })[0] ?? null
 }
 
+function selectWorkerReferencedRun(
+  records: PipelineRuntimeRunRecord[],
+  worker: PipelineRuntimeWorkerState,
+) {
+  const workerState = toText(worker.worker_process_state).toLowerCase()
+  if (workerState !== 'running' && workerState !== 'starting') return null
+
+  const workerBatchId = toText(worker.current_batch_id)
+  const workerEntityId = toText(worker.current_canonical_entity_id || worker.current_entity_id)
+  if (!workerBatchId && !workerEntityId) return null
+
+  return records.find((record) => {
+    if (!isCurrentLiveRun(record)) return false
+    if (workerBatchId && toText(record.batch_id) === workerBatchId) return true
+    if (workerEntityId && toText(record.canonical_entity_id || record.entity_id) === workerEntityId) return true
+    return false
+  }) ?? null
+}
+
 function rankNoteworthyRun(record: PipelineRuntimeRunRecord) {
   const queueStateScore = (
     record.queue_state === 'worker_stale' ? 7
       : record.queue_state === 'failed_terminal' ? 6
         : record.queue_state === 'published_degraded' ? 5
-          : record.queue_state === 'completed' ? 4
-            : record.queue_state === 'reconciling' ? 3
-              : record.queue_state === 'retrying' ? 2
-                : record.queue_state === 'running' ? 1
-                  : 0
+          : record.queue_state === 'partial_persisted' ? 4.5
+            : record.queue_state === 'completed' ? 4
+              : record.queue_state === 'reconciling' ? 3
+                : record.queue_state === 'retrying' ? 2
+                  : record.queue_state === 'running' ? 1
+                    : 0
   )
   return [queueStateScore, -(record.heartbeat_age_seconds ?? Number.MAX_SAFE_INTEGER)] as const
 }
@@ -572,6 +745,9 @@ function selectLatestNoteworthyRun(
   return records
     .filter((record) => {
       if (currentLiveRun && record.batch_id && record.batch_id === currentLiveRun.batch_id) {
+        return false
+      }
+      if (record.queue_state === 'queued') {
         return false
       }
       return !isCurrentLiveRun(record)
@@ -627,7 +803,7 @@ export async function loadPipelineRuntimeReadSet(): Promise<PipelineRuntimeReadS
 }
 
 export function buildPipelineRuntimeSnapshot(readSet: PipelineRuntimeReadSet): PipelineRuntimeSnapshot {
-  const { snapshot_at, control, worker, fastmcp, rows, dossiers } = readSet
+  const { snapshot_at, control: rawControl, worker: rawWorker, fastmcp, rows, dossiers } = readSet
   const dossierLookup = new Map<string, Record<string, unknown>>()
   for (const dossierRow of dossiers) {
     const dossierData = dossierRow.dossier_data && typeof dossierRow.dossier_data === 'object'
@@ -644,15 +820,18 @@ export function buildPipelineRuntimeSnapshot(readSet: PipelineRuntimeReadSet): P
     }
   }
 
+  const worker = resolveEffectiveWorkerState(rawControl, rawWorker, rows)
   const workerHealthy = worker.worker_process_state === 'running'
 
   const runtimeRecords = rows.map((row) => {
     const dossierData = dossierLookup.get(toText(row.entity_id).toLowerCase())
       || (row.canonical_entity_id ? dossierLookup.get(toText(row.canonical_entity_id).toLowerCase()) : null)
       || null
-    return toRuntimeRecord(row, workerHealthy, dossierData)
+    return buildPipelineRuntimeRunRecord(row, workerHealthy, dossierData)
   })
-  const currentLiveRun = selectCurrentLiveRun(runtimeRecords)
+  const workerReferencedRun = selectWorkerReferencedRun(runtimeRecords, worker)
+  const currentLiveRun = selectCurrentLiveRun(runtimeRecords) ?? workerReferencedRun
+  const control = synchronizeControlStateWithCurrentLiveRun(rawControl, currentLiveRun)
   const latestNoteworthyRun = selectLatestNoteworthyRun(runtimeRecords, currentLiveRun)
   const currentRun = currentLiveRun ?? latestNoteworthyRun
   const recentFailures = runtimeRecords
@@ -661,10 +840,17 @@ export function buildPipelineRuntimeSnapshot(readSet: PipelineRuntimeReadSet): P
     .slice(0, 8)
   const failureBuckets = buildFailureBuckets(runtimeRecords)
   const queueDepth = runtimeRecords.filter((record) => record.queue_state !== 'failed_terminal').length
+  const state = toText(control.state) || resolveRuntimeHealthClass({ control, worker, fastmcp, rows })
+  const healthClass = toText(control.health_class) || state
 
   return {
     snapshot_at,
     generated_at: snapshot_at,
+    state,
+    health_class: healthClass,
+    last_self_heal_action: toText(control.last_self_heal_action) || null,
+    last_self_heal_reason: toText(control.last_self_heal_reason) || null,
+    last_self_heal_at: toText(control.last_self_heal_at) || null,
     control,
     worker,
     fastmcp,

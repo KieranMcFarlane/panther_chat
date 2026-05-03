@@ -6,14 +6,29 @@ Tests for BrightData client selection in the API pipeline.
 import sys
 import types
 from pathlib import Path
+from uuid import UUID, uuid5
 
 import pytest
+from fastapi.testclient import TestClient
 
 backend_dir = Path(__file__).parent.parent
 sys.path.insert(0, str(backend_dir))
 
 import main
 from main import EntityPipelineRequest, run_entity_pipeline
+
+
+ENTITY_PUBLIC_ID_NAMESPACE = UUID("f5c2b2b8-9cf2-4e66-a1c2-38cde7bc3f4e")
+
+
+def test_normalize_canonical_entity_id_falls_back_to_deterministic_uuid5_for_slug():
+    value = main.normalize_canonical_entity_id("arsenal-fc")
+    assert value == str(uuid5(ENTITY_PUBLIC_ID_NAMESPACE, "arsenal-fc"))
+
+
+def test_normalize_canonical_entity_id_preserves_uuid_inputs():
+    value = main.normalize_canonical_entity_id("f66b9c56-7a38-44d0-8923-6993b7b33926")
+    assert value == "f66b9c56-7a38-44d0-8923-6993b7b33926"
 
 
 @pytest.fixture(autouse=True)
@@ -97,10 +112,444 @@ def test_pipeline_phase_metadata_client_prefers_local_postgres_when_database_url
     assert remote_calls == []
 
 
+def test_app_uses_lifespan_without_deprecated_event_hooks(monkeypatch):
+    events = []
+
+    class _StubGraphitiService:
+        def __init__(self, *args, **kwargs):
+            events.append("constructed")
+
+        async def initialize(self):
+            events.append("initialized")
+            return True
+
+        def close(self):
+            events.append("closed")
+
+    monkeypatch.setitem(
+        sys.modules,
+        "backend.graphiti_service",
+        types.SimpleNamespace(GraphitiService=_StubGraphitiService),
+    )
+    monkeypatch.setattr(main, "graphiti_service", None, raising=False)
+
+    assert main.app.router.on_startup == []
+    assert main.app.router.on_shutdown == []
+
+    with TestClient(main.app):
+        assert events == ["constructed", "initialized"]
+        assert isinstance(main.graphiti_service, _StubGraphitiService)
+
+    assert events == ["constructed", "initialized", "closed"]
+
+
+@pytest.mark.asyncio
+async def test_generate_dossier_prefers_shared_persistence_client_for_local_postgres(monkeypatch):
+    writes = []
+
+    class _FakeExecuteResult:
+        def __init__(self, data=None):
+            self.data = data or []
+
+    class _FakeTable:
+        def __init__(self, name):
+            self.name = name
+            self._mode = "select"
+
+        def select(self, *_args, **_kwargs):
+            self._mode = "select"
+            return self
+
+        def eq(self, *_args, **_kwargs):
+            return self
+
+        def order(self, *_args, **_kwargs):
+            return self
+
+        def limit(self, *_args, **_kwargs):
+            return self
+
+        def update(self, payload):
+            self._mode = "update"
+            writes.append(("update", self.name, payload))
+            return self
+
+        def insert(self, payload):
+            self._mode = "insert"
+            writes.append(("insert", self.name, payload))
+            return self
+
+        def execute(self):
+            if self._mode == "select":
+                return _FakeExecuteResult([])
+            return _FakeExecuteResult([{"id": "persisted-row"}])
+
+    class _FakePersistenceClient:
+        def table(self, name):
+            return _FakeTable(name)
+
+    class _StubClaudeClient:
+        def __init__(self, *args, **kwargs):
+            pass
+
+    class _StubGenerator:
+        def __init__(self, *args, **kwargs):
+            pass
+
+        async def generate_universal_dossier(self, **_kwargs):
+            return {
+                "metadata": {
+                    "hypothesis_count": 1,
+                    "signal_count": 1,
+                    "generation_time_seconds": 0,
+                    "source_count": 0,
+                },
+                "summary": "generated",
+            }
+
+    def _supabase_should_not_be_used(*_args, **_kwargs):  # pragma: no cover - red assertion
+        raise AssertionError("generate_dossier should use create_pipeline_persistence_client()")
+
+    monkeypatch.setenv("DATABASE_URL", "postgresql://localhost/signal_noise_app")
+    monkeypatch.delenv("SUPABASE_URL", raising=False)
+    monkeypatch.delenv("NEXT_PUBLIC_SUPABASE_URL", raising=False)
+    monkeypatch.delenv("SUPABASE_ANON_KEY", raising=False)
+    monkeypatch.delenv("NEXT_PUBLIC_SUPABASE_ANON_KEY", raising=False)
+    monkeypatch.setattr(main, "create_pipeline_persistence_client", lambda: _FakePersistenceClient(), raising=False)
+    monkeypatch.setattr(main, "create_client", _supabase_should_not_be_used, raising=False)
+    monkeypatch.setitem(
+        sys.modules,
+        "backend.claude_client",
+        types.SimpleNamespace(ClaudeClient=_StubClaudeClient, LLMRequestError=RuntimeError),
+    )
+    monkeypatch.setitem(
+        sys.modules,
+        "backend.dossier_generator",
+        types.SimpleNamespace(UniversalDossierGenerator=_StubGenerator),
+    )
+
+    response = await main.generate_dossier(
+        main.DossierRequest(
+            entity_id="arsenal-fc",
+            entity_name="Arsenal FC",
+            entity_type="CLUB",
+            priority_score=85,
+        )
+    )
+
+    assert response.cache_status == "FRESH"
+    assert writes
+    assert writes[0][0] == "insert"
+    assert writes[0][1] == "entity_dossiers"
+
+
+@pytest.mark.asyncio
+async def test_health_check_reports_generic_persistence_readiness_fields(monkeypatch):
+    class _StubGraphitiService:
+        persist_pipeline_record_falkordb = staticmethod(lambda *_args, **_kwargs: None)
+        persist_pipeline_record_storage = staticmethod(lambda *_args, **_kwargs: None)
+        persistence_client = object()
+        driver = object()
+
+    monkeypatch.setattr(main, "graphiti_service", _StubGraphitiService(), raising=False)
+    monkeypatch.setenv("FALKORDB_URI", "redis://localhost:6379")
+    monkeypatch.setitem(sys.modules, "falkordb", types.SimpleNamespace())
+
+    payload = await main.health_check()
+    readiness = payload["services"]["dual_write_adapter_readiness"]
+
+    assert "supabase_adapter" not in readiness
+    assert "supabase_client_ready" not in readiness
+    assert readiness["persistence_adapter"] is True
+    assert readiness["persistence_client_ready"] is True
+    assert readiness["falkordb_adapter"] is True
+    assert readiness["falkordb_transport_ready"] is True
+
+
+@pytest.mark.asyncio
+async def test_run_entity_pipeline_phase_updates_do_not_treat_slug_canonical_entity_id_as_uuid(monkeypatch):
+    captured_filters = []
+
+    class _FakeTable:
+        def select(self, *_args, **_kwargs):
+            return self
+
+        def update(self, *_args, **_kwargs):
+            return self
+
+        def eq(self, field, value):
+            captured_filters.append((field, value))
+            if field == "canonical_entity_id" and value == "arsenal-fc":
+                raise AssertionError("slug canonical_entity_id should not be used as a UUID filter")
+            return self
+
+        def limit(self, *_args, **_kwargs):
+            return self
+
+        def execute(self):
+            return types.SimpleNamespace(data=[{"metadata": {}}])
+
+    class _FakePersistenceClient:
+        def table(self, _name):
+            return _FakeTable()
+
+    monkeypatch.setenv("PIPELINE_QUESTION_FIRST_ENABLED", "true")
+    monkeypatch.delenv("PIPELINE_PHASE0_MODE", raising=False)
+    monkeypatch.setattr(main, "create_pipeline_persistence_client", lambda: _FakePersistenceClient(), raising=False)
+
+    class _FakeBrightDataClient:
+        async def search_engine(self, *args, **kwargs):
+            return {"status": "success", "results": []}
+
+        async def scrape_as_markdown(self, *args, **kwargs):
+            return {"status": "success", "content": ""}
+
+    monkeypatch.setattr(main, "create_pipeline_brightdata_client", lambda *args, **kwargs: _FakeBrightDataClient(), raising=False)
+
+    orchestrator_module = types.ModuleType("backend.pipeline_orchestrator")
+
+    class _DummyOrchestrator:
+        def __init__(self, *args, **kwargs):
+            pass
+
+        async def run_entity_pipeline(self, **kwargs):
+            phase_callback = kwargs.get("phase_callback")
+            if phase_callback is not None:
+                await phase_callback("dossier_generation", {"status": "question_first_running"})
+            return {
+                "entity_id": kwargs.get("entity_id", "unknown"),
+                "entity_name": kwargs.get("entity_name", "unknown"),
+                "phases": {"dossier_generation": {"status": "question_first_running"}},
+                "validated_signal_count": 0,
+                "capability_signal_count": 0,
+                "rfp_count": 0,
+                "sales_readiness": "MONITOR",
+                "artifacts": {"dossier": kwargs.get("initial_dossier", {})},
+                "completed_at": "2026-03-25T00:00:00+00:00",
+            }
+
+    orchestrator_module.PipelineOrchestrator = _DummyOrchestrator
+    monkeypatch.setitem(sys.modules, "backend.pipeline_orchestrator", orchestrator_module)
+
+    await run_entity_pipeline(
+        EntityPipelineRequest(
+            entity_id="arsenal-fc-smoke-20260423",
+            entity_name="Arsenal FC",
+            entity_type="CLUB",
+            priority_score=85,
+            batch_id="local-postgres-main-smoke-20260423",
+            run_objective="procurement_discovery",
+            metadata={"canonical_entity_id": "arsenal-fc"},
+        )
+    )
+
+    assert ("entity_id", "arsenal-fc-smoke-20260423") in captured_filters
+
+
+@pytest.mark.asyncio
+async def test_run_entity_pipeline_creates_missing_run_record_for_direct_api_batch(monkeypatch):
+    inserted_rows = []
+    updated_rows = []
+
+    class _FakeTable:
+        def __init__(self, name):
+            self.name = name
+            self._mode = "select"
+
+        def select(self, *_args, **_kwargs):
+            self._mode = "select"
+            return self
+
+        def insert(self, payload):
+            self._mode = "insert"
+            inserted_rows.append((self.name, payload))
+            return self
+
+        def update(self, payload):
+            self._mode = "update"
+            updated_rows.append((self.name, payload))
+            return self
+
+        def eq(self, *_args, **_kwargs):
+            return self
+
+        def limit(self, *_args, **_kwargs):
+            return self
+
+        def execute(self):
+            if self._mode == "select":
+                return types.SimpleNamespace(data=[])
+            return types.SimpleNamespace(data=[{"id": "run-row"}])
+
+    class _FakePersistenceClient:
+        def table(self, name):
+            return _FakeTable(name)
+
+    monkeypatch.setenv("PIPELINE_QUESTION_FIRST_ENABLED", "true")
+    monkeypatch.delenv("PIPELINE_PHASE0_MODE", raising=False)
+    monkeypatch.setattr(main, "create_pipeline_persistence_client", lambda: _FakePersistenceClient(), raising=False)
+
+    class _FakeBrightDataClient:
+        async def search_engine(self, *args, **kwargs):
+            return {"status": "success", "results": []}
+
+        async def scrape_as_markdown(self, *args, **kwargs):
+            return {"status": "success", "content": ""}
+
+    monkeypatch.setattr(main, "create_pipeline_brightdata_client", lambda *args, **kwargs: _FakeBrightDataClient(), raising=False)
+
+    orchestrator_module = types.ModuleType("backend.pipeline_orchestrator")
+
+    class _DummyOrchestrator:
+        def __init__(self, *args, **kwargs):
+            pass
+
+        async def run_entity_pipeline(self, **kwargs):
+            phase_callback = kwargs.get("phase_callback")
+            if phase_callback is not None:
+                await phase_callback("dossier_generation", {"status": "question_first_running"})
+            return {
+                "entity_id": kwargs.get("entity_id", "unknown"),
+                "entity_name": kwargs.get("entity_name", "unknown"),
+                "phases": {"dossier_generation": {"status": "completed"}},
+                "validated_signal_count": 0,
+                "capability_signal_count": 0,
+                "rfp_count": 0,
+                "sales_readiness": "MONITOR",
+                "artifacts": {"dossier": kwargs.get("initial_dossier", {})},
+                "completed_at": "2026-03-25T00:00:00+00:00",
+            }
+
+    orchestrator_module.PipelineOrchestrator = _DummyOrchestrator
+    monkeypatch.setitem(sys.modules, "backend.pipeline_orchestrator", orchestrator_module)
+
+    await run_entity_pipeline(
+        EntityPipelineRequest(
+            entity_id="arsenal-fc-smoke-create",
+            entity_name="Arsenal FC",
+            entity_type="CLUB",
+            priority_score=85,
+            batch_id="local-postgres-direct-api-create",
+            run_objective="procurement_discovery",
+            metadata={"canonical_entity_id": "arsenal-fc"},
+        )
+    )
+
+    assert inserted_rows
+    assert inserted_rows[0][0] == "entity_pipeline_runs"
+    inserted_payload = inserted_rows[0][1]
+    if isinstance(inserted_payload, list):
+        inserted_payload = inserted_payload[0]
+    assert inserted_payload["batch_id"] == "local-postgres-direct-api-create"
+    assert inserted_payload["entity_id"] == "arsenal-fc-smoke-create"
+    assert updated_rows
+
+
+@pytest.mark.asyncio
+async def test_run_entity_pipeline_phase_updates_do_not_overwrite_terminal_timeout_rows(monkeypatch):
+    updated_rows = []
+
+    class _FakeTable:
+        def __init__(self, name):
+            self.name = name
+            self._mode = "select"
+
+        def select(self, *_args, **_kwargs):
+            self._mode = "select"
+            return self
+
+        def insert(self, *_args, **_kwargs):
+            raise AssertionError("terminal run rows should not be recreated")
+
+        def update(self, payload):
+            self._mode = "update"
+            updated_rows.append((self.name, payload))
+            return self
+
+        def eq(self, *_args, **_kwargs):
+            return self
+
+        def limit(self, *_args, **_kwargs):
+            return self
+
+        def execute(self):
+            if self._mode == "select":
+                return types.SimpleNamespace(
+                    data=[
+                        {
+                            "status": "failed",
+                            "completed_at": "2026-04-28T15:00:00+00:00",
+                            "metadata": {
+                                "retry_state": "failed",
+                                "failure_class": "entity_pipeline_timeout",
+                                "continue_pipeline_on_failure": True,
+                            },
+                        }
+                    ]
+                )
+            return types.SimpleNamespace(data=[])
+
+    class _FakePersistenceClient:
+        def table(self, name):
+            return _FakeTable(name)
+
+    monkeypatch.setenv("PIPELINE_QUESTION_FIRST_ENABLED", "true")
+    monkeypatch.delenv("PIPELINE_PHASE0_MODE", raising=False)
+    monkeypatch.setattr(main, "create_pipeline_persistence_client", lambda: _FakePersistenceClient(), raising=False)
+
+    class _FakeBrightDataClient:
+        async def search_engine(self, *args, **kwargs):
+            return {"status": "success", "results": []}
+
+        async def scrape_as_markdown(self, *args, **kwargs):
+            return {"status": "success", "content": ""}
+
+    monkeypatch.setattr(main, "create_pipeline_brightdata_client", lambda *args, **kwargs: _FakeBrightDataClient(), raising=False)
+
+    orchestrator_module = types.ModuleType("backend.pipeline_orchestrator")
+
+    class _DummyOrchestrator:
+        def __init__(self, *args, **kwargs):
+            pass
+
+        async def run_entity_pipeline(self, **kwargs):
+            phase_callback = kwargs.get("phase_callback")
+            if phase_callback is not None:
+                await phase_callback("dossier_generation", {"status": "question_first_running"})
+            return {
+                "entity_id": kwargs.get("entity_id", "unknown"),
+                "entity_name": kwargs.get("entity_name", "unknown"),
+                "phases": {"dossier_generation": {"status": "question_first_running"}},
+                "validated_signal_count": 0,
+                "capability_signal_count": 0,
+                "rfp_count": 0,
+                "sales_readiness": "MONITOR",
+                "artifacts": {"dossier": kwargs.get("initial_dossier", {})},
+                "completed_at": "2026-04-28T15:05:00+00:00",
+            }
+
+    orchestrator_module.PipelineOrchestrator = _DummyOrchestrator
+    monkeypatch.setitem(sys.modules, "backend.pipeline_orchestrator", orchestrator_module)
+
+    await run_entity_pipeline(
+        EntityPipelineRequest(
+            entity_id="kieran-scott",
+            entity_name="Kieran Scott",
+            entity_type="PERSON",
+            priority_score=50,
+            batch_id="import-timeout-row",
+            run_objective="dossier_core",
+            metadata={"canonical_entity_id": "1fdf772d-62d1-412a-97de-52d4cb96e38e"},
+        )
+    )
+
+    assert updated_rows == []
+
+
 @pytest.mark.asyncio
 async def test_run_entity_pipeline_uses_pipeline_brightdata_factory(monkeypatch):
     monkeypatch.setenv("BRIGHTDATA_API_TOKEN", "test-token")
-    monkeypatch.setenv("BRIGHTDATA_FASTMCP_URL", "http://127.0.0.1:8000/mcp")
+    monkeypatch.setenv("BRIGHTDATA_FASTMCP_URL", "http://127.0.0.1:8014/mcp")
     monkeypatch.setenv("PIPELINE_USE_BRIGHTDATA_FASTMCP", "true")
     monkeypatch.setenv("PIPELINE_BRIGHTDATA_SHARED_CLIENT", "true")
 
@@ -300,6 +749,79 @@ async def test_run_entity_pipeline_passes_canonical_entity_id_into_dossier_reque
 
 
 @pytest.mark.asyncio
+async def test_run_entity_pipeline_falls_back_to_entity_id_for_missing_canonical_entity_id(monkeypatch):
+    captured_request = {}
+
+    monkeypatch.setenv("BRIGHTDATA_API_TOKEN", "test-token")
+    monkeypatch.setenv("PIPELINE_PHASE0_MODE", "legacy_python")
+
+    class _FakeBrightDataClient:
+        async def search_engine(self, *args, **kwargs):
+            return {"status": "success", "results": []}
+
+        async def scrape_as_markdown(self, *args, **kwargs):
+            return {"status": "success", "content": ""}
+
+    monkeypatch.setattr(main, "create_pipeline_brightdata_client", lambda *args, **kwargs: _FakeBrightDataClient(), raising=False)
+
+    orchestrator_module = types.ModuleType("backend.pipeline_orchestrator")
+
+    class _DummyOrchestrator:
+        def __init__(self, *args, **kwargs):
+            pass
+
+        async def run_entity_pipeline(self, **kwargs):
+            return {
+                "entity_id": kwargs.get("entity_id", "unknown"),
+                "entity_name": kwargs.get("entity_name", "unknown"),
+                "phases": {"dossier_generation": {"status": "completed"}},
+                "validated_signal_count": 0,
+                "capability_signal_count": 0,
+                "rfp_count": 0,
+                "sales_readiness": "MONITOR",
+                "artifacts": {"dossier": kwargs.get("initial_dossier", {})},
+                "completed_at": "2026-03-25T00:00:00+00:00",
+            }
+
+    orchestrator_module.PipelineOrchestrator = _DummyOrchestrator
+    monkeypatch.setitem(sys.modules, "backend.pipeline_orchestrator", orchestrator_module)
+
+    async def _fake_generate_dossier(request):
+        captured_request["canonical_entity_id"] = getattr(request, "canonical_entity_id", None)
+        return types.SimpleNamespace(
+            metadata={
+                "hypothesis_count": 0,
+                "signal_count": 0,
+                "generation_time_seconds": 0,
+                "tier": "STANDARD",
+                "source_count": 0,
+                "sources_used": [],
+                "source_timings": {},
+                "canonical_sources": {},
+                "generation_mode": "test",
+                "collection_timed_out": False,
+                "model_max_tokens": 0,
+                "inference_runtime": {},
+            },
+            dossier_data={"metadata": {}},
+        )
+
+    monkeypatch.setattr(main, "generate_dossier", _fake_generate_dossier)
+
+    entity_id = "f66b9c56-7a38-44d0-8923-6993b7b33926"
+    await run_entity_pipeline(
+        EntityPipelineRequest(
+            entity_id=entity_id,
+            entity_name="Yuasa Battery Grottazzolina",
+            entity_type="CLUB",
+            priority_score=85,
+        )
+    )
+
+    assert captured_request["canonical_entity_id"] == entity_id
+
+
+@pytest.mark.asyncio
 async def test_run_entity_pipeline_uses_leadership_enrichment_for_phase0_when_question_first_enabled(monkeypatch):
     captured_request = {}
 
@@ -407,7 +929,7 @@ async def test_run_entity_pipeline_skips_python_phase0_and_enters_orchestrator_w
                         "status": "question_first_running",
                         "question_first_backend": "opencode",
                         "phase0_mode": "opencode_first",
-                        "opencode_model": "zai-api/glm-5.1",
+                        "opencode_model": "zai-coding-plan/glm-5.1",
                         "opencode_provider": "z.ai",
                         "brightdata_transport": "stdio",
                     },
@@ -539,7 +1061,7 @@ async def test_run_entity_pipeline_does_not_construct_legacy_claude_for_opencode
 @pytest.mark.asyncio
 async def test_run_entity_pipeline_emits_phase_boundary_logs(monkeypatch, caplog):
     monkeypatch.setenv("BRIGHTDATA_API_TOKEN", "test-token")
-    monkeypatch.setenv("BRIGHTDATA_FASTMCP_URL", "http://127.0.0.1:8000/mcp")
+    monkeypatch.setenv("BRIGHTDATA_FASTMCP_URL", "http://127.0.0.1:8014/mcp")
     monkeypatch.setenv("PIPELINE_USE_BRIGHTDATA_FASTMCP", "true")
     monkeypatch.setenv("PIPELINE_PHASE0_MODE", "legacy_python")
 

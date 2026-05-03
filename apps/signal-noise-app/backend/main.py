@@ -5,6 +5,8 @@ AI-powered dossier enrichment system with MCP server orchestration
 Enhanced with Graphiti temporal knowledge graph capabilities
 """
 
+from __future__ import annotations
+
 import os
 import sys
 import logging
@@ -15,6 +17,7 @@ from copy import deepcopy
 from typing import Dict, Any, Optional, List, Callable, Awaitable
 from datetime import datetime
 from pathlib import Path
+from uuid import UUID
 
 # Load environment variables from .env file
 try:
@@ -32,6 +35,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 from supabase import create_client, Client
+from canonical_ids import normalize_canonical_entity_id
 from local_pg_client import create_local_pg_client, should_use_local_pg
 
 # Add backend to path for imports
@@ -66,6 +70,7 @@ _pipeline_phase_callback_ctx: ContextVar[Optional[PipelinePhaseCallback]] = Cont
     "pipeline_phase_callback_ctx",
     default=None,
 )
+OPENCODE_PROVIDER_INSUFFICIENT_BALANCE_ERROR = "OpenCodeProviderInsufficientBalanceError"
 
 
 def create_pipeline_persistence_client():
@@ -76,6 +81,7 @@ def create_pipeline_persistence_client():
     if not supabase_url or not supabase_key:
         return None
     return create_client(supabase_url, supabase_key)
+
 
 PHASE0_SUBSTEP_ORDER = [
     "cache_lookup",
@@ -91,7 +97,7 @@ PHASE0_SUBSTEP_ORDER = [
     "finalize_response",
 ]
 
-DEFAULT_OPENCODE_PROVIDER = "zai-api"
+DEFAULT_OPENCODE_PROVIDER = "zai-coding-plan"
 DEFAULT_OPENCODE_MODEL_ID = "glm-5.1"
 DEFAULT_OPENCODE_MODEL = f"{DEFAULT_OPENCODE_PROVIDER}/{DEFAULT_OPENCODE_MODEL_ID}"
 PHASE0_MODE_OPENCODE_FIRST = "opencode_first"
@@ -140,7 +146,11 @@ try:
     async def _combined_lifespan(app_instance):
         async with _original_router_lifespan(app_instance):
             async with _mcp_asgi.lifespan(app_instance):
-                yield
+                await _initialize_graphiti_service()
+                try:
+                    yield
+                finally:
+                    _close_graphiti_service()
 
     app.router.lifespan_context = _combined_lifespan
     app.mount("/mcp", _mcp_asgi)
@@ -150,6 +160,38 @@ except Exception as _mcp_mount_err:
 
 # Graphiti service (lazy initialization)
 graphiti_service = None
+
+
+async def _initialize_graphiti_service():
+    """Initialize Graphiti service during app startup."""
+    global graphiti_service
+
+    logger.info("🚀 Starting Signal Noise App Backend v2.0.0...")
+
+    try:
+        from backend.graphiti_service import GraphitiService
+
+        graphiti_service = GraphitiService()
+        initialized = await graphiti_service.initialize()
+
+        if initialized:
+            logger.info("✅ Graphiti temporal service initialized")
+        else:
+            logger.warning("⚠️  Graphiti service initialization incomplete")
+    except ImportError:
+        logger.warning("⚠️  Graphiti service not available")
+    except Exception as e:
+        logger.error(f"❌ Failed to initialize Graphiti: {e}")
+
+
+def _close_graphiti_service():
+    """Cleanup Graphiti service during app shutdown."""
+    global graphiti_service
+
+    if graphiti_service:
+        graphiti_service.close()
+        logger.info("🔌 Graphiti service closed")
+        graphiti_service = None
 
 
 def _resolve_phase0_run_objective(request_run_objective: str | None) -> str:
@@ -280,44 +322,6 @@ if dossier_outreach_handler and OutreachIntelligenceRequest and OutreachIntellig
     async def dossier_outreach_intelligence_proxy(request: OutreachIntelligenceRequest):
         return await dossier_outreach_handler(request)
 
-
-# =============================================================================
-# Lifecycle Events
-# =============================================================================
-
-@app.on_event("startup")
-async def startup_event():
-    """Initialize services on startup"""
-    global graphiti_service
-
-    logger.info("🚀 Starting Signal Noise App Backend v2.0.0...")
-
-    # Initialize Graphiti service
-    try:
-        from backend.graphiti_service import GraphitiService
-        graphiti_service = GraphitiService()
-        initialized = await graphiti_service.initialize()
-
-        if initialized:
-            logger.info("✅ Graphiti temporal service initialized")
-        else:
-            logger.warning("⚠️  Graphiti service initialization incomplete")
-    except ImportError:
-        logger.warning("⚠️  Graphiti service not available")
-    except Exception as e:
-        logger.error(f"❌ Failed to initialize Graphiti: {e}")
-
-
-@app.on_event("shutdown")
-async def shutdown_event():
-    """Cleanup on shutdown"""
-    global graphiti_service
-
-    if graphiti_service:
-        graphiti_service.close()
-        logger.info("🔌 Graphiti service closed")
-
-
 # =============================================================================
 # Health & Status Endpoints
 # =============================================================================
@@ -345,13 +349,23 @@ async def health_check():
                 "ready": bool(falkordb_uri and falkordb_installed),
             },
             "dual_write_adapter_readiness": {
-                "supabase_adapter": bool(
-                    graphiti_service and callable(getattr(graphiti_service, "persist_pipeline_record_supabase", None))
+                "persistence_adapter": bool(
+                    graphiti_service
+                    and (
+                        callable(getattr(graphiti_service, "persist_pipeline_record_storage", None))
+                        or callable(getattr(graphiti_service, "persist_pipeline_record_supabase", None))
+                    )
                 ),
                 "falkordb_adapter": bool(
                     graphiti_service and callable(getattr(graphiti_service, "persist_pipeline_record_falkordb", None))
                 ),
-                "supabase_client_ready": bool(graphiti_service and getattr(graphiti_service, "supabase_client", None)),
+                "persistence_client_ready": bool(
+                    graphiti_service
+                    and (
+                        getattr(graphiti_service, "persistence_client", None)
+                        or getattr(graphiti_service, "supabase_client", None)
+                    )
+                ),
                 "falkordb_transport_ready": bool(
                     graphiti_service
                     and (
@@ -981,7 +995,70 @@ def enrich_persisted_dossier_payload(
         payload.setdefault("publish_status", "staged")
         payload.setdefault("run_id", "legacy-dossier-cache")
 
+    discovery_summary = question_first.get("discovery_summary") if isinstance(question_first.get("discovery_summary"), dict) else {}
+    graphiti_sales_brief = discovery_summary.get("graphiti_sales_brief") if isinstance(discovery_summary.get("graphiti_sales_brief"), dict) else {}
+    yellow_panther_fit = (
+        discovery_summary.get("yellow_panther_fit")
+        if isinstance(discovery_summary.get("yellow_panther_fit"), dict)
+        else discovery_summary.get("yellow_panther_opportunity")
+        if isinstance(discovery_summary.get("yellow_panther_opportunity"), dict)
+        else {}
+    )
+    executive_summary = payload.get("executive_summary") if isinstance(payload.get("executive_summary"), dict) else {}
+    strategic_analysis = payload.get("strategic_analysis") if isinstance(payload.get("strategic_analysis"), dict) else {}
+    has_meaningful_publication_artifacts = (
+        str(graphiti_sales_brief.get("status") or "").strip().lower() == "available"
+        and any(str(graphiti_sales_brief.get(key) or "").strip() for key in ("buyer_name", "outreach_target", "outreach_angle"))
+        and any(str(yellow_panther_fit.get(key) or "").strip() for key in ("fit_rationale", "fit_feedback", "competitive_advantage"))
+        and any(str(executive_summary.get(key) or "").strip() for key in ("summary", "headline"))
+        and any(str(strategic_analysis.get(key) or "").strip() for key in ("recommended_approach", "overall_assessment"))
+    )
+    if str(payload.get("publish_status") or "").strip().lower().startswith("published") and not has_meaningful_publication_artifacts:
+        payload["publish_status"] = "published_partial"
+        payload["publication_status"] = "published_partial"
+        if question_first:
+            question_first["publish_status"] = "published_partial"
+
+    if has_provider_infrastructure_failure(payload):
+        payload["quality_state"] = "failed"
+        payload["publish_status"] = "failed"
+        payload["publication_status"] = "failed"
+        metadata["quality_state"] = "failed"
+        metadata["failure_class"] = "provider_infrastructure_failure"
+        metadata["failure_reason"] = "provider_infrastructure_failure"
+        if question_first:
+            question_first["quality_state"] = "failed"
+            question_first["publish_status"] = "failed"
+            question_first["failure_class"] = "provider_infrastructure_failure"
+
     return payload
+
+
+def has_provider_infrastructure_failure(value: Any) -> bool:
+    if value is None:
+        return False
+    if isinstance(value, str):
+        text = value.lower()
+        return (
+            OPENCODE_PROVIDER_INSUFFICIENT_BALANCE_ERROR.lower() in text
+            or "providerinsufficientbalance" in text
+            or "insufficient balance" in text
+        )
+    if isinstance(value, (int, float, bool)):
+        return False
+    if isinstance(value, list):
+        return any(has_provider_infrastructure_failure(item) for item in value)
+    if not isinstance(value, dict):
+        return False
+    failure_name = str(value.get("failure_name") or value.get("error_name") or value.get("name") or "").lower()
+    error_type = str(value.get("error_type") or value.get("failure_type") or "").lower()
+    message = str(value.get("message") or value.get("error_message") or value.get("stderr") or value.get("error") or "").lower()
+    return (
+        OPENCODE_PROVIDER_INSUFFICIENT_BALANCE_ERROR.lower() in failure_name
+        or "provider_infrastructure_failure" in error_type
+        or OPENCODE_PROVIDER_INSUFFICIENT_BALANCE_ERROR.lower() in message
+        or any(has_provider_infrastructure_failure(item) for item in value.values())
+    )
 
 
 def _persisted_dossier_question_count(dossier: Dict[str, Any]) -> int:
@@ -1041,8 +1118,12 @@ def _persisted_dossier_publish_status(dossier: Dict[str, Any]) -> str:
 
 
 def score_persisted_dossier_candidate(dossier: Dict[str, Any]) -> int:
+    if has_provider_infrastructure_failure(dossier):
+        return -10_000
+
     quality_priority = {
         "missing": 0,
+        "failed": 0,
         "partial": 1,
         "blocked": 2,
         "complete": 3,
@@ -1206,15 +1287,15 @@ def resolve_question_repair_source_path(*, entity_id: str, entity_name: str) -> 
 @app.post("/api/dossiers/generate", response_model=DossierResponse)
 async def generate_dossier(request: DossierRequest):
     """
-    Generate enhanced dossier with multi-source intelligence and Supabase persistence
+    Generate enhanced dossier with multi-source intelligence and persisted dossier storage
 
     Process:
-    1. Check Supabase cache for existing fresh dossier
+    1. Check persisted dossier cache for existing fresh dossier
     2. If cache miss or force_refresh, generate new dossier:
        - Collect multi-source intelligence via BrightData SDK
        - Generate contextual scores with explanations
        - Create outreach strategy with conversation trees
-    3. Persist to Supabase entity_dossiers table
+    3. Persist to the entity_dossiers table
     4. Return complete dossier
 
     Returns:
@@ -1229,27 +1310,23 @@ async def generate_dossier(request: DossierRequest):
         - Recommended next steps
     """
     try:
-        import os
-        from supabase import create_client, Client
-
-        # Initialize Supabase client (try both SUPABASE_URL and NEXT_PUBLIC_SUPABASE_URL)
-        supabase_url = os.getenv("SUPABASE_URL") or os.getenv("NEXT_PUBLIC_SUPABASE_URL")
-        supabase_key = os.getenv("SUPABASE_ANON_KEY") or os.getenv("NEXT_PUBLIC_SUPABASE_ANON_KEY")
-
-        if not supabase_url or not supabase_key:
+        persistence_client = create_pipeline_persistence_client()
+        if persistence_client is None:
             raise HTTPException(
                 status_code=500,
-                detail="Supabase credentials not configured. Set SUPABASE_URL/NEXT_PUBLIC_SUPABASE_URL and SUPABASE_ANON_KEY/NEXT_PUBLIC_SUPABASE_ANON_KEY environment variables."
+                detail=(
+                    "Persistence backend not configured. Set DATABASE_URL for local Postgres "
+                    "or SUPABASE_URL/NEXT_PUBLIC_SUPABASE_URL plus SUPABASE_ANON_KEY/"
+                    "NEXT_PUBLIC_SUPABASE_ANON_KEY."
+                ),
             )
 
-        supabase: Client = create_client(supabase_url, supabase_key)
-
         logger.info(f"📊 Dossier generation requested for {request.entity_name} (entity_id: {request.entity_id})")
-        canonical_entity_id = str(
+        canonical_entity_id = normalize_canonical_entity_id(
             request.canonical_entity_id
             or (request.metadata or {}).get("canonical_entity_id")
-            or ""
-        ).strip() or None
+            or request.entity_id
+        )
         question_source_preview = build_universal_atomic_question_source(
             entity_type=request.entity_type,
             entity_name=request.entity_name,
@@ -1291,11 +1368,11 @@ async def generate_dossier(request: DossierRequest):
                 ),
             )
 
-        # Step 1: Check Supabase cache
+        # Step 1: Check persisted dossier cache
         await emit_dossier_substep("cache_lookup", "running")
         if not request.force_refresh:
             try:
-                cache_query = supabase.table("entity_dossiers").select("*")
+                cache_query = persistence_client.table("entity_dossiers").select("*")
                 if canonical_entity_id:
                     cached = cache_query.eq("canonical_entity_id", canonical_entity_id).order("created_at", desc=True).limit(1).execute()
                 else:
@@ -1389,9 +1466,9 @@ async def generate_dossier(request: DossierRequest):
             logger.info(f"✅ Dossier generated: {dossier.get('metadata', {}).get('hypothesis_count', 0)} hypotheses, "
                        f"{dossier.get('metadata', {}).get('signal_count', 0)} signals")
 
-            # Step 3: Persist to Supabase
+            # Step 3: Persist dossier
             await emit_dossier_substep("persist_dossier", "running")
-            logger.info("💾 Persisting dossier to Supabase...")
+            logger.info("💾 Persisting dossier to entity_dossiers...")
 
             from datetime import datetime, timedelta
 
@@ -1425,10 +1502,10 @@ async def generate_dossier(request: DossierRequest):
                 "last_accessed_at": datetime.now().isoformat()
             }
 
-            # Upsert to Supabase (update if exists, insert if not)
+            # Upsert to the configured persistence backend (update if exists, insert if not)
             try:
                 # Check if exists
-                existing_query = supabase.table("entity_dossiers").select("id, dossier_data")
+                existing_query = persistence_client.table("entity_dossiers").select("id, dossier_data")
                 if canonical_entity_id:
                     existing = existing_query.eq("canonical_entity_id", canonical_entity_id).limit(1).execute()
                 else:
@@ -1441,23 +1518,23 @@ async def generate_dossier(request: DossierRequest):
                         existing=existing_dossier_data if isinstance(existing_dossier_data, dict) else None,
                         candidate=persisted_dossier,
                     ):
-                        update_query = supabase.table("entity_dossiers").update(dossier_record)
+                        update_query = persistence_client.table("entity_dossiers").update(dossier_record)
                         if canonical_entity_id:
                             update_query = update_query.eq("canonical_entity_id", canonical_entity_id)
                         else:
                             update_query = update_query.eq("entity_id", request.entity_id)
                         update_query.execute()
-                        logger.info("✅ Updated existing dossier in Supabase")
+                        logger.info("✅ Updated existing persisted dossier")
                     else:
-                        logger.info("✅ Preserved higher-quality existing dossier in Supabase")
+                        logger.info("✅ Preserved higher-quality existing persisted dossier")
                 else:
                     # Insert new
-                    supabase.table("entity_dossiers").insert(dossier_record).execute()
-                    logger.info("✅ Inserted new dossier to Supabase")
+                    persistence_client.table("entity_dossiers").insert(dossier_record).execute()
+                    logger.info("✅ Inserted new persisted dossier")
                 await emit_dossier_substep("persist_dossier", "completed")
 
             except Exception as e:
-                logger.error(f"❌ Supabase persistence failed: {e}")
+                logger.error(f"❌ Dossier persistence failed: {e}")
                 await emit_dossier_substep("persist_dossier", "failed", error=str(e))
                 # Continue anyway - we have the dossier
 
@@ -1552,33 +1629,92 @@ async def run_entity_pipeline(request: EntityPipelineRequest):
             )
 
         pipeline_supabase: Optional[Any] = None
-        canonical_entity_id = str(
+        canonical_entity_id = normalize_canonical_entity_id(
             request.canonical_entity_id
             or (request.metadata or {}).get("canonical_entity_id")
-            or ""
-        ).strip() or None
+            or request.entity_id
+        )
         if request.batch_id:
             pipeline_supabase = create_pipeline_persistence_client()
+        run_record_seeded = False
+
+        def _build_direct_api_run_row(initial_phase: str, initial_status: str) -> Dict[str, Any]:
+            now_iso = datetime.now().isoformat()
+            return {
+                "id": f"{request.batch_id}_{request.entity_id}",
+                "batch_id": request.batch_id,
+                "entity_id": request.entity_id,
+                "canonical_entity_id": canonical_entity_id,
+                "entity_name": request.entity_name,
+                "status": initial_status,
+                "phase": initial_phase,
+                "error_message": None,
+                "dossier_id": None,
+                "sales_readiness": None,
+                "rfp_count": 0,
+                "started_at": now_iso,
+                "completed_at": None,
+                "metadata": {
+                    "source": "direct_api_run_entity",
+                    "queue_mode": "direct_api",
+                    "entity_type": request.entity_type,
+                    "priority_score": request.priority_score,
+                    "run_objective": request.run_objective,
+                    "canonical_entity_id": canonical_entity_id,
+                    **(request.metadata if isinstance(request.metadata, dict) else {}),
+                },
+            }
 
         async def emit_phase_update(phase: str, payload: Dict[str, Any]) -> None:
+            nonlocal run_record_seeded
             if not pipeline_supabase or not request.batch_id:
                 return
             normalized_payload = normalize_phase_callback_payload(phase, payload)
 
             existing_metadata: Dict[str, Any] = {}
+            existing_status = ""
+            existing_rows: List[Dict[str, Any]] = []
             try:
-                existing_query = pipeline_supabase.table("entity_pipeline_runs").select("metadata").eq("batch_id", request.batch_id)
+                existing_query = pipeline_supabase.table("entity_pipeline_runs").select("status, completed_at, metadata").eq("batch_id", request.batch_id)
                 if canonical_entity_id:
                     existing = existing_query.eq("canonical_entity_id", canonical_entity_id).limit(1).execute()
                 else:
                     existing = existing_query.eq("entity_id", request.entity_id).limit(1).execute()
-                current_metadata = ((existing.data or [{}])[0]).get("metadata")
+                existing_rows = existing.data or []
+                existing_row = (existing_rows or [{}])[0]
+                existing_status = str(existing_row.get("status") or "").strip().lower()
+                current_metadata = existing_row.get("metadata")
                 if isinstance(current_metadata, dict):
                     existing_metadata = current_metadata
             except Exception as fetch_error:
                 logger.warning(f"⚠️ Failed to fetch existing phase metadata for {request.entity_id}/{phase}: {fetch_error}")
 
+            terminal_retry_state = str(existing_metadata.get("retry_state") or "").strip().lower() == "failed"
+            nonblocking_timeout_failure = (
+                str(existing_metadata.get("failure_class") or "").strip().lower() == "entity_pipeline_timeout"
+                and existing_metadata.get("continue_pipeline_on_failure") is True
+            )
+            if existing_status in {"failed", "completed"} or (terminal_retry_state and nonblocking_timeout_failure):
+                logger.info(
+                    "Skipping late phase update for terminal pipeline run batch=%s entity=%s phase=%s status=%s",
+                    request.batch_id,
+                    request.entity_id,
+                    phase,
+                    existing_status or existing_metadata.get("retry_state"),
+                )
+                return
+
             normalized_status = normalize_phase_status(normalized_payload.get("status"), default="running")
+            if not existing_rows and not run_record_seeded:
+                try:
+                    pipeline_supabase.table("entity_pipeline_runs").insert(
+                        [_build_direct_api_run_row(phase, normalized_status)]
+                    ).execute()
+                    run_record_seeded = True
+                except Exception as insert_error:
+                    logger.warning(
+                        f"⚠️ Failed to create direct API run record for {request.entity_id}/{phase}: {insert_error}"
+                    )
             update_payload = {
                 "phase": phase,
                 "status": normalized_status,
@@ -1592,6 +1728,8 @@ async def run_entity_pipeline(request: EntityPipelineRequest):
                     update_query = update_query.eq("canonical_entity_id", canonical_entity_id)
                 else:
                     update_query = update_query.eq("entity_id", request.entity_id)
+                if hasattr(update_query, "neq"):
+                    update_query = update_query.neq("status", "failed").neq("status", "completed")
                 update_query.execute()
             except Exception as phase_error:
                 logger.warning(f"⚠️ Failed to emit phase update for {request.entity_id}/{phase}: {phase_error}")

@@ -45,8 +45,8 @@
     },
     "q7_procurement_signal": {
       "section_id": "strategic_opportunities",
-      "strategy_label": "Broad web-first procurement signal discovery",
-      "source_order": ["google_serp", "news", "press_release", "linkedin_posts", "official_site"]
+      "strategy_label": "Bounded procurement signal sweep with optional LinkedIn signal check",
+      "source_order": ["official_site", "tender_portal", "press_release", "partner_announcement", "linkedin_posts"]
     },
     "q8_explicit_rfp": {
       "section_id": "strategic_opportunities",

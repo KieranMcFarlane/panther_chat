@@ -303,7 +303,7 @@ export const config = {
 ## 🎯 **Usage Instructions**
 
 ### **Getting Started**
-1. **Start the app**: `npm run dev`
+1. **Start the app**: `bash scripts/dev-full.sh`
 2. **Access vector search**: Click top-right "Vector Search" button
 3. **Navigate pages**: Use left sidebar navigation
 4. **View entities**: Browse through Sports, Contacts, etc.
@@ -385,7 +385,6 @@ The system is ready for:
 4. **User testing and feedback**
 
 **Next milestone**: Replace mock data with real AuraDB queries and implement actual Qdrant vector operations.
-
 
 
 

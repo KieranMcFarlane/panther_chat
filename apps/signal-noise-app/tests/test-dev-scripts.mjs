@@ -15,18 +15,21 @@ test('package exposes a backend dev launcher with Claude disabled for local deve
   const pkg = JSON.parse(packageSource)
 
   assert.equal(
-    pkg.scripts['backend:dev'],
-    'cd ../.. && DISABLE_CLAUDE_API=1 /Library/Frameworks/Python.framework/Versions/3.13/bin/python3 apps/signal-noise-app/backend/main.py'
+    pkg.scripts['backend:dev:no-llm'],
+    'bash -lc \'test "${PANTHER_CHAT_ALLOW_DIRECT_START:-0}" = 1 || { echo "Use bash scripts/dev-full.sh" >&2; exit 1; }; cd ../.. && DISABLE_CLAUDE_API=1 ${PYTHON_BIN:-python3} apps/signal-noise-app/backend/main.py\''
   )
 })
 
-test('package exposes a single-command full dev launcher', () => {
+test('package does not expose a dev alias', () => {
   const pkg = JSON.parse(packageSource)
 
-  assert.equal(
-    pkg.scripts['dev:full'],
-    'bash scripts/dev-full.sh'
-  )
+  assert.equal(pkg.scripts.dev, undefined)
+})
+
+test('package guards the standalone production start command behind the full launcher', () => {
+  const pkg = JSON.parse(packageSource)
+
+  assert.match(pkg.scripts['start'], /PANTHER_CHAT_ALLOW_DIRECT_START/)
 })
 
 test('full dev launcher prewarms the entity snapshot after frontend startup', () => {
@@ -36,4 +39,64 @@ test('full dev launcher prewarms the entity snapshot after frontend startup', ()
   assert.match(devFullScriptSource, /curl -sf ['"]http:\/\/127\.0\.0\.1:3005\/api\/entities\?page=1&limit=10&entityType=all&sortBy=name&sortOrder=asc['"]/)
   assert.match(devFullScriptSource, /curl -sf ['"]http:\/\/127\.0\.0\.1:3005\/api\/entities\/summary['"]/)
   assert.match(devFullScriptSource, /wait "\$\{frontend_pid\}"/)
+})
+
+test('full dev launcher verifies the Python backend API, not only a generic health endpoint', () => {
+  assert.match(devFullScriptSource, /openapi\.json/)
+  assert.match(devFullScriptSource, /\/api\/pipeline\/run-entity/)
+  assert.match(devFullScriptSource, /payload\.get\("status"\)\s*!=\s*"healthy"/)
+  assert.match(devFullScriptSource, /payload\.get\("version"\)\s*!=\s*"2\.0\.0"/)
+})
+
+test('full dev launcher keeps BrightData FastMCP off the Python backend port', () => {
+  assert.match(devFullScriptSource, /BRIGHTDATA_FASTMCP_PORT=8014/)
+  assert.doesNotMatch(devFullScriptSource, /BRIGHTDATA_FASTMCP_PORT=8000/)
+})
+
+test('full dev launcher supervises the worker and restarts it after crashes', () => {
+  assert.match(devFullScriptSource, /worker_supervisor_pid=/)
+  assert.match(devFullScriptSource, /while true; do/)
+  assert.match(devFullScriptSource, /worker exited unexpectedly; restarting/)
+  assert.match(devFullScriptSource, /sleep 2/)
+  assert.match(devFullScriptSource, /wait "\$\{worker_supervisor_pid\}"/)
+})
+
+test('full dev launcher resolves npm once and uses the resolved binary for detached restarts', () => {
+  assert.match(devFullScriptSource, /resolve_npm_bin\(\)/)
+  assert.match(devFullScriptSource, /resolve_node_bin\(\)/)
+  assert.match(devFullScriptSource, /command -v npm/)
+  assert.match(devFullScriptSource, /command -v node/)
+  assert.match(devFullScriptSource, /zsh -lic 'command -v npm/)
+  assert.match(devFullScriptSource, /zsh -lic 'command -v node/)
+  assert.match(devFullScriptSource, /Unable to locate npm for dev-full\.sh/)
+  assert.match(devFullScriptSource, /Unable to locate node for dev-full\.sh/)
+  assert.match(devFullScriptSource, /export NPM_BIN/)
+  assert.match(devFullScriptSource, /export NODE_BIN/)
+  assert.match(devFullScriptSource, /export PATH/)
+  assert.match(devFullScriptSource, /PATH="\$\(dirname "\$\{NODE_BIN\}"\)":"\$\(dirname "\$\{NPM_BIN\}"\)"/)
+  assert.match(devFullScriptSource, /"\$\{NPM_BIN\}" run backend:dev/)
+  assert.match(devFullScriptSource, /"\$\{NPM_BIN\}" run dev:frontend/)
+  assert.match(devFullScriptSource, /"\$\{NPM_BIN\}" run worker:entity-pipeline/)
+  assert.doesNotMatch(devFullScriptSource, /(^|[^\$"{])npm run backend:dev/m)
+  assert.doesNotMatch(devFullScriptSource, /(^|[^\$"{])npm run dev:frontend/m)
+  assert.doesNotMatch(devFullScriptSource, /(^|[^\$"{])npm run worker:entity-pipeline/m)
+})
+
+test('full dev launcher logs explicit restart failures and clears misleading pid files', () => {
+  assert.match(devFullScriptSource, /backend restart failed:/)
+  assert.match(devFullScriptSource, /frontend restart failed:/)
+  assert.match(devFullScriptSource, /worker restart failed:/)
+  assert.match(devFullScriptSource, /rm -f "\$\{backend_pid_file\}"/)
+  assert.match(devFullScriptSource, /rm -f "\$\{frontend_pid_file\}"/)
+  assert.match(devFullScriptSource, /rm -f "\$\{worker_supervisor_pid_file\}" "\$\{worker_pid_file\}"/)
+})
+
+test('direct component startup scripts are guarded behind the full launcher', () => {
+  const pkg = JSON.parse(packageSource)
+
+  assert.match(pkg.scripts['backend:dev'], /PANTHER_CHAT_ALLOW_DIRECT_START/)
+  assert.match(pkg.scripts['backend:dev:no-llm'], /PANTHER_CHAT_ALLOW_DIRECT_START/)
+  assert.match(pkg.scripts['dev:frontend'], /PANTHER_CHAT_ALLOW_DIRECT_START/)
+  assert.match(pkg.scripts['worker:entity-pipeline'], /PANTHER_CHAT_ALLOW_DIRECT_START/)
+  assert.match(devFullScriptSource, /PANTHER_CHAT_ALLOW_DIRECT_START=1/)
 })

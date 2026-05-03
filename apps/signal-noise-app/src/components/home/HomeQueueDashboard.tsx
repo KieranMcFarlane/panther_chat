@@ -114,6 +114,7 @@ type HomeQueueDashboardPayload = {
       universe_count: number
       total_scheduled: number
       completed: number
+      processed_dossiers?: number
       failed: number
       retryable_failures: number
       client_ready_dossiers: number
@@ -130,6 +131,7 @@ type HomeQueueDashboardPayload = {
       in_progress_entity: QueueEntityRecord | null
       running_entities: QueueEntityRecord[]
       stale_active_rows: QueueEntityRecord[]
+      processed_entities?: QueueEntityRecord[]
       resume_needed_entities: QueueEntityRecord[]
       upcoming_entities: QueueEntityRecord[]
     }
@@ -186,7 +188,7 @@ function formatLoopHealth(health: HomeQueueDashboardPayload['loop_status']['heal
 }
 
 function formatLoopSource(source: HomeQueueDashboardPayload['loop_status']['source']) {
-  if (source === 'pipeline_runs') return 'Supabase pipeline runs'
+  if (source === 'pipeline_runs') return 'local Postgres pipeline runs'
   if (source === 'diagnostics') return 'Diagnostics artifacts'
   return 'Published snapshot fallback'
 }
@@ -434,6 +436,7 @@ function deriveLiveDashboardState(
         universe_count: livePayload.loop_status.universe_count ?? fallbackLoopStatus?.universe_count ?? 0,
         total_scheduled: livePayload.loop_status.total_scheduled ?? fallbackLoopStatus?.total_scheduled ?? 0,
         completed: livePayload.loop_status.completed ?? fallbackLoopStatus?.completed ?? 0,
+        processed_dossiers: livePayload.loop_status.processed_dossiers ?? fallbackLoopStatus?.processed_dossiers ?? livePayload.loop_status.completed ?? fallbackLoopStatus?.completed ?? 0,
         failed: livePayload.loop_status.failed ?? fallbackLoopStatus?.failed ?? 0,
         retryable_failures: livePayload.loop_status.retryable_failures ?? fallbackLoopStatus?.retryable_failures ?? 0,
         client_ready_dossiers: livePayload.loop_status.quality_counts?.client_ready ?? fallbackLoopStatus?.client_ready_dossiers ?? 0,
@@ -477,6 +480,8 @@ function deriveLiveDashboardState(
 }
 
 // Legacy contract marker: In progress now
+const INITIAL_VISIBLE_QUEUE_CARD_COUNT = 24
+const QUEUE_CARD_PAGE_SIZE = 24
 
 function mergeDashboardPayload(
   previous: HomeQueueDashboardPayload | null,
@@ -495,6 +500,7 @@ export function HomeQueueDashboard() {
   const [livePayload, setLivePayload] = useState<OperationalDrilldownPayload | null>(null)
   const [loading, setLoading] = useState(true)
   const [queueingEntityId, setQueueingEntityId] = useState<string | null>(null)
+  const [visibleUpcomingCount, setVisibleUpcomingCount] = useState(INITIAL_VISIBLE_QUEUE_CARD_COUNT)
   const didLoadRfpCardsRef = useRef(false)
 
   async function loadDashboardEnrichment() {
@@ -614,7 +620,7 @@ export function HomeQueueDashboard() {
     )
   }
 
-  const { playlist_sort_key, client_ready_dossiers, rfp_cards, sales_summary, dossier_quality, rollout_proof_set } = data
+  const { playlist_sort_key, client_ready_dossiers, rfp_cards, sales_summary, dossier_quality } = data
   const liveState = deriveLiveDashboardState(livePayload, data)
   const loop_status = liveState.loop_status
   const queue = liveState.queue
@@ -639,6 +645,10 @@ export function HomeQueueDashboard() {
     : liveState.operational_state === 'stopped' && controlObservedState === 'starting'
       ? 'starting'
       : liveState.operational_state
+  const currentCanonicalEntity = queue.in_progress_entity ?? queue.running_entities[0] ?? null
+  const currentCanonicalEntityLabel = currentCanonicalEntity && typeof currentCanonicalEntity.queue_position === 'number'
+    ? `${currentCanonicalEntity.queue_position}/${loop_status.universe_count ?? loop_status.total_scheduled ?? '…'}`
+    : String(loop_status.universe_count ?? loop_status.total_scheduled ?? '…')
   const runningEntities = dedupeQueueItems([
     queue.in_progress_entity,
     ...queue.running_entities,
@@ -649,6 +659,8 @@ export function HomeQueueDashboard() {
     : queue.resume_needed_entities.find((item) => hasFollowOnRepair(item))
       || queue.completed_entities.find((item) => hasFollowOnRepair(item))
       || null
+  const visibleUpcomingEntities = queue.upcoming_entities.slice(0, visibleUpcomingCount)
+  const hiddenUpcomingEntityCount = Math.max(queue.upcoming_entities.length - visibleUpcomingEntities.length, 0)
 
   return (
     <div className="mt-10 space-y-8">
@@ -709,8 +721,11 @@ export function HomeQueueDashboard() {
                 aria-label="Open pipeline kanban"
                 title="Open pipeline kanban"
               >
-                <p className="text-xs uppercase tracking-[0.16em] text-slate-400">Completions</p>
-                <p className="mt-3 text-3xl font-semibold text-emerald-300">{loop_status.completed}</p>
+                <p className="text-xs uppercase tracking-[0.16em] text-slate-400">Canonical entity</p>
+                <p className="mt-3 text-3xl font-semibold text-emerald-300">{currentCanonicalEntityLabel}</p>
+                <p className="mt-2 text-xs uppercase tracking-[0.14em] text-slate-500">
+                  {currentCanonicalEntity?.entity_name ?? 'No active entity'}
+                </p>
               </button>
             </CardContent>
           </Card>
@@ -771,56 +786,22 @@ export function HomeQueueDashboard() {
         <Card className="border-white/10 bg-white/[0.04]">
           <CardHeader><CardTitle className="flex items-center gap-2 text-white"><ArrowRight className="h-5 w-5 text-sky-300" />Coming up next</CardTitle></CardHeader>
           <CardContent className="space-y-3">
-            {queue.upcoming_entities.length > 0 ? queue.upcoming_entities.map((item) => <QueueCard key={item.entity_id} item={item} />) : <p className="text-sm text-slate-300">No upcoming entities queued.</p>}
+            {visibleUpcomingEntities.length > 0 ? visibleUpcomingEntities.map((item) => <QueueCard key={item.entity_id} item={item} />) : <p className="text-sm text-slate-300">No upcoming entities queued.</p>}
+            {hiddenUpcomingEntityCount > 0 ? (
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full border-white/10 bg-white/5 text-white hover:bg-white/10"
+                onClick={() => setVisibleUpcomingCount((current) => Math.min(current + QUEUE_CARD_PAGE_SIZE, queue.upcoming_entities.length))}
+              >
+                Show more queued entities ({hiddenUpcomingEntityCount} remaining)
+              </Button>
+            ) : null}
           </CardContent>
         </Card>
       </section>
 
       <section className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
-        <Card className="border-white/10 bg-white/[0.04]">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-white"><Route className="h-5 w-5 text-sky-300" />Rollout proof set</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <p className="text-xs leading-5 text-slate-400">
-              This set is the QA and loop-acceptance source of truth. Validation samples stay false until the canonical browser route resolves to the expected full-pack quality state.
-            </p>
-            {rollout_proof_set.map((item) => (
-              <div key={item.entity_id} className="rounded-2xl border border-white/10 bg-black/20 p-4">
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <p className="text-sm font-semibold text-white">{item.entity_name}</p>
-                    <p className="mt-1 text-xs uppercase tracking-[0.16em] text-slate-400">
-                      Expected {formatQualityState(item.expected_quality_state)} • {item.question_count} questions
-                    </p>
-                  </div>
-                  <Badge className={item.validation_sample ? 'border-emerald-400/30 bg-emerald-500/10 text-emerald-200' : 'border-white/10 bg-white/5 text-slate-200'}>
-                    {item.validation_sample ? 'Validation sample' : formatQualityState(item.actual_quality_state)}
-                  </Badge>
-                </div>
-                <p className="mt-3 text-sm leading-6 text-slate-300">{toText(item.summary) || 'No persisted dossier summary is available yet.'}</p>
-                <div className="mt-4">
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="border-white/10 bg-white/5 text-white hover:bg-white/10"
-                    onClick={() => void queueEntity(item.browser_entity_id)}
-                    disabled={queueingEntityId === item.browser_entity_id}
-                  >
-                    Queue this entity
-                  </Button>
-                </div>
-                <div className="mt-4">
-                  <Button asChild size="sm" variant="outline" className="border-white/10 bg-white/5 text-white hover:bg-white/10">
-                    <Link href={getEntityBrowserDossierHref(item.browser_entity_id, '1') || `/entity-browser/${encodeURIComponent(item.browser_entity_id)}/dossier?from=1`}>
-                      Open dossier
-                    </Link>
-                  </Button>
-                </div>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
         <Card className="border-white/10 bg-white/[0.04]">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-white"><Users className="h-5 w-5 text-emerald-300" />Client-ready dossiers</CardTitle>

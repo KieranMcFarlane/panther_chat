@@ -12,7 +12,12 @@ begin
     from entity_import_batches
     where status = 'queued'
       and completed_at is null
-    order by started_at
+    order by
+      case
+        when metadata->>'source' = 'question_first_timeout_continuation' then 0
+        else 1
+      end,
+      started_at
     limit 1
     for update skip locked
   )

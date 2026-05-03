@@ -14,6 +14,16 @@ export type PipelineWorkerSupervisorState = {
   stopped_at: string | null
   updated_at: string | null
   last_error: string | null
+  current_batch_id?: string | null
+  current_entity_id?: string | null
+  current_canonical_entity_id?: string | null
+  current_entity_name?: string | null
+  current_question_id?: string | null
+  current_question_text?: string | null
+  current_action?: string | null
+  current_phase?: string | null
+  current_started_at?: string | null
+  current_activity_at?: string | null
 }
 
 const WORKER_PID_PATH = path.join(process.cwd(), 'tmp', 'entity-pipeline-worker.pid')
@@ -29,6 +39,16 @@ const DEFAULT_STATE: PipelineWorkerSupervisorState = {
   stopped_at: null,
   updated_at: null,
   last_error: null,
+  current_batch_id: null,
+  current_entity_id: null,
+  current_canonical_entity_id: null,
+  current_entity_name: null,
+  current_question_id: null,
+  current_question_text: null,
+  current_action: null,
+  current_phase: null,
+  current_started_at: null,
+  current_activity_at: null,
 }
 
 function toText(value: unknown): string {
@@ -100,6 +120,16 @@ function normalizeState(input: Partial<PipelineWorkerSupervisorState> & { worker
     stopped_at: input.stopped_at ?? null,
     updated_at: input.updated_at ?? null,
     last_error: input.last_error ?? null,
+    current_batch_id: toText(input.current_batch_id) || null,
+    current_entity_id: toText(input.current_entity_id) || null,
+    current_canonical_entity_id: toText(input.current_canonical_entity_id) || null,
+    current_entity_name: toText(input.current_entity_name) || null,
+    current_question_id: toText(input.current_question_id) || null,
+    current_question_text: toText(input.current_question_text) || null,
+    current_action: toText(input.current_action) || null,
+    current_phase: toText(input.current_phase) || null,
+    current_started_at: toText(input.current_started_at) || null,
+    current_activity_at: toText(input.current_activity_at) || null,
   }
 }
 

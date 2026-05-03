@@ -273,7 +273,7 @@ export function OperationalDrawer({
             items={drawerVm.stoppedItems}
             emptyLabel="No stale or blocked entities right now."
           />
-          <EntityListCard
+        <EntityListCard
             title="Completed"
             icon={<ListChecks className="h-4 w-4 text-emerald-300" />}
             items={drawerVm.completedItems}

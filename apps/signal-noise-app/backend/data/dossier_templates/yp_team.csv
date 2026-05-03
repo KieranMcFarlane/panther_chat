@@ -1,0 +1,6 @@
+member_id,display_order,yp_name,yp_role,yp_linkedin,yp_weight,yp_expertise_1,yp_expertise_2,yp_expertise_3,status
+stuart-cope,10,Stuart Cope,Co-Founder & COO,https://www.linkedin.com/in/stuart-cope-54392b16/,1.5,Operations,Client Relationships,Strategic Partnerships,active
+andrew-rapley,20,Andrew Rapley,Head of Projects,https://www.linkedin.com/in/andrew-rapley/,1.3,Project Management,Delivery Excellence,Client Success,active
+sarfraz-hussain,30,Sarfraz Hussain,Head of Strategy,https://www.linkedin.com/in/sarfraz-hussain/,1.2,Strategic Planning,Market Analysis,Growth Strategy,active
+elliott-hillman,40,Elliott Hillman,Senior Client Partner,https://www.linkedin.com/in/elliott-hillman/,1.2,Client Partnerships,Sports Industry,Business Development,active
+gunjan-parikh,50,Gunjan Parikh,Founder & CEO,https://www.linkedin.com/in/gunjan-parikh/,1.3,Strategic Vision,Business Development,Client Strategy,excluded

@@ -93,7 +93,7 @@ LOG_LEVEL=INFO
 ## Next Steps
 
 Once credentials are set:
-1. Restart the Next.js dev server: `npm run dev`
+1. Restart the full app stack: `bash scripts/dev-full.sh`
 2. Visit `http://localhost:3001/canvas`
 3. Test AI chat functionality
 4. Verify agent can create/update canvas cards

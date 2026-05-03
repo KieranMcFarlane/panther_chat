@@ -42,12 +42,16 @@ export async function GET(_request: NextRequest) {
     control: payload.control,
     live_operational: {
       control: payload.control,
-      loop_status: payload.loop_status,
+      loop_status: {
+        ...payload.loop_status,
+        processed_dossiers: payload.loop_status.processed_dossiers ?? payload.loop_status.completed,
+      },
       queue: {
         completed_entities: payload.queue.completed_entities,
         in_progress_entity: payload.queue.in_progress_entity,
         running_entities: payload.queue.running_entities,
         stale_active_rows: payload.queue.stale_active_rows,
+        processed_entities: payload.queue.processed_entities,
         resume_needed_entities: payload.queue.resume_needed_entities,
         upcoming_entities: payload.queue.upcoming_entities,
       },
@@ -58,6 +62,7 @@ export async function GET(_request: NextRequest) {
     playlist_sort_key: payload.playlist_sort_key,
     loop_status: {
       ...payload.loop_status,
+      processed_dossiers: payload.loop_status.processed_dossiers ?? payload.loop_status.completed,
       runtime_counts: payload.loop_status.runtime_counts,
     },
     queue: {
@@ -65,6 +70,7 @@ export async function GET(_request: NextRequest) {
       in_progress_entity: payload.queue.in_progress_entity,
       running_entities: payload.queue.running_entities,
       stale_active_rows: payload.queue.stale_active_rows,
+      processed_entities: payload.queue.processed_entities,
       resume_needed_entities: payload.queue.resume_needed_entities,
       upcoming_entities: payload.queue.upcoming_entities,
     },

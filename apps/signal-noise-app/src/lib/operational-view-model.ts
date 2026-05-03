@@ -8,6 +8,10 @@ import type {
   OperationalDrilldownPayload,
   OperationalQueueEntity,
 } from "@/lib/operational-drilldown-client";
+import {
+  buildOperationalSafetyStopHint,
+  getOperationalStopDetails,
+} from "@/lib/operational-safety-stop";
 import { formatPlaylistSortKey } from "@/lib/playlist-sort-key";
 
 export type OperationalRuntimeEntity = OperationalQueueEntity & {
@@ -52,6 +56,7 @@ export type OperationalStatusViewModel = {
     }>;
     debugSummary: string | null;
     debugCompactLine: string | null;
+    marqueeLine: string | null;
   };
   statusItems: Array<{
     label: string;
@@ -91,6 +96,7 @@ export type OperationalDrawerEntity = {
   run_phase?: string | null;
   queue_position?: number | null;
   publication_status?: string | null;
+  continue_pipeline_on_failure?: boolean;
   next_repair_question_id?: string | null;
   next_repair_status?: string | null;
   next_repair_batch_id?: string | null;
@@ -110,6 +116,7 @@ export type OperationalDrawerPayload = OperationalDrilldownPayload & {
   queue: {
     in_progress_entity: OperationalDrawerEntity | null;
     stale_active_rows?: OperationalDrawerEntity[];
+    processed_entities?: OperationalDrawerEntity[];
     completed_entities: OperationalDrawerEntity[];
     resume_needed_entities: OperationalDrawerEntity[];
     upcoming_entities: OperationalDrawerEntity[];
@@ -189,11 +196,18 @@ function formatControlStateLabel(
 
 function buildLastCompletedLabel(entity: OperationalRuntimeEntity | null) {
   if (!entity) return "No recent completions";
+  const questionText =
+    toText(entity.last_completed_question_text) ||
+    toText(entity.current_question_text) ||
+    toText(entity.next_repair_question_text);
   const questionId =
     toText(entity.last_completed_question) ||
     toText(entity.current_question_id) ||
-    toText(entity.active_question_id);
-  const questionLabel = questionId
+    toText(entity.active_question_id) ||
+    toText(entity.next_repair_question_id);
+  const questionLabel = questionText
+    ? questionText
+    : questionId
     ? formatQuestionProgress(questionId)
     : toText(entity.current_action) ||
       toText(entity.run_phase) ||
@@ -212,9 +226,11 @@ function buildStatusHeroCopy(input: {
   hasFreshActiveWork: boolean;
   hasStaleActiveWork: boolean;
   repairFocus: boolean;
+  isSafetyStop: boolean;
   stopReason: string | null;
   stopDetails: Record<string, unknown> | null;
   activeEntity: OperationalRuntimeEntity | null;
+  resumablePausedEntity: OperationalRuntimeEntity | null;
   activeActionLabel: string | null;
   activeRunPhaseLabel: string | null;
   activeSessionLabel: string;
@@ -239,9 +255,11 @@ function buildStatusHeroCopy(input: {
     hasFreshActiveWork,
     hasStaleActiveWork,
     repairFocus,
+    isSafetyStop,
     stopReason,
     stopDetails,
     activeEntity,
+    resumablePausedEntity,
     activeActionLabel,
     activeRunPhaseLabel,
     activeSessionLabel,
@@ -257,10 +275,19 @@ function buildStatusHeroCopy(input: {
     lastActivityLabel,
   } = input;
 
+  const hasPausedResumeCheckpoint = Boolean(
+    isRequestedPaused && resumablePausedEntity && !isSafetyStop,
+  );
+  const safetyStopHint = buildOperationalSafetyStopHint({ stopReason, stopDetails });
+
   const headline = isTransitioning
     ? workerStateLabel === "Starting"
       ? "Starting intake…"
       : "Stopping intake…"
+    : hasPausedResumeCheckpoint
+      ? "Paused — resumable checkpoint ready"
+    : isSafetyStop
+      ? "Pipeline paused…"
     : isRequestedPaused
       ? isStaleOrStopped
         ? "Paused with a stale session…"
@@ -281,6 +308,10 @@ function buildStatusHeroCopy(input: {
     ? workerStateLabel === "Starting"
       ? "Pipeline control is transitioning. Waiting for the worker to confirm the new state."
       : "Pipeline is safely shutting down. No new work is being accepted."
+    : hasPausedResumeCheckpoint
+      ? `${String(resumablePausedEntity?.entity_name || "Checkpoint")} · question rerun ready. Start pipeline to resume from the saved checkpoint.`
+    : isSafetyStop
+      ? `Pipeline intake is paused because ${String(stopReason)}. Resolve the stop condition before resuming.`
     : isRequestedPaused
       ? isStaleOrStopped
         ? "The pipeline is paused and the latest session needs recovery before it can continue."
@@ -298,18 +329,22 @@ function buildStatusHeroCopy(input: {
               : "No active work is currently visible.";
 
   const issueSummary =
-    freshnessState === "stale"
-      ? "Operational snapshot is lagging behind recent pipeline activity."
-      : isStaleOrStopped && activeEntity
-      ? `Stale session detected for ${activeEntity.entity_name}.`
-      : isActuallyPaused && stopReason
+    hasPausedResumeCheckpoint
+      ? null
+      : isSafetyStop
         ? `Pipeline paused because ${String(stopReason).replaceAll("_", " ")}.`
-        : isActuallyStopped && stopReason
-          ? `Pipeline stopped because ${String(stopReason).replaceAll("_", " ")}.`
-          : null;
+      : isActuallyStopped && stopReason
+        ? `Pipeline stopped because ${String(stopReason).replaceAll("_", " ")}.`
+      : freshnessState === "stale"
+        ? "Operational snapshot is lagging behind recent pipeline activity."
+      : isStaleOrStopped && activeEntity
+        ? `Stale session detected for ${activeEntity.entity_name}.`
+        : null;
 
   const primaryActionRecommended =
-    isRequestedPaused || isStaleOrStopped || isWaiting || isActuallyStopped;
+    isSafetyStop
+      ? false
+      : isRequestedPaused || isStaleOrStopped || isWaiting || isActuallyStopped;
 
   const primaryActionLabel = isTransitioning
     ? workerStateLabel === "Starting"
@@ -330,7 +365,9 @@ function buildStatusHeroCopy(input: {
         : "Stop pipeline intake";
 
   const primaryActionHint = isRequestedPaused || isActuallyStopped
-    ? isStaleOrStopped
+    ? isSafetyStop
+      ? safetyStopHint
+      : isStaleOrStopped
       ? "Start pipeline intake and recover the stale session if a target is available."
       : isWaiting
         ? "Start pipeline intake and wait for the next claimable entity."
@@ -341,7 +378,7 @@ function buildStatusHeroCopy(input: {
 
   const detailRows = [
     { label: "Requested", value: requestedStateLabel.replace("Requested ", "") },
-    { label: "Worker", value: workerStateLabel },
+    { label: "Worker process", value: workerStateLabel },
     { label: "Activity", value: activityStateLabel },
     { label: "Current question", value: currentQuestionLabel },
     { label: "Elapsed", value: currentElapsedLabel },
@@ -351,6 +388,13 @@ function buildStatusHeroCopy(input: {
     { label: "Updated", value: `${controlUpdatedLabel}${controlUpdatedExactLabel ? ` · ${controlUpdatedExactLabel}` : ""}` },
   ];
 
+  if (hasFreshActiveWork && !isSafetyStop) {
+    detailRows.splice(3, 0,
+      { label: "Current section", value: activeRunPhaseLabel || "Unavailable" },
+      { label: "Execution state", value: activeActionLabel || "Unavailable" },
+    );
+  }
+
   const debugSummary = activeEntity
     ? `${isStaleOrStopped ? "Stale session" : isActuallyPaused ? "Paused session" : isActuallyStopped ? "Stopped session" : "Current session"} — ${String(activeEntity.entity_name || "Unknown entity")} — ${activeActionLabel || activeRunPhaseLabel || "phase unavailable"} — ${activeSessionLabel}`
     : null;
@@ -358,6 +402,13 @@ function buildStatusHeroCopy(input: {
   const debugCompactLine = activeEntity
     ? `Session: ${String(activeEntity.batch_id || activeEntity.entity_id)} · ${activeActionLabel || activeRunPhaseLabel || "phase unavailable"} · ${activeSessionLabel} · ${input.stopReason ? `reason ${String(input.stopReason).replaceAll("_", " ")}` : currentElapsedLabel}`
     : null;
+  const marqueeLine = hasPausedResumeCheckpoint
+    ? headline
+    : isSafetyStop
+      ? `Paused — ${String(stopReason).replaceAll("_", " ")}`
+    : activeEntity
+      ? `Checkpoint: ${String(activeEntity.entity_name || "Unknown entity")} • ${activeSessionLabel}`
+      : headline;
 
   return {
     headline,
@@ -370,6 +421,7 @@ function buildStatusHeroCopy(input: {
     detailRows,
     debugSummary,
     debugCompactLine,
+    marqueeLine,
   };
 }
 
@@ -476,6 +528,7 @@ export function buildOperationalStatusViewModel(input: {
 }) {
   const drilldown = input.drilldown;
   const controlState = input.controlState;
+  const runtimeWorkerState = drilldown?.runtime?.worker?.worker_process_state ?? null;
   const inProgressEntity =
     (drilldown?.queue?.in_progress_entity as OperationalRuntimeEntity | null) ??
     null;
@@ -506,12 +559,10 @@ export function buildOperationalStatusViewModel(input: {
       : staleActiveRows.length > 0
         ? "stopped"
         : "running");
-  const stopReason =
-    typeof drilldown?.stop_reason === "string" ? drilldown.stop_reason : null;
-  const stopDetails =
-    drilldown?.stop_details && typeof drilldown.stop_details === "object"
-      ? drilldown.stop_details
-      : null;
+  const { isSafetyStop, stopReason, stopDetails } = getOperationalStopDetails(
+    drilldown,
+    controlState,
+  );
   const freshActiveEntity = inProgressEntity;
   const activeEntity = freshActiveEntity ?? staleActiveEntity;
   const hasFreshActiveWork = Boolean(freshActiveEntity);
@@ -525,6 +576,19 @@ export function buildOperationalStatusViewModel(input: {
   const isRequestedRunning = requestedState === "running";
   const isTransitioning =
     transitionState === "starting" || transitionState === "stopping";
+  const workerAppearsRunning =
+    runtimeWorkerState === "running" ||
+    runtimeWorkerState === "starting" ||
+    observedState === "running";
+  const staleBacklogWhileRunning = Boolean(
+    hasStaleActiveWork &&
+      !hasFreshActiveWork &&
+      !isTransitioning &&
+      !isRequestedPaused &&
+      !isSafetyStop &&
+      operationalState === "waiting" &&
+      workerAppearsRunning,
+  );
   const isWaiting =
     operationalState === "waiting" ||
     (!hasFreshActiveWork &&
@@ -537,17 +601,20 @@ export function buildOperationalStatusViewModel(input: {
     (hasStaleActiveWork &&
       !hasFreshActiveWork &&
       !isTransitioning &&
-      !isRequestedPaused) ||
+      !isRequestedPaused &&
+      !staleBacklogWhileRunning) ||
     Boolean(stopReason);
   const isStaleOrStopped = Boolean(
     isActuallyStopped ||
       (hasStaleActiveWork &&
         !isTransitioning &&
         !isRequestedPaused &&
-        !hasFreshActiveWork),
+        !hasFreshActiveWork &&
+        !staleBacklogWhileRunning),
   );
   const hasActiveWork = hasFreshActiveWork;
-  const canStartPipeline = isRequestedPaused || isActuallyStopped || isWaiting;
+  const canStartPipeline =
+    isRequestedPaused || isActuallyStopped || (isWaiting && !staleBacklogWhileRunning);
   const requestedStateLabel = isRequestedPaused
     ? "Requested paused"
     : "Requested running";
@@ -567,6 +634,8 @@ export function buildOperationalStatusViewModel(input: {
       ? transitionState === "starting"
         ? "Starting"
         : "Stopping"
+      : staleBacklogWhileRunning
+        ? "Waiting"
       : hasStaleActiveWork
         ? "Stale"
         : isActuallyPaused
@@ -580,6 +649,8 @@ export function buildOperationalStatusViewModel(input: {
     ? workerStateLabel
     : hasFreshActiveWork
       ? activityStateLabel
+      : staleBacklogWhileRunning
+        ? "Waiting"
       : hasStaleActiveWork
         ? "Stale"
         : isActuallyPaused
@@ -615,7 +686,8 @@ export function buildOperationalStatusViewModel(input: {
     : hasActiveWork
       ? "Stop pipeline intake after the current work item finishes."
       : "Stop pipeline intake.";
-  const activeQuestionEntity = freshActiveEntity ?? staleActiveEntity;
+  const activeQuestionEntity =
+    freshActiveEntity ?? (staleBacklogWhileRunning ? null : staleActiveEntity);
   const activeQuestionLabel = activeQuestionEntity
     ? formatQuestionProgress(
         activeQuestionEntity.current_question_id || activeQuestionEntity.active_question_id,
@@ -666,7 +738,14 @@ export function buildOperationalStatusViewModel(input: {
             latestCompletedEntity.generated_at,
           )
         : "Unknown duration";
-  const lastCompletedLabel = buildLastCompletedLabel(latestCompletedEntity);
+  const resumablePausedEntity =
+    ((asArray(drilldown?.queue?.resume_needed_entities)[0] as OperationalRuntimeEntity | null) ?? null)
+    || ((isRequestedPaused && latestCompletedEntity && (latestCompletedEntity.current_question_id || latestCompletedEntity.next_repair_question_id))
+      ? latestCompletedEntity
+      : null);
+  const displayLastCompletedEntity =
+    isRequestedPaused && resumablePausedEntity ? resumablePausedEntity : latestCompletedEntity;
+  const lastCompletedLabel = buildLastCompletedLabel(displayLastCompletedEntity);
   const liveEntityTicker = isTransitioning
     ? transitionState === "starting"
       ? "Starting — waiting for fresh heartbeat"
@@ -675,8 +754,10 @@ export function buildOperationalStatusViewModel(input: {
       ? stopReason
         ? `Paused — ${String(stopDetails?.entity_name || "Pipeline")} — ${String(stopReason).replaceAll("_", " ")}`
         : "Paused — intake is waiting for resume"
-      : freshActiveEntity
+    : freshActiveEntity
         ? `${activityStateLabel} — ${freshActiveEntity.entity_name} — ${activeActionLabel || activeRunPhaseLabel || "phase unavailable"} — ${activeHeartbeatLabel || formatRunningDuration(freshActiveEntity.started_at || freshActiveEntity.generated_at)}`
+        : staleBacklogWhileRunning
+          ? "Idle — waiting for claimable work"
         : staleActiveEntity
           ? `Stale — ${String(staleActiveEntity.entity_name || "Unknown entity")} — ${
               String(staleActiveEntity.run_phase || "")
@@ -686,7 +767,10 @@ export function buildOperationalStatusViewModel(input: {
           : isActuallyStopped
             ? "Stopped — waiting for restart"
             : "Idle — waiting for claimable work";
-  const sessionEntity = activeQuestionEntity ?? latestCompletedEntity;
+  const sessionEntity =
+    (isRequestedPaused && resumablePausedEntity)
+      ? resumablePausedEntity
+      : (activeQuestionEntity ?? latestCompletedEntity);
   const sessionQuestionId = sessionEntity
     ? String(
         sessionEntity.current_question_id ||
@@ -696,8 +780,18 @@ export function buildOperationalStatusViewModel(input: {
           "",
       ).trim() || null
     : null;
+  const sessionQuestionText = sessionEntity
+    ? String(
+        sessionEntity.current_question_text ||
+          sessionEntity.next_repair_question_text ||
+          sessionEntity.last_completed_question_text ||
+          "",
+      ).trim() || null
+    : null;
   const currentQuestionLabel = activeQuestionLabel
     ? activeQuestionLabel
+    : sessionQuestionText
+      ? sessionQuestionText
     : sessionQuestionId
       ? formatQuestionProgress(sessionQuestionId)
       : isActuallyPaused || isActuallyStopped
@@ -728,6 +822,8 @@ export function buildOperationalStatusViewModel(input: {
       : null;
   const sessionQuestionLabel = activeQuestionEntity
     ? activeSessionLabel
+    : sessionQuestionText
+      ? sessionQuestionText
     : sessionQuestionId
       ? formatQuestionProgress(sessionQuestionId)
       : sessionPhase;
@@ -780,9 +876,11 @@ export function buildOperationalStatusViewModel(input: {
     hasFreshActiveWork,
     hasStaleActiveWork,
     repairFocus,
+    isSafetyStop,
     stopReason,
     stopDetails,
     activeEntity,
+    resumablePausedEntity,
     activeActionLabel,
     activeRunPhaseLabel,
     activeSessionLabel,
@@ -801,6 +899,10 @@ export function buildOperationalStatusViewModel(input: {
   const blockedOrPartialCount =
     Number(loopStatus?.quality_counts?.partial ?? 0) +
     Number(loopStatus?.quality_counts?.blocked ?? 0);
+  const canonicalEntityLabel =
+    inProgressEntity?.queue_position !== undefined && inProgressEntity?.queue_position !== null
+      ? `${inProgressEntity.queue_position}/${loopStatus?.universe_count ?? loopStatus?.total_scheduled ?? "…"}`
+      : String(loopStatus?.universe_count ?? loopStatus?.total_scheduled ?? "…");
   const statusItems = [
     {
       label: "Universe",
@@ -818,8 +920,8 @@ export function buildOperationalStatusViewModel(input: {
       tone: "text-amber-300",
     },
     {
-      label: "Recent completions",
-      value: String(loopStatus?.completed ?? "…"),
+      label: "Canonical entity",
+      value: canonicalEntityLabel,
       tone: "text-emerald-300",
     },
   ] as const;
@@ -989,16 +1091,19 @@ export function buildOperationalDrawerViewModel(input: {
     ...blockedItems,
   ];
 
-  const completedItems = asArray(dashboard.queue.completed_entities)
+  const completedItems = asArray(dashboard.queue.processed_entities || dashboard.queue.completed_entities)
     .slice(0, 8)
     .map((item) =>
       buildEntityCardBase(item, {
-        detail: toText(item.summary) || "Completed dossier.",
-        badge: formatPublicationState(item.publication_status),
-        nextAction: "Open the completed dossier",
+        detail: toText(item.summary) || (item.continue_pipeline_on_failure ? "Entity failed, but the pipeline continued." : "Completed dossier."),
+        badge: item.continue_pipeline_on_failure ? "Failed, continuing" : formatPublicationState(item.publication_status),
+        nextAction: item.continue_pipeline_on_failure ? "Inspect the failed entity" : "Open the completed dossier",
         facts: [
           `Current question: ${toText(item.active_question_id) || "completed"}`,
-          `Run phase: ${toText(item.run_phase) || "completed"}`,
+          `Run phase: ${toText(item.run_phase) || (item.continue_pipeline_on_failure ? "failed" : "completed")}`,
+          ...(item.continue_pipeline_on_failure
+            ? [`Failure mode: ${toText(item.stop_reason) || "non-blocking failure"}`]
+            : []),
           formatHeartbeatAge(toText(item.heartbeat_at) || null),
         ],
         meta: item.generated_at

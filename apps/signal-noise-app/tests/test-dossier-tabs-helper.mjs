@@ -20,15 +20,10 @@ test('buildDossierTabs derives tabs from dossier payload sections', () => {
     tabs.map((tab) => tab.value),
     [
       'overview',
-      'procurement',
-      'digital-transformation',
-      'strategic-analysis',
-      'opportunities',
-      'leadership',
-      'connections',
-      'implementation-roadmap',
-      'contact',
-      'outreach'
+      'digital-stack',
+      'procurement-ecosystem',
+      'decision-owners-pois',
+      'evidence-sources',
     ]
   )
 })

@@ -7,10 +7,10 @@ import { Pool, PoolConfig } from 'pg';
 // ── Connection ──────────────────────────────────────────────────────────
 
 const poolConfig: PoolConfig = {
-  connectionString: process.env.DATABASE_URL || `postgresql://localhost:5432/signal_noise_app`,
-  max: 10,
+  connectionString: process.env.DATABASE_URL || `postgresql:///signal_noise_app?host=/tmp`,
+  max: 20,
   idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 5000,
+  connectionTimeoutMillis: 30000,
 };
 
 let _pool: Pool | null = null;

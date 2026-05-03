@@ -24,10 +24,12 @@ from pydantic import BaseModel, Field, ValidationError
 try:
     from backend.brightdata_mcp_client import BrightDataMCPClient
     from backend.claude_client import ClaudeClient
+    from backend.question_first_promoter import build_question_first_promotions
     from backend.question_progress_framework import build_question_checkpoint_fields, enrich_question_specs
 except ImportError:
     from brightdata_mcp_client import BrightDataMCPClient  # type: ignore
     from claude_client import ClaudeClient  # type: ignore
+    from question_first_promoter import build_question_first_promotions  # type: ignore
     from question_progress_framework import build_question_checkpoint_fields, enrich_question_specs  # type: ignore
 
 logger = logging.getLogger(__name__)
@@ -213,6 +215,7 @@ async def _launch_opencode_question_first_batch(
     worktree_root: Optional[Path] = None,
     opencode_timeout_ms: int = 300000,
     progress_callback: Optional[Any] = None,
+    resume: bool = False,
 ) -> Path:
     backend_root = Path(__file__).resolve().parent
     app_root = backend_root.parent
@@ -237,6 +240,8 @@ async def _launch_opencode_question_first_batch(
         ]
         if preset:
             command.extend(["--preset", preset])
+        if resume:
+            command.append("--resume")
 
         proc = await asyncio.create_subprocess_exec(
             *command,
@@ -801,12 +806,24 @@ async def run_question_first_dossier_from_payload(
     preset: Optional[str] = None,
     question_source_label: Optional[str] = None,
     progress_callback: Optional[Any] = None,
+    question_first_checkpoint: Optional[Dict[str, Any]] = None,
+    resume: bool = False,
     **_legacy_kwargs: Any,
 ) -> Dict[str, Any]:
     source = dict(source_payload or {})
+    if isinstance(question_first_checkpoint, dict) and question_first_checkpoint:
+        source["question_first_checkpoint"] = question_first_checkpoint
+        metadata = source.get("metadata") if isinstance(source.get("metadata"), dict) else {}
+        metadata["question_first_checkpoint"] = question_first_checkpoint
+        source["metadata"] = metadata
     if isinstance(source.get("questions"), list):
         source["questions"] = enrich_question_specs(source.get("questions") or [])
     launch_source = dict(launch_source_payload or source)
+    if isinstance(question_first_checkpoint, dict) and question_first_checkpoint:
+        launch_source["question_first_checkpoint"] = question_first_checkpoint
+        launch_metadata = launch_source.get("metadata") if isinstance(launch_source.get("metadata"), dict) else {}
+        launch_metadata["question_first_checkpoint"] = question_first_checkpoint
+        launch_source["metadata"] = launch_metadata
     if isinstance(launch_source.get("questions"), list):
         launch_source["questions"] = enrich_question_specs(launch_source.get("questions") or [])
     artifact_path_value = question_first_run_path or source.get("question_first_run_path")
@@ -821,6 +838,7 @@ async def run_question_first_dossier_from_payload(
             worktree_root=worktree_root,
             opencode_timeout_ms=opencode_timeout_ms,
             progress_callback=progress_callback,
+            resume=resume or bool(question_first_checkpoint),
         )
 
     artifact = _load_question_first_run_artifact(artifact_path)
@@ -847,6 +865,48 @@ async def run_question_first_dossier_from_payload(
             entity_id_for_log,
         )
     merged = merge_question_first_run_artifact_into_dossier(dossier_payload=source, artifact=artifact)
+    connections_graph_enricher = _legacy_kwargs.get("connections_graph_enricher")
+    if not isinstance(merged.get("connections_graph"), dict):
+        promotion_bundle = build_question_first_promotions(
+            answers=artifact.answers,
+            question_specs=artifact.questions or source.get("questions") or [],
+            evidence_items=artifact.evidence_items,
+            poi_graph=merged.get("poi_graph") if isinstance(merged.get("poi_graph"), dict) else None,
+            connections_graph=merged.get("connections_graph") if isinstance(merged.get("connections_graph"), dict) else None,
+        )
+        poi_graph = promotion_bundle.get("poi_graph") if isinstance(promotion_bundle.get("poi_graph"), dict) else {}
+        connections_graph = (
+            promotion_bundle.get("connections_graph")
+            if isinstance(promotion_bundle.get("connections_graph"), dict)
+            else {}
+        )
+        if connections_graph_enricher is not None and connections_graph:
+            enriched_connections_graph = await connections_graph_enricher.enrich(
+                connections_graph=connections_graph,
+                poi_graph=poi_graph,
+                entity_name=str(
+                    artifact.entity.get("entity_name")
+                    or source.get("entity_name")
+                    or source.get("entity_id")
+                    or "entity"
+                ),
+            )
+            if isinstance(enriched_connections_graph, dict):
+                connections_graph = enriched_connections_graph
+                promotion_bundle = build_question_first_promotions(
+                    answers=artifact.answers,
+                    question_specs=artifact.questions or source.get("questions") or [],
+                    evidence_items=artifact.evidence_items,
+                    poi_graph=poi_graph,
+                    connections_graph=connections_graph,
+                )
+        for key in ("dossier_promotions", "discovery_summary", "promotion_candidates", "poi_graph", "connections_graph"):
+            value = promotion_bundle.get(key)
+            if value is not None:
+                merged[key] = value
+                question_first = merged.get("question_first")
+                if isinstance(question_first, dict):
+                    question_first[key] = value
 
     if output_dir is not None:
       output_dir = Path(output_dir)

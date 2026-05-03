@@ -256,6 +256,37 @@ def test_build_question_first_connections_graph_accepts_explicit_bridge_contacts
     )
 
 
+def test_build_question_first_connections_graph_omits_excluded_yp_members():
+    poi_graph = {
+        "schema_version": "poi_graph_v1",
+        "entity_id": "arsenal-fc",
+        "entity_name": "Arsenal FC",
+        "nodes": [{"node_id": "arsenal-fc", "node_type": "entity", "name": "Arsenal FC"}],
+        "edges": [],
+    }
+
+    graph = build_question_first_connections_graph(
+        poi_graph=poi_graph,
+        yp_team=[
+            {
+                "member_id": "elliott-hillman",
+                "display_order": 10,
+                "yp_name": "Elliott Hillman",
+                "yp_role": "Senior Client Partner",
+                "yp_linkedin": "https://www.linkedin.com/in/elliott-hillman/",
+                "yp_weight": 1.2,
+                "yp_expertise_1": "Client Partnerships",
+                "yp_expertise_2": "Sports Industry",
+                "yp_expertise_3": "Business Development",
+                "status": "active",
+            }
+        ],
+    )
+
+    yp_member_names = {node["name"] for node in graph["nodes"] if node["node_type"] == "yp_member"}
+    assert yp_member_names == {"Elliott Hillman"}
+
+
 def test_build_question_first_promotions_phase_gates_decision_outputs_by_default():
     result = build_question_first_promotions(
         answers=[
@@ -472,3 +503,156 @@ def test_build_question_first_promotions_emits_graphiti_sales_brief_when_buyer_s
     assert brief["buyer_name"] == "Juliet Slot"
     assert brief["best_path_owner"] == "Elliott Hillman"
     assert brief["capability_gap"] == "digital_stack_maturity"
+
+
+def test_build_question_first_promotions_prefers_deterministic_connections_for_graphiti_sales_brief():
+    result = build_question_first_promotions(
+        answers=[
+            {
+                "question_id": "q11_decision_owner",
+                "entity_id": "doncaster-rovers",
+                "entity_name": "Doncaster Rovers",
+                "question_type": "decision_owner",
+                "answer": "Shaun Lockwood",
+                "confidence": 0.94,
+                "validation_state": "validated",
+                "signal_type": "DECISION_OWNER",
+                "evidence_url": "https://example.com/owner",
+                "primary_owner": {
+                    "name": "Shaun Lockwood",
+                    "title": "Chief Commercial Officer",
+                    "organization": "Club Doncaster",
+                },
+            },
+            {
+                "question_id": "q14_yp_fit",
+                "question_type": "yp_fit",
+                "answer": {
+                    "raw_structured_output": {
+                        "best_service": "commercial_partnerships",
+                        "fit_rationale": "Commercial leadership plus fresh hiring signal suggests sponsorship and revenue support needs.",
+                    }
+                },
+                "confidence": 0.74,
+                "validation_state": "provisional",
+                "signal_type": "YP_FIT",
+            },
+            {
+                "question_id": "q15_outreach_strategy",
+                "question_type": "outreach_strategy",
+                "answer": {
+                    "raw_structured_output": {
+                        "recommended_target": "Shaun Lockwood",
+                        "recommended_angle": "Use the current commercial hiring motion to start a sponsorship operations discussion.",
+                    }
+                },
+                "confidence": 0.66,
+                "validation_state": "provisional",
+                "signal_type": "OUTREACH_STRATEGY",
+            },
+        ],
+        evidence_items=[],
+        promotion_candidates=[],
+        bridge_contacts=[
+            {
+                "contact_name": "Bridge Contact",
+                "relationship_to_yp": "Stuart Cope",
+                "network_reach": "Commercial leadership",
+                "introduction_capability": "Warm route into sponsorship teams",
+                "linkedin_url": "https://example.com/bridge",
+                "target_connections_count": 1,
+            }
+        ],
+        allowed_rollout_phase="phase_3_decision",
+    )
+
+    brief = result["discovery_summary"]["graphiti_sales_brief"]
+    assert brief["status"] == "available"
+    assert brief["buyer_name"] == "Shaun Lockwood"
+    assert brief["best_path_owner"] == "Stuart Cope"
+    assert brief["path_type"] == "Tier 2 bridge"
+    assert brief["yp_fit_service"] == "commercial_partnerships"
+    assert brief["buyer_relevance"] == "decision_owner"
+    assert brief["route_confidence"] is not None
+    assert "verify" in brief["verification_needed"].lower()
+
+
+def test_build_question_first_promotions_uses_direct_buyer_route_fields_when_connections_analyzer_is_richer():
+    result = build_question_first_promotions(
+        answers=[
+            {
+                "question_id": "q11_decision_owner",
+                "entity_id": "arsenal-fc",
+                "entity_name": "Arsenal Football Club",
+                "question_type": "decision_owner",
+                "answer": "Juliet Slot",
+                "confidence": 0.95,
+                "validation_state": "validated",
+                "signal_type": "DECISION_OWNER",
+                "primary_owner": {
+                    "name": "Juliet Slot",
+                    "title": "Chief Commercial Officer",
+                    "organization": "Arsenal Football Club",
+                },
+            },
+            {
+                "question_id": "q15_outreach_strategy",
+                "question_type": "outreach_strategy",
+                "answer": {
+                    "raw_structured_output": {
+                        "recommended_target": "Juliet Slot",
+                        "recommended_angle": "Use the commercial remit and current platform work to open a revenue systems conversation.",
+                    }
+                },
+                "confidence": 0.68,
+                "validation_state": "provisional",
+                "signal_type": "OUTREACH_STRATEGY",
+            },
+        ],
+        evidence_items=[],
+        promotion_candidates=[],
+        allowed_rollout_phase="phase_3_decision",
+        bridge_contacts=[
+            {
+                "contact_name": "David Eames",
+                "relationship_to_yp": "Stuart Cope",
+                "network_reach": "Commercial partnerships",
+                "introduction_capability": "Warm support intro",
+            }
+        ],
+        poi_graph={
+            "schema_version": "poi_graph_v1",
+            "entity_id": "arsenal-fc",
+            "entity_name": "Arsenal Football Club",
+            "nodes": [
+                {"node_id": "arsenal-fc", "node_type": "entity", "name": "Arsenal Football Club"},
+                {"node_id": "person:juliet-slot", "node_type": "person", "name": "Juliet Slot", "title": "Chief Commercial Officer"},
+                {"node_id": "person:omar-shaikh", "node_type": "person", "name": "Omar Shaikh", "title": "Chief Financial Officer"},
+            ],
+            "edges": [
+                {"from_id": "arsenal-fc", "to_id": "person:juliet-slot", "edge_type": "primary_owner_of"},
+                {"from_id": "arsenal-fc", "to_id": "person:omar-shaikh", "edge_type": "supports"},
+            ],
+        },
+        connections_graph={
+            "schema_version": "connections_graph_v1",
+            "nodes": [
+                {"node_id": "Elliott Hillman", "node_type": "yp_member", "name": "Elliott Hillman"},
+                {"node_id": "Stuart Cope", "node_type": "yp_member", "name": "Stuart Cope"},
+                {"node_id": "person:juliet-slot", "node_type": "person", "name": "Juliet Slot", "title": "Chief Commercial Officer"},
+                {"node_id": "person:omar-shaikh", "node_type": "person", "name": "Omar Shaikh", "title": "Chief Financial Officer"},
+                {"node_id": "bridge:david-eames", "node_type": "bridge_contact", "name": "David Eames", "relationship_to_yp": "Stuart Cope", "introduction_capability": "Warm support intro"},
+            ],
+            "edges": [
+                {"from_id": "Elliott Hillman", "to_id": "person:juliet-slot", "edge_type": "direct_connection", "confidence": 78.0},
+                {"from_id": "Stuart Cope", "to_id": "bridge:david-eames", "edge_type": "bridge_connection", "confidence": 52.0, "to_label": "David Eames"},
+                {"from_id": "bridge:david-eames", "to_id": "person:omar-shaikh", "edge_type": "bridge_to_target", "confidence": 55.0},
+            ],
+        },
+    )
+
+    brief = result["discovery_summary"]["graphiti_sales_brief"]
+    assert brief["best_path_owner"] == "Elliott Hillman"
+    assert brief["path_type"] == "Direct (warm)"
+    assert brief["buyer_relevance"] == "decision_owner"
+    assert brief["outreach_target"] == "Juliet Slot"

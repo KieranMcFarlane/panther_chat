@@ -4,6 +4,7 @@ import {
   FileSearch,
   Home,
   Search,
+  Users,
   Upload,
 } from 'lucide-react'
 
@@ -23,6 +24,7 @@ export const primaryNavItems: DiscoveryNavItem[] = [
   { icon: Database, label: 'Entities', href: '/entity-browser' },
   { icon: FileSearch, label: 'RFPs', href: '/rfps' },
   { icon: Briefcase, label: 'Opportunities', href: '/opportunities' },
+  { icon: Users, label: 'YP Team', href: '/admin/yp-team' },
   { icon: Upload, label: 'CSV Import', href: '/entity-import' },
   { icon: Search, label: 'Search', href: '/search' },
 ] as const

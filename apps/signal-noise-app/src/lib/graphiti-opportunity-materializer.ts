@@ -6,6 +6,10 @@ import {
   buildGraphitiOpportunityId,
   buildGraphitiOpportunityStateHash,
 } from '@/lib/graphiti-opportunity-identity'
+import {
+  assessDossierOpportunityPromotion,
+  buildGraphitiOpportunityReasoning,
+} from '@/lib/graphiti-opportunity-reasoning.mjs'
 import type {
   GraphitiOpportunityCard,
   GraphitiOpportunitySourceRow,
@@ -13,7 +17,15 @@ import type {
 } from '@/lib/graphiti-opportunity-contract'
 
 function toText(value: unknown): string {
-  return value === null || value === undefined ? '' : String(value).trim()
+  if (value === null || value === undefined) return ''
+  if (typeof value === 'string') {
+    const text = value.trim()
+    return text === '[object Object]' ? '' : text
+  }
+  if (typeof value === 'number' || typeof value === 'boolean') return String(value)
+  if (Array.isArray(value)) return value.map(toReadableText).filter(Boolean).join(' · ')
+  if (typeof value === 'object') return toReadableText(value)
+  return String(value).trim()
 }
 
 function asRecord(value: unknown): Record<string, unknown> {
@@ -45,7 +57,7 @@ function toReadableText(value: unknown): string {
   }
   if (typeof value === 'object') {
     const record = value as Record<string, unknown>
-    return toText([
+    return [
       record.name,
       record.title,
       record.label,
@@ -53,9 +65,11 @@ function toReadableText(value: unknown): string {
       record.summary,
       record.description,
       record.answer,
+      record.text,
+      record.context,
       record.role,
       record.name && record.answer ? `${record.name}: ${record.answer}` : '',
-    ].find(Boolean))
+    ].map(toReadableText).find(Boolean) || ''
   }
   return toText(value)
 }
@@ -78,14 +92,14 @@ function uniqueTextValues(values: Array<unknown>): string[] {
   for (const value of values) {
     if (Array.isArray(value)) {
       for (const nested of value) {
-        const text = toText(nested)
+        const text = toReadableText(nested)
         if (!text || seen.has(text.toLowerCase())) continue
         seen.add(text.toLowerCase())
         output.push(text)
       }
       continue
     }
-    const text = toText(value)
+    const text = toReadableText(value)
     if (!text || seen.has(text.toLowerCase())) continue
     seen.add(text.toLowerCase())
     output.push(text)
@@ -268,16 +282,56 @@ export function materializeGraphitiOpportunity(
     opportunityKind,
     enrichedTaxonomy.theme,
   ])
+  const reasoning = buildGraphitiOpportunityReasoning({
+    entityName: linked.canonical_entity_name || source.entity_name || organization,
+    detectedAt: source.detected_at,
+    lastSeenAt: source.materialized_at || source.detected_at,
+    materializedAt: source.materialized_at,
+    deadline: toText(rawPayload['deadline'] || rawPayload['due_date']) || null,
+    confidence,
+    yellowPantherFit: fitScore,
+    supportingSignals,
+    evidence: source.evidence,
+    relationships: source.relationships,
+    rawPayload,
+  })
+  const promotion = assessDossierOpportunityPromotion(reasoning, {
+    qualityState: toText(rawPayload.quality_state),
+    answerCount: Number(rawPayload.answer_count || 0),
+    evidenceCount: Number(rawPayload.evidence_count || 0),
+    yellowPantherFit: fitScore,
+  })
+  const enrichedRawPayload = {
+    ...rawPayload,
+    source_ledger_id: rawPayload.source_ledger_id || null,
+    quality_state: rawPayload.quality_state || null,
+    answer_count: rawPayload.answer_count || 0,
+    evidence_count: rawPayload.evidence_count || 0,
+    signal_family: reasoning.pattern_reasoning?.signal_type || null,
+    promotion_reason: promotion.promotion_reason,
+    shortlist_opportunity: promotion.shortlist,
+    watch_item: promotion.watch_item,
+    commercial_qualification: reasoning.commercial_qualification,
+    temporal_reasoning: reasoning.temporal_reasoning as GraphitiOpportunityCard['temporal_reasoning'],
+    pattern_reasoning: reasoning.pattern_reasoning as GraphitiOpportunityCard['pattern_reasoning'],
+    yp_fit_reasoning: reasoning.yp_fit_reasoning,
+    recommended_action: reasoning.recommended_action,
+    findings: reasoning.findings as GraphitiOpportunityCard['findings'],
+    timeline: reasoning.timeline as GraphitiOpportunityCard['timeline'],
+    related_patterns: reasoning.related_patterns as GraphitiOpportunityCard['related_patterns'],
+  }
+  const opportunityId = buildGraphitiOpportunityId({
+    canonical_entity_id: linked.canonical_entity_id,
+    canonical_entity_name: linked.canonical_entity_name,
+    entity_id: source.entity_id,
+    entity_name: organization,
+    title,
+    opportunity_kind: opportunityKind,
+  })
 
   const opportunity = {
-    opportunity_id: buildGraphitiOpportunityId({
-      canonical_entity_id: linked.canonical_entity_id,
-      canonical_entity_name: linked.canonical_entity_name,
-      entity_id: source.entity_id,
-      entity_name: organization,
-      title,
-      opportunity_kind: opportunityKind,
-    }),
+    id: opportunityId,
+    opportunity_id: opportunityId,
     insight_id: source.insight_id,
     entity_id: linked.canonical_entity_id || source.entity_id,
     entity_name: linked.canonical_entity_name || source.entity_name || organization,
@@ -286,6 +340,7 @@ export function materializeGraphitiOpportunity(
     canonical_entity_name: linked.canonical_entity_name || null,
     organization: linked.canonical_entity_name || organization,
     title,
+    description: whyThisIsAnOpportunity || summary || whyItMatters,
     summary,
     why_it_matters: whyItMatters,
     suggested_action: suggestedAction,
@@ -300,7 +355,7 @@ export function materializeGraphitiOpportunity(
     priority_score: priorityScore,
     yellow_panther_fit: fitScore,
     category: toText(rawPayload['category']) || opportunityKind || 'Graphiti',
-    status: 'qualified',
+    status: promotion.shortlist ? 'qualified' : promotion.watch_item ? 'watch' : 'not_promoted',
     location: toText(rawPayload['location']) || null,
     value: toText(rawPayload['value'] || rawPayload['budget']) || null,
     deadline: toText(rawPayload['deadline'] || rawPayload['due_date']) || null,
@@ -315,7 +370,14 @@ export function materializeGraphitiOpportunity(
     detected_at: source.detected_at,
     evidence: source.evidence,
     relationships: source.relationships,
-    metadata: rawPayload,
+    temporal_reasoning: reasoning.temporal_reasoning as GraphitiOpportunityCard['temporal_reasoning'],
+    pattern_reasoning: reasoning.pattern_reasoning as GraphitiOpportunityCard['pattern_reasoning'],
+    yp_fit_reasoning: reasoning.yp_fit_reasoning,
+    recommended_action: reasoning.recommended_action,
+    findings: reasoning.findings as GraphitiOpportunityCard['findings'],
+    timeline: reasoning.timeline as GraphitiOpportunityCard['timeline'],
+    related_patterns: reasoning.related_patterns as GraphitiOpportunityCard['related_patterns'],
+    metadata: enrichedRawPayload,
   }
 
   const materialized_at = source.materialized_at || new Date().toISOString()
@@ -342,10 +404,10 @@ export function materializeGraphitiOpportunity(
       source_url: opportunity.source_url,
       tags: opportunity.tags || [],
       taxonomy: opportunity.taxonomy || {},
-      metadata: rawPayload,
+      metadata: enrichedRawPayload,
     }),
-    is_active: true,
-    raw_payload: rawPayload,
+    is_active: promotion.shortlist,
+    raw_payload: enrichedRawPayload,
     source_run_id: source.source_run_id || null,
     source_signal_id: source.source_signal_id || null,
     source_episode_id: source.source_episode_id || null,
@@ -356,8 +418,23 @@ export function materializeGraphitiOpportunity(
   }
 }
 
-export function rankGraphitiOpportunities<T extends { priority_score?: number | null; confidence?: number | null; detected_at?: string | null }>(opportunities: T[]): T[] {
+export function rankGraphitiOpportunities<T extends { priority_score?: number | null; confidence?: number | null; detected_at?: string | null; temporal_reasoning?: { status?: string | null } | null }>(opportunities: T[]): T[] {
   return [...opportunities].sort((left, right) => {
+    const temporalWeight = (status: string | null | undefined) => {
+      switch (status) {
+        case 'accelerating': return 5
+        case 'active': return 4
+        case 'emerging': return 3
+        case 'unknown': return 2
+        case 'stale': return 1
+        case 'expired': return 0
+        default: return 2
+      }
+    }
+    const leftTemporal = temporalWeight(left.temporal_reasoning?.status)
+    const rightTemporal = temporalWeight(right.temporal_reasoning?.status)
+    if (rightTemporal !== leftTemporal) return rightTemporal - leftTemporal
+
     const leftPriority = Number(left.priority_score || 0)
     const rightPriority = Number(right.priority_score || 0)
     if (rightPriority !== leftPriority) return rightPriority - leftPriority

@@ -16,7 +16,7 @@ const APP_ROOT = path.resolve(MODULE_DIR, '..');
 const WORKTREE_ROOT = path.resolve(APP_ROOT, '..', '..');
 const QUESTION_PROGRESS_FRAMEWORK_PATH = path.join(APP_ROOT, 'backend', 'question_progress_framework.json');
 const STANDALONE_BRIGHTDATA_FALLBACK_SCRIPT = path.join(APP_ROOT, 'scripts', 'standalone_brightdata_fallback.py');
-const DEFAULT_PROVIDER_ID = 'zai-api';
+const DEFAULT_PROVIDER_ID = 'zai-coding-plan';
 const DEFAULT_MODEL_ID = 'glm-5.1';
 const DEFAULT_MODEL = `${DEFAULT_PROVIDER_ID}/${DEFAULT_MODEL_ID}`;
 const COMMERCIAL_SIGNAL_QUESTION_IDS = new Set([
@@ -56,7 +56,7 @@ function _resolveOpenCodeEnv(explicit) {
   _loadEnv(true);
   const env = explicit || _captureOpenCodeExplicitEnv();
   return {
-    baseUrl: env.baseUrl || process.env.ZAI_BASE_URL || 'https://api.z.ai/api/paas/v4',
+    baseUrl: env.baseUrl || process.env.ZAI_BASE_URL || 'https://api.z.ai/api/anthropic/v1',
     apiKey: env.zaiApiKey || process.env.ZAI_API_KEY || '',
     brightdataToken:
       env.brightdataApiToken || env.brightdataToken || process.env.BRIGHTDATA_API_TOKEN || process.env.BRIGHTDATA_TOKEN || '',
@@ -156,6 +156,17 @@ async function _normalizeQuestionSourceQuestions(sourcePayload) {
           const normalizedQuestionId = String(hydratedQuestion.question_id || hydratedQuestion.id || hydratedQuestion.slug || `q${index + 1}`).trim();
           const progressFields = progressLookup.get(normalizedQuestionId) || {};
           const normalizedQuestionText = String(hydratedQuestion.question_text || hydratedQuestion.question || hydratedQuestion.prompt || '').trim();
+          const sourcePriority = Array.isArray(hydratedQuestion.source_priority) && hydratedQuestion.source_priority.length > 0
+            ? [...hydratedQuestion.source_priority]
+            : (Array.isArray(hydratedQuestion.current_source_order) && hydratedQuestion.current_source_order.length > 0
+              ? [...hydratedQuestion.current_source_order]
+              : resolveQuestionSourceOrder({
+                ...hydratedQuestion,
+                question_id: normalizedQuestionId,
+              }, String(hydratedQuestion.entity_type || entityType).trim() || entityType));
+          const currentSourceOrder = Array.isArray(progressFields.current_source_order) && progressFields.current_source_order.length > 0
+            ? [...progressFields.current_source_order]
+            : sourcePriority;
           return {
             ...hydratedQuestion,
             ...Object.fromEntries(Object.entries(progressFields).filter(([, value]) => value !== null && value !== undefined)),
@@ -167,6 +178,8 @@ async function _normalizeQuestionSourceQuestions(sourcePayload) {
             entity_type: String(hydratedQuestion.entity_type || entityType).trim() || entityType,
             preset: hydratedQuestion.preset ?? preset,
             current_execution_state: String(hydratedQuestion.current_execution_state || progressFields.current_execution_state || 'searching sources').trim(),
+            source_priority: sourcePriority,
+            current_source_order: currentSourceOrder,
           };
         })
     : [];
@@ -174,6 +187,59 @@ async function _normalizeQuestionSourceQuestions(sourcePayload) {
 
 function _isCommercialSignalQuestion(question) {
   return COMMERCIAL_SIGNAL_QUESTION_IDS.has(String(question?.question_id || '').trim());
+}
+
+function _getQuestionFamilyKey(question) {
+  const questionId = String(question?.question_id || '').trim().toLowerCase();
+  const questionType = String(question?.question_type || '').trim().toLowerCase();
+
+  if (['q7_procurement_signal', 'q8_explicit_rfp', 'q10_hiring_signal'].includes(questionId) || ['procurement', 'procurement_signal', 'tender_docs', 'hiring_signal'].includes(questionType)) {
+    return 'procurement';
+  }
+  if (['q11_decision_owner', 'q12_connections', 'q15_outreach_strategy', 'q3_leadership'].includes(questionId) || ['decision_owner', 'connections', 'outreach_strategy', 'leadership', 'poi'].includes(questionType)) {
+    return 'decision-owner';
+  }
+  if (['q2_digital_stack', 'q6_launch_signal', 'q9_news_signal'].includes(questionId) || ['digital_stack', 'launch_signal', 'news_signal', 'performance', 'league_context'].includes(questionType)) {
+    return 'digital';
+  }
+  if (['q13_capability_gap', 'q14_yp_fit'].includes(questionId) || ['capability_gap', 'yp_fit'].includes(questionType)) {
+    return 'capability';
+  }
+  return 'generic';
+}
+
+export function resolveQuestionSourceOrder(question, entityType = 'ENTITY') {
+  const normalizedEntityType = String(entityType || question?.entity_type || 'ENTITY').trim().toUpperCase();
+  const family = _getQuestionFamilyKey(question);
+  const questionId = String(question?.question_id || '').trim().toLowerCase();
+
+  const entityTypeDefaults = {
+    CLUB: ['official_site', 'leadership_page', 'vacancies', 'app_store', 'sponsors', 'news', 'linkedin_posts', 'wikipedia'],
+    LEAGUE: ['official_site', 'broadcast_partner', 'app_store', 'commercial_partner', 'federation_site', 'press_release', 'news', 'linkedin_posts'],
+    FEDERATION: ['official_site', 'tender_portal', 'board_minutes', 'strategic_plan', 'leadership_page', 'press_release', 'news', 'linkedin_posts'],
+    PERSON: ['official_bio', 'linkedin_posts', 'interview', 'official_site', 'news'],
+    ENTITY: ['official_site', 'news', 'linkedin_posts', 'wikipedia'],
+  };
+
+  const familyOverrides = {
+    procurement: ['vacancies', 'partner_announcement', 'vendor_page', 'tender_portal', 'press_release', 'news'],
+    'decision-owner': ['official_site', 'linkedin_posts', 'news', 'leadership_page', 'official_bio'],
+    digital: ['official_site', 'app_store', 'press_release', 'news', 'vendor_page', 'wikipedia'],
+    capability: ['official_site', 'news', 'press_release', 'linkedin_posts'],
+    generic: [],
+  };
+
+  if (questionId === 'q7_procurement_signal') {
+    return ['official_site', 'tender_portal', 'press_release', 'partner_announcement', 'linkedin_posts', 'vendor_page'];
+  }
+
+  if (normalizedEntityType === 'FEDERATION' && family === 'procurement') {
+    return ['official_site', 'tender_portal', 'board_minutes', 'strategic_plan', 'leadership_page', 'press_release', 'news', 'linkedin_posts', 'partner_announcement', 'vendor_page'];
+  }
+
+  const base = entityTypeDefaults[normalizedEntityType] || entityTypeDefaults.ENTITY;
+  const familyFirst = familyOverrides[family] || [];
+  return Array.from(new Set([...familyFirst, ...base]));
 }
 
 function _clampNumber(value, min = 0, max = 1) {
@@ -594,6 +660,66 @@ function _buildQuestionAliases(question) {
   return [...aliases].filter(Boolean);
 }
 
+function _isTerminalQuestionState(status) {
+  const normalized = String(status || '').trim().toLowerCase();
+  return ['validated', 'provisional', 'no_signal', 'blocked', 'failed', 'exhausted', 'tool_call_missing', 'cli_error', 'parse_error', 'timeout'].includes(normalized)
+    || normalized.endsWith('_tool_call_missing');
+}
+
+function _buildRunStateFromQuestionFirstCheckpoint(questions, checkpoint, { preset, timestamp }) {
+  const runState = buildPresetRunState(questions, { preset, runId: 'checkpoint', timestamp });
+  const answerRecords = Array.isArray(checkpoint?.answer_records) ? checkpoint.answer_records : [];
+  const terminalStates = checkpoint?.terminal_states && typeof checkpoint.terminal_states === 'object'
+    ? checkpoint.terminal_states
+    : {};
+  const answerByQuestion = new Map();
+  for (const answer of answerRecords) {
+    if (!answer || typeof answer !== 'object') continue;
+    const questionId = String(answer.question_id || '').trim();
+    if (questionId) answerByQuestion.set(questionId, answer);
+  }
+  runState.questions = runState.questions.map((questionState, index) => {
+    const question = questions[index] || {};
+    const questionId = String(question.question_id || questionState.question_id || '').trim();
+    const answer = answerByQuestion.get(questionId);
+    const terminalState = String(terminalStates[questionId] || answer?.validation_state || answer?.status || '').trim();
+    if (!answer && !_isTerminalQuestionState(terminalState)) {
+      return questionState;
+    }
+    const answerText = String(answer?.answer || answer?.summary || answer?.value || '').trim();
+    const evidenceUrl = String(answer?.evidence_url || (Array.isArray(answer?.sources) ? answer.sources[0] : '') || '').trim();
+    return {
+      ...questionState,
+      status: _isTerminalQuestionState(terminalState) ? terminalState : 'provisional',
+      current_confidence: Number(answer?.confidence || 0),
+      best_answer: answerText,
+      best_evidence_url: evidenceUrl,
+      accepted_links: Array.isArray(answer?.sources)
+        ? answer.sources.filter(Boolean).map((url) => ({ url, source_kind: _sourceKindFromUrl(url), score: 1, decision: 'accept' }))
+        : questionState.accepted_links,
+      notes: answer?.notes || answer?.context || answer?.commercial_interpretation?.summary || questionState.notes || '',
+      prompt_trace: answer?.prompt_trace || questionState.prompt_trace || null,
+      message_trace: answer?.message_trace || questionState.message_trace || [],
+      last_completed_at: checkpoint?.updated_at || timestamp,
+    };
+  });
+  runState.question_first_checkpoint = checkpoint;
+  return runState;
+}
+
+function _countTerminalQuestionStates(runState) {
+  if (!runState || !Array.isArray(runState.questions)) return 0;
+  return runState.questions.filter((questionState) => _isTerminalQuestionState(questionState?.status)).length;
+}
+
+function _selectResumeRunState(localState, checkpointState) {
+  if (!localState || typeof localState !== 'object') return checkpointState;
+  if (!checkpointState || typeof checkpointState !== 'object') return localState;
+  return _countTerminalQuestionStates(checkpointState) > _countTerminalQuestionStates(localState)
+    ? checkpointState
+    : localState;
+}
+
 function _buildExecutionQuestion(question, query, hopIndex = 0) {
   return {
     ...question,
@@ -806,7 +932,7 @@ function _mergeQuestionState(questionState, questionPayload, timestamp) {
   const nextState = {
     ...questionState,
     last_run_at: timestamp,
-    status: questionPayload.validation_state === 'validated' ? 'validated' : questionPayload.validation_state === 'provisional' ? 'provisional' : questionPayload.validation_state === 'no_signal' ? 'no_signal' : 'running',
+    status: _isTerminalQuestionState(questionPayload.validation_state) ? questionPayload.validation_state : 'running',
     current_confidence: questionPayload.confidence ?? questionState.current_confidence ?? 0,
     best_answer: questionPayload.answer || questionState.best_answer || '',
     best_evidence_url: questionPayload.evidence_url || questionState.best_evidence_url || '',
@@ -993,8 +1119,8 @@ async function _writeTrackerFile(trackerPath, tracker) {
   await _writeJsonFile(trackerPath, tracker);
 }
 
-const FASTMCP_HEALTH_URL = 'http://127.0.0.1:8000/health';
-const FASTMCP_MCP_URL = 'http://127.0.0.1:8000/mcp/';
+const FASTMCP_HEALTH_URL = 'http://127.0.0.1:8014/health';
+const FASTMCP_MCP_URL = 'http://127.0.0.1:8014/mcp/';
 
 export async function ensureBrightDataFastMcpService({
   fetchImpl = globalThis.fetch,
@@ -1026,7 +1152,7 @@ export async function ensureBrightDataFastMcpService({
       ...serviceEnv,
       BRIGHTDATA_FASTMCP_URL: serviceUrl,
       BRIGHTDATA_FASTMCP_HOST: serviceEnv.BRIGHTDATA_FASTMCP_HOST || '127.0.0.1',
-      BRIGHTDATA_FASTMCP_PORT: serviceEnv.BRIGHTDATA_FASTMCP_PORT || '8000',
+      BRIGHTDATA_FASTMCP_PORT: serviceEnv.BRIGHTDATA_FASTMCP_PORT || '8014',
       BRIGHTDATA_MCP_USE_HOSTED: 'false',
       BRIGHTDATA_MCP_HOSTED_URL: '',
     },
@@ -1065,10 +1191,10 @@ export async function buildOpenCodeConfig({
     model: DEFAULT_MODEL,
     provider: {
       [DEFAULT_PROVIDER_ID]: {
-        npm: '@ai-sdk/openai-compatible',
-        name: 'Z.AI API',
+        npm: '@ai-sdk/anthropic',
+        name: 'Z.AI Coding Plan',
         options: {
-          baseURL: baseUrl || resolvedEnv.baseUrl,
+          baseURL: baseUrl || 'https://api.z.ai/api/anthropic/v1',
           apiKey: '{env:ZAI_API_KEY}',
         },
         models: {
@@ -1128,15 +1254,22 @@ export async function buildOpenCodeConfig({
 }
 
 export function buildOpenCodeQuestionPrompt(question, { standaloneHarness = false } = {}) {
+  const sourceOrder = Array.isArray(question?.source_priority) && question.source_priority.length > 0
+    ? question.source_priority
+    : (Array.isArray(question?.current_source_order) && question.current_source_order.length > 0
+      ? question.current_source_order
+      : []);
   const promptLines = [
     'Use BrightData to answer one atomic question.',
     'Do not inspect local files, the repository, tests, or generated scripts.',
     'Do not use bash, python, grep, ripgrep, or any local code-analysis workflow.',
     'Use only BrightData-backed web evidence and your final JSON response.',
+    `Entity type: ${question.entity_type || 'ENTITY'}`,
     `Question type: ${question.question_type}`,
     `Question: ${question.question_text}`,
     `Canonical query: ${question.query}`,
     ...(question?.structured_output_schema ? [`Structured output schema: ${question.structured_output_schema}`] : []),
+    ...(sourceOrder.length > 0 ? [`Prioritize sources in this order: ${sourceOrder.join(', ')}`] : []),
     'Return only JSON with these keys: question, answer, context, sources, confidence.',
     'If you cannot find an answer, leave answer empty, keep context brief, and set confidence to 0.',
     'If the question is compound, answer the narrowest concrete fact first.',
@@ -1204,6 +1337,11 @@ function _usesTwoStageOpenCodeFlow(question) {
 }
 
 export function buildOpenCodeRetrievalPrompt(question, { standaloneHarness = false } = {}) {
+  const sourceOrder = Array.isArray(question?.source_priority) && question.source_priority.length > 0
+    ? question.source_priority
+    : (Array.isArray(question?.current_source_order) && question.current_source_order.length > 0
+      ? question.current_source_order
+      : []);
   const promptLines = [
     'Use BrightData to gather retrieval evidence for one atomic question.',
     'This is the retrieval pass.',
@@ -1211,10 +1349,12 @@ export function buildOpenCodeRetrievalPrompt(question, { standaloneHarness = fal
     'Do not inspect local files, the repository, tests, or generated scripts.',
     'Do not use bash, python, grep, ripgrep, or any local code-analysis workflow.',
     'Use only BrightData-backed web evidence.',
+    `Entity type: ${question.entity_type || 'ENTITY'}`,
     `Question type: ${question.question_type}`,
     `Question: ${question.question_text}`,
     `Canonical query: ${question.query}`,
     ...(question?.structured_output_schema ? [`Structured output schema: ${question.structured_output_schema}`] : []),
+    ...(sourceOrder.length > 0 ? [`Prioritize sources in this order: ${sourceOrder.join(', ')}`] : []),
     'Your first action must be one BrightData search using the canonical query.',
     'If the first search is weak, do at most one follow-up BrightData search or scrape.',
     'Return only JSON with these keys: question, query, leads, retrieval_summary.',
@@ -1231,6 +1371,18 @@ export function buildOpenCodeRetrievalPrompt(question, { standaloneHarness = fal
       'Do not spend steps on repeated reasoning without BrightData tool progress.',
     );
   }
+  if (question?.question_id === 'q7_procurement_signal') {
+    promptLines.splice(
+      promptLines.length - 1,
+      0,
+      'For q7, keep this retrieval pass hard bounded: maximum two BrightData tool calls total.',
+      'You may use at most one LinkedIn signal check for q7, and it must be a post/company search only.',
+      'Do not inspect LinkedIn people, personal profiles, or broad profile search results for q7.',
+      'If using LinkedIn, use one focused query such as site:linkedin.com/posts OR site:linkedin.com/company with the entity and procurement/vendor/partnership/platform terms.',
+      'Prefer official site, tender/procurement pages, press releases, partner announcements, and named vendor/platform pages.',
+      'Return at most three leads. If none are concrete after the bounded search, return an empty leads array immediately.',
+    );
+  }
   promptLines.push('IMPORTANT: After your BrightData searches, you MUST output your final JSON as plain text in your next message. Do not make additional tool calls.');
   return promptLines.join('\n');
 }
@@ -1240,6 +1392,8 @@ export function buildOpenCodeSynthesisPrompt(question, { retrievalOutput = {}, s
     'Use BrightData retrieval evidence to answer one atomic question.',
     'This is the synthesis pass.',
     'Use only the supplied retrieval evidence.',
+    'Do not make BrightData tool calls during synthesis.',
+    'Do not browse, search, scrape, or inspect any new source during synthesis.',
     'Do not inspect local files, the repository, tests, or generated scripts.',
     'Do not use bash, python, grep, ripgrep, or any local code-analysis workflow.',
     `Question type: ${question.question_type}`,
@@ -1298,6 +1452,16 @@ export function buildOpenCodeRunArgs(question, prompt, { standaloneHarness = fal
     args.splice(args.length - 1, 0, '--print-logs', '--log-level', 'INFO');
   }
   return args;
+}
+
+function _resolveOpenCodePassTimeoutMs(question, opencodeTimeoutMs) {
+  const baseTimeoutMs = Number.isFinite(Number(opencodeTimeoutMs)) && Number(opencodeTimeoutMs) > 0
+    ? Number(opencodeTimeoutMs)
+    : 300000;
+  if (String(question?.question_id || '').trim() === 'q7_procurement_signal') {
+    return Math.min(baseTimeoutMs, 90000);
+  }
+  return baseTimeoutMs;
 }
 
 export async function prepareOpenCodeRunWorkspace({ worktreeRoot = WORKTREE_ROOT, baseUrl } = {}) {
@@ -1669,6 +1833,16 @@ function _shouldAbortStandaloneHarnessStall({ stdout = '', stderr = '' } = {}) {
     && diagnostics.brightdata_source_count === 0;
 }
 
+function _detectProviderTerminalError(stderr = '') {
+  const text = String(stderr || '');
+  if (/Insufficient balance or no resource package/i.test(text) || /"code":"1113"/i.test(text) || /"code"\s*:\s*"1113"/i.test(text)) {
+    const error = new Error('opencode provider terminated with insufficient balance');
+    error.name = 'OpenCodeProviderInsufficientBalanceError';
+    return error;
+  }
+  return null;
+}
+
 function _normalizeQuestionRunResult(questionRun, { fallbackMode = null, failureDiagnostics = null } = {}) {
   const normalized = questionRun && typeof questionRun === 'object' ? questionRun : {};
   const promptTrace = normalized.promptTrace && typeof normalized.promptTrace === 'object'
@@ -1868,6 +2042,13 @@ function _spawnOpencodeRun(args, { command = 'opencode', cwd, env, timeoutMs = 3
     child.stderr.on('data', (chunk) => {
       stderr += chunk.toString();
       maybeAbortForHarnessStall();
+      const providerTerminalError = _detectProviderTerminalError(stderr);
+      if (providerTerminalError) {
+        providerTerminalError.stdout = stdout;
+        providerTerminalError.stderr = stderr;
+        providerTerminalError.timeoutMs = timeoutMs;
+        rejectAfterChildStops(providerTerminalError);
+      }
     });
     child.on('error', (error) => {
       rejectOnce(error);
@@ -1923,7 +2104,7 @@ export async function runOpenCodeCliQuestion(
         BRIGHTDATA_ZONE: resolvedEnv.brightdataZone,
         PATH: process.env.PATH,
       },
-      timeoutMs: opencodeTimeoutMs,
+      timeoutMs: _resolveOpenCodePassTimeoutMs(question, opencodeTimeoutMs),
       standaloneHarness,
     },
   );
@@ -1946,11 +2127,121 @@ export async function runOpenCodeCliQuestion(
         retrievalOutput = _recoverRetrievalOutputFromFailure(question, retrievalCliResult.stdout);
       }
       const retrievalLeads = Array.isArray(retrievalOutput?.leads) ? retrievalOutput.leads : [];
+      if (question?.question_id === 'q7_procurement_signal' && retrievalRecoveredFromFailure && retrievalLeads.length === 0) {
+        const noSignalOutput = _buildStructuredNoSignalOutput(question, {
+          context: retrievalOutput?.retrieval_summary || 'No completed BrightData leads were recoverable from the timed out retrieval pass.',
+        });
+        return {
+          structuredOutput: noSignalOutput,
+          promptTrace: {
+            exit_code: retrievalCliResult.code,
+            stdout_length: retrievalCliResult.stdout.length,
+            stderr_length: retrievalCliResult.stderr.length,
+            has_structured_output: true,
+            stage_count: 1,
+            retrieval_recovered_from_failure: true,
+            retrieval_has_leads: false,
+            retrieval_lead_count: 0,
+            retrieval_exit_code: retrievalCliResult.code,
+            synthesis_skipped: true,
+          },
+          messageTrace: [
+            {
+              role: 'assistant',
+              completed: false,
+              type: 'cli-run',
+              stage: 'retrieval',
+              has_structured_output: true,
+              part_count: 1,
+            },
+          ],
+          cliResult: retrievalCliResult,
+        };
+      }
+      if (question?.question_id === 'q10_hiring_signal' && retrievalLeads.length === 0) {
+        const noSignalOutput = _buildStructuredNoSignalOutput(question, {
+          context: retrievalOutput?.retrieval_summary || 'No hiring leads found in bounded retrieval.',
+        });
+        return {
+          structuredOutput: noSignalOutput,
+          promptTrace: {
+            exit_code: retrievalCliResult.code,
+            stdout_length: retrievalCliResult.stdout.length,
+            stderr_length: retrievalCliResult.stderr.length,
+            has_structured_output: true,
+            stage_count: 1,
+            retrieval_recovered_from_failure: retrievalRecoveredFromFailure,
+            retrieval_has_leads: false,
+            retrieval_lead_count: 0,
+            retrieval_exit_code: retrievalCliResult.code,
+            synthesis_skipped: true,
+          },
+          messageTrace: [
+            {
+              role: 'assistant',
+              completed: retrievalCliResult.code === 0,
+              type: 'cli-run',
+              stage: 'retrieval',
+              has_structured_output: Object.keys(retrievalOutput || {}).length > 0,
+              part_count: 1,
+            },
+          ],
+          cliResult: retrievalCliResult,
+        };
+      }
       const synthesisPrompt = buildOpenCodeSynthesisPrompt(question, {
         retrievalOutput,
         standaloneHarness,
       });
-      const synthesisCliResult = await runCliPass(synthesisPrompt);
+      let synthesisCliResult;
+      try {
+        synthesisCliResult = await runCliPass(synthesisPrompt);
+      } catch (error) {
+        const recoveredStructuredOutput = _recoverStructuredOutputFromFailure(question, error?.stdout || '');
+        const fallbackOutput = recoveredStructuredOutput || _buildStructuredNoSignalOutput(question, {
+          context: retrievalOutput?.retrieval_summary || `OpenCode synthesis failed (${error?.name || 'Error'}).`,
+        });
+        return {
+          structuredOutput: fallbackOutput,
+          promptTrace: {
+            exit_code: typeof error?.code === 'number' ? error.code : 124,
+            stdout_length: String(error?.stdout || '').length,
+            stderr_length: String(error?.stderr || '').length,
+            has_structured_output: true,
+            stage_count: 2,
+            retrieval_recovered_from_failure: retrievalRecoveredFromFailure,
+            retrieval_has_leads: retrievalLeads.length > 0,
+            retrieval_lead_count: retrievalLeads.length,
+            retrieval_exit_code: retrievalCliResult.code,
+            recovered_from_failure: true,
+            failure_name: error?.name || 'Error',
+            synthesis_failed: true,
+          },
+          messageTrace: [
+            {
+              role: 'assistant',
+              completed: retrievalCliResult.code === 0,
+              type: 'cli-run',
+              stage: 'retrieval',
+              has_structured_output: Object.keys(retrievalOutput || {}).length > 0,
+              part_count: 1,
+            },
+            {
+              role: 'assistant',
+              completed: false,
+              type: 'cli-run',
+              stage: 'synthesis',
+              has_structured_output: Object.keys(fallbackOutput || {}).length > 0,
+              part_count: 1,
+            },
+          ],
+          cliResult: {
+            code: typeof error?.code === 'number' ? error.code : 124,
+            stdout: String(error?.stdout || ''),
+            stderr: String(error?.stderr || ''),
+          },
+        };
+      }
       const structuredOutput = _extractFinalCliJson(synthesisCliResult.stdout);
       const promptTrace = {
         exit_code: synthesisCliResult.code,
@@ -2174,14 +2465,19 @@ function _buildProgressEvent({
   questionIndex = 0,
   questionsTotal = 0,
   error = null,
+  completedQuestion = null,
+  artifactPaths = null,
+  nextQuestion = null,
 }) {
   const answeredCount = eventType === 'batch_complete'
     ? questionsTotal
-    : Math.max(0, Number(questionIndex || 0) - 1);
+    : eventType === 'question_completed'
+      ? Math.min(Math.max(0, Number(questionIndex || 0)), questionsTotal)
+      : Math.max(0, Number(questionIndex || 0) - 1);
   const progress = questionsTotal > 0
     ? `${Math.min(Math.max(0, Number(questionIndex || 0)), questionsTotal)}/${questionsTotal} questions`
     : null;
-  return {
+  const event = {
     event_type: eventType,
     phase: 'dossier_generation',
     current_substep: eventType === 'batch_complete' ? 'question_first_completed' : 'question_first_running',
@@ -2194,6 +2490,8 @@ function _buildProgressEvent({
     current_question_text: question?.question_text || null,
     current_question_index: question?.current_question_index ?? null,
     current_question_total: question?.current_question_total ?? null,
+    next_question_id: nextQuestion?.question_id || null,
+    next_question_text: nextQuestion?.question_text || null,
     current_strategy_label: question?.current_strategy_label || null,
     current_execution_state: question?.current_execution_state || (eventType === 'batch_complete' ? 'finalising section' : 'searching sources'),
     current_source_order: Array.isArray(question?.current_source_order) ? question.current_source_order : (Array.isArray(question?.source_priority) ? question.source_priority : null),
@@ -2202,6 +2500,13 @@ function _buildProgressEvent({
     current_substep_progress: progress,
     error: error ? String(error) : null,
   };
+  if (completedQuestion && typeof completedQuestion === 'object') {
+    event.completed_question = completedQuestion;
+  }
+  if (artifactPaths && typeof artifactPaths === 'object') {
+    event.artifact_paths = artifactPaths;
+  }
+  return event;
 }
 
 export async function runOpenCodePresetBatch({
@@ -2262,7 +2567,15 @@ export async function runOpenCodePresetBatch({
 
   const runStartedAt = new Date().toISOString();
   const statePath = _buildStateFilePath(outputDir, normalizedPreset, entityId);
-  const existingState = resume ? await _loadJsonFile(statePath) : null;
+  const checkpoint = questionsOverride && questionsOverride.__question_first_checkpoint
+    ? questionsOverride.__question_first_checkpoint
+    : null;
+  const existingState = resume
+    ? _selectResumeRunState(
+      await _loadJsonFile(statePath),
+      checkpoint ? _buildRunStateFromQuestionFirstCheckpoint(questions, checkpoint, { preset: normalizedPreset, timestamp: runStartedAt }) : null,
+    )
+    : null;
   const runState = existingState && typeof existingState === 'object' ? existingState : buildPresetRunState(questions, { preset: normalizedPreset, runId: 'cli', timestamp: runStartedAt });
   const budgetOverrides = _buildCreditOverrides({ searchCredits, scrapeCredits, revisitCredits, confidenceThreshold });
   const trackerPath = _buildTrackerFilePath(outputDir, normalizedPreset, entityId);
@@ -2303,36 +2616,6 @@ export async function runOpenCodePresetBatch({
 
   try {
     for (const [index, question] of questions.entries()) {
-      if (typeof onProgress === 'function') {
-        await onProgress(_buildProgressEvent({
-          eventType: 'question_progress',
-          question,
-          questionIndex: index + 1,
-          questionsTotal: questions.length,
-        }));
-      }
-      const questionStartedAt = new Date().toISOString();
-      tracker.current_question_index = index + 1;
-      tracker.current_question_id = question.question_id;
-      tracker.current_question_text = question.question_text;
-      tracker = _updateTrackerQuestion(tracker, index, {
-        status: 'running',
-        started_at: questionStartedAt,
-        completed_at: null,
-        validation_state: null,
-        confidence: null,
-        answer_excerpt: null,
-        notes: null,
-        error: null,
-      });
-      _appendTrackerEvent(tracker, {
-        type: 'question_started',
-        question_id: question.question_id,
-        question_index: index + 1,
-        question_text: question.question_text,
-      });
-      await _writeTrackerFile(trackerPath, tracker);
-
       let existingQuestionState = runState.questions[index];
       const currentQuestionState = existingQuestionState || buildQuestionState(question, { runId: `cli-${index + 1}`, timestamp: runStartedAt, creditBudgetOverrides: budgetOverrides, confidenceThreshold: budgetOverrides.confidenceThreshold });
       existingQuestionState = currentQuestionState;
@@ -2346,9 +2629,41 @@ export async function runOpenCodePresetBatch({
       const shouldReplayFrontier = pendingFrontierItems.length > 0;
       const executionQueue = shouldReplayFrontier
         ? pendingFrontierItems.slice(0, Math.max(1, Number(question.hop_budget || 0))).map((item, hopIndex) => _buildExecutionQuestion(question, item.query, hopIndex + 1))
-        : (resume && existingQuestionState && ['validated', 'provisional', 'no_signal'].includes(existingQuestionState.status) && existingQuestionState.best_answer)
+        : (resume && existingQuestionState && _isTerminalQuestionState(existingQuestionState.status))
           ? []
           : [question];
+      const shouldEmitLiveProgress = executionQueue.length > 0;
+      if (shouldEmitLiveProgress) {
+        if (typeof onProgress === 'function') {
+          await onProgress(_buildProgressEvent({
+            eventType: 'question_progress',
+            question,
+            questionIndex: index + 1,
+            questionsTotal: questions.length,
+          }));
+        }
+        const questionStartedAt = new Date().toISOString();
+        tracker.current_question_index = index + 1;
+        tracker.current_question_id = question.question_id;
+        tracker.current_question_text = question.question_text;
+        tracker = _updateTrackerQuestion(tracker, index, {
+          status: 'running',
+          started_at: questionStartedAt,
+          completed_at: null,
+          validation_state: null,
+          confidence: null,
+          answer_excerpt: null,
+          notes: null,
+          error: null,
+        });
+        _appendTrackerEvent(tracker, {
+          type: 'question_started',
+          question_id: question.question_id,
+          question_index: index + 1,
+          question_text: question.question_text,
+        });
+        await _writeTrackerFile(trackerPath, tracker);
+      }
       let questionPayload;
       let questionRun = null;
       if (executionQueue.length === 0) {
@@ -2585,6 +2900,18 @@ export async function runOpenCodePresetBatch({
           `Answer: ${questionPayload.answer || 'n/a'}`,
         ].join('\n'),
       );
+      if (typeof onProgress === 'function') {
+        if (shouldEmitLiveProgress) {
+          await onProgress(_buildProgressEvent({
+            eventType: 'question_completed',
+            question,
+            questionIndex: index + 1,
+            questionsTotal: questions.length,
+            completedQuestion: questionPayload,
+            nextQuestion: questions[index + 1] || null,
+          }));
+        }
+      }
     }
 
 	    const questionPaths = [];
@@ -2678,6 +3005,15 @@ export async function runOpenCodePresetBatch({
         question: questions[questions.length - 1] || null,
         questionIndex: questions.length,
         questionsTotal: questions.length,
+        artifactPaths: {
+          question_first_run_path: questionFirstRunPath,
+          rollup_path: rollupPath,
+          meta_result_path: metaPath,
+          question_results_path: metaPath,
+          transcript_path: transcriptPath,
+          tracker_path: trackerPath,
+          question_result_paths: questionPaths,
+        },
       }));
     }
 
@@ -2771,6 +3107,11 @@ export async function runOpenCodeQuestionSourceBatch({
   const questions = await _normalizeQuestionSourceQuestions(sourcePayload);
   if (questions.length === 0) {
     throw new Error(`Question source ${JSON.stringify(questionSourcePath)} does not contain any questions`);
+  }
+  const sourceMetadata = sourcePayload.metadata && typeof sourcePayload.metadata === 'object' ? sourcePayload.metadata : {};
+  const checkpoint = sourcePayload.question_first_checkpoint || sourceMetadata.question_first_checkpoint || null;
+  if (checkpoint && typeof checkpoint === 'object') {
+    questions.__question_first_checkpoint = checkpoint;
   }
 
   const entityName = String(sourcePayload.entity_name || sourcePayload.entityName || sourcePayload.entity_id || sourcePayload.entityId || 'entity').trim() || 'entity';

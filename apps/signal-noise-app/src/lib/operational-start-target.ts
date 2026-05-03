@@ -38,16 +38,17 @@ function selectCandidate(section: OperationalStartSection, drilldown: Operationa
   const completedCandidate = queue.completed_entities?.[0] || null
   const upcomingCandidate = queue.upcoming_entities?.[0] || null
   const staleCandidate = queue.stale_active_rows?.[0] || null
+  const resumableCandidate = queue.in_progress_entity || staleCandidate || resumeCandidate || null
   switch (section) {
     case 'running':
-      return queue.in_progress_entity || staleCandidate || resumeCandidate || upcomingCandidate || completedCandidate || null
+      return resumableCandidate || upcomingCandidate || completedCandidate || null
     case 'blocked':
-      return blockedCandidate || resumeCandidate || upcomingCandidate || completedCandidate || null
+      return resumableCandidate || blockedCandidate || upcomingCandidate || completedCandidate || null
     case 'completed':
-      return completedCandidate || resumeCandidate || upcomingCandidate || blockedCandidate || null
+      return resumableCandidate || completedCandidate || upcomingCandidate || blockedCandidate || null
     case 'entities':
     default:
-      return upcomingCandidate || resumeCandidate || blockedCandidate || completedCandidate || null
+      return resumableCandidate || upcomingCandidate || blockedCandidate || completedCandidate || null
   }
 }
 

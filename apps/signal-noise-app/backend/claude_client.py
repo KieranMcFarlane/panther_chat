@@ -673,6 +673,10 @@ class ClaudeClient:
         if self.provider in {self.PROVIDER_CHUTES_OPENAI, self.PROVIDER_CHUTES_ANTHROPIC}:
             return os.getenv("CHUTES_API_KEY")
 
+        anthropic_base_url = (os.getenv("ANTHROPIC_BASE_URL") or "").strip().lower()
+        if os.getenv("ZAI_API_KEY") and (not anthropic_base_url or "api.z.ai" in anthropic_base_url):
+            return os.getenv("ZAI_API_KEY")
+
         return (
             os.getenv("ANTHROPIC_API_KEY")
             or os.getenv("ANTHROPIC_AUTH_TOKEN")

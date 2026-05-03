@@ -47,7 +47,8 @@ except ImportError:
     from objective_profiles import DEFAULT_PIPELINE_OBJECTIVE, normalize_run_objective
 
 logger = logging.getLogger(__name__)
-DEFAULT_OPENCODE_MODEL = "zai-api/glm-5.1"
+DEFAULT_OPENCODE_MODEL = "zai-coding-plan/glm-5.1"
+OPENCODE_PROVIDER_INSUFFICIENT_BALANCE_ERROR = "OpenCodeProviderInsufficientBalanceError"
 
 
 @dataclass
@@ -138,6 +139,34 @@ class PipelineOrchestrator:
             )
         return metadata
 
+    @classmethod
+    def _has_provider_infrastructure_failure(cls, value: Any) -> bool:
+        if value is None:
+            return False
+        if isinstance(value, str):
+            text = value.lower()
+            return (
+                OPENCODE_PROVIDER_INSUFFICIENT_BALANCE_ERROR.lower() in text
+                or "providerinsufficientbalance" in text
+                or "insufficient balance" in text
+            )
+        if isinstance(value, (int, float, bool)):
+            return False
+        if isinstance(value, list):
+            return any(cls._has_provider_infrastructure_failure(item) for item in value)
+        if not isinstance(value, dict):
+            return False
+
+        failure_name = str(value.get("failure_name") or value.get("error_name") or value.get("name") or "").lower()
+        error_type = str(value.get("error_type") or value.get("failure_type") or "").lower()
+        message = str(value.get("message") or value.get("error_message") or value.get("stderr") or value.get("error") or "").lower()
+        return (
+            OPENCODE_PROVIDER_INSUFFICIENT_BALANCE_ERROR.lower() in failure_name
+            or "provider_infrastructure_failure" in error_type
+            or OPENCODE_PROVIDER_INSUFFICIENT_BALANCE_ERROR.lower() in message
+            or any(cls._has_provider_infrastructure_failure(item) for item in value.values())
+        )
+
     def _build_question_first_seed_dossier(
         self,
         *,
@@ -163,6 +192,290 @@ class PipelineOrchestrator:
         }
         return source_payload
 
+    def _merge_question_first_checkpoint_event(
+        self,
+        *,
+        checkpoint: Optional[Dict[str, Any]],
+        event: Dict[str, Any],
+    ) -> Dict[str, Any]:
+        existing = deepcopy(checkpoint or {})
+        now_iso = datetime.now(timezone.utc).isoformat()
+        existing.setdefault("schema_version", "question_first_checkpoint_v1")
+        existing["updated_at"] = now_iso
+        if event.get("questions_answered") is not None:
+            existing["questions_answered"] = int(event.get("questions_answered") or 0)
+        if event.get("questions_total") is not None:
+            existing["questions_total"] = int(event.get("questions_total") or 0)
+
+        current_question_id = str(event.get("current_question_id") or "").strip()
+        if current_question_id:
+            existing["current_question_id"] = current_question_id
+        current_question_text = str(event.get("current_question_text") or "").strip()
+        if current_question_text:
+            existing["current_question_text"] = current_question_text
+        next_question_id = str(event.get("next_question_id") or "").strip()
+        if next_question_id:
+            existing["next_question_id"] = next_question_id
+        next_question_text = str(event.get("next_question_text") or "").strip()
+        if next_question_text:
+            existing["next_question_text"] = next_question_text
+
+        answer_records = existing.get("answer_records")
+        if not isinstance(answer_records, list):
+            answer_records = []
+        terminal_states = existing.get("terminal_states")
+        if not isinstance(terminal_states, dict):
+            terminal_states = {}
+        evidence_urls = existing.get("evidence_urls")
+        if not isinstance(evidence_urls, list):
+            evidence_urls = []
+        evidence_url_set = {str(url).strip() for url in evidence_urls if str(url).strip()}
+
+        completed = event.get("completed_question")
+        if isinstance(completed, dict):
+            completed_question_id = str(completed.get("question_id") or current_question_id or "").strip()
+            if completed_question_id:
+                existing["last_completed_question_id"] = completed_question_id
+                answer_record = deepcopy(completed)
+                if "question_text" not in answer_record and current_question_text:
+                    answer_record["question_text"] = current_question_text
+                answer_records = [
+                    record for record in answer_records
+                    if not (isinstance(record, dict) and str(record.get("question_id") or "").strip() == completed_question_id)
+                ]
+                answer_records.append(answer_record)
+                state = str(
+                    completed.get("validation_state")
+                    or completed.get("status")
+                    or completed.get("terminal_state")
+                    or ""
+                ).strip()
+                if state:
+                    terminal_states[completed_question_id] = state
+                for url in completed.get("sources") or []:
+                    url_value = str(url or "").strip()
+                    if url_value and url_value not in evidence_url_set:
+                        evidence_url_set.add(url_value)
+                        evidence_urls.append(url_value)
+                evidence_url = str(completed.get("evidence_url") or "").strip()
+                if evidence_url and evidence_url not in evidence_url_set:
+                    evidence_url_set.add(evidence_url)
+                    evidence_urls.append(evidence_url)
+
+        artifact_paths = event.get("artifact_paths")
+        if isinstance(artifact_paths, dict):
+            existing["artifact_paths"] = deepcopy(artifact_paths)
+        existing["answer_records"] = answer_records
+        existing["terminal_states"] = terminal_states
+        existing["evidence_urls"] = evidence_urls
+        return existing
+
+    @staticmethod
+    def _question_first_checkpoint_answer_count(checkpoint: Optional[Dict[str, Any]]) -> int:
+        if not isinstance(checkpoint, dict):
+            return 0
+        raw_count = checkpoint.get("questions_answered")
+        if raw_count is None and isinstance(checkpoint.get("answer_records"), list):
+            raw_count = len(checkpoint.get("answer_records") or [])
+        try:
+            return max(0, int(raw_count or 0))
+        except (TypeError, ValueError):
+            return 0
+
+    @classmethod
+    def _select_richest_question_first_checkpoint(
+        cls,
+        *checkpoints: Optional[Dict[str, Any]],
+    ) -> Optional[Dict[str, Any]]:
+        richest: Optional[Dict[str, Any]] = None
+        richest_count = -1
+        for checkpoint in checkpoints:
+            if not isinstance(checkpoint, dict) or not checkpoint:
+                continue
+            count = cls._question_first_checkpoint_answer_count(checkpoint)
+            if count > richest_count:
+                richest = deepcopy(checkpoint)
+                richest_count = count
+        return richest
+
+    @classmethod
+    def _extract_question_first_checkpoint_from_payload(cls, payload: Any) -> Optional[Dict[str, Any]]:
+        if not isinstance(payload, dict):
+            return None
+        direct = payload.get("question_first_checkpoint")
+        if isinstance(direct, dict) and direct:
+            return deepcopy(direct)
+        metadata = payload.get("metadata")
+        if isinstance(metadata, dict) and isinstance(metadata.get("question_first_checkpoint"), dict):
+            return deepcopy(metadata["question_first_checkpoint"])
+        dossier = payload.get("dossier")
+        if isinstance(dossier, dict):
+            extracted = cls._extract_question_first_checkpoint_from_payload(dossier)
+            if extracted:
+                return extracted
+        question_first = payload.get("question_first")
+        if isinstance(question_first, dict):
+            answers = question_first.get("answers") if isinstance(question_first.get("answers"), list) else []
+            if answers:
+                last_answer = answers[-1] if isinstance(answers[-1], dict) else {}
+                return {
+                    "schema_version": "question_first_checkpoint_v1",
+                    "questions_answered": int(question_first.get("questions_answered") or len(answers)),
+                    "questions_total": int(question_first.get("questions_total") or 0),
+                    "last_completed_question_id": str(last_answer.get("question_id") or "").strip() or None,
+                    "answer_records": deepcopy(answers),
+                }
+        return None
+
+    async def _load_persisted_question_first_checkpoint(self, *, entity_id: str) -> Optional[Dict[str, Any]]:
+        client = getattr(self.graphiti_service, "supabase_client", None)
+        if client is None:
+            return None
+        candidates: List[Dict[str, Any]] = []
+        try:
+            dossier_response = (
+                client.table("entity_dossiers")
+                .select("entity_id,dossier_data,generated_at")
+                .eq("entity_id", entity_id)
+                .limit(5)
+                .execute()
+            )
+            for row in dossier_response.data or []:
+                if not isinstance(row, dict):
+                    continue
+                checkpoint = self._extract_question_first_checkpoint_from_payload(row.get("dossier_data"))
+                if checkpoint:
+                    candidates.append(checkpoint)
+        except Exception as error:  # noqa: BLE001
+            logger.debug(
+                "question_first_checkpoint_dossier_lookup_failed",
+                extra={"entity_id": entity_id, "error": str(error)},
+            )
+        try:
+            temporal_response = (
+                client.table("temporal_episodes")
+                .select("metadata,created_at")
+                .eq("entity_id", entity_id)
+                .eq("episode_type", "PIPELINE_PERSISTENCE")
+                .contains("metadata", {"record_type": "question_first_partial_dossier"})
+                .order("created_at", desc=True)
+                .limit(50)
+                .execute()
+            )
+            for row in temporal_response.data or []:
+                if not isinstance(row, dict):
+                    continue
+                metadata = row.get("metadata") if isinstance(row.get("metadata"), dict) else {}
+                payload = metadata.get("payload") if isinstance(metadata.get("payload"), dict) else {}
+                checkpoint = self._extract_question_first_checkpoint_from_payload(payload)
+                if checkpoint:
+                    candidates.append(checkpoint)
+        except Exception as error:  # noqa: BLE001
+            logger.debug(
+                "question_first_checkpoint_temporal_lookup_failed",
+                extra={"entity_id": entity_id, "error": str(error)},
+            )
+        return self._select_richest_question_first_checkpoint(*candidates)
+
+    def _build_partial_question_first_dossier(
+        self,
+        *,
+        source_payload: Dict[str, Any],
+        entity_id: str,
+        entity_name: str,
+        entity_type: str,
+        checkpoint: Dict[str, Any],
+        request_metadata: Optional[Dict[str, Any]] = None,
+    ) -> Dict[str, Any]:
+        payload = deepcopy(source_payload if isinstance(source_payload, dict) else {})
+        now_iso = datetime.now(timezone.utc).isoformat()
+        answers = checkpoint.get("answer_records") if isinstance(checkpoint.get("answer_records"), list) else []
+        payload.update(
+            {
+                "entity_id": entity_id,
+                "entity_name": entity_name,
+                "entity_type": entity_type,
+                "quality_state": "partial",
+                "publication_status": "published_partial",
+                "publish_status": "published_partial",
+                "generated_at": now_iso,
+                "question_first_checkpoint": deepcopy(checkpoint),
+                "question_first": {
+                    "enabled": True,
+                    "schema_version": "question_first_run_v1",
+                    "questions_answered": int(checkpoint.get("questions_answered") or len(answers)),
+                    "questions_total": int(checkpoint.get("questions_total") or 0),
+                    "answers": deepcopy(answers),
+                    "categories": [],
+                    "checkpoint_status": "partial",
+                },
+            }
+        )
+        metadata = payload.get("metadata") if isinstance(payload.get("metadata"), dict) else {}
+        provider_failure = self._has_provider_infrastructure_failure(checkpoint)
+        if provider_failure:
+            payload["quality_state"] = "failed"
+            payload["publication_status"] = "failed"
+            payload["publish_status"] = "failed"
+        payload["metadata"] = {
+            **metadata,
+            "entity_id": entity_id,
+            "entity_name": entity_name,
+            "entity_type": entity_type,
+            "quality_state": "failed" if provider_failure else "partial",
+            "publication_status": "failed" if provider_failure else "published_partial",
+            **(
+                {
+                    "failure_class": "provider_infrastructure_failure",
+                    "failure_reason": "provider_infrastructure_failure",
+                }
+                if provider_failure
+                else {}
+            ),
+            "question_first_checkpoint": deepcopy(checkpoint),
+            **self._question_first_runtime_metadata(request_metadata=request_metadata),
+        }
+        return payload
+
+    async def _persist_question_first_dossier_snapshot(
+        self,
+        *,
+        run_id: str,
+        entity_id: str,
+        entity_name: str,
+        entity_type: str,
+        dossier: Dict[str, Any],
+        question_first_meta: Optional[Dict[str, Any]] = None,
+        request_metadata: Optional[Dict[str, Any]] = None,
+        record_type: str = "question_first_dossier",
+        record_id: Optional[str] = None,
+    ) -> None:
+        """
+        Persist the enriched question-first dossier immediately after enrichment.
+
+        This is intentionally earlier than the final publication stage so the
+        entity dossier page can render the result even if later phases fail.
+        """
+        if not isinstance(dossier, dict) or not dossier:
+            return
+        payload: Dict[str, Any] = {
+            "entity_name": entity_name,
+            "entity_type": entity_type,
+            "dossier": dossier,
+        }
+        if isinstance(question_first_meta, dict) and question_first_meta:
+            payload["question_first"] = question_first_meta
+        if isinstance(request_metadata, dict) and request_metadata:
+            payload["request_metadata"] = request_metadata
+        await self.persistence_coordinator.persist_run_artifacts(
+            run_id=run_id,
+            entity_id=entity_id,
+            phase="question_first_enrichment",
+            record_type=record_type,
+            record_id=record_id or entity_id,
+            payload=payload,
+        )
+
     def _build_canonical_publication_dossier(
         self,
         *,
@@ -181,6 +494,7 @@ class PipelineOrchestrator:
         payload["generated_at"] = now_iso
         payload["run_id"] = run_id
         payload["publish_status"] = "published"
+        payload["publication_status"] = payload.get("publication_status") or "published"
 
         metadata = payload.get("metadata") if isinstance(payload.get("metadata"), dict) else {}
         payload["metadata"] = metadata
@@ -190,9 +504,55 @@ class PipelineOrchestrator:
 
         question_first = payload.get("question_first") if isinstance(payload.get("question_first"), dict) else {}
         if question_first:
+            provider_failure = self._has_provider_infrastructure_failure(payload)
             payload["question_first"] = question_first
             quality_state = str(question_first.get("quality_state") or payload.get("quality_state") or "").strip() or None
+            if provider_failure:
+                quality_state = "failed"
+            if not quality_state:
+                answers = question_first.get("answers") if isinstance(question_first.get("answers"), list) else []
+                try:
+                    questions_answered = int(question_first.get("questions_answered") or len(answers))
+                except (TypeError, ValueError):
+                    questions_answered = len(answers)
+                if questions_answered > 0:
+                    quality_state = "partial"
             payload["quality_state"] = quality_state
+            if provider_failure:
+                payload["publication_status"] = "failed"
+                payload["publish_status"] = "failed"
+                metadata["failure_class"] = "provider_infrastructure_failure"
+                metadata["failure_reason"] = "provider_infrastructure_failure"
+            metadata["quality_state"] = quality_state
+            checkpoint = payload.get("question_first_checkpoint")
+            if not isinstance(checkpoint, dict):
+                metadata_checkpoint = metadata.get("question_first_checkpoint")
+                checkpoint = metadata_checkpoint if isinstance(metadata_checkpoint, dict) else None
+            if not isinstance(checkpoint, dict):
+                answers = question_first.get("answers") if isinstance(question_first.get("answers"), list) else []
+                try:
+                    questions_answered = int(question_first.get("questions_answered") or len(answers))
+                except (TypeError, ValueError):
+                    questions_answered = len(answers)
+                questions_total = question_first.get("questions_total") or len(answers) or questions_answered
+                last_completed_question_id = None
+                if answers:
+                    last_answer = answers[-1] if isinstance(answers[-1], dict) else {}
+                    last_completed_question_id = (
+                        last_answer.get("question_id")
+                        or last_answer.get("id")
+                        or last_answer.get("question")
+                    )
+                checkpoint = {
+                    "schema_version": "question_first_checkpoint_v1",
+                    "questions_answered": questions_answered,
+                    "questions_total": questions_total,
+                    "last_completed_question_id": last_completed_question_id,
+                    "answer_records": deepcopy(answers),
+                    "updated_at": now_iso,
+                }
+            payload["question_first_checkpoint"] = checkpoint
+            metadata["question_first_checkpoint"] = deepcopy(checkpoint)
             payload["answers"] = question_first.get("answers") if isinstance(question_first.get("answers"), list) else payload.get("answers")
             payload["question_timings"] = (
                 question_first.get("question_timings")
@@ -208,9 +568,13 @@ class PipelineOrchestrator:
                 **metadata_question_first,
                 "generated_at": now_iso,
                 "run_id": run_id,
-                "publish_status": "published",
+                "publish_status": "failed" if provider_failure else "published",
                 "quality_state": quality_state,
             }
+            question_first["quality_state"] = question_first.get("quality_state") or quality_state
+            if provider_failure:
+                question_first["publish_status"] = "failed"
+                question_first["failure_class"] = "provider_infrastructure_failure"
 
             if str((request_metadata or {}).get("rerun_mode") or "").strip().lower() == "question":
                 repair_meta = {
@@ -297,6 +661,8 @@ class PipelineOrchestrator:
                     dossier=dossier,
                     entity_id=entity_id,
                     entity_name=entity_name,
+                    entity_type=entity_type,
+                    run_id=run_id,
                     request_metadata=request_metadata,
                     phase_callback=phase_callback,
                 )
@@ -317,6 +683,26 @@ class PipelineOrchestrator:
                     },
                 )
                 logger.warning("🚦 Pipeline boundary: question_first_enrichment:complete")
+                try:
+                    await self._persist_question_first_dossier_snapshot(
+                        run_id=run_id,
+                        entity_id=entity_id,
+                        entity_name=entity_name,
+                        entity_type=entity_type,
+                        dossier=dossier,
+                        question_first_meta=question_first_meta if isinstance(question_first_meta, dict) else None,
+                        request_metadata=request_metadata,
+                    )
+                except Exception as error:  # noqa: BLE001
+                    logger.warning(
+                        "question_first_dossier_snapshot_persist_failed",
+                        extra={
+                            "entity_id": entity_id,
+                            "entity_name": entity_name,
+                            "run_id": run_id,
+                            "error": str(error),
+                        },
+                    )
             else:
                 await self._emit_phase_update(phase_callback, "dossier_generation", {"status": "running", "current_substep": "dossier_generation_running"})
                 dossier = await self._run_dossier_generation(
@@ -338,6 +724,8 @@ class PipelineOrchestrator:
                         dossier=dossier,
                         entity_id=entity_id,
                         entity_name=entity_name,
+                        entity_type=entity_type,
+                        run_id=run_id,
                         request_metadata=request_metadata,
                         phase_callback=phase_callback,
                     )
@@ -358,6 +746,26 @@ class PipelineOrchestrator:
                         },
                     )
                     logger.warning("🚦 Pipeline boundary: question_first_enrichment:complete")
+                    try:
+                        await self._persist_question_first_dossier_snapshot(
+                            run_id=run_id,
+                            entity_id=entity_id,
+                            entity_name=entity_name,
+                            entity_type=entity_type,
+                            dossier=dossier,
+                            question_first_meta=question_first_meta if isinstance(question_first_meta, dict) else None,
+                            request_metadata=request_metadata,
+                        )
+                    except Exception as error:  # noqa: BLE001
+                        logger.warning(
+                            "question_first_dossier_snapshot_persist_failed",
+                            extra={
+                                "entity_id": entity_id,
+                                "entity_name": entity_name,
+                                "run_id": run_id,
+                                "error": str(error),
+                            },
+                        )
             dossier = self._coerce_dossier_payload(dossier)
             await self._emit_phase_update(
                 phase_callback,
@@ -393,6 +801,8 @@ class PipelineOrchestrator:
                         dossier=dossier,
                         entity_id=entity_id,
                         entity_name=entity_name,
+                        entity_type=entity_type,
+                        run_id=run_id,
                         request_metadata=request_metadata,
                         phase_callback=phase_callback,
                     )
@@ -413,6 +823,26 @@ class PipelineOrchestrator:
                         },
                     )
                     logger.warning("🚦 Pipeline boundary: question_first_enrichment:complete")
+                    try:
+                        await self._persist_question_first_dossier_snapshot(
+                            run_id=run_id,
+                            entity_id=entity_id,
+                            entity_name=entity_name,
+                            entity_type=entity_type,
+                            dossier=dossier,
+                            question_first_meta=question_first_meta if isinstance(question_first_meta, dict) else None,
+                            request_metadata=request_metadata,
+                        )
+                    except Exception as error:  # noqa: BLE001
+                        logger.warning(
+                            "question_first_dossier_snapshot_persist_failed",
+                            extra={
+                                "entity_id": entity_id,
+                                "entity_name": entity_name,
+                                "run_id": run_id,
+                                "error": str(error),
+                            },
+                        )
             phase_results["dossier_generation"] = {"status": "completed"}
             step_artifacts.extend(self._build_dossier_step_artifacts(dossier=dossier, entity_id=entity_id))
 
@@ -1015,6 +1445,8 @@ class PipelineOrchestrator:
         dossier: Dict[str, Any],
         entity_id: str,
         entity_name: str,
+        entity_type: str,
+        run_id: str,
         request_metadata: Optional[Dict[str, Any]] = None,
         phase_callback: Optional[Any] = None,
     ) -> Dict[str, Any]:
@@ -1117,6 +1549,21 @@ class PipelineOrchestrator:
             from question_first_repair import build_filtered_question_source_payload, derive_repair_question_ids  # type: ignore
 
         launch_source_payload = None
+        durable_checkpoint = None
+        if isinstance(request_metadata, dict) and isinstance(request_metadata.get("question_first_checkpoint"), dict):
+            durable_checkpoint = request_metadata.get("question_first_checkpoint")
+        elif isinstance(source_payload.get("question_first_checkpoint"), dict):
+            durable_checkpoint = source_payload.get("question_first_checkpoint")
+        elif (
+            isinstance(source_payload.get("metadata"), dict)
+            and isinstance(source_payload.get("metadata", {}).get("question_first_checkpoint"), dict)
+        ):
+            durable_checkpoint = source_payload.get("metadata", {}).get("question_first_checkpoint")
+        persisted_checkpoint = await self._load_persisted_question_first_checkpoint(entity_id=entity_id)
+        durable_checkpoint = self._select_richest_question_first_checkpoint(
+            durable_checkpoint if isinstance(durable_checkpoint, dict) else None,
+            persisted_checkpoint,
+        )
         repair_meta = (
             source_payload.get("metadata", {}).get("question_first_repair")
             if isinstance(source_payload.get("metadata"), dict)
@@ -1146,9 +1593,16 @@ class PipelineOrchestrator:
                     source_payload=source_payload,
                     question_ids=capped_question_ids,
                 )
+        question_first_checkpoint: Dict[str, Any] = {}
+
         async def _opencode_progress_callback(event: Dict[str, Any]) -> None:
+            nonlocal question_first_checkpoint
             if not isinstance(event, dict):
                 return
+            question_first_checkpoint = self._merge_question_first_checkpoint_event(
+                checkpoint=question_first_checkpoint,
+                event=event,
+            )
             questions_answered = event.get("questions_answered")
             questions_total = event.get("questions_total")
             checkpoint = build_question_checkpoint_fields(
@@ -1175,9 +1629,67 @@ class PipelineOrchestrator:
                         if questions_answered is not None and questions_total is not None
                         else None
                     ),
+                    "question_first_checkpoint": deepcopy(question_first_checkpoint),
                     **checkpoint,
                 },
             )
+            if event.get("event_type") == "question_completed":
+                try:
+                    if self._has_provider_infrastructure_failure(question_first_checkpoint):
+                        await self._emit_phase_update(
+                            phase_callback,
+                            "dossier_generation",
+                            {
+                                "status": "provider_infrastructure_failure",
+                                **runtime_metadata,
+                                "failure_class": "provider_infrastructure_failure",
+                                "failure_reason": "provider_infrastructure_failure",
+                                "current_question_id": event.get("current_question_id"),
+                                "questions_answered": event.get("questions_answered"),
+                                "questions_total": event.get("questions_total"),
+                                "question_first_checkpoint": deepcopy(question_first_checkpoint),
+                            },
+                        )
+                        return
+                    completed_question = event.get("completed_question")
+                    if not isinstance(completed_question, dict):
+                        completed_question = {}
+                    completed_question_id = str(
+                        completed_question.get("question_id")
+                        or question_first_checkpoint.get("last_completed_question_id")
+                        or event.get("current_question_id")
+                        or question_first_checkpoint.get("questions_answered")
+                        or "checkpoint"
+                    ).strip()
+                    partial_dossier = self._build_partial_question_first_dossier(
+                        source_payload=source_payload,
+                        entity_id=entity_id,
+                        entity_name=entity_name,
+                        entity_type=entity_type,
+                        checkpoint=question_first_checkpoint,
+                        request_metadata=request_metadata,
+                    )
+                    await self._persist_question_first_dossier_snapshot(
+                        run_id=run_id,
+                        entity_id=entity_id,
+                        entity_name=entity_name,
+                        entity_type=entity_type,
+                        dossier=partial_dossier,
+                        question_first_meta=partial_dossier.get("question_first"),
+                        request_metadata=request_metadata,
+                        record_type="question_first_partial_dossier",
+                        record_id=f"{entity_id}:{completed_question_id}",
+                    )
+                except Exception as error:  # noqa: BLE001
+                    logger.warning(
+                        "question_first_partial_checkpoint_persist_failed",
+                        extra={
+                            "entity_id": entity_id,
+                            "entity_name": entity_name,
+                            "run_id": run_id,
+                            "error": str(error),
+                        },
+                    )
 
         merged_dossier = await question_first_runner.run_question_first_dossier_from_payload(
             source_payload=source_payload,
@@ -1188,6 +1700,8 @@ class PipelineOrchestrator:
             preset=source_payload.get("preset"),
             question_source_label=f"{entity_id}::question-first",
             progress_callback=_opencode_progress_callback,
+            question_first_checkpoint=durable_checkpoint if isinstance(durable_checkpoint, dict) else None,
+            resume=bool(durable_checkpoint),
         )
         final_dossier = merged_dossier if isinstance(merged_dossier, dict) else dossier
         if isinstance(final_dossier, dict):
@@ -1203,6 +1717,8 @@ class PipelineOrchestrator:
         dossier: Dict[str, Any],
         entity_id: str,
         entity_name: str,
+        entity_type: str,
+        run_id: str,
         request_metadata: Optional[Dict[str, Any]] = None,
         phase_callback: Optional[Any] = None,
     ) -> Dict[str, Any]:
@@ -1211,6 +1727,8 @@ class PipelineOrchestrator:
             "dossier": dossier,
             "entity_id": entity_id,
             "entity_name": entity_name,
+            "entity_type": entity_type,
+            "run_id": run_id,
             "request_metadata": request_metadata,
         }
         try:

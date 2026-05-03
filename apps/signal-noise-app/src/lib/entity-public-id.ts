@@ -1,5 +1,5 @@
 import { v5 as uuidv5 } from 'uuid'
-import entityUuidAliases from '@/lib/entity-public-id-aliases.js'
+import entityUuidAliases from './entity-public-id-aliases.js'
 
 type PublicIdEntity = {
   uuid?: unknown
@@ -45,8 +45,17 @@ function getSourceSeed(entity: PublicIdEntity): string {
   return [fallbackType, fallbackName].filter(Boolean).join('|') || 'entity'
 }
 
-export function resolveEntityUuid(entity: PublicIdEntity | null | undefined): string | null {
+export function resolveEntityUuid(entity: PublicIdEntity | string | null | undefined): string | null {
   if (!entity) return null
+
+  if (typeof entity === 'string') {
+    const text = toText(entity)
+    if (!text) return null
+    const canonicalAlias = entityUuidAliases.resolveCanonicalEntityUuidAlias(text)
+    if (canonicalAlias) return canonicalAlias
+    if (/^[0-9a-f-]{36}$/i.test(text)) return text
+    return uuidv5(text, ENTITY_PUBLIC_ID_NAMESPACE)
+  }
 
   const aliasCandidates = [
     entity.canonical_entity_id,
@@ -62,6 +71,7 @@ export function resolveEntityUuid(entity: PublicIdEntity | null | undefined): st
     entity.id,
   ]
 
+  let fallbackSeed: string | null = null
   for (const candidate of aliasCandidates) {
     const text = toText(candidate)
     if (!text) continue
@@ -69,10 +79,11 @@ export function resolveEntityUuid(entity: PublicIdEntity | null | undefined): st
     const canonicalAlias = entityUuidAliases.resolveCanonicalEntityUuidAlias(text)
     if (canonicalAlias) return canonicalAlias
 
-    if (text) return text
+    if (/^[0-9a-f-]{36}$/i.test(text)) return text
+    fallbackSeed = fallbackSeed || text
   }
 
-  return uuidv5(getSourceSeed(entity), ENTITY_PUBLIC_ID_NAMESPACE)
+  return uuidv5(fallbackSeed || getSourceSeed(entity), ENTITY_PUBLIC_ID_NAMESPACE)
 }
 
 export function matchesEntityUuid(entity: PublicIdEntity | null | undefined, candidateUuid: string | null | undefined): boolean {

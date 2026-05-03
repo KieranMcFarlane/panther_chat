@@ -29,6 +29,8 @@ from dataclasses import dataclass, asdict
 from enum import Enum
 from pathlib import Path
 
+from canonical_ids import normalize_canonical_entity_id
+
 # Load environment variables from .env.local
 project_root = Path(__file__).parent.parent
 env_files = [
@@ -616,12 +618,12 @@ class GraphitiService:
             or run_payload.get("entity_type")
             or "CLUB"
         ).strip().upper() or "CLUB"
-        canonical_entity_id = str(
+        canonical_entity_id = normalize_canonical_entity_id(
             dossier.get("canonical_entity_id")
             or metadata.get("canonical_entity_id")
             or run_payload.get("canonical_entity_id")
-            or ""
-        ).strip() or None
+            or entity_id
+        )
 
         record = {
             "entity_id": entity_id,
@@ -647,7 +649,59 @@ class GraphitiService:
         }
         # Upsert avoids race conditions and duplicate key insert failures across retries/workers.
         conflict_key = "canonical_entity_id" if canonical_entity_id else "entity_id"
+        incoming_answer_count = self._question_first_checkpoint_answer_count(dossier)
+        try:
+            existing_response = (
+                self.supabase_client.table("entity_dossiers")
+                .select("dossier_data")
+                .eq(conflict_key, canonical_entity_id if conflict_key == "canonical_entity_id" else entity_id)
+                .limit(1)
+                .execute()
+            )
+            existing_rows = existing_response.data or []
+            existing_dossier = (
+                existing_rows[0].get("dossier_data")
+                if existing_rows and isinstance(existing_rows[0], dict)
+                else None
+            )
+            existing_answer_count = self._question_first_checkpoint_answer_count(existing_dossier)
+            if existing_answer_count > incoming_answer_count:
+                logger.info(
+                    "Skipping entity_dossier downgrade for %s: existing_checkpoint=%s incoming_checkpoint=%s",
+                    entity_id,
+                    existing_answer_count,
+                    incoming_answer_count,
+                )
+                return
+        except Exception as error:  # noqa: BLE001
+            logger.warning(
+                "entity_dossier_existing_checkpoint_lookup_failed",
+                extra={"entity_id": entity_id, "error": str(error)},
+            )
         self.supabase_client.table("entity_dossiers").upsert(record, on_conflict=conflict_key).execute()
+
+    @staticmethod
+    def _question_first_checkpoint_answer_count(dossier: Any) -> int:
+        if not isinstance(dossier, dict):
+            return 0
+        checkpoint = dossier.get("question_first_checkpoint")
+        if not isinstance(checkpoint, dict):
+            metadata = dossier.get("metadata")
+            if isinstance(metadata, dict) and isinstance(metadata.get("question_first_checkpoint"), dict):
+                checkpoint = metadata.get("question_first_checkpoint")
+        if isinstance(checkpoint, dict):
+            try:
+                return max(0, int(checkpoint.get("questions_answered") or 0))
+            except (TypeError, ValueError):
+                return 0
+        question_first = dossier.get("question_first")
+        if isinstance(question_first, dict):
+            try:
+                return max(0, int(question_first.get("questions_answered") or 0))
+            except (TypeError, ValueError):
+                answers = question_first.get("answers")
+                return len(answers) if isinstance(answers, list) else 0
+        return 0
 
     async def persist_pipeline_record_falkordb(self, envelope: Dict[str, Any]) -> Dict[str, Any]:
         """

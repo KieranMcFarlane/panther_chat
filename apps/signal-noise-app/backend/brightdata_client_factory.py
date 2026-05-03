@@ -17,7 +17,7 @@ from typing import Any, Callable, Optional
 logger = logging.getLogger(__name__)
 _PIPELINE_BRIGHTDATA_CLIENT_CACHE: Any | None = None
 _PIPELINE_BRIGHTDATA_CLIENT_CACHE_KEY: tuple[Any, ...] | None = None
-DEFAULT_BRIGHTDATA_FASTMCP_URL = "http://127.0.0.1:8000/mcp/"
+DEFAULT_BRIGHTDATA_FASTMCP_URL = "http://127.0.0.1:8014/mcp/"
 
 
 def _normalize_fastmcp_url(url: str) -> str:

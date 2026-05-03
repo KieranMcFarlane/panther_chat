@@ -547,11 +547,12 @@ class EntityDossierGenerator:
 
             # PHASE 0 ENHANCEMENT: Collect Yellow Panther team data for Connections analysis
             try:
-                from backend.connections_analyzer import YELLOW_PANTHER_TEAM, format_connections_for_dossier
+                from backend.yp_team_roster import load_active_yp_team
 
                 # Add YP team data for Connections section
+                yp_team = load_active_yp_team()
                 yp_team_summary = []
-                for yp_member in YELLOW_PANTHER_TEAM:
+                for yp_member in yp_team:
                     yp_team_summary.append(f"""
 - {yp_member['yp_name']} ({yp_member['yp_role']}): {yp_member.get('yp_expertise_1', '')}, {yp_member.get('yp_expertise_2', '')}, {yp_member.get('yp_expertise_3', '')}
   LinkedIn: {yp_member.get('yp_linkedin', 'N/A')}
@@ -559,7 +560,7 @@ class EntityDossierGenerator:
 """)
 
                 entity_data["yp_team_data"] = "\n".join(yp_team_summary)
-                entity_data["yp_team_members"] = len(YELLOW_PANTHER_TEAM)
+                entity_data["yp_team_members"] = len(yp_team)
 
                 logger.info(f"✅ Yellow Panther team data added: {entity_data['yp_team_members']} members")
 

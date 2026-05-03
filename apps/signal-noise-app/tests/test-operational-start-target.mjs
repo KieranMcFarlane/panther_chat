@@ -94,3 +94,65 @@ test('start prefers the next upcoming entity when the running section is empty',
   assert.equal(target?.questionId, null)
   assert.equal(target?.mode, 'full')
 })
+
+test('start prefers a resumable entity over upcoming work in the entities section', () => {
+  const target = resolvePipelineStartTarget({
+    activeSection: 'entities',
+    drilldown: {
+      queue: {
+        in_progress_entity: null,
+        stale_active_rows: [],
+        resume_needed_entities: [
+          {
+            entity_id: 'arsenal-fc',
+            current_question_id: 'q7_procurement_signal',
+            next_repair_question_id: 'q11_decision_owner',
+          },
+        ],
+        completed_entities: [],
+        upcoming_entities: [
+          {
+            entity_id: 'fifa',
+            current_question_id: null,
+            next_repair_question_id: null,
+          },
+        ],
+      },
+    },
+  })
+
+  assert.equal(target?.entityId, 'arsenal-fc')
+  assert.equal(target?.questionId, 'q11_decision_owner')
+  assert.equal(target?.mode, 'question')
+})
+
+test('start prefers a resumable entity over a completed entity in the completed section', () => {
+  const target = resolvePipelineStartTarget({
+    activeSection: 'completed',
+    drilldown: {
+      queue: {
+        in_progress_entity: null,
+        stale_active_rows: [],
+        resume_needed_entities: [
+          {
+            entity_id: 'arsenal-fc',
+            current_question_id: 'q7_procurement_signal',
+            next_repair_question_id: null,
+          },
+        ],
+        completed_entities: [
+          {
+            entity_id: 'fc-porto-2027',
+            current_question_id: null,
+            next_repair_question_id: 'q11_decision_owner',
+          },
+        ],
+        upcoming_entities: [],
+      },
+    },
+  })
+
+  assert.equal(target?.entityId, 'arsenal-fc')
+  assert.equal(target?.questionId, 'q7_procurement_signal')
+  assert.equal(target?.mode, 'question')
+})

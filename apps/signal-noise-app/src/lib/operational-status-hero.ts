@@ -1,5 +1,9 @@
 import type { OperationalDrilldownPayload } from '@/lib/operational-drilldown-client'
 import { buildCheckpointSummary, formatCheckpointQuestionProgress, formatCheckpointSourceOrder } from '@/lib/operational-checkpoint'
+import {
+  buildOperationalSafetyStopHint,
+  getOperationalStopDetails,
+} from '@/lib/operational-safety-stop'
 
 type ControlState = OperationalDrilldownPayload['control']
 type QueueEntity = NonNullable<OperationalDrilldownPayload['queue']['in_progress_entity']> & {
@@ -104,6 +108,10 @@ function formatRelativeTimestamp(value: string | null | undefined, prefix: strin
   return `${prefix} just now`
 }
 
+function shouldHidePlaceholderValue(value: string) {
+  return /unavailable/i.test(value) || /not available/i.test(value)
+}
+
 function formatExactTimestamp(value: string | null | undefined) {
   if (!value) return 'Not available'
   const timestamp = new Date(value)
@@ -125,8 +133,9 @@ export function buildOperationalStatusHero(input: {
   const liveState = input.drilldown?.live_state ?? null
   const backlogHealth = input.drilldown?.backlog_health ?? null
   const runtime = input.drilldown?.runtime ?? null
-  const currentLiveRun = liveState?.current_live_run ?? liveState?.current_run ?? runtime?.current_live_run ?? runtime?.current_run ?? null
+  const currentLiveRun = liveState?.current_live_run ?? runtime?.current_live_run ?? null
   const inProgressEntity = liveState?.in_progress_entity ?? input.drilldown?.queue?.in_progress_entity ?? null
+  const resumeNeededEntity = input.drilldown?.queue?.resume_needed_entities?.[0] ?? null
   const latestNoteworthyEntity = input.drilldown?.queue?.latest_noteworthy_entity ?? input.drilldown?.queue?.completed_entities?.[0] ?? null
   const queuedEntityCount = input.drilldown?.queue?.upcoming_entities?.length ?? 0
   const completedEntities = input.drilldown?.queue?.completed_entities ?? []
@@ -136,6 +145,11 @@ export function buildOperationalStatusHero(input: {
   const controlUpdatedExactLabel = formatExactTimestamp(input.controlState?.updated_at ?? null)
   const requestedState = input.controlState?.requested_state ?? (input.controlState?.is_paused === true ? 'paused' : 'running')
   const transitionState = input.controlState?.transition_state ?? input.controlState?.observed_state ?? null
+  const liveOperationalState = input.drilldown?.operational_state ?? liveState?.operational_state ?? null
+  const { isSafetyStop, stopReason, stopDetails } = getOperationalStopDetails(
+    input.drilldown,
+    input.controlState,
+  )
   const pipelinePaused = requestedState === 'paused'
   const workerState = liveState?.worker_process_state
     || input.controlState?.transition_state
@@ -152,7 +166,13 @@ export function buildOperationalStatusHero(input: {
       || inProgressEntity.next_repair_batch_id
     ),
   )
-  const currentCheckpoint = currentLiveRun || inProgressEntity
+  const activeExecutionCheckpoint = pipelinePaused
+    ? null
+    : currentLiveRun
+      ? (inProgressEntity || currentLiveRun)
+      : null
+  const pausedCheckpoint = resumeNeededEntity ?? inProgressEntity ?? latestNoteworthyEntity
+  const currentCheckpoint = activeExecutionCheckpoint || (pipelinePaused ? pausedCheckpoint : null)
   const activeQuestionLabel = currentCheckpoint
     ? formatQuestionLabel(
       currentCheckpoint.current_question_text,
@@ -161,11 +181,11 @@ export function buildOperationalStatusHero(input: {
     : null
   const checkpointSummary = buildCheckpointSummary(currentCheckpoint)
   const questionProgressLabel = formatCheckpointQuestionProgress(currentCheckpoint)
-  const currentSectionLabel = toText(currentCheckpoint?.current_section_label) || 'Unavailable'
-  const currentExecutionState = toText(currentCheckpoint?.current_execution_state) || 'Unavailable'
-  const currentStrategyLabel = toText(currentCheckpoint?.current_strategy_label) || 'Unavailable'
+  const currentSectionLabel = toText(currentCheckpoint?.current_section_label) || null
+  const currentExecutionState = toText(currentCheckpoint?.current_execution_state) || null
+  const currentStrategyLabel = toText(currentCheckpoint?.current_strategy_label) || null
   const currentSourceOrder = formatCheckpointSourceOrder(currentCheckpoint?.current_source_order)
-  const elapsedLabel = currentLiveRun && inProgressEntity
+  const elapsedLabel = activeExecutionCheckpoint && inProgressEntity
     ? formatRunningDuration(inProgressEntity.started_at || inProgressEntity.generated_at)
     : null
   const substepLabel = formatSubstepLabel(
@@ -191,16 +211,26 @@ export function buildOperationalStatusHero(input: {
     : queuedEntityCount > 0
       ? 'Start will queue the next claimable entity from the list.'
       : 'Start will queue the next claimable entity.'
+  const hasPausedResumeCheckpoint = Boolean(
+    pipelinePaused && pausedCheckpoint && !isSafetyStop,
+  )
+  const pausedResumeEntityName = toText(currentCheckpoint?.entity_name) || 'Checkpoint'
+  const pausedResumeQuestionLabel = activeQuestionLabel || 'Question rerun ready'
+  const pausedStopMarquee = stopReason ? `Paused — ${stopReason}` : null
+  const safetyStopHint = buildOperationalSafetyStopHint({ stopReason, stopDetails })
+
   const headline = isStopping
     ? 'Stopping intake…'
     : isStarting
       ? 'Starting intake…'
-      : pipelinePaused
-        ? 'Pipeline paused'
+      : hasPausedResumeCheckpoint
+        ? 'Paused — resumable checkpoint ready'
+        : pipelinePaused
+          ? 'Pipeline paused'
         : repairFocus && inProgressEntity
           ? `Repairing ${inProgressEntity.entity_name}…`
-          : currentLiveRun && inProgressEntity
-            ? `Processing ${inProgressEntity.entity_name}…`
+        : activeExecutionCheckpoint && inProgressEntity
+          ? `Processing ${inProgressEntity.entity_name}…`
             : isStopped
               ? 'Pipeline stopped'
               : 'Waiting for claimable work.'
@@ -209,23 +239,31 @@ export function buildOperationalStatusHero(input: {
     ? 'Pipeline is safely shutting down. No new work is being accepted.'
     : isStarting
       ? 'Pipeline is starting. Claimable work will be queued again as soon as the worker is ready.'
-      : pipelinePaused
-        ? 'Pipeline intake is paused. No new work is being accepted.'
-        : currentLiveRun && inProgressEntity
+      : hasPausedResumeCheckpoint
+        ? `${pausedResumeEntityName} · question rerun ready. Start pipeline to resume from the saved checkpoint.`
+        : isSafetyStop
+          ? `Pipeline intake is paused because ${stopReason}. Resolve the stop condition before resuming.`
+        : pipelinePaused
+          ? 'Pipeline intake is paused. No new work is being accepted.'
+        : activeExecutionCheckpoint && inProgressEntity
           ? `Currently processing ${inProgressEntity.entity_name}.`
           : isStopped
             ? 'No new work is being processed until the pipeline is started.'
             : 'The queue is waiting for claimable work.'
 
-  const issueSummary = freshnessState === 'stale'
-    ? 'Operational snapshot is lagging behind recent pipeline activity.'
+  const issueSummary = hasPausedResumeCheckpoint
+    ? null
+    : isSafetyStop
+      ? `Pipeline paused because ${stopReason}.`
+    : freshnessState === 'stale'
+      ? 'Operational snapshot is lagging behind recent pipeline activity.'
     : pipelinePaused || isStopping
     ? (queuedEntityCount > 0
       ? `Pipeline paused with ${queuedEntityCount} queued entities waiting.`
       : workerState === 'running'
         ? 'Pipeline intake is paused. Worker is idle.'
         : 'No active worker.')
-    : !currentLiveRun && latestNoteworthyEntity && (
+    : !activeExecutionCheckpoint && latestNoteworthyEntity && (
       latestNoteworthyEntity.publication_status === 'published_degraded'
       || latestNoteworthyEntity.freshness_state === 'stale'
     )
@@ -241,7 +279,7 @@ export function buildOperationalStatusHero(input: {
         ? (inProgressEntity ? `Repair queue active for ${inProgressEntity.entity_name}.` : 'Repair queue is active.')
         : null
 
-  const primaryActionRecommended = pipelinePaused || isStopped || isWaiting
+  const primaryActionRecommended = isSafetyStop ? false : pipelinePaused || isStopped || isWaiting
   const primaryActionLabel = isStarting
     ? 'Starting pipeline…'
     : isStopping
@@ -255,47 +293,71 @@ export function buildOperationalStatusHero(input: {
       ? 'Stopping pipeline intake'
       : pipelinePaused || isStopped
         ? 'Start pipeline intake'
-        : currentLiveRun
+        : activeExecutionCheckpoint
           ? 'Stop pipeline intake after the current work item finishes'
           : 'Stop pipeline intake'
   const primaryActionHint = pipelinePaused || isStopped
-    ? `${currentTargetHint}`
-    : currentLiveRun
+    ? isSafetyStop
+      ? safetyStopHint
+      : `${currentTargetHint}`
+    : activeExecutionCheckpoint
       ? 'Stop pipeline intake after the current work item finishes.'
       : 'Stop pipeline intake.'
 
-  const detailRows = [
-    { label: 'Requested', value: requestedState },
-    { label: 'Worker', value: workerState },
-    { label: 'Activity', value: pipelinePaused ? 'paused' : currentLiveRun && inProgressEntity ? (repairFocus ? 'repairing' : 'running') : isStopped ? 'stopped' : 'waiting' },
-    { label: 'Current section', value: currentSectionLabel },
-    { label: 'Sub-step', value: substepLabel || 'Unavailable' },
-    { label: 'Question progress', value: questionProgressLabel || 'Unavailable' },
-    { label: 'Current question', value: activeQuestionLabel || 'Question unavailable' },
-    { label: 'Execution state', value: currentExecutionState },
-    { label: 'Strategy', value: currentStrategyLabel },
-    { label: 'Source order', value: currentSourceOrder },
-    { label: 'Sub-step progress', value: substepProgress || 'Unavailable' },
-    { label: 'Elapsed', value: elapsedLabel || 'Not running' },
-    { label: 'Last completed', value: completedEntities[0]
-      ? `${completedEntities[0].entity_name} · ${formatQuestionLabel(completedEntities[0].last_completed_question_text || completedEntities[0].current_question_text, completedEntities[0].current_question_id || completedEntities[0].active_question_id)}`
-      : 'No recent completions' },
-    { label: 'Last activity', value: formatRelativeTimestamp(lastActivityAt, 'Activity') },
-    { label: 'Freshness', value: freshnessState },
-    { label: 'Control updated', value: controlUpdatedLabel },
-    { label: 'Updated at', value: controlUpdatedExactLabel },
-  ] satisfies OperationalStatusHeroDetailRow[]
+  const detailRows: OperationalStatusHeroDetailRow[] = []
+  const pushDetailRow = (label: string, value: string | null | undefined) => {
+    const text = toText(value)
+    if (!text) return
+    if (shouldHidePlaceholderValue(text)) return
+    detailRows.push({ label, value: text })
+  }
 
-  const debugSummary = currentLiveRun && inProgressEntity
+  pushDetailRow('Pipeline intake', requestedState)
+  pushDetailRow('Worker process', workerState)
+  pushDetailRow('Current activity', pipelinePaused
+    ? 'paused'
+    : liveOperationalState || (currentLiveRun && inProgressEntity ? (repairFocus ? 'repairing' : 'running') : isStopped ? 'stopped' : 'waiting'))
+
+  if (activeExecutionCheckpoint && inProgressEntity) {
+    pushDetailRow('Current section', currentSectionLabel)
+    pushDetailRow('Sub-step', substepLabel)
+    pushDetailRow('Question progress', questionProgressLabel)
+    pushDetailRow('Execution state', currentExecutionState)
+    pushDetailRow('Strategy', currentStrategyLabel)
+    pushDetailRow('Source order', currentSourceOrder)
+    pushDetailRow('Sub-step progress', substepProgress)
+  }
+
+  pushDetailRow('Current question', activeQuestionLabel)
+  pushDetailRow('Elapsed', elapsedLabel || 'Not running')
+  pushDetailRow(
+    'Last completed',
+    completedEntities[0]
+      ? `${completedEntities[0].entity_name} · ${formatQuestionLabel(
+          completedEntities[0].last_completed_question_text || completedEntities[0].current_question_text,
+          completedEntities[0].current_question_id || completedEntities[0].active_question_id,
+        )}`
+      : 'No recent completions',
+  )
+  pushDetailRow('Last activity', formatRelativeTimestamp(lastActivityAt, 'Activity'))
+  pushDetailRow('Freshness', freshnessState)
+  pushDetailRow('Control updated', controlUpdatedLabel)
+  pushDetailRow('Updated at', controlUpdatedExactLabel)
+
+  const debugSummary = activeExecutionCheckpoint && inProgressEntity
     ? `${inProgressEntity.entity_name} · ${checkpointSummary || inProgressEntity.run_phase || inProgressEntity.current_stage || 'entity_registration'}`
     : null
-  const debugCompactLine = currentLiveRun && inProgressEntity
+  const debugCompactLine = activeExecutionCheckpoint && inProgressEntity
     ? `Session: ${inProgressEntity.entity_id} · ${checkpointSummary || inProgressEntity.run_phase || inProgressEntity.current_stage || 'n/a'} · heartbeat ${formatRunningDuration(inProgressEntity.started_at || inProgressEntity.generated_at)} ago`
     : null
-  const marqueeLine = currentCheckpoint
+  const marqueeLine = hasPausedResumeCheckpoint
+    ? headline
+    : isSafetyStop && pausedStopMarquee
+      ? pausedStopMarquee
+    : currentCheckpoint
     ? [
         `Checkpoint: ${currentCheckpoint.entity_name}`,
-        checkpointSummary || stageLabel || 'Question unavailable',
+        checkpointSummary || pausedResumeQuestionLabel || stageLabel || 'Question unavailable',
         elapsedLabel ? `Elapsed ${elapsedLabel}` : null,
       ].filter(Boolean).join(' • ')
     : headline

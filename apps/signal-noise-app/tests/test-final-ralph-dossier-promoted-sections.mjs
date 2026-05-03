@@ -10,4 +10,8 @@ test('final club dossier reads promoted question-first discovery summary inside 
   assert.match(finalClubDossierSource, /Evidence-backed opportunity signals/)
   assert.match(finalClubDossierSource, /Promoted decision owners/)
   assert.match(finalClubDossierSource, /Promoted timing and procurement/)
+  assert.match(finalClubDossierSource, /timing_analysis/)
+  assert.match(finalClubDossierSource, /connections_summary/)
+  assert.match(finalClubDossierSource, /Recommended next step/)
+  assert.match(finalClubDossierSource, /Recommended Yellow Panther owner/)
 })

@@ -29,6 +29,16 @@ test('local Postgres Supabase shim supports grouped aggregate queries still used
   assert.match(pgClientSource, /GROUP BY/)
 })
 
+test('local Postgres client defaults to the Unix socket DSN instead of TCP localhost', () => {
+  assert.match(pgClientSource, /postgresql:\/\/\/signal_noise_app\?host=\/tmp/)
+  assert.doesNotMatch(pgClientSource, /postgresql:\/\/localhost:5432\/signal_noise_app/)
+})
+
+test('local Postgres client keeps a slightly larger pool and longer acquire timeout for the polling dashboard', () => {
+  assert.match(pgClientSource, /max:\s*20/)
+  assert.match(pgClientSource, /connectionTimeoutMillis:\s*30000/)
+})
+
 test('supabase-cache preserves the legacy cacheService surface during the local Postgres migration', () => {
   assert.match(supabaseCacheSource, /export class SupabaseCacheService/)
   assert.match(supabaseCacheSource, /async initialize\(\)/)

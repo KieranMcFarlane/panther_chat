@@ -7,11 +7,19 @@ const dashboardSourcePath = new URL('../src/components/home/HomeQueueDashboard.t
 const stripSourcePath = new URL('../src/components/layout/OperationalStatusStrip.tsx', import.meta.url)
 const dashboardApiPath = new URL('../src/app/api/home/queue-dashboard/route.ts', import.meta.url)
 const dashboardLoaderPath = new URL('../src/lib/home-queue-dashboard.ts', import.meta.url)
+const queueDrilldownApiPath = new URL('../src/app/api/home/queue-drilldown/route.ts', import.meta.url)
+const pipelineRuntimePath = new URL('../src/lib/pipeline-runtime.ts', import.meta.url)
+const operationalHeroPath = new URL('../src/lib/operational-status-hero.ts', import.meta.url)
+const workerSourcePath = new URL('../backend/entity_pipeline_worker.py', import.meta.url)
 
 let dashboardSource = ''
 let stripSource = ''
 let dashboardApiSource = ''
 let dashboardLoaderSource = ''
+let queueDrilldownApiSource = ''
+let pipelineRuntimeSource = ''
+let operationalHeroSource = ''
+let workerSource = ''
 try {
   dashboardSource = readFileSync(dashboardSourcePath, 'utf8')
 } catch {}
@@ -24,6 +32,18 @@ try {
 try {
   dashboardLoaderSource = readFileSync(dashboardLoaderPath, 'utf8')
 } catch {}
+try {
+  queueDrilldownApiSource = readFileSync(queueDrilldownApiPath, 'utf8')
+} catch {}
+try {
+  pipelineRuntimeSource = readFileSync(pipelineRuntimePath, 'utf8')
+} catch {}
+try {
+  operationalHeroSource = readFileSync(operationalHeroPath, 'utf8')
+} catch {}
+try {
+  workerSource = readFileSync(workerSourcePath, 'utf8')
+} catch {}
 
 test('home page mounts the live queue dashboard instead of relying on the old static opportunity-only surface', () => {
   assert.match(homePageSource, /HomeQueueDashboard/)
@@ -34,6 +54,8 @@ test('home queue dashboard renders loop status, queue lanes, client-ready dossie
   assert.match(dashboardSource, /In progress now/)
   assert.match(dashboardSource, /Completed recently/)
   assert.match(dashboardSource, /Coming up next/)
+  assert.match(dashboardSource, /Canonical entity/)
+  assert.match(dashboardSource, /formatPlaylistSortKey\(playlist_sort_key\)/)
   assert.match(dashboardSource, /Repair run|Full run/)
   assert.match(dashboardSource, /Published degraded|Published healthy|Reconciliation pending/i)
   assert.match(dashboardSource, /Auto-repair queued|Repairing|Exhausted/i)
@@ -49,12 +71,15 @@ test('home queue dashboard renders loop status, queue lanes, client-ready dossie
 test('live ops strip exposes compact ignition mode with expand and minimize controls', () => {
   assert.match(stripSource, /Expand|Minimize/)
   assert.match(stripSource, /maxHeight:\s*isExpanded \? '40rem' : '7rem', padding: '0.7rem'/)
-  assert.match(stripSource, /Start pipeline|Stop pipeline|Starting pipeline…|Stopping pipeline…/)
   assert.match(stripSource, /animate-marquee/)
-  assert.match(stripSource, /Universe/)
+  assert.match(stripSource, /isSafetyStop \? compactTicker : null/)
+  assert.match(stripSource, /Completed/)
+  assert.match(stripSource, /currentUniverseProgressLabel/)
+  assert.match(stripSource, /Fast MCP \${fastmcpHealth}/)
+  assert.match(stripSource, /league_priority ASC/)
   assert.match(stripSource, /Running now/)
   assert.match(stripSource, /Blocked \/ partial/)
-  assert.match(stripSource, /Recent completions/)
+  assert.match(stripSource, /Canonical entity/)
   assert.match(stripSource, /Waiting|Starting|Stopping|Running|Paused|Repairing/)
   assert.match(stripSource, /Waiting for claimable work/)
   assert.match(stripSource, /buildOperationalStatusHero/)
@@ -64,13 +89,18 @@ test('live ops strip exposes compact ignition mode with expand and minimize cont
   assert.match(stripSource, /Stale \/ blocked/)
   assert.match(stripSource, /Completed/)
   assert.match(stripSource, /Recommended/)
+  assert.match(stripSource, /runtimeCheckpointFailed/)
+  assert.match(stripSource, /getOperationalStopDetails/)
   assert.match(stripSource, /Issue detected/)
   assert.match(stripSource, /System details/)
   assert.match(stripSource, /Current question:/)
+  assert.match(stripSource, /Historical stale rows/)
+  assert.doesNotMatch(stripSource, /Backlog diagnostics: stale rows/)
   assert.doesNotMatch(stripSource, /Show run details|Hide run details/)
   assert.doesNotMatch(stripSource, /requested: .*acknowledged: .*running: .*paused:/i)
   assert.doesNotMatch(stripSource, /No entity is actively running right now/)
   assert.doesNotMatch(stripSource, /No entities are currently running\./)
+  assert.doesNotMatch(stripSource, /Start pipeline intake|Stop pipeline intake/)
 })
 
 test('home queue dashboard API exposes the normalized payload contract for loop status, queue, dossiers, rfp cards, and sales summary', () => {
@@ -78,6 +108,8 @@ test('home queue dashboard API exposes the normalized payload contract for loop 
   assert.match(dashboardApiSource, /operational_state/)
   assert.match(dashboardApiSource, /freshness_state/)
   assert.match(dashboardApiSource, /loop_status/)
+  assert.match(dashboardApiSource, /processed_dossiers/)
+  assert.match(dashboardApiSource, /processed_entities/)
   assert.match(dashboardApiSource, /runtime_counts/)
   assert.match(dashboardApiSource, /completed_entities/)
   assert.match(dashboardApiSource, /in_progress_entity/)
@@ -108,18 +140,17 @@ test('home queue dashboard drilldown contract carries ignition control state and
   assert.match(dashboardLoaderSource, /next_action|Next action/)
 })
 
-test('home queue dashboard payload includes dossier quality counts, incomplete artifacts, and the rollout proof set', () => {
+test('home queue dashboard payload includes dossier quality counts and incomplete artifacts', () => {
   assert.match(dashboardSource, /Running now/)
   assert.match(dashboardSource, /Resume needed/)
   assert.match(dashboardSource, /Needs full-pack completion/)
-  assert.match(dashboardSource, /Rollout proof set/)
+  assert.doesNotMatch(dashboardSource, /Rollout proof set/)
   assert.match(dashboardSource, /Queue this entity/)
   assert.match(dashboardLoaderSource, /quality_counts/)
   assert.match(dashboardLoaderSource, /runtime_counts/)
   assert.match(dashboardLoaderSource, /resume_needed_entities/)
   assert.match(dashboardLoaderSource, /buildRuntimeCounts/)
   assert.match(dashboardLoaderSource, /buildDossierQualityOverview/)
-  assert.match(dashboardLoaderSource, /buildRolloutProofSet/)
   assert.match(dashboardLoaderSource, /rollout_proof_set/)
   assert.match(dashboardLoaderSource, /incomplete_entities/)
   assert.match(dashboardLoaderSource, /publication_status/)
@@ -129,16 +160,70 @@ test('home queue dashboard payload includes dossier quality counts, incomplete a
   assert.match(dashboardLoaderSource, /isActiveRepairFocus/)
 })
 
-test('home queue dashboard loader prefers Supabase pipeline runs and keeps manifest ordering for production queue state', () => {
+test('home queue dashboard loader prefers persisted pipeline runs and keeps manifest ordering for production queue state', () => {
   assert.match(dashboardLoaderSource, /cachedEntitiesSupabase as supabase/)
   assert.match(dashboardLoaderSource, /\.from\('entity_pipeline_runs'\)/)
   assert.match(dashboardLoaderSource, /buildLoopStatusFromRuns/)
   assert.match(dashboardLoaderSource, /buildQueueStateFromDiagnostics/)
-  assert.match(dashboardLoaderSource, /manifestEntities\.map\(\(entity\) => entity\.entity_id\)/)
+  assert.match(dashboardLoaderSource, /sortQuestionFirstManifestEntities\(manifestEntities, canonicalEntities\)/)
+  assert.match(dashboardLoaderSource, /orderedManifestEntities\.map\(\(entity\) => entity\.entity_id\)/)
   assert.match(dashboardLoaderSource, /loadPipelineRuntimeReadSet/)
   assert.match(dashboardLoaderSource, /buildPipelineRuntimeSnapshot/)
   assert.match(dashboardLoaderSource, /current_live_run/)
   assert.match(dashboardLoaderSource, /applyRuntimeOverride/)
+})
+
+test('live progress projection uses nested phase metadata instead of stale worker placeholders', () => {
+  assert.match(pipelineRuntimeSource, /export function buildPipelineRuntimeRunRecord/)
+  assert.match(pipelineRuntimeSource, /phase_details_by_phase/)
+  assert.match(pipelineRuntimeSource, /selectWorkerReferencedRun/)
+  assert.match(pipelineRuntimeSource, /currentLiveRun = selectCurrentLiveRun\(runtimeRecords\) \?\? workerReferencedRun/)
+  assert.match(queueDrilldownApiSource, /buildPipelineRuntimeRunRecord/)
+  assert.match(queueDrilldownApiSource, /current_section_label: runtimeRecord\.current_section_label/)
+  assert.match(queueDrilldownApiSource, /current_substep_progress: runtimeRecord\.current_substep_progress/)
+  assert.match(queueDrilldownApiSource, /current_strategy_label: runtimeRecord\.current_strategy_label/)
+  assert.match(queueDrilldownApiSource, /execution_backend: runtimeRecord\.execution_backend/)
+  assert.match(operationalHeroSource, /Pipeline intake/)
+  assert.match(operationalHeroSource, /Current activity/)
+  assert.doesNotMatch(operationalHeroSource, /pushDetailRow\('Requested'/)
+  assert.doesNotMatch(operationalHeroSource, /pushDetailRow\('Activity'/)
+})
+
+test('pipeline runtime loads live running rows before queued backlog rows', () => {
+  assert.match(
+    pipelineRuntimeSource,
+    /CASE status\s+WHEN 'running' THEN 0\s+WHEN 'retrying' THEN 1\s+WHEN 'reconciling' THEN 2\s+WHEN 'queued' THEN 3/s,
+  )
+  assert.doesNotMatch(
+    pipelineRuntimeSource,
+    /\.in\('status', \['running', 'queued', 'retrying', 'reconciling'\]\)\s*\.order\('started_at'/,
+  )
+})
+
+test('entity pipeline worker promotes claimed runs to dossier generation before backend calls', () => {
+  assert.match(workerSource, /"phase": "dossier_generation"/)
+  assert.match(workerSource, /run = \{\s+\*\*run,\s+"status": "running",\s+"phase": "dossier_generation"/)
+  assert.match(workerSource, /result = self\.call_pipeline\(run, batch_id\)/)
+  assert.match(workerSource, /"failure_class"] = "entity_pipeline_timeout"/)
+  assert.match(workerSource, /"continue_pipeline_on_failure"] = True/)
+})
+
+test('auto-advance batches preserve canonical entity identity for dashboard and claim tooling', () => {
+  assert.match(workerSource, /"auto_advance_target_entity_id": next_entity_id/)
+  assert.match(workerSource, /"entity_id": next_entity_id/)
+  assert.match(workerSource, /"canonical_entity_id": canonical_entity_id or next_entity_id/)
+  assert.match(workerSource, /"entity_name": next_entity_name/)
+  assert.match(workerSource, /"entity_type": next_entity_type/)
+  assert.match(queueDrilldownApiSource, /auto_advance_target_entity_id/)
+  assert.match(queueDrilldownApiSource, /normalizeQueueIdentity/)
+})
+
+test('home dashboard exposes the canonical universe as a virtual queue with lazy rendering', () => {
+  assert.doesNotMatch(queueDrilldownApiSource, /const upcomingEntities = canonicalManifestEntities\s*\.filter\([^)]*\)\s*\.slice\(0, 8\)/)
+  assert.match(queueDrilldownApiSource, /canonicalQueuePositionByEntityId\.get\(entity\.entity_id\)/)
+  assert.match(dashboardSource, /visibleUpcomingCount/)
+  assert.match(dashboardSource, /Show more queued entities/)
+  assert.match(dashboardSource, /queue\.upcoming_entities\.slice\(0, visibleUpcomingCount\)/)
 })
 
 test('home queue dashboard loader keeps the published snapshot as fallback-only and computes live loop health from runtime timestamps', () => {
@@ -151,7 +236,8 @@ test('home queue dashboard loader keeps the published snapshot as fallback-only 
   assert.match(dashboardLoaderSource, /last_activity_at/)
   assert.match(dashboardLoaderSource, /selectQueueSource\(/)
   assert.match(dashboardLoaderSource, /loop_status:\s*runtimeSelectedSource\.loop_status/)
-  assert.match(dashboardLoaderSource, /queue:\s*runtimeSelectedSource\.queue/)
+  assert.match(dashboardLoaderSource, /processed_entities:\s*processedEntities/)
+  assert.match(dashboardLoaderSource, /queue:\s*\{\s*\.\.\.runtimeSelectedSource\.queue,/)
 })
 
 test('home queue dashboard UI reflects computed loop health instead of always claiming active looping', () => {

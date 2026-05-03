@@ -154,7 +154,7 @@ async def health_check(_request) -> PlainTextResponse:
 
 def main() -> None:
     host = os.getenv("BRIGHTDATA_FASTMCP_HOST", "127.0.0.1")
-    port = int(os.getenv("BRIGHTDATA_FASTMCP_PORT", "8000"))
+    port = int(os.getenv("BRIGHTDATA_FASTMCP_PORT", "8014"))
     logger.info("🌐 Starting BrightData FastMCP service on http://%s:%s/mcp", host, port)
     mcp.run(transport="http", host=host, port=port)
 

@@ -67,7 +67,7 @@ def test_create_pipeline_brightdata_client_uses_sdk_when_disabled(monkeypatch):
 def test_create_pipeline_brightdata_client_prefers_fastmcp_service(monkeypatch):
     monkeypatch.setenv("BRIGHTDATA_API_TOKEN", "token")
     monkeypatch.setenv("PIPELINE_USE_BRIGHTDATA_FASTMCP", "true")
-    monkeypatch.setenv("BRIGHTDATA_FASTMCP_URL", "http://127.0.0.1:8000/mcp")
+    monkeypatch.setenv("BRIGHTDATA_FASTMCP_URL", "http://127.0.0.1:8014/mcp")
     monkeypatch.setattr(factory, "_PIPELINE_BRIGHTDATA_CLIENT_CACHE", None, raising=False)
     monkeypatch.setattr(factory, "_PIPELINE_BRIGHTDATA_CLIENT_CACHE_KEY", None, raising=False)
 
@@ -86,7 +86,7 @@ def test_create_pipeline_brightdata_client_prefers_fastmcp_service(monkeypatch):
     )
 
     assert client.kind == "fastmcp"
-    assert captured == {"mcp_url": "http://127.0.0.1:8000/mcp/", "timeout": 4.5}
+    assert captured == {"mcp_url": "http://127.0.0.1:8014/mcp/", "timeout": 4.5}
 
 
 def test_create_pipeline_brightdata_client_defaults_fastmcp_to_local_service(monkeypatch):
@@ -111,7 +111,7 @@ def test_create_pipeline_brightdata_client_defaults_fastmcp_to_local_service(mon
     )
 
     assert client.kind == "fastmcp"
-    assert captured["mcp_url"] == "http://127.0.0.1:8000/mcp/"
+    assert captured["mcp_url"] == "http://127.0.0.1:8014/mcp/"
 
 
 def test_create_pipeline_brightdata_client_reuses_shared_instance(monkeypatch):
