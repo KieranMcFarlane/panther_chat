@@ -107,6 +107,11 @@ export type OperationalDrilldownPayload = {
   runtime?: {
     snapshot_at?: string | null
     generated_at?: string | null
+    state?: string | null
+    health_class?: string | null
+    last_self_heal_action?: string | null
+    last_self_heal_reason?: string | null
+    last_self_heal_at?: string | null
     worker?: {
       worker_process_state?: 'starting' | 'running' | 'stopping' | 'stopped' | 'crashed'
       worker_pid?: number | null

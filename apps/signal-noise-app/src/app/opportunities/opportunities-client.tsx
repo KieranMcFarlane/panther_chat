@@ -52,6 +52,10 @@ interface OpportunityCard {
   patternReasoning?: OpportunityPatternReasoning;
   ypFitReasoning: string;
   recommendedAction: string;
+  approachStrategy: string;
+  successRationale: string;
+  verificationCaveat: string;
+  strategyNextSteps: string;
   findings: OpportunityFinding[];
   timeline: OpportunityTimelineEvent[];
   relatedPatterns: OpportunityRelatedPattern[];
@@ -148,12 +152,18 @@ function conciseList(values: unknown[], limit = 3): string[] {
   return output;
 }
 
+function recordValue(value: unknown): Record<string, unknown> {
+  return value && typeof value === 'object' && !Array.isArray(value) ? value as Record<string, unknown> : {};
+}
+
 function normalizeOpportunity(opp: GraphitiOpportunityCard): OpportunityCard {
   const organization = opp.canonical_entity_name || opp.entity_name || opp.organization || 'Unknown organization';
   const fit = opp.yellow_panther_fit ?? 0;
   const confidence = opp.confidence ?? 0;
   const priority = opp.priority_score ?? 0;
   const metadata = typeof opp.metadata === 'object' && opp.metadata && !Array.isArray(opp.metadata) ? opp.metadata : {};
+  const commercialQualification = recordValue(metadata.commercial_qualification);
+  const ypFitBreakdown = recordValue(commercialQualification.yp_fit_breakdown);
   const taxonomy = opp.taxonomy || normalizeOpportunityTaxonomy({
     ...opp,
     organization,
@@ -179,6 +189,23 @@ function normalizeOpportunity(opp: GraphitiOpportunityCard): OpportunityCard {
   ], 4);
   const conciseReadMoreContext = conciseText(opp.read_more_context, 360) || conciseText(opp.description, 360);
   const conciseWhy = conciseText(opp.why_this_is_an_opportunity, 320) || conciseText(opp.description, 320) || 'No description available';
+  const capabilityMatch = conciseText(ypFitBreakdown.capability_match, 220);
+  const buyerRoute = conciseText(ypFitBreakdown.buyer_route, 220);
+  const outreachAngle = conciseText(ypFitBreakdown.outreach_angle, 260);
+  const verificationCaveat = conciseText(ypFitBreakdown.verification_needed, 240)
+    || 'Verify recency, source evidence, and buyer ownership before outreach.';
+  const approachStrategy = outreachAngle
+    || recommendedAction
+    || 'Use the signal as a hypothesis, then validate the buyer route before outreach.';
+  const successRationale = conciseText(ypFitBreakdown.success_rationale, 260)
+    || (capabilityMatch
+      ? `This makes sense for Yellow Panther because the signal maps to ${capabilityMatch}.`
+      : 'This makes sense for Yellow Panther only if the signal maps to a funded commercial or operational priority.');
+  const strategyNextSteps = conciseBlockText([
+    approachStrategy,
+    buyerRoute ? `Buyer route: ${buyerRoute}.` : '',
+    `Verification caveat: ${verificationCaveat}`,
+  ].filter(Boolean).join(' '), 520);
 
   return {
     id: opp.id,
@@ -205,6 +232,10 @@ function normalizeOpportunity(opp: GraphitiOpportunityCard): OpportunityCard {
     patternReasoning,
     ypFitReasoning: conciseBlockText(opp.yp_fit_reasoning) || 'Yellow Panther relevance is inferred from the dossier evidence and fit score.',
     recommendedAction,
+    approachStrategy,
+    successRationale,
+    verificationCaveat,
+    strategyNextSteps,
     findings,
     timeline,
     relatedPatterns,
@@ -644,6 +675,18 @@ function OpportunitiesContent() {
                     <div className="mt-1 text-sm text-white">{opportunity.recommendedAction}</div>
                   </div>
                   <div className="rounded-md border border-custom-border bg-black/10 p-3">
+                    <div className="text-[11px] uppercase tracking-[0.14em] text-fm-medium-grey">Approach strategy</div>
+                    <div className="mt-1 text-sm text-white">{opportunity.approachStrategy}</div>
+                  </div>
+                  <div className="rounded-md border border-custom-border bg-black/10 p-3">
+                    <div className="text-[11px] uppercase tracking-[0.14em] text-fm-medium-grey">Success rationale</div>
+                    <div className="mt-1 text-sm text-white">{opportunity.successRationale}</div>
+                  </div>
+                  <div className="rounded-md border border-custom-border bg-black/10 p-3">
+                    <div className="text-[11px] uppercase tracking-[0.14em] text-fm-medium-grey">Verification caveat</div>
+                    <div className="mt-1 text-sm text-white">{opportunity.verificationCaveat}</div>
+                  </div>
+                  <div className="rounded-md border border-custom-border bg-black/10 p-3">
                     <div className="text-[11px] uppercase tracking-[0.14em] text-fm-medium-grey">Why this is an opportunity</div>
                     <div className="mt-1 text-sm text-white">{opportunity.whyItMatters}</div>
                   </div>
@@ -690,7 +733,7 @@ function OpportunitiesContent() {
                     </div>
                     <div>
                       <div className="font-medium text-yellow-100">What to do next</div>
-                      <div className="mt-1 text-fm-light-grey">{opportunity.nextSteps}</div>
+                      <div className="mt-1 text-fm-light-grey">{opportunity.strategyNextSteps}</div>
                     </div>
                   </div>
                   {opportunity.timeline.length > 0 && (

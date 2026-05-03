@@ -57,3 +57,13 @@ test('opportunities page does not show the canonical pipeline status panel', () 
   assert.doesNotMatch(clientSource, /pipelineStatus/)
   assert.doesNotMatch(clientSource, /api\/home\/pipeline-status/)
 })
+
+test('opportunity cards show Yellow Panther strategy, success rationale, and verification caveat', () => {
+  assert.match(clientSource, /Approach strategy/)
+  assert.match(clientSource, /Success rationale/)
+  assert.match(clientSource, /Verification caveat/)
+  assert.match(clientSource, /strategyNextSteps/)
+  assert.match(clientSource, /successRationale/)
+  assert.match(clientSource, /verificationCaveat/)
+  assert.match(clientSource, /yp_fit_breakdown/)
+})

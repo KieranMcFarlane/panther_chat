@@ -211,6 +211,8 @@ function buildRuntimeLabelValuePairs(input: {
   pushRow('Worker pid', String(input.runtime?.worker?.worker_pid ?? 'n/a'))
   pushRow('Fast MCP', input.fastmcpHealth)
   pushRow('Live state', toText(input.liveOperationalState) || 'unknown')
+  pushRow('Health class', toText(input.runtime?.health_class))
+  pushRow('Last self-heal', toText(input.runtime?.last_self_heal_action))
   pushRow('Current entity', toText(input.currentRun?.entity_name) || toText(input.currentRun?.entity_id) || 'n/a')
   pushRow('Current section', toText(input.currentRun?.current_section_label))
   pushRow('Question progress', formatCheckpointQuestionProgress(input.currentRun))
