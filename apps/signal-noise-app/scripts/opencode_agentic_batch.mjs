@@ -330,6 +330,318 @@ function _collectUniqueSourceUrls(structuredOutput = {}) {
   return Array.from(urls).filter(Boolean);
 }
 
+function _toDisplayText(value) {
+  if (value == null) return '';
+  if (typeof value === 'string') return value.trim();
+  if (typeof value === 'number' || typeof value === 'boolean') return String(value);
+  if (Array.isArray(value)) {
+    return value.map((item) => _toDisplayText(item)).filter(Boolean).join('; ');
+  }
+  if (typeof value === 'object') {
+    return Object.entries(value)
+      .map(([key, nestedValue]) => {
+        const nestedText = _toDisplayText(nestedValue);
+        return nestedText ? `${key}: ${nestedText}` : '';
+      })
+      .filter(Boolean)
+      .join('; ');
+  }
+  return '';
+}
+
+function _isMeaningfulCommercialText(value) {
+  const text = _toDisplayText(value);
+  if (!text) return false;
+  return !/(^no_signal$|^no signal$|source pending$|question execution failed|no deterministic answer was produced|no completed brightdata leads were recoverable|returned no results matching|no results matching|searches? (for|across).* (returned|found) no|limited to unrelated|no web evidence found|insufficient signal|^\[object object\]$)/i.test(text);
+}
+
+function _firstMeaningfulCommercialText(values) {
+  return values.map((value) => _toDisplayText(value)).find((text) => _isMeaningfulCommercialText(text)) || '';
+}
+
+function _getAnswerRaw(questionPayload) {
+  const answer = questionPayload?.answer;
+  if (answer && typeof answer === 'object') {
+    return answer.raw_structured_output && typeof answer.raw_structured_output === 'object'
+      ? answer.raw_structured_output
+      : answer;
+  }
+  return questionPayload?.reasoning?.structured_output && typeof questionPayload.reasoning.structured_output === 'object'
+    ? questionPayload.reasoning.structured_output
+    : {};
+}
+
+function _validatedOrProvisional(questionPayload) {
+  const state = String(questionPayload?.validation_state || '').trim().toLowerCase();
+  return ['validated', 'confirmed', 'provisional'].includes(state);
+}
+
+function _priorQuestionMap(priorQuestions = []) {
+  return new Map(
+    (Array.isArray(priorQuestions) ? priorQuestions : [])
+      .filter((item) => item && typeof item === 'object' && item.question_id)
+      .map((item) => [String(item.question_id), item]),
+  );
+}
+
+function _strongestPriorCommercialSignal(priorById) {
+  const candidates = [
+    priorById.get('q6_launch_signal'),
+    priorById.get('q9_news_signal'),
+    priorById.get('q7_procurement_signal'),
+    priorById.get('q10_hiring_signal'),
+    priorById.get('q2_digital_stack'),
+  ].filter(Boolean);
+  return candidates
+    .filter((item) => _validatedOrProvisional(item))
+    .map((item) => ({
+      question_id: item.question_id,
+      answer: _firstMeaningfulCommercialText([
+        _getAnswerRaw(item).answer,
+        _getAnswerRaw(item).summary,
+        _getAnswerRaw(item).context,
+        item.answer,
+        item.notes,
+      ]),
+      confidence: Number(item.confidence || 0),
+      evidence_url: item.evidence_url || '',
+    }))
+    .filter((item) => _isMeaningfulCommercialText(item.answer))
+    .sort((a, b) => b.confidence - a.confidence)[0] || null;
+}
+
+function _buyerContextFromPrior(priorById) {
+  const q11 = priorById.get('q11_decision_owner') || {};
+  const raw = _getAnswerRaw(q11);
+  const primaryOwner = raw.primary_owner && typeof raw.primary_owner === 'object' ? raw.primary_owner : {};
+  const structuredSignal = raw.structured_signal && typeof raw.structured_signal === 'object'
+    ? raw.structured_signal
+    : (q11.structured_signal && typeof q11.structured_signal === 'object' ? q11.structured_signal : {});
+  const name = _firstMeaningfulCommercialText([
+    primaryOwner.name,
+    structuredSignal.decision_owner_name,
+    structuredSignal.name,
+    raw.name,
+    raw.answer,
+    q11.primary_owner?.name,
+    q11.answer,
+  ]);
+  const title = _firstMeaningfulCommercialText([
+    primaryOwner.title,
+    structuredSignal.decision_owner_title,
+    structuredSignal.title,
+    structuredSignal.role,
+    raw.title,
+    q11.primary_owner?.title,
+  ]);
+  return {
+    name,
+    title,
+    confidence: Number(q11.confidence || 0),
+  };
+}
+
+function _connectionsContextFromPrior(priorById, buyer) {
+  const q12 = priorById.get('q12_connections') || {};
+  const raw = _getAnswerRaw(q12);
+  const paths = Array.isArray(raw.candidate_paths) ? raw.candidate_paths : [];
+  const bestPath = paths[0] && typeof paths[0] === 'object' ? paths[0] : {};
+  return {
+    owner: _firstMeaningfulCommercialText([
+      raw.best_yp_owner,
+      raw.yp_member,
+      raw.recommended_yp_owner,
+      bestPath.best_yp_owner,
+      bestPath.yp_member,
+    ]),
+    pathType: _firstMeaningfulCommercialText([
+      raw.path_type,
+      raw.introduction_path,
+      raw.recommended_route,
+      bestPath.path_type,
+      bestPath.route_type,
+    ]),
+    targetPerson: _firstMeaningfulCommercialText([
+      raw.target_person,
+      bestPath.name,
+      bestPath.target_person,
+      buyer.name,
+    ]),
+    confidence: Number(raw.route_confidence || bestPath.route_confidence || q12.confidence || 0),
+  };
+}
+
+function _inferYellowPantherService(signalText, capabilityGapText) {
+  const combined = `${signalText} ${capabilityGapText}`.toLowerCase();
+  if (/\b(app|platform|digital|ott|product|launch|website|fan experience|ticketing|stack)\b/.test(combined)) {
+    return 'DIGITAL_TRANSFORMATION';
+  }
+  if (/\b(procurement|vendor|rfp|tender|commercial|partnership|sponsor|revenue)\b/.test(combined)) {
+    return 'COMMERCIAL_PARTNERSHIPS';
+  }
+  if (/\b(hiring|recruitment|delivery|programme|program|project)\b/.test(combined)) {
+    return 'PROJECT_DELIVERY';
+  }
+  if (/\b(strategy|growth|planning|positioning)\b/.test(combined)) {
+    return 'STRATEGY';
+  }
+  return 'STAKEHOLDER_ENGAGEMENT';
+}
+
+function _buildInsufficientSynthesis(question, confidenceCaveat) {
+  return {
+    question: question.question_text,
+    answer: 'insufficient_signal',
+    summary: 'insufficient_signal',
+    validation_state: 'no_signal',
+    confidence: 0,
+    sources: [],
+    status: 'insufficient_signal',
+    confidence_caveat: confidenceCaveat || 'Need stronger adjacent dossier evidence before deterministic synthesis.',
+  };
+}
+
+function _buildDeterministicStructuredOutput(question, priorQuestions = []) {
+  const questionId = String(question?.question_id || '').trim();
+  const priorById = _priorQuestionMap(priorQuestions);
+  const signal = _strongestPriorCommercialSignal(priorById);
+  const buyer = _buyerContextFromPrior(priorById);
+  const connections = _connectionsContextFromPrior(priorById, buyer);
+  const q13Raw = _getAnswerRaw(priorById.get('q13_capability_gap') || {});
+  const capabilityGapText = _firstMeaningfulCommercialText([
+    q13Raw.top_gap,
+    q13Raw.gap_label,
+    q13Raw.answer,
+    q13Raw.summary,
+  ]);
+
+  if (questionId === 'q12_connections') {
+    if (!buyer.name) {
+      return _buildInsufficientSynthesis(question, 'Need a buyer hypothesis before route synthesis.');
+    }
+    return {
+      question: question.question_text,
+      answer: buyer.name,
+      summary: `${buyer.name}${buyer.title ? ` (${buyer.title})` : ''} is the buyer route to verify; no deterministic warm path is confirmed yet.`,
+      candidate_paths: [{
+        name: buyer.name,
+        title: buyer.title,
+        best_yp_owner: '',
+        path_type: 'cold_verification',
+        buyer_relevance: 'decision_owner',
+        route_confidence: Math.max(0.35, Math.min(0.62, buyer.confidence || 0.45)),
+        verification_needed: `Confirm ${buyer.name} is still the right owner and check for warm intro paths.`,
+      }],
+      target_person: buyer.name,
+      target_role: buyer.title,
+      recommended_route: 'cold_verification',
+      buyer_relevance: 'decision_owner',
+      verification_needed: `Confirm ${buyer.name} is still the right owner and check for warm intro paths.`,
+      validation_state: 'provisional',
+      confidence: Math.max(0.35, Math.min(0.62, buyer.confidence || 0.45)),
+      sources: [],
+    };
+  }
+
+  if (questionId === 'q13_capability_gap') {
+    if (!signal) {
+      return _buildInsufficientSynthesis(question, 'Need at least one validated launch, digital, procurement, news, or hiring signal before gap synthesis.');
+    }
+    const service = _inferYellowPantherService(signal.answer, '');
+    const topGap = service === 'DIGITAL_TRANSFORMATION'
+      ? 'digital product/platform delivery'
+      : service.toLowerCase().replace(/_/g, ' ');
+    return {
+      question: question.question_text,
+      answer: topGap,
+      summary: `${topGap} is inferred from ${signal.question_id}: ${signal.answer}`,
+      top_gap: topGap,
+      gap_label: topGap,
+      evidence_basis: [signal.question_id],
+      validation_state: 'provisional',
+      confidence: Math.max(0.45, Math.min(0.72, signal.confidence - 0.12 || 0.45)),
+      sources: signal.evidence_url ? [signal.evidence_url] : [],
+    };
+  }
+
+  if (questionId === 'q14_yp_fit') {
+    const evidenceText = _firstMeaningfulCommercialText([signal?.answer, capabilityGapText]);
+    if (!evidenceText) {
+      return {
+        ..._buildInsufficientSynthesis(question, 'Need at least one validated commercial trigger before fit can be recommended.'),
+        best_service: '',
+        service_fit: [],
+        fit_rationale: 'insufficient_signal',
+        buyer_context: buyer.name || null,
+        evidence_basis: [],
+      };
+    }
+    const bestService = _inferYellowPantherService(signal?.answer || '', capabilityGapText);
+    return {
+      question: question.question_text,
+      answer: bestService,
+      summary: `${bestService.replace(/_/g, ' ')} is the strongest capability match because current dossier evidence points to ${evidenceText.toLowerCase()}.`,
+      best_service: bestService,
+      service_fit: [bestService],
+      fit_rationale: `${bestService.replace(/_/g, ' ')} is the strongest capability match because current dossier evidence points to ${evidenceText.toLowerCase()}.`,
+      buyer_context: [buyer.name, buyer.title].filter(Boolean).join(', ') || null,
+      evidence_basis: [signal?.question_id, signal?.answer, capabilityGapText].filter(Boolean),
+      confidence_caveat: buyer.name
+        ? `Verify recency and confirm ${buyer.name} is still the right route before outreach.`
+        : 'Verify the current buyer route before outreach.',
+      validation_state: 'provisional',
+      confidence: Math.max(0.5, Math.min(0.76, signal?.confidence ? signal.confidence - 0.1 : 0.55)),
+      sources: signal?.evidence_url ? [signal.evidence_url] : [],
+      status: 'available',
+    };
+  }
+
+  if (questionId === 'q15_outreach_strategy') {
+    const q14Raw = _getAnswerRaw(priorById.get('q14_yp_fit') || {});
+    const bestService = _firstMeaningfulCommercialText([q14Raw.best_service, q14Raw.recommended_service]);
+    const fitRationale = _firstMeaningfulCommercialText([q14Raw.fit_rationale, q14Raw.summary]);
+    const hasEvidence = [signal?.answer, fitRationale].some((value) => _isMeaningfulCommercialText(value));
+    if (!buyer.name && !hasEvidence) {
+      return {
+        ..._buildInsufficientSynthesis(question, 'Need a clearer buyer hypothesis before outreach.'),
+        recommended_target: null,
+        recommended_route: null,
+        recommended_angle: '',
+        first_message_strategy: '',
+        verification_needed: 'Need a clearer buyer hypothesis before outreach.',
+        why_now: '',
+      };
+    }
+    const route = connections.pathType || (connections.owner ? 'warm_intro' : 'cold_verification');
+    const angle = _firstMeaningfulCommercialText([
+      signal?.answer,
+      fitRationale,
+      `Lead with a ${bestService ? bestService.replace(/_/g, ' ').toLowerCase() : 'current commercial trigger'} angle tied to the active signal.`,
+    ]);
+    return {
+      question: question.question_text,
+      answer: angle,
+      summary: `${buyer.name || 'Verify the buyer'} via ${route}: ${angle}`,
+      recommended_target: buyer.name || connections.targetPerson || null,
+      recommended_route: route,
+      recommended_angle: angle,
+      first_message_strategy: buyer.name
+        ? `Open with the fresh trigger, connect it to ${bestService ? bestService.replace(/_/g, ' ').toLowerCase() : 'Yellow Panther capability'}, and ask for a short discovery call with ${buyer.name}.`
+        : 'Open with the fresh trigger, explain the relevant Yellow Panther capability, and verify the right owner before deeper outreach.',
+      verification_needed: connections.owner
+        ? `Confirm ${connections.owner} is still the best intro route and validate signal recency.`
+        : 'Validate signal recency and confirm the right buyer route before outreach.',
+      why_now: signal?.answer || angle,
+      validation_state: 'provisional',
+      confidence: Math.max(0.48, Math.min(0.74, signal?.confidence ? signal.confidence - 0.14 : 0.52)),
+      sources: signal?.evidence_url ? [signal.evidence_url] : [],
+      status: 'available',
+    };
+  }
+
+  return null;
+}
+
 function _inferEvidenceGrade(question, structuredOutput, validationState, structuredSignal) {
   if (!_isCommercialSignalQuestion(question)) return null;
   const sourceCount = _collectUniqueSourceUrls(structuredOutput).length;
@@ -2666,7 +2978,33 @@ export async function runOpenCodePresetBatch({
       }
       let questionPayload;
       let questionRun = null;
-      if (executionQueue.length === 0) {
+      let usedDeterministicSynthesis = false;
+      const deterministicStructuredOutput = Number(question.hop_budget || 0) <= 0 && question.fallback_to_retrieval === false
+        ? _buildDeterministicStructuredOutput(question, finalQuestions)
+        : null;
+      if (deterministicStructuredOutput) {
+        usedDeterministicSynthesis = true;
+        questionRun = {
+          structuredOutput: deterministicStructuredOutput,
+          promptTrace: {
+            provider: 'deterministic_synthesis',
+            source_question_ids: Array.isArray(question.depends_on) ? question.depends_on : [],
+          },
+          messageTrace: [],
+          cliResult: { code: 0, stdout: '', stderr: '' },
+        };
+        questionPayload = _buildQuestionPayload(
+          question,
+          deterministicStructuredOutput,
+          `cli-${index + 1}`,
+          {
+            promptTrace: questionRun.promptTrace,
+            messageTrace: questionRun.messageTrace,
+            executionQuery: question.query,
+            cliResult: questionRun.cliResult,
+          },
+        );
+      } else if (executionQueue.length === 0) {
         questionPayload = {
           question_id: question.question_id,
           question_type: question.question_type,
@@ -2861,7 +3199,7 @@ export async function runOpenCodePresetBatch({
           notes: existingQuestionState?.notes || '',
         };
       }
-      if (executionQueue.length === 0) {
+      if (executionQueue.length === 0 || usedDeterministicSynthesis) {
         runState.questions[index] = _mergeQuestionState(existingQuestionState || currentQuestionState, questionPayload, new Date().toISOString());
         await _writeJsonFile(statePath, runState);
       }

@@ -52,6 +52,214 @@ function contentHash(value) {
   return crypto.createHash('sha256').update(stableJson(value)).digest('hex')
 }
 
+function toText(value) {
+  if (value == null) return ''
+  if (typeof value === 'string') return value.trim()
+  if (typeof value === 'number' || typeof value === 'boolean') return String(value)
+  if (Array.isArray(value)) return value.map(toText).filter(Boolean).join('; ')
+  if (typeof value === 'object') {
+    return Object.entries(value)
+      .map(([key, nested]) => {
+        const text = toText(nested)
+        return text ? `${key}: ${text}` : ''
+      })
+      .filter(Boolean)
+      .join('; ')
+  }
+  return ''
+}
+
+function hasMeaningfulCommercialText(value) {
+  const text = toText(value)
+  return Boolean(text)
+    && !/(^no_signal$|^no signal$|source pending$|question execution failed|no deterministic answer was produced|no completed brightdata leads were recoverable|returned no results matching|no results matching|searches? (for|across).* (returned|found) no|limited to unrelated|no web evidence found|insufficient signal|^\[object object\]$)/i.test(text)
+}
+
+function firstMeaningfulCommercialText(values) {
+  return values.map(toText).find(hasMeaningfulCommercialText) || ''
+}
+
+function questionAnswerMap(dossierData) {
+  return Object.fromEntries(answerRecords(dossierData).map((answer) => [String(answer.question_id || '').trim(), answer]))
+}
+
+function makeStructuredAnswer(kind, summary, rawStructuredOutput) {
+  return {
+    kind,
+    value: summary,
+    summary,
+    raw_structured_output: rawStructuredOutput,
+  }
+}
+
+function shouldUsePatch(record, patch) {
+  if (!patch) return false
+  const existingConfidence = Number(record?.confidence || 0)
+  return Number(patch.confidence || 0) > existingConfidence
+    || ['no_signal', 'failed', 'blocked', 'exhausted', 'unknown', ''].includes(String(record?.validation_state || '').trim().toLowerCase())
+}
+
+function patchAnswerArray(records, patchByQuestionId) {
+  if (!Array.isArray(records)) return records
+  return records.map((record) => {
+    if (!record || typeof record !== 'object') return record
+    const questionId = String(record.question_id || record.id || '').trim()
+    const patch = patchByQuestionId[questionId]
+    if (!shouldUsePatch(record, patch)) return record
+    return {
+      ...record,
+      validation_state: patch.validation_state,
+      confidence: patch.confidence,
+      answer: patch.answer,
+      evidence_url: patch.evidence_url || record.evidence_url || '',
+      reasoning: {
+        ...(asRecord(record.reasoning)),
+        structured_output: patch.answer.raw_structured_output,
+      },
+      prompt_trace: {
+        provider: 'deterministic_repair',
+        source: 'repair-question-first-dossier-quality',
+        source_questions: patch.source_questions,
+      },
+    }
+  })
+}
+
+function patchQuestionRecordContainers(dossier, patchByQuestionId) {
+  const next = { ...dossier }
+  next.answers = patchAnswerArray(next.answers, patchByQuestionId)
+  next.questions = patchAnswerArray(next.questions, patchByQuestionId)
+  next.question_first = {
+    ...asRecord(next.question_first),
+    answers: patchAnswerArray(asRecord(next.question_first).answers, patchByQuestionId),
+    answer_records: patchAnswerArray(asRecord(next.question_first).answer_records, patchByQuestionId),
+    questions: patchAnswerArray(asRecord(next.question_first).questions, patchByQuestionId),
+  }
+  const metadata = asRecord(next.metadata)
+  const checkpoint = asRecord(next.question_first_checkpoint || metadata.question_first_checkpoint)
+  const patchedCheckpoint = {
+    ...checkpoint,
+    answers: patchAnswerArray(checkpoint.answers, patchByQuestionId),
+    answer_records: patchAnswerArray(checkpoint.answer_records, patchByQuestionId),
+  }
+  next.question_first_checkpoint = Object.keys(patchedCheckpoint).length > 0 ? patchedCheckpoint : next.question_first_checkpoint
+  next.metadata = {
+    ...metadata,
+    question_first_checkpoint: Object.keys(patchedCheckpoint).length > 0 ? patchedCheckpoint : metadata.question_first_checkpoint,
+  }
+  return next
+}
+
+function buildQuestionRecordPatches(repairedDossier) {
+  const answers = questionAnswerMap(repairedDossier)
+  const discoverySummary = asRecord(repairedDossier.discovery_summary || asRecord(repairedDossier.question_first).discovery_summary)
+  const brief = asRecord(discoverySummary.graphiti_sales_brief || repairedDossier.graphiti_sales_brief)
+  const fit = asRecord(discoverySummary.yellow_panther_fit || repairedDossier.yellow_panther_fit || discoverySummary.yellow_panther_opportunity)
+  const outreach = asRecord(discoverySummary.outreach_strategy || repairedDossier.outreach_strategy)
+  const patches = {}
+
+  if (String(brief.status || '').toLowerCase() === 'available' && hasMeaningfulCommercialText(brief.buyer_name || brief.outreach_target)) {
+    const target = firstMeaningfulCommercialText([brief.buyer_name, brief.outreach_target])
+    const route = firstMeaningfulCommercialText([brief.outreach_route, brief.path_type]) || 'cold_verification'
+    const summary = `${target} is the buyer path to verify via ${route}.`
+    const raw = {
+      answer: summary,
+      summary,
+      target_person: target,
+      target_role: toText(brief.buyer_title),
+      best_yp_owner: toText(brief.best_path_owner || brief.recommended_owner),
+      recommended_route: route,
+      buyer_relevance: 'decision_owner',
+      route_confidence: 0.52,
+      verification_needed: `Confirm ${target} is still the right owner and verify the warmest current intro path.`,
+    }
+    patches.q12_connections = {
+      validation_state: 'provisional',
+      confidence: Math.max(0.45, Number(answers.q12_connections?.confidence || 0), 0.52),
+      answer: makeStructuredAnswer('connections_path', summary, raw),
+      source_questions: ['q11_decision_owner'],
+    }
+  }
+
+  const q13Raw = asRecord(asRecord(answers.q13_capability_gap?.answer).raw_structured_output || answers.q13_capability_gap?.answer)
+  const topGap = firstMeaningfulCommercialText([
+    q13Raw.top_gap,
+    q13Raw.gap_label,
+    q13Raw.answer,
+    q13Raw.summary,
+    fit.fit_rationale,
+    fit.best_service,
+  ])
+  if (topGap && hasMeaningfulCommercialText(topGap)) {
+    const raw = {
+      answer: topGap,
+      summary: topGap,
+      top_gap: topGap,
+      gap_label: topGap,
+      evidence_basis: asArray(fit.evidence_basis),
+    }
+    patches.q13_capability_gap = {
+      validation_state: 'provisional',
+      confidence: Math.max(0.45, Number(answers.q13_capability_gap?.confidence || 0), 0.55),
+      answer: makeStructuredAnswer('scorecard', topGap, raw),
+      source_questions: ['q2_digital_stack', 'q6_launch_signal', 'q7_procurement_signal', 'q9_news_signal', 'q10_hiring_signal'],
+    }
+  }
+
+  if (String(fit.status || '').toLowerCase() === 'available' && hasMeaningfulCommercialText(fit.fit_rationale || fit.best_service)) {
+    const summary = firstMeaningfulCommercialText([fit.fit_rationale, fit.best_service])
+    const raw = {
+      answer: summary,
+      summary,
+      best_service: toText(fit.best_service || fit.recommended_service),
+      service_fit: asArray(fit.service_fit).length > 0 ? fit.service_fit : [toText(fit.best_service)].filter(Boolean),
+      fit_rationale: summary,
+      buyer_context: fit.buyer_context || brief.buyer_name || null,
+      evidence_basis: asArray(fit.evidence_basis),
+      confidence_caveat: toText(fit.confidence_caveat) || 'Verify recency and buyer ownership before outreach.',
+      status: 'available',
+    }
+    patches.q14_yp_fit = {
+      validation_state: 'provisional',
+      confidence: Math.max(0.5, Number(answers.q14_yp_fit?.confidence || 0), 0.58),
+      answer: makeStructuredAnswer('scorecard', summary, raw),
+      source_questions: ['q6_launch_signal', 'q11_decision_owner', 'q12_connections', 'q13_capability_gap'],
+    }
+  }
+
+  if (String(outreach.status || '').toLowerCase() === 'available' && hasMeaningfulCommercialText(outreach.recommended_target || outreach.recommended_angle || outreach.first_message_strategy)) {
+    const target = firstMeaningfulCommercialText([outreach.recommended_target, brief.outreach_target, brief.buyer_name])
+    const angle = firstMeaningfulCommercialText([outreach.recommended_angle, outreach.why_now, outreach.first_message_strategy])
+    const summary = `${target || 'Verify the buyer'}: ${angle}`
+    const raw = {
+      answer: summary,
+      summary,
+      recommended_target: target || null,
+      recommended_route: toText(outreach.recommended_route || brief.outreach_route) || 'cold_verification',
+      recommended_angle: angle,
+      first_message_strategy: toText(outreach.first_message_strategy),
+      verification_needed: toText(outreach.verification_needed) || 'Validate signal recency and confirm the right buyer route before outreach.',
+      why_now: toText(outreach.why_now || angle),
+      status: 'available',
+    }
+    patches.q15_outreach_strategy = {
+      validation_state: 'provisional',
+      confidence: Math.max(0.48, Number(answers.q15_outreach_strategy?.confidence || 0), 0.56),
+      answer: makeStructuredAnswer('scorecard', summary, raw),
+      source_questions: ['q6_launch_signal', 'q11_decision_owner', 'q12_connections', 'q14_yp_fit'],
+    }
+  }
+
+  return patches
+}
+
+function repairQuestionAnswerRecords(repairedDossier) {
+  const patches = buildQuestionRecordPatches(repairedDossier)
+  return Object.keys(patches).length > 0
+    ? patchQuestionRecordContainers(repairedDossier, patches)
+    : repairedDossier
+}
+
 export function answerRecords(dossierData) {
   const dossier = asRecord(dossierData)
   const questionFirst = asRecord(dossier.question_first)
@@ -101,7 +309,9 @@ export function repairDossierPayload(dossierData, canonicalEntityId, entityInfo 
       type: entityInfo.entity_type || dossier.entity_type,
     },
   }
-  const normalized = normalizeQuestionFirstDossier(dossier, String(canonicalEntityId || dossier.entity_id || ''), entity)
+  const normalized = repairQuestionAnswerRecords(
+    normalizeQuestionFirstDossier(dossier, String(canonicalEntityId || dossier.entity_id || ''), entity),
+  )
   return {
     changed: contentHash(dossier) !== contentHash(normalized),
     before_publish_status: dossier.publish_status || dossier.publication_status || null,

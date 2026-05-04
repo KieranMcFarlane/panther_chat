@@ -23,7 +23,7 @@
     "graphiti:dossier-ingestions:backfill:apply": "node scripts/backfill-graphiti-dossier-ingestions.mjs --apply",
     "dossiers:quality-report": "node scripts/admin/report-dossier-quality.cjs",
     "dossiers:quality-gate": "node scripts/admin/assert-dossier-question-quality.cjs",
-    "dossiers:test-question-quality": "NODE_OPTIONS=--experimental-strip-types node --test scripts/question-first-golden-output.test.mjs scripts/admin/report-dossier-quality.test.cjs scripts/admin/assert-dossier-question-quality.test.cjs scripts/repair-question-first-dossier-quality.test.mjs",
+    "dossiers:test-question-quality": "NODE_OPTIONS=--experimental-strip-types node --test scripts/question-first-golden-output.test.mjs scripts/admin/report-dossier-quality.test.cjs scripts/admin/assert-dossier-question-quality.test.cjs scripts/repair-question-first-dossier-quality.test.mjs scripts/opencode-agentic-derived-synthesis.test.mjs",
     "dossiers:repair-quality": "NODE_OPTIONS=--experimental-strip-types node scripts/repair-question-first-dossier-quality.mjs",
     "dossiers:repair-quality:apply": "NODE_OPTIONS=--experimental-strip-types node scripts/repair-question-first-dossier-quality.mjs --apply",
     "remediate:pipeline-state:local": "node scripts/remediate-pipeline-state-local.mjs",

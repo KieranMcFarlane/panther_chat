@@ -69,6 +69,7 @@ test('shouldRepairDossier targets mechanically complete weak published packs', (
 
 test('repairDossierPayload synthesizes artifacts from useful signals without provider calls', () => {
   const repair = repairDossierPayload(weakFifteenPack(), 'major-league-cricket')
+  const answers = Object.fromEntries(repair.repaired_dossier.question_first.answers.map((item) => [item.question_id, item]))
 
   assert.equal(repair.changed, true)
   assert.equal(repair.after_publish_status, 'published_partial')
@@ -76,6 +77,16 @@ test('repairDossierPayload synthesizes artifacts from useful signals without pro
   assert.equal(repair.repaired_dossier.yellow_panther_fit.status, 'available')
   assert.equal(repair.repaired_dossier.yellow_panther_fit.best_service, 'DIGITAL_TRANSFORMATION')
   assert.equal(repair.repaired_dossier.discovery_summary.outreach_strategy.status, 'available')
+  assert.ok(answers.q12_connections.confidence > 0)
+  assert.equal(answers.q12_connections.validation_state, 'provisional')
+  assert.ok(answers.q13_capability_gap.confidence > 0)
+  assert.equal(answers.q13_capability_gap.validation_state, 'provisional')
+  assert.ok(answers.q14_yp_fit.confidence > 0)
+  assert.equal(answers.q14_yp_fit.validation_state, 'provisional')
+  assert.equal(answers.q14_yp_fit.answer.raw_structured_output.best_service, 'DIGITAL_TRANSFORMATION')
+  assert.ok(answers.q15_outreach_strategy.confidence > 0)
+  assert.equal(answers.q15_outreach_strategy.validation_state, 'provisional')
+  assert.equal(answers.q15_outreach_strategy.answer.raw_structured_output.recommended_target, 'Commercial Operations Lead')
   assert.ok(repair.repaired_dossier.sections)
 })
 
