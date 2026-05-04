@@ -70,6 +70,20 @@ def _is_meaningful_text(value: Any) -> bool:
         return False
     if "no completed brightdata leads were recoverable" in lowered:
         return False
+    if "no brightdata-backed evidence" in lowered:
+        return False
+    if "initial search returned only generic" in lowered:
+        return False
+    if "follow-up search timed out" in lowered:
+        return False
+    if "no hiring leads found" in lowered:
+        return False
+    if "bounded retrieval" in lowered:
+        return False
+    if "points to insufficient_signal" in lowered or "current dossier evidence points to insufficient signal" in lowered:
+        return False
+    if "kind: summary" in lowered and ("value: null" in lowered or "summary: null" in lowered or "raw structured output: null" in lowered):
+        return False
     if "kind: summary; value: ; summary:" in lowered:
         return False
     if "commercial interpretation: themes: ; summary:" in lowered:

@@ -72,7 +72,7 @@ function toText(value) {
 function hasMeaningfulCommercialText(value) {
   const text = toText(value)
   return Boolean(text)
-    && !/(^no_signal$|^no signal$|source pending$|question execution failed|no deterministic answer was produced|no completed brightdata leads were recoverable|returned no results matching|no results matching|searches? (for|across).* (returned|found) no|limited to unrelated|no web evidence found|insufficient signal|^\[object object\]$)/i.test(text)
+    && !/(^no_signal$|^no signal$|source pending$|question execution failed|no deterministic answer was produced|no completed brightdata leads were recoverable|no brightdata-backed evidence|initial search returned only generic|follow-up search timed out|returned no results matching|no results matching|no hiring leads found|bounded retrieval|points to insufficient_signal|current dossier evidence points to insufficient[_ ]signal|searches? (for|across).* (returned|found) no|limited to unrelated|kind:\s*summary(\.|;|$)|kind:\s*summary;\s*value:\s*(;|null)|value:\s*null|summary:\s*null|raw structured output:\s*(;|null)|no web evidence found|insufficient signal|^\[object object\]$)/i.test(text)
 }
 
 function firstMeaningfulCommercialText(values) {
@@ -90,6 +90,74 @@ function makeStructuredAnswer(kind, summary, rawStructuredOutput) {
     summary,
     raw_structured_output: rawStructuredOutput,
   }
+}
+
+function answerRaw(record) {
+  const answer = asRecord(record?.answer)
+  return asRecord(answer.raw_structured_output || answer)
+}
+
+function validatedOrProvisional(record) {
+  const state = String(record?.validation_state || '').trim().toLowerCase()
+  return ['validated', 'confirmed', 'provisional'].includes(state)
+}
+
+function candidateRoleScore(candidate) {
+  const haystack = [
+    candidate?.title,
+    candidate?.role,
+    candidate?.function,
+    candidate?.function_type,
+    candidate?.department,
+    candidate?.summary,
+  ].map((value) => String(value || '').toLowerCase()).join(' ')
+  if (/\b(chief commercial officer|cco|commercial director|head of commercial|commercial)\b/.test(haystack)) return 100
+  if (/\b(partnerships?|sponsorship|business development|revenue)\b/.test(haystack)) return 90
+  if (/\b(digital|product|technology|data|marketing|growth|strategy)\b/.test(haystack)) return 80
+  if (/\b(chief executive|ceo|managing director|general manager)\b/.test(haystack)) return 70
+  return 0
+}
+
+function normalizeLeadershipCandidate(candidate) {
+  if (!candidate || typeof candidate !== 'object') return null
+  const name = firstMeaningfulCommercialText([
+    candidate.name,
+    candidate.full_name,
+    candidate.person_name,
+    candidate.label,
+  ])
+  const title = firstMeaningfulCommercialText([
+    candidate.title,
+    candidate.role,
+    candidate.job_title,
+    candidate.position,
+  ])
+  const score = candidateRoleScore(candidate)
+  if (!name || score <= 0) return null
+  return {
+    name,
+    title,
+    function: firstMeaningfulCommercialText([candidate.function, candidate.function_type, candidate.department]),
+    evidence_url: firstMeaningfulCommercialText([candidate.evidence_url, candidate.url, candidate.linkedin_url]),
+    score,
+  }
+}
+
+function leadershipBuyerCandidate(answers) {
+  const q3 = answers.q3_leadership
+  if (!validatedOrProvisional(q3)) return null
+  const raw = answerRaw(q3)
+  return [
+    ...asArray(raw.candidates),
+    ...asArray(raw.people),
+    ...asArray(raw.leadership),
+    ...asArray(raw.ranked_people),
+    raw.primary_owner && typeof raw.primary_owner === 'object' ? raw.primary_owner : null,
+  ]
+    .filter(Boolean)
+    .map(normalizeLeadershipCandidate)
+    .filter(Boolean)
+    .sort((left, right) => right.score - left.score)[0] || null
 }
 
 function shouldUsePatch(record, patch) {
@@ -157,16 +225,47 @@ function buildQuestionRecordPatches(repairedDossier) {
   const fit = asRecord(discoverySummary.yellow_panther_fit || repairedDossier.yellow_panther_fit || discoverySummary.yellow_panther_opportunity)
   const outreach = asRecord(discoverySummary.outreach_strategy || repairedDossier.outreach_strategy)
   const patches = {}
+  const leadershipBuyer = leadershipBuyerCandidate(answers)
 
-  if (String(brief.status || '').toLowerCase() === 'available' && hasMeaningfulCommercialText(brief.buyer_name || brief.outreach_target)) {
-    const target = firstMeaningfulCommercialText([brief.buyer_name, brief.outreach_target])
+  if (leadershipBuyer) {
+    const confidence = Math.max(0.5, Math.min(0.72, (Number(answers.q3_leadership?.confidence || 0) || 0.65) - 0.12))
+    const summary = `${leadershipBuyer.name}${leadershipBuyer.title ? ` (${leadershipBuyer.title})` : ''} is the strongest buyer hypothesis from leadership evidence.`
+    patches.q11_decision_owner = {
+      validation_state: 'provisional',
+      confidence,
+      answer: makeStructuredAnswer('person', summary, {
+        answer: leadershipBuyer.name,
+        summary,
+        primary_owner: {
+          name: leadershipBuyer.name,
+          title: leadershipBuyer.title,
+          function: leadershipBuyer.function,
+          evidence_url: leadershipBuyer.evidence_url,
+        },
+        structured_signal: {
+          decision_owner_name: leadershipBuyer.name,
+          decision_owner_title: leadershipBuyer.title,
+          buyer_function: leadershipBuyer.function || 'commercial',
+        },
+        verification_needed: `Confirm ${leadershipBuyer.name} still owns the commercial or digital buying motion before outreach.`,
+      }),
+      evidence_url: leadershipBuyer.evidence_url,
+      source_questions: ['q3_leadership'],
+    }
+  }
+
+  const q11PatchRaw = asRecord(patches.q11_decision_owner?.answer?.raw_structured_output)
+  const q11PatchOwner = asRecord(q11PatchRaw.primary_owner)
+  const q12TargetSource = firstMeaningfulCommercialText([brief.buyer_name, brief.outreach_target, q11PatchOwner.name])
+  if ((String(brief.status || '').toLowerCase() === 'available' && hasMeaningfulCommercialText(brief.buyer_name || brief.outreach_target)) || hasMeaningfulCommercialText(q12TargetSource)) {
+    const target = q12TargetSource
     const route = firstMeaningfulCommercialText([brief.outreach_route, brief.path_type]) || 'cold_verification'
     const summary = `${target} is the buyer path to verify via ${route}.`
     const raw = {
       answer: summary,
       summary,
       target_person: target,
-      target_role: toText(brief.buyer_title),
+      target_role: toText(brief.buyer_title || q11PatchOwner.title),
       best_yp_owner: toText(brief.best_path_owner || brief.recommended_owner),
       recommended_route: route,
       buyer_relevance: 'decision_owner',

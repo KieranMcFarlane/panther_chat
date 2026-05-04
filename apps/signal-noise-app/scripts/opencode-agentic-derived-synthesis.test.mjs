@@ -55,6 +55,29 @@ async function fakeQuestionRunner(executionQuestion) {
       cliResult: { code: 0, stdout: '{}', stderr: '' },
     }
   }
+  if (executionQuestion.question_id === 'q3_leadership') {
+    return {
+      structuredOutput: {
+        question: executionQuestion.question_text,
+        answer: 'Jane Buyer leads commercial partnerships at Test Club.',
+        candidates: [
+          {
+            name: 'Jane Buyer',
+            title: 'Chief Commercial Officer',
+            function: 'commercial',
+            evidence_url: 'https://example.com/test-club-leadership',
+          },
+        ],
+        context: 'Leadership page lists Jane Buyer as the commercial owner.',
+        sources: ['https://example.com/test-club-leadership'],
+        confidence: 0.86,
+        signal_type: 'LEADERSHIP',
+      },
+      promptTrace: { fake: true },
+      messageTrace: [],
+      cliResult: { code: 0, stdout: '{}', stderr: '' },
+    }
+  }
   if (executionQuestion.question_id === 'q11_decision_owner') {
     return {
       structuredOutput: {
@@ -173,4 +196,69 @@ test('zero-hop q12-q15 synthesize from prior commercial and buyer evidence witho
   assert.ok(q15.confidence > 0)
   assert.equal(q15.reasoning.structured_output.recommended_target, 'Jane Buyer')
   assert.match(q15.reasoning.structured_output.first_message_strategy, /Jane Buyer/)
+})
+
+test('q11 and q12 synthesize buyer route from q3 leadership when q11 retrieval is empty', async () => {
+  process.env.ZAI_API_KEY = process.env.ZAI_API_KEY || 'test-key'
+  const outputDir = await fs.mkdtemp(path.join(os.tmpdir(), 'opencode-buyer-synthesis-'))
+  const questions = [
+    question('q3_leadership', {
+      question_type: 'leadership',
+      structured_output_schema: 'leadership_candidates_v1',
+    }),
+    question('q6_launch_signal', { question_type: 'launch_signal', structured_output_schema: 'launch_signal_v1' }),
+    question('q11_decision_owner', {
+      question_type: 'decision_owner',
+      structured_output_schema: 'decision_owner_v1',
+      depends_on: ['q3_leadership', 'q6_launch_signal'],
+    }),
+    question('q12_connections', {
+      question_type: 'connections',
+      query: '',
+      source_priority: [],
+      execution_class: 'deterministic_enrichment',
+      structured_output_schema: 'connections_path_v1',
+      depends_on: ['q11_decision_owner'],
+      fallback_to_retrieval: false,
+      hop_budget: 0,
+    }),
+  ]
+
+  const result = await runOpenCodePresetBatch({
+    outputDir,
+    questionsOverride: questions,
+    entityNameOverride: 'Test Club',
+    entityIdOverride: 'test-club',
+    entityTypeOverride: 'CLUB',
+    questionRunner: async (executionQuestion) => {
+      if (executionQuestion.question_id === 'q11_decision_owner') {
+        return {
+          structuredOutput: {
+            question: executionQuestion.question_text,
+            answer: '',
+            context: '',
+            sources: [],
+            confidence: 0,
+          },
+          promptTrace: { fake: true },
+          messageTrace: [],
+          cliResult: { code: 0, stdout: '{}', stderr: '' },
+        }
+      }
+      return fakeQuestionRunner(executionQuestion)
+    },
+    directBrightDataRunner: null,
+  })
+
+  const meta = JSON.parse(await fs.readFile(result.meta_result_path, 'utf8'))
+  const answers = Object.fromEntries(meta.questions.map((item) => [item.question_id, item]))
+
+  assert.equal(answers.q11_decision_owner.validation_state, 'provisional')
+  assert.ok(answers.q11_decision_owner.confidence > 0)
+  assert.equal(answers.q11_decision_owner.reasoning.structured_output.primary_owner.name, 'Jane Buyer')
+  assert.equal(answers.q11_decision_owner.reasoning.structured_output.primary_owner.title, 'Chief Commercial Officer')
+
+  assert.equal(answers.q12_connections.validation_state, 'provisional')
+  assert.ok(answers.q12_connections.confidence > 0)
+  assert.equal(answers.q12_connections.reasoning.structured_output.target_person, 'Jane Buyer')
 })

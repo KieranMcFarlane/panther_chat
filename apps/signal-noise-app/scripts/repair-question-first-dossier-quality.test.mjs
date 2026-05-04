@@ -63,6 +63,38 @@ function weakFifteenPack() {
   }
 }
 
+function leadershipBuyerPack() {
+  const pack = weakFifteenPack()
+  pack.answers = pack.answers.map((item) => {
+    if (item.question_id === 'q3_leadership') {
+      return {
+        ...item,
+        validation_state: 'validated',
+        confidence: 0.86,
+        answer: {
+          kind: 'person_list',
+          summary: 'Jane Buyer leads commercial partnerships.',
+          raw_structured_output: {
+            candidates: [
+              {
+                name: 'Jane Buyer',
+                title: 'Chief Commercial Officer',
+                function: 'commercial',
+                evidence_url: 'https://example.com/jane-buyer',
+              },
+            ],
+          },
+        },
+      }
+    }
+    if (item.question_id === 'q11_decision_owner') {
+      return answer('q11_decision_owner')
+    }
+    return item
+  })
+  return pack
+}
+
 test('shouldRepairDossier targets mechanically complete weak published packs', () => {
   assert.equal(shouldRepairDossier(weakFifteenPack()), true)
 })
@@ -88,6 +120,20 @@ test('repairDossierPayload synthesizes artifacts from useful signals without pro
   assert.equal(answers.q15_outreach_strategy.validation_state, 'provisional')
   assert.equal(answers.q15_outreach_strategy.answer.raw_structured_output.recommended_target, 'Commercial Operations Lead')
   assert.ok(repair.repaired_dossier.sections)
+})
+
+test('repairDossierPayload synthesizes q11 and q12 from leadership buyer evidence', () => {
+  const repair = repairDossierPayload(leadershipBuyerPack(), 'major-league-cricket')
+  const answers = Object.fromEntries(repair.repaired_dossier.question_first.answers.map((item) => [item.question_id, item]))
+
+  assert.equal(answers.q11_decision_owner.validation_state, 'provisional')
+  assert.ok(answers.q11_decision_owner.confidence > 0)
+  assert.equal(answers.q11_decision_owner.answer.raw_structured_output.primary_owner.name, 'Jane Buyer')
+  assert.equal(answers.q11_decision_owner.answer.raw_structured_output.primary_owner.title, 'Chief Commercial Officer')
+
+  assert.equal(answers.q12_connections.validation_state, 'provisional')
+  assert.ok(answers.q12_connections.confidence > 0)
+  assert.equal(answers.q12_connections.answer.raw_structured_output.target_person, 'Jane Buyer')
 })
 
 test('repairDossierPayload demotes mechanically complete packs with no commercial artifacts', () => {
@@ -152,6 +198,25 @@ test('repairDossierPayload does not treat checked-absence search text as a launc
   }))
 
   const repair = repairDossierPayload(noSignalPack, 'major-league-cricket')
+
+  assert.equal(repair.after_publish_status, 'published_partial')
+  assert.equal(repair.repaired_dossier.discovery_summary.graphiti_sales_brief.status, 'insufficient_signal')
+  assert.equal(repair.repaired_dossier.yellow_panther_fit.status, 'insufficient_signal')
+  assert.equal(repair.repaired_dossier.discovery_summary.outreach_strategy.status, 'insufficient_signal')
+})
+
+test('repairDossierPayload does not treat bounded no-hiring text as a commercial trigger', () => {
+  const noHiringPack = weakFifteenPack()
+  noHiringPack.answers = noHiringPack.answers.map((item) => ({
+    ...item,
+    validation_state: 'no_signal',
+    confidence: 0,
+    answer: 'No hiring leads found in bounded retrieval.',
+    primary_owner: undefined,
+    evidence_url: undefined,
+  }))
+
+  const repair = repairDossierPayload(noHiringPack, 'major-league-cricket')
 
   assert.equal(repair.after_publish_status, 'published_partial')
   assert.equal(repair.repaired_dossier.discovery_summary.graphiti_sales_brief.status, 'insufficient_signal')

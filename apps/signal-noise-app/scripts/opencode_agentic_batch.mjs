@@ -441,6 +441,63 @@ function _buyerContextFromPrior(priorById) {
   };
 }
 
+function _candidateRoleScore(candidate) {
+  const haystack = [
+    candidate?.title,
+    candidate?.role,
+    candidate?.function,
+    candidate?.function_type,
+    candidate?.department,
+    candidate?.summary,
+  ].map((value) => String(value || '').toLowerCase()).join(' ');
+  if (/\b(chief commercial officer|cco|commercial director|head of commercial|commercial)\b/.test(haystack)) return 100;
+  if (/\b(partnerships?|sponsorship|business development|revenue)\b/.test(haystack)) return 90;
+  if (/\b(digital|product|technology|data|marketing|growth|strategy)\b/.test(haystack)) return 80;
+  if (/\b(chief executive|ceo|managing director|general manager)\b/.test(haystack)) return 70;
+  return 0;
+}
+
+function _normalizeLeadershipCandidate(candidate) {
+  if (!candidate || typeof candidate !== 'object') return null;
+  const name = _firstMeaningfulCommercialText([
+    candidate.name,
+    candidate.full_name,
+    candidate.person_name,
+    candidate.label,
+  ]);
+  const title = _firstMeaningfulCommercialText([
+    candidate.title,
+    candidate.role,
+    candidate.job_title,
+    candidate.position,
+  ]);
+  if (!name || _candidateRoleScore(candidate) <= 0) return null;
+  return {
+    name,
+    title,
+    function: _firstMeaningfulCommercialText([candidate.function, candidate.function_type, candidate.department]),
+    evidence_url: _firstMeaningfulCommercialText([candidate.evidence_url, candidate.url, candidate.linkedin_url]),
+    score: _candidateRoleScore(candidate),
+  };
+}
+
+function _leadershipCandidatesFromPrior(priorById) {
+  const q3 = priorById.get('q3_leadership') || {};
+  if (!_validatedOrProvisional(q3)) return [];
+  const raw = _getAnswerRaw(q3);
+  const directCandidates = [
+    ...(Array.isArray(raw.candidates) ? raw.candidates : []),
+    ...(Array.isArray(raw.people) ? raw.people : []),
+    ...(Array.isArray(raw.leadership) ? raw.leadership : []),
+    ...(Array.isArray(raw.ranked_people) ? raw.ranked_people : []),
+    raw.primary_owner && typeof raw.primary_owner === 'object' ? raw.primary_owner : null,
+  ].filter(Boolean);
+  return directCandidates
+    .map(_normalizeLeadershipCandidate)
+    .filter(Boolean)
+    .sort((left, right) => right.score - left.score);
+}
+
 function _connectionsContextFromPrior(priorById, buyer) {
   const q12 = priorById.get('q12_connections') || {};
   const raw = _getAnswerRaw(q12);
@@ -514,6 +571,35 @@ function _buildDeterministicStructuredOutput(question, priorQuestions = []) {
     q13Raw.answer,
     q13Raw.summary,
   ]);
+
+  if (questionId === 'q11_decision_owner') {
+    const candidate = _leadershipCandidatesFromPrior(priorById)[0];
+    if (!candidate) {
+      return _buildInsufficientSynthesis(question, 'Need a named commercial, partnerships, digital, product, or executive leadership candidate before buyer synthesis.');
+    }
+    const confidence = Math.max(0.5, Math.min(0.72, (Number(priorById.get('q3_leadership')?.confidence || 0) || 0.65) - 0.12));
+    return {
+      question: question.question_text,
+      answer: candidate.name,
+      summary: `${candidate.name}${candidate.title ? ` (${candidate.title})` : ''} is the strongest buyer hypothesis from leadership evidence.`,
+      primary_owner: {
+        name: candidate.name,
+        title: candidate.title,
+        function: candidate.function,
+        evidence_url: candidate.evidence_url,
+      },
+      structured_signal: {
+        decision_owner_name: candidate.name,
+        decision_owner_title: candidate.title,
+        buyer_function: candidate.function || 'commercial',
+      },
+      buyer_confidence: confidence,
+      verification_needed: `Confirm ${candidate.name} still owns the commercial or digital buying motion before outreach.`,
+      validation_state: 'provisional',
+      confidence,
+      sources: candidate.evidence_url ? [candidate.evidence_url] : [],
+    };
+  }
 
   if (questionId === 'q12_connections') {
     if (!buyer.name) {
@@ -3114,6 +3200,28 @@ export async function runOpenCodePresetBatch({
               cliResult: questionRun.cliResult || null,
             },
           );
+          if (
+            question.question_id === 'q11_decision_owner'
+            && !['validated', 'confirmed', 'provisional'].includes(String(questionPayload.validation_state || '').trim().toLowerCase())
+          ) {
+            const synthesizedDecisionOwner = _buildDeterministicStructuredOutput(question, finalQuestions);
+            if (synthesizedDecisionOwner && synthesizedDecisionOwner.validation_state === 'provisional') {
+              questionPayload = _buildQuestionPayload(
+                question,
+                synthesizedDecisionOwner,
+                `cli-${index + 1}`,
+                {
+                  promptTrace: {
+                    provider: 'deterministic_synthesis',
+                    source_question_ids: Array.isArray(question.depends_on) ? question.depends_on : [],
+                  },
+                  messageTrace: [],
+                  executionQuery: question.query,
+                  cliResult: { code: 0, stdout: '', stderr: '' },
+                },
+              );
+            }
+          }
           let updatedState = _mergeQuestionState(existingQuestionState || currentQuestionState, questionPayload, new Date().toISOString());
           updatedState = _spendCredit(updatedState, 'search', 1);
           if (Array.isArray(questionPayload?.reasoning?.structured_output?.sources) && questionPayload.reasoning.structured_output.sources.length > 0) {

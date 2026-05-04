@@ -119,9 +119,12 @@ function hasMeaningfulOutreachStrategy(dossierData) {
   const dossier = asRecord(dossierData)
   const discoverySummary = asRecord(dossier.discovery_summary || asRecord(dossier.question_first).discovery_summary)
   const outreach = asRecord(discoverySummary.outreach_strategy || dossier.outreach_strategy)
-  return hasMeaningfulText(outreach.recommended_target)
-    || hasMeaningfulText(outreach.recommended_angle)
-    || hasMeaningfulText(outreach.first_message_strategy)
+  return String(outreach.status || '').trim().toLowerCase() !== 'insufficient_signal'
+    && (
+      hasMeaningfulText(outreach.recommended_target)
+      || hasMeaningfulText(outreach.recommended_angle)
+      || hasMeaningfulText(outreach.first_message_strategy)
+    )
 }
 
 function hasMeaningfulSummary(dossierData) {

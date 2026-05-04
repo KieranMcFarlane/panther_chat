@@ -55,6 +55,10 @@ test('artifactCoverage counts dossier-ready commercial artifacts', () => {
       dossier_data: {
         discovery_summary: {
           graphiti_sales_brief: { status: 'insufficient_signal' },
+          outreach_strategy: {
+            status: 'insufficient_signal',
+            first_message_strategy: 'Open with the fresh trigger, explain the relevant Yellow Panther capability, and verify the right owner before deeper outreach.',
+          },
         },
         sections: null,
       },
