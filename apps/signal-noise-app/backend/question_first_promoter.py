@@ -13,6 +13,7 @@ try:
         _yp_team_data_from_connections_graph,
     )
     from backend.yp_team_roster import load_active_yp_team
+    from backend.question_answer_normalizer import normalize_upstream_answer
 except ImportError:
     from connections_analyzer import (  # type: ignore
         ConnectionsAnalyzer,
@@ -21,6 +22,7 @@ except ImportError:
         _yp_team_data_from_connections_graph,
     )
     from yp_team_roster import load_active_yp_team  # type: ignore
+    from question_answer_normalizer import normalize_upstream_answer  # type: ignore
 
 
 def _slugify(value: Any) -> str:
@@ -850,6 +852,15 @@ def build_question_first_promotions(
     allowed_rollout_phase: str = "phase_1_core",
 ) -> Dict[str, Any]:
     answers = [item for item in (answers or []) if isinstance(item, dict)]
+    raw_answer_by_question = {
+        str(answer.get("question_id") or "").strip(): answer
+        for answer in answers
+        if str(answer.get("question_id") or "").strip()
+    }
+    answers = [
+        normalize_upstream_answer(answer, adjacent_answers=raw_answer_by_question)
+        for answer in answers
+    ]
     question_specs = [item for item in (question_specs or []) if isinstance(item, dict)]
     evidence_items = [item for item in (evidence_items or []) if isinstance(item, dict)]
     promotion_candidates = [item for item in (promotion_candidates or []) if isinstance(item, dict)]

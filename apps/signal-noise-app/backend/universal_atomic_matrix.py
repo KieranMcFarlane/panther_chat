@@ -15,6 +15,23 @@ HOP_TIMEOUT_MS = 180000
 HOP_BUDGET = 8
 EVIDENCE_EXTENSION_CONFIDENCE_THRESHOLD = 0.65
 
+UPSTREAM_QUALITY_CONTRACT = {
+    "typed_outcomes": ["validated", "no_signal", "not_applicable", "failed"],
+    "required_fields": [
+        "validation_state",
+        "confidence",
+        "checked_sources",
+        "commercial_implication",
+        "applicability",
+        "structured_signal",
+    ],
+}
+
+SPORT_CONTEXT_QUALITY_CONTRACT = {
+    **UPSTREAM_QUALITY_CONTRACT,
+    "not_applicable_for_entity_types": ["PERSON", "RFP", "NON_CURRENT_ENTITY"],
+}
+
 
 def _slugify(value: str) -> str:
     slug = "".join(ch.lower() if ch.isalnum() else "-" for ch in str(value or "").strip())
@@ -160,6 +177,7 @@ UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
         "fallback_to_retrieval": True,
         "hop_budget": HOP_BUDGET,
         "evidence_extension_budget": 1,
+        "quality_contract": UPSTREAM_QUALITY_CONTRACT,
     },
     {
         "question_id": "q2_digital_stack",
@@ -183,6 +201,8 @@ UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
         "deterministic_input": {"source_question_id": "q1_foundation", "official_site_only": True},
         "hop_budget": HOP_BUDGET,
         "evidence_extension_budget": 2,
+        "quality_contract": UPSTREAM_QUALITY_CONTRACT,
+        "adjacent_evidence_reuse": ["q6_launch_signal"],
     },
     {
         "question_id": "q3_leadership",
@@ -214,6 +234,7 @@ UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
         "evidence_extension_budget": 2,
         "question_timeout_ms": 300000,
         "hop_timeout_ms": 300000,
+        "quality_contract": UPSTREAM_QUALITY_CONTRACT,
     },
     {
         "question_id": "q6_launch_signal",
@@ -236,6 +257,7 @@ UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
         "hop_budget": HOP_BUDGET,
         "evidence_extension_budget": 2,
         "commercial_output_enabled": True,
+        "quality_contract": UPSTREAM_QUALITY_CONTRACT,
     },
     {
         "question_id": "q7_procurement_signal",
@@ -260,6 +282,7 @@ UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
         "question_role": "stage_1_broad_opener",
         "empty_result_policy": "no_signal",
         "commercial_output_enabled": True,
+        "quality_contract": UPSTREAM_QUALITY_CONTRACT,
     },
     {
         "question_id": "q8_explicit_rfp",
@@ -284,6 +307,7 @@ UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
         "question_role": "follow_up_negative_confirmation",
         "empty_result_policy": "no_signal",
         "commercial_output_enabled": True,
+        "quality_contract": UPSTREAM_QUALITY_CONTRACT,
     },
     {
         "question_id": "q9_news_signal",
@@ -306,6 +330,7 @@ UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
         "hop_budget": HOP_BUDGET,
         "evidence_extension_budget": 2,
         "commercial_output_enabled": True,
+        "quality_contract": UPSTREAM_QUALITY_CONTRACT,
     },
     {
         "question_id": "q10_hiring_signal",
@@ -330,6 +355,7 @@ UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
         "question_role": "supplementary_signal_probe",
         "empty_result_policy": "no_signal",
         "commercial_output_enabled": True,
+        "quality_contract": UPSTREAM_QUALITY_CONTRACT,
     },
     {
         "question_id": "q4_performance",
@@ -351,6 +377,7 @@ UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
         "fallback_to_retrieval": False,
         "hop_budget": 0,
         "evidence_extension_budget": 0,
+        "quality_contract": SPORT_CONTEXT_QUALITY_CONTRACT,
     },
     {
         "question_id": "q5_league_context",
@@ -372,6 +399,7 @@ UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
         "fallback_to_retrieval": False,
         "hop_budget": 0,
         "evidence_extension_budget": 0,
+        "quality_contract": SPORT_CONTEXT_QUALITY_CONTRACT,
     },
     {
         "question_id": "q11_decision_owner",

@@ -9,6 +9,7 @@ const {
   hasCommercialSynthesisEligibility,
   perQuestionQuality,
   qualityState,
+  targetedRerunBacklog,
 } = require('./report-dossier-quality.cjs')
 
 test('qualityState demotes published dossier with missing commercial artifacts', () => {
@@ -336,4 +337,34 @@ test('hasBuyerRouteEligibility rejects private entity leadership absence prose',
   }
 
   assert.equal(hasBuyerRouteEligibility(dossier), false)
+})
+
+test('targetedRerunBacklog reports upstream rerun candidates with reason codes', () => {
+  const rows = [
+    {
+      canonical_entity_id: 'major-league-cricket',
+      entity_name: 'Major League Cricket',
+      dossier_data: {
+        answers: [
+          { question_id: 'q1_foundation', validation_state: 'failed', confidence: 0, answer: 'Provider infrastructure failure.' },
+          { question_id: 'q2_digital_stack', validation_state: 'failed', confidence: 0, answer: 'Provider infrastructure failure.' },
+          { question_id: 'q3_leadership', validation_state: 'failed', confidence: 0, answer: 'Provider infrastructure failure.' },
+          { question_id: 'q6_launch_signal', validation_state: 'validated', confidence: 0.82, answer: 'The league launched a new ticketing app.' },
+          { question_id: 'q14_yp_fit', validation_state: 'no_signal', confidence: 0 },
+        ],
+      },
+    },
+  ]
+
+  const backlog = targetedRerunBacklog(rows)
+
+  assert.equal(backlog.total_entities, 1)
+  assert.equal(backlog.total_recommendations, 3)
+  assert.deepEqual(backlog.by_question, {
+    q1_foundation: 1,
+    q2_digital_stack: 1,
+    q3_leadership: 1,
+  })
+  assert.equal(backlog.recommendations[0].canonical_entity_id, 'major-league-cricket')
+  assert.equal(backlog.recommendations[0].reason, 'upstream_failed_blocks_commercial_synthesis')
 })

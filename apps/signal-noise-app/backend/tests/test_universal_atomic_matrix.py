@@ -313,6 +313,37 @@ def test_universal_atomic_matrix_keeps_deterministic_and_derived_questions_out_o
     assert questions["q15_outreach_strategy"]["query"] == ""
 
 
+def test_upstream_questions_define_typed_quality_contracts():
+    payload = build_universal_atomic_question_source(
+        entity_type="PERSON",
+        entity_name="Elliott Hillman",
+        entity_id="elliott-hillman",
+        preset="elliott-hillman-atomic-matrix",
+    )
+    questions = _question_index(payload)
+
+    for question_id in [
+        "q1_foundation",
+        "q2_digital_stack",
+        "q3_leadership",
+        "q4_performance",
+        "q5_league_context",
+        "q6_launch_signal",
+        "q7_procurement_signal",
+        "q8_explicit_rfp",
+        "q9_news_signal",
+        "q10_hiring_signal",
+    ]:
+        contract = questions[question_id]["quality_contract"]
+        assert contract["typed_outcomes"] == ["validated", "no_signal", "not_applicable", "failed"]
+        assert "checked_sources" in contract["required_fields"]
+        assert "structured_signal" in contract["required_fields"]
+
+    assert questions["q2_digital_stack"]["adjacent_evidence_reuse"] == ["q6_launch_signal"]
+    assert questions["q4_performance"]["quality_contract"]["not_applicable_for_entity_types"] == ["PERSON", "RFP", "NON_CURRENT_ENTITY"]
+    assert questions["q5_league_context"]["quality_contract"]["not_applicable_for_entity_types"] == ["PERSON", "RFP", "NON_CURRENT_ENTITY"]
+
+
 def test_universal_atomic_matrix_allows_default_rollout_phase_override():
     payload = build_universal_atomic_question_source(
         entity_type="SPORT_CLUB",

@@ -4,6 +4,8 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 
 import {
+  buildTargetedRerunRecommendations,
+  parseArgs,
   repairDossierPayload,
   shouldRepairDossier,
 } from './repair-question-first-dossier-quality.mjs'
@@ -690,4 +692,55 @@ test('repairDossierPayload replaces generic placeholder q15 outreach with insuff
 
   assert.equal(answers.q15_outreach_strategy.validation_state, 'no_signal')
   assert.equal(answers.q15_outreach_strategy.answer.raw_structured_output.status, 'insufficient_signal')
+})
+
+test('parseArgs supports dry-run filters and rerun plan output', () => {
+  assert.deepEqual(parseArgs([
+    '--dry-run',
+    '--limit=25',
+    '--entity-id=major-league-cricket',
+    '--questions=q1_foundation,q3_leadership,q6_launch_signal',
+    '--rerun-plan-output=/tmp/reruns.json',
+  ]), {
+    apply: false,
+    dryRun: true,
+    limit: 25,
+    entityId: 'major-league-cricket',
+    questions: ['q1_foundation', 'q3_leadership', 'q6_launch_signal'],
+    rerunPlanOutput: '/tmp/reruns.json',
+  })
+})
+
+test('targeted rerun recommendations prioritize upstream unlock questions', () => {
+  const pack = weakFifteenPack()
+  pack.answers = pack.answers.map((item) => {
+    if (['q1_foundation', 'q2_digital_stack', 'q3_leadership', 'q6_launch_signal', 'q9_news_signal'].includes(item.question_id)) {
+      return {
+        ...item,
+        validation_state: 'failed',
+        confidence: 0,
+        answer: 'Provider infrastructure failure.',
+      }
+    }
+    if (item.question_id === 'q14_yp_fit') {
+      return answer('q14_yp_fit')
+    }
+    return item
+  })
+
+  const recommendations = buildTargetedRerunRecommendations(pack, {
+    canonicalEntityId: 'major-league-cricket',
+    entityName: 'Major League Cricket',
+  })
+
+  assert.deepEqual(recommendations.map((item) => item.question_id), [
+    'q1_foundation',
+    'q2_digital_stack',
+    'q3_leadership',
+    'q6_launch_signal',
+    'q9_news_signal',
+  ])
+  assert.equal(recommendations[0].canonical_entity_id, 'major-league-cricket')
+  assert.equal(recommendations[0].reason, 'upstream_failed_blocks_commercial_synthesis')
+  assert.match(recommendations[0].expected_unlock, /q11-q15/)
 })

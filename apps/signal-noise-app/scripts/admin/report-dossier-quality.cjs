@@ -108,6 +108,49 @@ function hasCommercialSynthesisEligibility(dossierData) {
   })
 }
 
+const PRIORITY_RERUN_QUESTION_IDS = [
+  'q1_foundation',
+  'q2_digital_stack',
+  'q3_leadership',
+  'q6_launch_signal',
+  'q9_news_signal',
+]
+
+function isFailedUpstreamRecord(record) {
+  if (!record) return false
+  const state = answerValidationState(record)
+  return ['failed', 'tool_call_missing', 'unknown', 'blocked', ''].includes(state)
+    || /provider infrastructure failure|insufficient balance|question execution failed|no deterministic answer was produced/i.test(answerText(record))
+}
+
+function targetedRerunRecommendationsForRow(row) {
+  const dossier = asRecord(row.dossier_data)
+  const answers = questionAnswerMap(dossier)
+  const promising = hasCommercialSynthesisEligibility(dossier)
+    || hasBuyerRouteEligibility(dossier)
+  if (!promising) return []
+  return PRIORITY_RERUN_QUESTION_IDS
+    .filter((questionId) => isFailedUpstreamRecord(answers[questionId]))
+    .map((questionId) => ({
+      canonical_entity_id: row.canonical_entity_id || dossier.entity_id || null,
+      entity_name: row.entity_name || dossier.entity_name || null,
+      question_id: questionId,
+      reason: 'upstream_failed_blocks_commercial_synthesis',
+      expected_unlock: 'Improves q1-q10 evidence quality and can unlock q11-q15 buyer/fit/outreach synthesis.',
+    }))
+}
+
+function targetedRerunBacklog(rows) {
+  const recommendations = rows.flatMap(targetedRerunRecommendationsForRow)
+  const entityIds = new Set(recommendations.map((item) => item.canonical_entity_id || item.entity_name).filter(Boolean))
+  return {
+    total_entities: entityIds.size,
+    total_recommendations: recommendations.length,
+    by_question: countBy(recommendations, (item) => item.question_id),
+    recommendations: recommendations.slice(0, 50),
+  }
+}
+
 function answerRecords(dossierData) {
   const dossier = asRecord(dossierData)
   const questionFirst = asRecord(dossier.question_first)
@@ -179,6 +222,8 @@ function hasMeaningfulYellowPantherFit(dossierData) {
   return hasMeaningfulText(fit.fit_rationale)
     || hasMeaningfulText(fit.fit_feedback)
     || hasMeaningfulText(fit.competitive_advantage)
+    || hasMeaningfulText(fit.best_service)
+    || hasMeaningfulText(fit.service_fit)
 }
 
 function hasMeaningfulOutreachStrategy(dossierData) {
@@ -393,6 +438,7 @@ function summarizeDossiers(dossiers) {
     answer_coverage_buckets: countBy(enriched, (row) => bucketForAnswerCount(row.answer_count)),
     artifact_coverage: artifactCoverage(dossiers),
     per_question_quality: perQuestionQuality(dossiers),
+    targeted_rerun_backlog: targetedRerunBacklog(dossiers),
     failed_provider_failures: providerFailureCount(dossiers),
     top_recent_dossiers: enriched.slice(0, 15),
   }
@@ -426,6 +472,7 @@ async function buildReport(pool) {
     answer_coverage_buckets: dossierSummary.answer_coverage_buckets,
     artifact_coverage: dossierSummary.artifact_coverage,
     per_question_quality: dossierSummary.per_question_quality,
+    targeted_rerun_backlog: dossierSummary.targeted_rerun_backlog,
     failed_provider_failures: dossierSummary.failed_provider_failures,
     top_recent_dossiers: dossierSummary.top_recent_dossiers,
     top_commercial_signal_candidates: topCommercialSignalCandidates,
@@ -460,4 +507,5 @@ module.exports = {
   qualityState,
   hasBuyerRouteEligibility,
   hasCommercialSynthesisEligibility,
+  targetedRerunBacklog,
 }

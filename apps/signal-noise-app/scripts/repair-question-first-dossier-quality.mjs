@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import crypto from 'node:crypto'
+import { writeFile } from 'node:fs/promises'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -13,9 +14,14 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 config({ path: resolve(__dirname, '..', '.env'), quiet: true })
 
 export function parseArgs(argv = process.argv.slice(2)) {
+  const questionsArg = argv.find((arg) => arg.startsWith('--questions='))?.split('=')[1] || ''
   return {
     apply: argv.includes('--apply'),
+    dryRun: argv.includes('--dry-run') || !argv.includes('--apply'),
     limit: Number(argv.find((arg) => arg.startsWith('--limit='))?.split('=')[1] || 500),
+    entityId: argv.find((arg) => arg.startsWith('--entity-id='))?.split('=')[1] || null,
+    questions: questionsArg.split(',').map((item) => item.trim()).filter(Boolean),
+    rerunPlanOutput: argv.find((arg) => arg.startsWith('--rerun-plan-output='))?.split('=').slice(1).join('=') || null,
   }
 }
 
@@ -39,6 +45,29 @@ function asRecord(value) {
 function asArray(value) {
   return Array.isArray(value) ? value : []
 }
+
+const UPSTREAM_QUESTION_IDS = new Set([
+  'q1_foundation',
+  'q2_digital_stack',
+  'q3_leadership',
+  'q4_performance',
+  'q5_league_context',
+  'q6_launch_signal',
+  'q7_procurement_signal',
+  'q8_explicit_rfp',
+  'q9_news_signal',
+  'q10_hiring_signal',
+])
+
+const PRIORITY_RERUN_QUESTION_IDS = [
+  'q1_foundation',
+  'q2_digital_stack',
+  'q3_leadership',
+  'q6_launch_signal',
+  'q9_news_signal',
+]
+
+const NON_SPORT_ENTITY_TYPES = new Set(['person', 'rfp', 'non_current_entity', 'non-current entity'])
 
 function stableJson(value) {
   if (Array.isArray(value)) return `[${value.map(stableJson).join(',')}]`
@@ -77,6 +106,110 @@ function hasMeaningfulCommercialText(value) {
 
 function firstMeaningfulCommercialText(values) {
   return values.map(toText).find(hasMeaningfulCommercialText) || ''
+}
+
+function normalizedEntityType(value) {
+  return String(value || '').trim().toLowerCase().replace(/-/g, '_')
+}
+
+function checkedSource(record, rationale) {
+  return {
+    source: toText(record?.evidence_url) || 'bounded_question_retrieval',
+    rationale,
+  }
+}
+
+function normalizeUpstreamAnswer(record, adjacentAnswers = {}, entityInfo = {}) {
+  if (!record || typeof record !== 'object') return null
+  const questionId = String(record.question_id || record.id || '').trim()
+  if (!UPSTREAM_QUESTION_IDS.has(questionId)) return null
+  const entityType = normalizedEntityType(record.entity_type || entityInfo.entity_type)
+  const currentStructuredSignal = asRecord(record.structured_signal || answerRaw(record).structured_signal)
+  const normalized = {
+    ...record,
+    checked_sources: asArray(record.checked_sources),
+    applicability: asRecord(record.applicability).status ? record.applicability : { status: 'applicable' },
+    structured_signal: currentStructuredSignal,
+    commercial_implication: toText(record.commercial_implication),
+  }
+
+  if (questionId === 'q1_foundation' && NON_SPORT_ENTITY_TYPES.has(entityType)) {
+    const reason = `${entityType || 'this entity type'} is outside the canonical organisation foundation target shape.`
+    return {
+      ...normalized,
+      validation_state: 'not_applicable',
+      confidence: 0,
+      applicability: { status: 'not_applicable', reason },
+      checked_sources: [checkedSource(record, reason)],
+      commercial_implication: 'Entity is outside the canonical organisation dossier target shape.',
+      structured_signal: {
+        ...currentStructuredSignal,
+        entity_classification: entityType === 'person' ? 'person' : entityType,
+      },
+      force: true,
+    }
+  }
+
+  if (['q4_performance', 'q5_league_context'].includes(questionId) && NON_SPORT_ENTITY_TYPES.has(entityType)) {
+    const reason = `${questionId} applies to current sport organisations, not ${entityType || 'this entity type'}.`
+    return {
+      ...normalized,
+      validation_state: 'not_applicable',
+      confidence: 0,
+      applicability: { status: 'not_applicable', reason },
+      checked_sources: [checkedSource(record, reason)],
+      commercial_implication: 'Question not applicable to this entity type.',
+      structured_signal: {
+        ...currentStructuredSignal,
+        status: 'not_applicable',
+      },
+      force: true,
+    }
+  }
+
+  if (questionId === 'q2_digital_stack') {
+    const q6 = adjacentAnswers.q6_launch_signal
+    const q6Evidence = recordCommercialEvidence(q6)
+    if (hasMeaningfulCommercialText(q6Evidence)) {
+      return {
+        ...normalized,
+        structured_signal: {
+          ...currentStructuredSignal,
+          digital_footprint_unknown: ['failed', 'no_signal', 'unknown', ''].includes(String(record.validation_state || '').toLowerCase()),
+          adjacent_digital_hints: [{
+            source_question_id: 'q6_launch_signal',
+            summary: q6Evidence,
+            evidence_url: toText(q6?.evidence_url),
+          }],
+        },
+        commercial_implication: normalized.commercial_implication || 'Adjacent launch evidence suggests digital footprint worth verifying.',
+        force: true,
+      }
+    }
+  }
+
+  const state = String(record.validation_state || '').trim().toLowerCase()
+  const text = toText(record.answer || record.summary || record.commercial_implication)
+  const checkedAbsent = state === 'no_signal'
+    || /returned no relevant results|returned no results|no evidence|no hiring leads found|checked absence/i.test(text)
+  if (checkedAbsent) {
+    const rationale = text || 'Checked sources did not produce a relevant signal.'
+    return {
+      ...normalized,
+      validation_state: 'no_signal',
+      confidence: 0,
+      checked_sources: normalized.checked_sources.length > 0 ? normalized.checked_sources : [checkedSource(record, rationale)],
+      structured_signal: {
+        ...currentStructuredSignal,
+        status: 'checked_absent',
+        checked_absence_rationale: rationale,
+      },
+      commercial_implication: normalized.commercial_implication || 'No current buying-motion evidence found in checked sources.',
+      force: true,
+    }
+  }
+
+  return null
 }
 
 function inferYellowPantherService(signalText, capabilityGapText = '') {
@@ -270,10 +403,14 @@ function patchAnswerArray(records, patchByQuestionId) {
       validation_state: patch.validation_state,
       confidence: patch.confidence,
       answer: patch.answer,
+      checked_sources: patch.checked_sources || record.checked_sources,
+      applicability: patch.applicability || record.applicability,
+      structured_signal: patch.structured_signal || record.structured_signal,
+      commercial_implication: patch.commercial_implication || record.commercial_implication,
       evidence_url: patch.evidence_url || record.evidence_url || '',
       reasoning: {
         ...(asRecord(record.reasoning)),
-        structured_output: patch.answer.raw_structured_output,
+        structured_output: asRecord(patch.answer).raw_structured_output || patch.structured_signal || asRecord(record.reasoning).structured_output,
       },
       prompt_trace: {
         provider: 'deterministic_repair',
@@ -530,11 +667,38 @@ function buildQuestionRecordPatches(repairedDossier) {
   return patches
 }
 
-function repairQuestionAnswerRecords(repairedDossier) {
-  const patches = buildQuestionRecordPatches(repairedDossier)
-  return Object.keys(patches).length > 0
-    ? patchQuestionRecordContainers(repairedDossier, patches)
+function buildUpstreamNormalizationPatches(repairedDossier, entityInfo = {}) {
+  const answers = questionAnswerMap(repairedDossier)
+  return Object.fromEntries(
+    Object.values(answers)
+      .map((record) => {
+        const questionId = String(record?.question_id || record?.id || '').trim()
+        if (!UPSTREAM_QUESTION_IDS.has(questionId)) return null
+        const patch = normalizeUpstreamAnswer(record, answers, {
+          entity_type: entityInfo.entity_type || repairedDossier.entity_type,
+        })
+        if (!patch) return null
+        return [questionId, patch]
+      })
+      .filter(Boolean),
+  )
+}
+
+function filterPatchQuestions(patches, questions = []) {
+  const allowed = new Set(asArray(questions).filter(Boolean))
+  if (allowed.size === 0) return patches
+  return Object.fromEntries(Object.entries(patches).filter(([questionId]) => allowed.has(questionId)))
+}
+
+function repairQuestionAnswerRecords(repairedDossier, entityInfo = {}, options = {}) {
+  const upstreamPatches = filterPatchQuestions(buildUpstreamNormalizationPatches(repairedDossier, entityInfo), options.questions)
+  const upstreamRepaired = Object.keys(upstreamPatches).length > 0
+    ? patchQuestionRecordContainers(repairedDossier, upstreamPatches)
     : repairedDossier
+  const synthesisPatches = filterPatchQuestions(buildQuestionRecordPatches(upstreamRepaired), options.questions)
+  return Object.keys(synthesisPatches).length > 0
+    ? patchQuestionRecordContainers(upstreamRepaired, synthesisPatches)
+    : upstreamRepaired
 }
 
 export function answerRecords(dossierData) {
@@ -568,6 +732,43 @@ function hasRepairableBuyerRouteMiss(dossierData) {
     && Number(answers.q12_connections?.confidence || 0) === 0
 }
 
+function isFailedUpstreamRecord(record) {
+  if (!record) return false
+  const state = String(record?.validation_state || '').trim().toLowerCase()
+  return ['failed', 'tool_call_missing', 'unknown', 'blocked', ''].includes(state)
+    || /provider infrastructure failure|insufficient balance|question execution failed|no deterministic answer was produced/i.test(toText(record?.answer || record?.commercial_implication))
+}
+
+function hasPromisingCommercialContext(answers) {
+  return [
+    recordCommercialEvidence(answers.q2_digital_stack),
+    recordCommercialEvidence(answers.q6_launch_signal),
+    recordCommercialEvidence(answers.q7_procurement_signal),
+    recordCommercialEvidence(answers.q9_news_signal),
+    recordCommercialEvidence(answers.q10_hiring_signal),
+    recordCommercialEvidence(answers.q13_capability_gap, ['top_gap', 'gap_label']),
+  ].some(hasMeaningfulCommercialText)
+    || Boolean(leadershipBuyerCandidate(answers))
+    || Boolean(decisionOwnerCandidate(answers.q11_decision_owner))
+}
+
+export function buildTargetedRerunRecommendations(dossierData, entityInfo = {}, options = {}) {
+  const answers = questionAnswerMap(dossierData)
+  const allowedQuestions = new Set(asArray(options.questions).filter(Boolean))
+  if (!hasPromisingCommercialContext(answers)) return []
+
+  return PRIORITY_RERUN_QUESTION_IDS
+    .filter((questionId) => allowedQuestions.size === 0 || allowedQuestions.has(questionId))
+    .filter((questionId) => isFailedUpstreamRecord(answers[questionId]))
+    .map((questionId) => ({
+      canonical_entity_id: String(entityInfo.canonicalEntityId || entityInfo.canonical_entity_id || dossierData?.entity_id || '').trim() || null,
+      entity_name: String(entityInfo.entityName || entityInfo.entity_name || dossierData?.entity_name || '').trim() || null,
+      question_id: questionId,
+      reason: 'upstream_failed_blocks_commercial_synthesis',
+      expected_unlock: 'Improves q1-q10 evidence quality and can unlock q11-q15 buyer/fit/outreach synthesis.',
+    }))
+}
+
 export function shouldRepairDossier(dossierData) {
   const dossier = asRecord(dossierData)
   const discoverySummary = asRecord(dossier.discovery_summary || asRecord(dossier.question_first).discovery_summary)
@@ -584,7 +785,7 @@ export function shouldRepairDossier(dossierData) {
     )
 }
 
-export function repairDossierPayload(dossierData, canonicalEntityId, entityInfo = {}) {
+export function repairDossierPayload(dossierData, canonicalEntityId, entityInfo = {}, options = {}) {
   const dossier = asRecord(dossierData)
   const entity = {
     id: canonicalEntityId || dossier.entity_id,
@@ -596,6 +797,8 @@ export function repairDossierPayload(dossierData, canonicalEntityId, entityInfo 
   }
   const normalized = repairQuestionAnswerRecords(
     normalizeQuestionFirstDossier(dossier, String(canonicalEntityId || dossier.entity_id || ''), entity),
+    entityInfo,
+    options,
   )
   return {
     changed: contentHash(dossier) !== contentHash(normalized),
@@ -607,7 +810,11 @@ export function repairDossierPayload(dossierData, canonicalEntityId, entityInfo 
   }
 }
 
-async function loadCandidateRows(pool, limit) {
+async function loadCandidateRows(pool, limit, entityId = null) {
+  const entityFilter = entityId
+    ? 'and (canonical_entity_id::text = $2 or entity_name = $2)'
+    : ''
+  const params = entityId ? [limit, entityId] : [limit]
   const result = await pool.query(`
     select
       id,
@@ -617,38 +824,56 @@ async function loadCandidateRows(pool, limit) {
       dossier_data
     from entity_dossiers
     where canonical_entity_id is not null
+      ${entityFilter}
     order by coalesce(generated_at, updated_at, created_at) desc nulls last
     limit $1
-  `, [limit])
+  `, params)
   return result.rows
 }
 
 async function main() {
-  const { apply, limit } = parseArgs()
+  const { apply, dryRun, limit, entityId, questions, rerunPlanOutput } = parseArgs()
   const pool = createPgPool()
   const summary = {
     apply,
+    dry_run: dryRun,
     limit,
+    entity_id: entityId,
+    questions,
     scanned: 0,
     eligible: 0,
     changed: 0,
     updated: 0,
     demoted_to_partial: 0,
+    q14_filled: 0,
+    q15_filled: 0,
+    rerun_recommendations: 0,
   }
+  const rerunPlan = []
 
   try {
-    const rows = await loadCandidateRows(pool, limit)
+    const rows = await loadCandidateRows(pool, limit, entityId)
     for (const row of rows) {
       summary.scanned += 1
+      const recommendations = buildTargetedRerunRecommendations(row.dossier_data, row, { questions })
+      rerunPlan.push(...recommendations)
       if (!shouldRepairDossier(row.dossier_data)) {
         continue
       }
       summary.eligible += 1
-      const repair = repairDossierPayload(row.dossier_data, row.canonical_entity_id, row)
+      const repair = repairDossierPayload(row.dossier_data, row.canonical_entity_id, row, { questions })
       if (!repair.changed) {
         continue
       }
       summary.changed += 1
+      const beforeAnswers = questionAnswerMap(row.dossier_data)
+      const afterAnswers = questionAnswerMap(repair.repaired_dossier)
+      if (Number(beforeAnswers.q14_yp_fit?.confidence || 0) === 0 && Number(afterAnswers.q14_yp_fit?.confidence || 0) > 0) {
+        summary.q14_filled += 1
+      }
+      if (Number(beforeAnswers.q15_outreach_strategy?.confidence || 0) === 0 && Number(afterAnswers.q15_outreach_strategy?.confidence || 0) > 0) {
+        summary.q15_filled += 1
+      }
       if (String(repair.after_publish_status || '').toLowerCase() === 'published_partial') {
         summary.demoted_to_partial += 1
       }
@@ -659,6 +884,10 @@ async function main() {
         )
         summary.updated += 1
       }
+    }
+    summary.rerun_recommendations = rerunPlan.length
+    if (rerunPlanOutput) {
+      await writeFile(rerunPlanOutput, `${JSON.stringify({ generated_at: new Date().toISOString(), recommendations: rerunPlan }, null, 2)}\n`, 'utf8')
     }
     process.stdout.write(`${JSON.stringify(summary, null, 2)}\n`)
   } finally {
