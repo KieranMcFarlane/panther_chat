@@ -6,6 +6,7 @@ const test = require('node:test')
 const {
   artifactCoverage,
   hasBuyerRouteEligibility,
+  hasCommercialSynthesisEligibility,
   perQuestionQuality,
   qualityState,
 } = require('./report-dossier-quality.cjs')
@@ -180,6 +181,12 @@ test('perQuestionQuality uses commercial synthesis eligibility for q14 and q15 d
       dossier_data: {
         answers: [
           { question_id: 'q6_launch_signal', validation_state: 'validated', confidence: 0.82, answer: 'The club launched a new digital ticketing app.' },
+          {
+            question_id: 'q11_decision_owner',
+            validation_state: 'provisional',
+            confidence: 0.62,
+            answer: 'Jane Buyer, Chief Commercial Officer',
+          },
           { question_id: 'q14_yp_fit', validation_state: 'provisional', confidence: 0.58 },
           { question_id: 'q15_outreach_strategy', validation_state: 'provisional', confidence: 0.56 },
         ],
@@ -194,6 +201,106 @@ test('perQuestionQuality uses commercial synthesis eligibility for q14 and q15 d
   assert.equal(stats.q14_yp_fit.eligible_total, 1)
   assert.equal(stats.q14_yp_fit.eligible_zero_confidence, 0)
   assert.equal(stats.q15_outreach_strategy.eligible_total, 1)
+  assert.equal(stats.q15_outreach_strategy.eligible_zero_confidence, 0)
+})
+
+test('commercial synthesis eligibility rejects placeholder q13 gap output', () => {
+  const dossier = {
+    answers: [
+      {
+        question_id: 'q13_capability_gap',
+        validation_state: 'provisional',
+        confidence: 0.55,
+        answer: {
+          kind: 'scorecard',
+          value: 'kind: summary',
+          summary: 'kind: summary',
+          raw_structured_output: {
+            top_gap: 'kind: summary',
+            gap_label: 'kind: summary',
+            evidence_basis: ['No hiring leads found in bounded retrieval.'],
+          },
+        },
+      },
+      { question_id: 'q14_yp_fit', validation_state: 'no_signal', confidence: 0 },
+      { question_id: 'q15_outreach_strategy', validation_state: 'no_signal', confidence: 0 },
+    ],
+  }
+
+  assert.equal(hasCommercialSynthesisEligibility(dossier), false)
+
+  const stats = perQuestionQuality([{ dossier_data: dossier }])
+  assert.equal(stats.q14_yp_fit.eligible_total, 0)
+  assert.equal(stats.q15_outreach_strategy.eligible_total, 0)
+})
+
+test('commercial synthesis eligibility does not count buyer route alone as a trigger', () => {
+  const dossier = {
+    answers: [
+      {
+        question_id: 'q11_decision_owner',
+        validation_state: 'validated',
+        confidence: 0.92,
+        answer: {
+          kind: 'person',
+          summary: 'Ivo Ferriani is the President and likely commercial decision owner.',
+          raw_structured_output: {
+            primary_owner: {
+              name: 'Ivo Ferriani',
+              title: 'President',
+            },
+          },
+        },
+      },
+      {
+        question_id: 'q12_connections',
+        validation_state: 'provisional',
+        confidence: 0.52,
+        answer: {
+          kind: 'connections_path',
+          summary: 'Ivo Ferriani is the buyer path to verify via cold.',
+          raw_structured_output: {
+            target_person: 'Ivo Ferriani',
+            recommended_route: 'cold',
+          },
+        },
+      },
+      { question_id: 'q14_yp_fit', validation_state: 'no_signal', confidence: 0 },
+      { question_id: 'q15_outreach_strategy', validation_state: 'no_signal', confidence: 0 },
+    ],
+  }
+
+  assert.equal(hasBuyerRouteEligibility(dossier), true)
+  assert.equal(hasCommercialSynthesisEligibility(dossier), false)
+
+  const stats = perQuestionQuality([{ dossier_data: dossier }])
+  assert.equal(stats.q14_yp_fit.eligible_total, 0)
+  assert.equal(stats.q15_outreach_strategy.eligible_total, 0)
+})
+
+test('perQuestionQuality requires buyer route eligibility for q15 outreach denominator', () => {
+  const rows = [
+    {
+      dossier_data: {
+        answers: [
+          {
+            question_id: 'q2_digital_stack',
+            validation_state: 'provisional',
+            confidence: 0.72,
+            answer: 'WSC Sports and Blinkfire show a meaningful digital and sponsorship analytics stack.',
+          },
+          { question_id: 'q14_yp_fit', validation_state: 'provisional', confidence: 0.58 },
+          { question_id: 'q15_outreach_strategy', validation_state: 'no_signal', confidence: 0 },
+        ],
+      },
+    },
+  ]
+
+  const stats = perQuestionQuality(rows)
+
+  assert.equal(stats.q14_yp_fit.eligible_total, 1)
+  assert.equal(stats.q14_yp_fit.eligible_zero_confidence, 0)
+  assert.equal(stats.q15_outreach_strategy.eligible_total, 0)
   assert.equal(stats.q15_outreach_strategy.eligible_zero_confidence, 0)
 })
 

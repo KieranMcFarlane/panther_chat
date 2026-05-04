@@ -94,12 +94,11 @@ function hasBuyerRouteEligibility(dossierData) {
 function hasCommercialSynthesisEligibility(dossierData) {
   const answers = questionAnswerMap(dossierData)
   return [
+    answers.q2_digital_stack,
     answers.q6_launch_signal,
     answers.q7_procurement_signal,
     answers.q9_news_signal,
     answers.q10_hiring_signal,
-    answers.q11_decision_owner,
-    answers.q12_connections,
     answers.q13_capability_gap,
   ].some((answer) => {
     if (!answer || answerConfidence(answer) <= 0) return false
@@ -268,7 +267,10 @@ function perQuestionQuality(rows) {
       if (['q14_yp_fit', 'q15_outreach_strategy'].includes(questionId)) {
         bucket.eligible_total = Number(bucket.eligible_total || 0)
         bucket.eligible_zero_confidence = Number(bucket.eligible_zero_confidence || 0)
-        if (commercialSynthesisEligible) {
+        const eligibleForQuestion = questionId === 'q15_outreach_strategy'
+          ? commercialSynthesisEligible && buyerRouteEligible
+          : commercialSynthesisEligible
+        if (eligibleForQuestion) {
           bucket.eligible_total += 1
           if (answerConfidence(answer) === 0) {
             bucket.eligible_zero_confidence += 1

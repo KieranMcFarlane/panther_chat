@@ -79,6 +79,36 @@ function firstMeaningfulCommercialText(values) {
   return values.map(toText).find(hasMeaningfulCommercialText) || ''
 }
 
+function inferYellowPantherService(signalText, capabilityGapText = '') {
+  const combined = `${signalText} ${capabilityGapText}`.toLowerCase()
+  if (/\b(app|platform|digital|ott|product|launch|website|fan experience|ticketing|stack|analytics|video|web3)\b/.test(combined)) {
+    return 'DIGITAL_TRANSFORMATION'
+  }
+  if (/\b(procurement|vendor|rfp|tender|commercial|partnership|sponsor|sponsorship|revenue)\b/.test(combined)) {
+    return 'COMMERCIAL_PARTNERSHIPS'
+  }
+  if (/\b(hiring|recruitment|delivery|programme|program|project)\b/.test(combined)) {
+    return 'PROJECT_DELIVERY'
+  }
+  if (/\b(strategy|growth|planning|positioning)\b/.test(combined)) {
+    return 'STRATEGY'
+  }
+  return 'STAKEHOLDER_ENGAGEMENT'
+}
+
+function recordCommercialEvidence(record, fields = []) {
+  if (!record || !validatedOrProvisional(record) || Number(record.confidence || 0) <= 0) return ''
+  const raw = answerRaw(record)
+  return firstMeaningfulCommercialText([
+    ...fields.map((field) => raw[field]),
+    raw.commercial_implication,
+    raw.summary,
+    raw.answer,
+    record.summary,
+    record.answer,
+  ])
+}
+
 function questionAnswerMap(dossierData) {
   return Object.fromEntries(answerRecords(dossierData).map((answer) => [String(answer.question_id || '').trim(), answer]))
 }
@@ -388,6 +418,40 @@ function buildQuestionRecordPatches(repairedDossier) {
     }
   }
 
+  if (!patches.q14_yp_fit) {
+    const fallbackSignals = [
+      ['q6_launch_signal', recordCommercialEvidence(answers.q6_launch_signal)],
+      ['q2_digital_stack', recordCommercialEvidence(answers.q2_digital_stack)],
+      ['q7_procurement_signal', recordCommercialEvidence(answers.q7_procurement_signal)],
+      ['q9_news_signal', recordCommercialEvidence(answers.q9_news_signal)],
+      ['q10_hiring_signal', recordCommercialEvidence(answers.q10_hiring_signal)],
+      ['q13_capability_gap', recordCommercialEvidence(answers.q13_capability_gap, ['top_gap', 'gap_label'])],
+    ].find(([, evidence]) => hasMeaningfulCommercialText(evidence))
+    if (fallbackSignals) {
+      const [sourceQuestion, evidenceText] = fallbackSignals
+      const capabilityGap = sourceQuestion === 'q13_capability_gap' ? evidenceText : topGap
+      const bestService = inferYellowPantherService(evidenceText, capabilityGap)
+      const summary = `${bestService.replace(/_/g, ' ')} is the strongest capability match because current dossier evidence points to ${evidenceText.toLowerCase()}.`
+      const raw = {
+        answer: summary,
+        summary,
+        best_service: bestService,
+        service_fit: [bestService],
+        fit_rationale: summary,
+        buyer_context: brief.buyer_name || q12TargetSource || null,
+        evidence_basis: [sourceQuestion, evidenceText].filter(Boolean),
+        confidence_caveat: 'Verify recency and buyer ownership before outreach.',
+        status: 'available',
+      }
+      patches.q14_yp_fit = {
+        validation_state: 'provisional',
+        confidence: Math.max(0.5, Number(answers.q14_yp_fit?.confidence || 0), 0.58),
+        answer: makeStructuredAnswer('scorecard', summary, raw),
+        source_questions: [sourceQuestion],
+      }
+    }
+  }
+
   if (String(outreach.status || '').toLowerCase() === 'available' && hasMeaningfulCommercialText(outreach.recommended_target || outreach.recommended_angle || outreach.first_message_strategy)) {
     const q12Raw = asRecord(asRecord(answers.q12_connections?.answer).raw_structured_output || answers.q12_connections?.answer)
     const q11Raw = asRecord(asRecord(answers.q11_decision_owner?.answer).raw_structured_output || answers.q11_decision_owner?.answer)
@@ -417,11 +481,13 @@ function buildQuestionRecordPatches(repairedDossier) {
   }
 
   const currentQ14Text = toText(answers.q14_yp_fit?.answer)
-  if (stalePositiveRecord(answers.q14_yp_fit) && !hasMeaningfulCommercialText(currentQ14Text)) {
+  const q14PatchText = toText(patches.q14_yp_fit?.answer)
+  if (stalePositiveRecord(answers.q14_yp_fit) && !hasMeaningfulCommercialText(currentQ14Text) && (!patches.q14_yp_fit || !hasMeaningfulCommercialText(q14PatchText))) {
     patches.q14_yp_fit = makeInsufficientPatch('q14_yp_fit', 'Insufficient commercial evidence for Yellow Panther fit.', ['q6_launch_signal', 'q13_capability_gap'])
   }
   const currentQ15Text = toText(answers.q15_outreach_strategy?.answer)
-  if (stalePositiveRecord(answers.q15_outreach_strategy) && !hasMeaningfulCommercialText(currentQ15Text)) {
+  const q15PatchText = toText(patches.q15_outreach_strategy?.answer)
+  if (stalePositiveRecord(answers.q15_outreach_strategy) && !hasMeaningfulCommercialText(currentQ15Text) && (!patches.q15_outreach_strategy || !hasMeaningfulCommercialText(q15PatchText))) {
     patches.q15_outreach_strategy = makeInsufficientPatch('q15_outreach_strategy', 'Insufficient commercial evidence for outreach strategy.', ['q11_decision_owner', 'q12_connections', 'q14_yp_fit'])
   }
 

@@ -353,6 +353,128 @@ test('repairDossierPayload overwrites provisional q15 when target is missing but
   assert.equal(answers.q15_outreach_strategy.answer.raw_structured_output.recommended_target, 'Corin Haines')
 })
 
+test('repairDossierPayload synthesizes q14 and q15 from meaningful q13 gap plus buyer path', () => {
+  const pack = weakFifteenPack()
+  pack.discovery_summary = null
+  pack.yellow_panther_fit = null
+  pack.answers = pack.answers.map((item) => {
+    if (['q2_digital_stack', 'q6_launch_signal', 'q7_procurement_signal', 'q9_news_signal', 'q10_hiring_signal'].includes(item.question_id)) {
+      return answer(item.question_id)
+    }
+    if (item.question_id === 'q11_decision_owner') {
+      return {
+        ...item,
+        validation_state: 'provisional',
+        confidence: 0.75,
+        answer: {
+          kind: 'person',
+          summary: 'Osvaldo Martínez Arias is the likely commercial decision owner.',
+          raw_structured_output: {
+            primary_owner: {
+              name: 'Osvaldo Martínez Arias',
+              title: 'President',
+            },
+          },
+        },
+      }
+    }
+    if (item.question_id === 'q12_connections') {
+      return {
+        ...item,
+        validation_state: 'provisional',
+        confidence: 0.52,
+        answer: {
+          kind: 'connections_path',
+          summary: 'Osvaldo Martínez Arias is the buyer path to verify via cold.',
+          raw_structured_output: {
+            target_person: 'Osvaldo Martínez Arias',
+            target_role: 'President',
+            recommended_route: 'cold',
+          },
+        },
+      }
+    }
+    if (item.question_id === 'q13_capability_gap') {
+      return {
+        ...item,
+        validation_state: 'validated',
+        confidence: 0.82,
+        answer: {
+          kind: 'scorecard',
+          summary: 'digital product/platform delivery',
+          raw_structured_output: {
+            top_gap: 'digital product/platform delivery',
+            gap_label: 'digital product/platform delivery',
+            evidence_basis: ['q2_digital_stack', 'lapsed domain and social-only footprint'],
+          },
+        },
+      }
+    }
+    if (['q14_yp_fit', 'q15_outreach_strategy'].includes(item.question_id)) {
+      return answer(item.question_id)
+    }
+    return item
+  })
+
+  const repair = repairDossierPayload(pack, 'cuba-volleyball-federation')
+  const answers = Object.fromEntries(repair.repaired_dossier.question_first.answers.map((item) => [item.question_id, item]))
+
+  assert.equal(answers.q14_yp_fit.validation_state, 'provisional')
+  assert.equal(answers.q14_yp_fit.answer.raw_structured_output.best_service, 'DIGITAL_TRANSFORMATION')
+  assert.match(answers.q14_yp_fit.answer.raw_structured_output.fit_rationale, /digital product.platform delivery/i)
+  assert.equal(answers.q15_outreach_strategy.validation_state, 'provisional')
+  assert.equal(answers.q15_outreach_strategy.answer.raw_structured_output.recommended_target, 'Osvaldo Martínez Arias')
+})
+
+test('repairDossierPayload synthesizes q14 from meaningful q2 digital stack evidence', () => {
+  const pack = weakFifteenPack()
+  pack.discovery_summary = null
+  pack.yellow_panther_fit = null
+  pack.answers = pack.answers.map((item) => {
+    if (item.question_id === 'q2_digital_stack') {
+      return {
+        ...item,
+        validation_state: 'provisional',
+        confidence: 0.72,
+        answer: {
+          kind: 'signal_set',
+          summary: 'The team uses WSC Sports for automated highlights, Blinkfire for sponsorship analytics, Adobe Analytics, and a Web3 fan engagement platform.',
+          raw_structured_output: {
+            commercial_implication: 'Digital product/platform and commercial analytics stack is visible.',
+          },
+        },
+      }
+    }
+    if (['q6_launch_signal', 'q7_procurement_signal', 'q9_news_signal', 'q10_hiring_signal', 'q11_decision_owner', 'q12_connections'].includes(item.question_id)) {
+      return answer(item.question_id)
+    }
+    if (item.question_id === 'q13_capability_gap') {
+      return {
+        ...item,
+        validation_state: 'provisional',
+        confidence: 0.55,
+        answer: {
+          kind: 'scorecard',
+          summary: 'kind: summary',
+          raw_structured_output: { top_gap: 'kind: summary' },
+        },
+      }
+    }
+    if (['q14_yp_fit', 'q15_outreach_strategy'].includes(item.question_id)) {
+      return answer(item.question_id)
+    }
+    return item
+  })
+
+  const repair = repairDossierPayload(pack, 'fc-barcelona-basket')
+  const answers = Object.fromEntries(repair.repaired_dossier.question_first.answers.map((item) => [item.question_id, item]))
+
+  assert.equal(answers.q14_yp_fit.validation_state, 'provisional')
+  assert.equal(answers.q14_yp_fit.answer.raw_structured_output.best_service, 'DIGITAL_TRANSFORMATION')
+  assert.match(answers.q14_yp_fit.answer.raw_structured_output.fit_rationale, /commercial analytics stack/i)
+  assert.equal(answers.q15_outreach_strategy.validation_state, 'no_signal')
+})
+
 test('repairDossierPayload demotes mechanically complete packs with no commercial artifacts', () => {
   const emptyPack = weakFifteenPack()
   emptyPack.answers = emptyPack.answers.map((item) => ({
@@ -487,6 +609,9 @@ test('repairDossierPayload replaces stale no-hiring q14 and q15 records with ins
     },
   }
   pack.answers = pack.answers.map((item) => {
+    if (['q2_digital_stack', 'q6_launch_signal', 'q7_procurement_signal', 'q9_news_signal', 'q10_hiring_signal', 'q13_capability_gap'].includes(item.question_id)) {
+      return answer(item.question_id)
+    }
     if (item.question_id === 'q14_yp_fit') {
       return {
         ...item,
@@ -538,6 +663,9 @@ test('repairDossierPayload replaces generic placeholder q15 outreach with insuff
     outreach_strategy: { status: 'insufficient_signal' },
   }
   pack.answers = pack.answers.map((item) => {
+    if (['q2_digital_stack', 'q6_launch_signal', 'q7_procurement_signal', 'q9_news_signal', 'q10_hiring_signal', 'q13_capability_gap'].includes(item.question_id)) {
+      return answer(item.question_id)
+    }
     if (item.question_id === 'q15_outreach_strategy') {
       return {
         ...item,
