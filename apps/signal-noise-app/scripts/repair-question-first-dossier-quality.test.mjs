@@ -101,6 +101,36 @@ test('shouldRepairDossier targets mechanically complete weak published packs', (
   assert.equal(shouldRepairDossier(weakFifteenPack()), true)
 })
 
+test('shouldRepairDossier ignores skeleton question definitions without answers', () => {
+  const pack = weakFifteenPack()
+  pack.answers = pack.answers.filter((item) => [
+    'q11_decision_owner',
+    'q12_connections',
+    'q14_yp_fit',
+    'q15_outreach_strategy',
+  ].includes(item.question_id))
+  pack.question_first = { answers: pack.answers }
+  pack.questions = [
+    'q1_foundation',
+    'q2_digital_stack',
+    'q3_leadership',
+    'q4_performance',
+    'q5_league_context',
+    'q6_launch_signal',
+    'q7_procurement_signal',
+    'q8_explicit_rfp',
+    'q9_news_signal',
+    'q10_hiring_signal',
+    'q11_decision_owner',
+    'q12_connections',
+    'q13_capability_gap',
+    'q14_yp_fit',
+    'q15_outreach_strategy',
+  ].map((question_id) => ({ question_id, question_text: question_id }))
+
+  assert.equal(shouldRepairDossier(pack), false)
+})
+
 test('repairDossierPayload synthesizes artifacts from useful signals without provider calls', () => {
   const repair = repairDossierPayload(weakFifteenPack(), 'major-league-cricket')
   const answers = Object.fromEntries(repair.repaired_dossier.question_first.answers.map((item) => [item.question_id, item]))

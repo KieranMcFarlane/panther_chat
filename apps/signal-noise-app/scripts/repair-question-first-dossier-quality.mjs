@@ -774,6 +774,15 @@ export function answerRecords(dossierData) {
   const metadata = asRecord(dossier.metadata)
   const checkpoint = asRecord(dossier.question_first_checkpoint || metadata.question_first_checkpoint)
   const report = asRecord(dossier.question_first_report)
+  const isAnswerRecord = (item) => {
+    if (!item || typeof item !== 'object') return false
+    if (!String(item.question_id || item.id || '').trim()) return false
+    return Object.prototype.hasOwnProperty.call(item, 'answer')
+      || Object.prototype.hasOwnProperty.call(item, 'validation_state')
+      || Object.prototype.hasOwnProperty.call(item, 'confidence')
+      || Object.prototype.hasOwnProperty.call(item, 'structured_signal')
+      || Object.prototype.hasOwnProperty.call(item, 'commercial_implication')
+  }
   const records = [
     questionFirst.answer_records,
     questionFirst.answers,
@@ -783,7 +792,7 @@ export function answerRecords(dossierData) {
     dossier.answers,
     dossier.questions,
     report.answers,
-  ].flatMap((value) => asArray(value).filter((item) => item && typeof item === 'object'))
+  ].flatMap((value) => asArray(value).filter(isAnswerRecord))
   const byQuestion = new Map()
   records.forEach((record, index) => {
     const questionId = String(record.question_id || record.id || '').trim()
