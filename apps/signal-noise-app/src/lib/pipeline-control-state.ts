@@ -1,3 +1,6 @@
+import { mkdir, readFile, writeFile } from 'node:fs/promises'
+import path from 'node:path'
+
 import { query } from '@/lib/pg-client'
 
 export type PipelineControlRequestedState = 'running' | 'paused'
@@ -71,6 +74,7 @@ const DEFAULT_CONTROL_STATE: PipelineControlState = {
 
 const PIPELINE_CONTROL_STATE_TABLE = 'pipeline_control_state'
 const PIPELINE_CONTROL_STATE_ROW_ID = 'pipeline'
+const PIPELINE_CONTROL_STATE_PATH = path.join(process.cwd(), 'tmp', 'pipeline-control-state.json')
 const PIPELINE_RECOVERY_STATE_VALUES: PipelineRecoveryState[] = [
   'healthy',
   'degraded',
@@ -221,6 +225,29 @@ async function readPipelineControlStateFromDatabase(): Promise<PipelineControlSt
   }
 }
 
+async function readPipelineControlStateFromFile(): Promise<PipelineControlState | null> {
+  try {
+    const raw = await readFile(PIPELINE_CONTROL_STATE_PATH, 'utf8')
+    const parsed = JSON.parse(raw)
+    return parsed && typeof parsed === 'object'
+      ? normalizePipelineControlState(parsed as Partial<PipelineControlState>)
+      : null
+  } catch {
+    return null
+  }
+}
+
+function chooseNewestControlState(
+  databaseState: PipelineControlState | null,
+  fileState: PipelineControlState | null,
+): PipelineControlState | null {
+  if (!databaseState) return fileState
+  if (!fileState) return databaseState
+  const databaseUpdatedAt = databaseState.updated_at ? Date.parse(databaseState.updated_at) : 0
+  const fileUpdatedAt = fileState.updated_at ? Date.parse(fileState.updated_at) : 0
+  return fileUpdatedAt > databaseUpdatedAt ? fileState : databaseState
+}
+
 async function writePipelineControlStateToDatabase(state: PipelineControlState): Promise<void> {
   if (!process.env.DATABASE_URL?.trim()) return
   await query(
@@ -233,9 +260,18 @@ async function writePipelineControlStateToDatabase(state: PipelineControlState):
   )
 }
 
+async function writePipelineControlStateToFile(state: PipelineControlState): Promise<void> {
+  await mkdir(path.dirname(PIPELINE_CONTROL_STATE_PATH), { recursive: true })
+  await writeFile(PIPELINE_CONTROL_STATE_PATH, `${JSON.stringify(state, null, 2)}\n`, 'utf8')
+}
+
 export async function readPipelineControlState(): Promise<PipelineControlState> {
-  const databaseState = await readPipelineControlStateFromDatabase()
-  if (databaseState) return databaseState
+  const [databaseState, fileState] = await Promise.all([
+    readPipelineControlStateFromDatabase(),
+    readPipelineControlStateFromFile(),
+  ])
+  const state = chooseNewestControlState(databaseState, fileState)
+  if (state) return state
   return { ...DEFAULT_CONTROL_STATE }
 }
 
@@ -316,6 +352,9 @@ export async function writePipelineControlState(input: {
     last_self_heal_at: input.last_self_heal_at ?? null,
   }
 
-  await writePipelineControlStateToDatabase(nextState).catch(() => undefined)
+  await Promise.all([
+    writePipelineControlStateToDatabase(nextState).catch(() => undefined),
+    writePipelineControlStateToFile(nextState).catch(() => undefined),
+  ])
   return nextState
 }

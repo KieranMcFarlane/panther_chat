@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { mkdtemp, readFile, writeFile } from 'node:fs/promises'
+import { mkdir, mkdtemp, readFile, writeFile } from 'node:fs/promises'
 import os from 'node:os'
 import path from 'node:path'
 import { pathToFileURL } from 'node:url'
@@ -27,12 +27,25 @@ async function loadPipelineControlStateModule() {
   return { module: import(`${pathToFileURL(tempPath).href}?t=${Date.now()}`), tempDir }
 }
 
-test('pipeline control state reads the postgres singleton row and ignores the tmp cache', async () => {
-  const { module } = await loadPipelineControlStateModule()
+test('pipeline control state reads the newest state across postgres and tmp cache', async () => {
+  const { module, tempDir } = await loadPipelineControlStateModule()
+  const previousCwd = process.cwd()
   const previousDatabaseUrl = process.env.DATABASE_URL
+  process.chdir(tempDir)
   process.env.DATABASE_URL = 'postgresql://local-test'
-  const tempControlPath = path.join(os.tmpdir(), `pipeline-control-state-${Date.now()}.json`)
-  await writeFile(tempControlPath, JSON.stringify({ current_batch_id: 'batch-file', cursor_source: 'tmp' }), 'utf8')
+  const tempControlPath = path.join(tempDir, 'tmp', 'pipeline-control-state.json')
+  await mkdir(path.dirname(tempControlPath), { recursive: true })
+  await writeFile(tempControlPath, JSON.stringify({
+    is_paused: true,
+    pause_reason: 'file pause',
+    requested_state: 'paused',
+    observed_state: 'paused',
+    transition_state: 'paused',
+    desired_state: 'paused',
+    updated_at: '2026-04-27T12:01:00.000Z',
+    current_batch_id: 'batch-file',
+    cursor_source: 'tmp',
+  }), 'utf8')
   globalThis.__pipelineControlQuery = async () => ({
     rows: [{
       state: {
@@ -63,17 +76,16 @@ test('pipeline control state reads the postgres singleton row and ignores the tm
   try {
     const state = await (await module).readPipelineControlState()
 
-    assert.equal(state.current_batch_id, 'batch-db')
-    assert.equal(state.current_entity_id, 'entity-db')
-    assert.equal(state.current_canonical_entity_id, 'canonical-db')
-    assert.equal(state.cursor_source, 'manifest_next_claim')
+    assert.equal(state.current_batch_id, 'batch-file')
+    assert.equal(state.requested_state, 'paused')
+    assert.equal(state.cursor_source, 'tmp')
   } finally {
     process.env.DATABASE_URL = previousDatabaseUrl
-    await writeFile(tempControlPath, '', 'utf8').catch(() => undefined)
+    process.chdir(previousCwd)
   }
 })
 
-test('pipeline control state writes the postgres singleton row only', async () => {
+test('pipeline control state writes the postgres singleton row and tmp cache', async () => {
   const { module, tempDir } = await loadPipelineControlStateModule()
   const previousCwd = process.cwd()
   const previousDatabaseUrl = process.env.DATABASE_URL
@@ -103,7 +115,9 @@ test('pipeline control state writes the postgres singleton row only', async () =
     assert.equal(state.current_entity_name, 'Entity New')
 
     const cachedPath = path.join(tempDir, 'tmp', 'pipeline-control-state.json')
-    await assert.rejects(readFile(cachedPath, 'utf8'))
+    const cachedState = JSON.parse(await readFile(cachedPath, 'utf8'))
+    assert.equal(cachedState.current_batch_id, 'batch-new')
+    assert.equal(cachedState.cursor_source, 'manifest_next_claim')
   } finally {
     process.env.DATABASE_URL = previousDatabaseUrl
     process.chdir(previousCwd)

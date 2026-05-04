@@ -316,6 +316,38 @@ def _read_pipeline_control_state_from_store() -> Optional[Dict[str, Any]]:
     return None
 
 
+def _read_pipeline_control_state_from_file() -> Optional[Dict[str, Any]]:
+    try:
+        if not PIPELINE_CONTROL_STATE_PATH.exists():
+            return None
+        parsed = json.loads(PIPELINE_CONTROL_STATE_PATH.read_text(encoding="utf-8"))
+        return parsed if isinstance(parsed, dict) else None
+    except Exception as error:
+        logger.warning("Failed to read pipeline control state file: %s", error)
+        return None
+
+
+def _choose_newest_pipeline_control_state(
+    store_payload: Optional[Dict[str, Any]],
+    file_payload: Optional[Dict[str, Any]],
+) -> Optional[Dict[str, Any]]:
+    if store_payload is None:
+        return file_payload
+    if file_payload is None:
+        return store_payload
+
+    def timestamp(payload: Dict[str, Any]) -> float:
+        raw = str(payload.get("updated_at") or "").strip()
+        if not raw:
+            return 0.0
+        try:
+            return datetime.fromisoformat(raw.replace("Z", "+00:00")).timestamp()
+        except Exception:
+            return 0.0
+
+    return file_payload if timestamp(file_payload) > timestamp(store_payload) else store_payload
+
+
 def _write_pipeline_control_state_to_store(state: Dict[str, Any]) -> None:
     if not should_use_local_pg():
         return
@@ -330,10 +362,17 @@ def _write_pipeline_control_state_to_store(state: Dict[str, Any]) -> None:
     ).execute()
 
 
+def _write_pipeline_control_state_to_file(state: Dict[str, Any]) -> None:
+    PIPELINE_CONTROL_STATE_PATH.parent.mkdir(parents=True, exist_ok=True)
+    PIPELINE_CONTROL_STATE_PATH.write_text(json.dumps(state, indent=2), encoding="utf-8")
+
+
 def read_pipeline_control_state() -> Dict[str, Any]:
     store_payload = _read_pipeline_control_state_from_store()
-    if store_payload is not None:
-        return _normalize_pipeline_control_state_payload(store_payload)
+    file_payload = _read_pipeline_control_state_from_file()
+    payload = _choose_newest_pipeline_control_state(store_payload, file_payload)
+    if payload is not None:
+        return _normalize_pipeline_control_state_payload(payload)
     return _default_pipeline_control_state()
 
 
@@ -391,6 +430,10 @@ def write_pipeline_control_state(payload: Dict[str, Any]) -> Dict[str, Any]:
         _write_pipeline_control_state_to_store(next_state)
     except Exception as error:
         logger.warning("Failed to persist pipeline control state to Postgres: %s", error)
+    try:
+        _write_pipeline_control_state_to_file(next_state)
+    except Exception as error:
+        logger.warning("Failed to persist pipeline control state file: %s", error)
     return next_state
 
 
@@ -498,6 +541,15 @@ def build_post_batch_idle_control_state(
         "transition_state": "running",
         "updated_at": now_iso,
     }
+
+
+def should_skip_manifest_auto_advance_for_batch_metadata(batch_metadata: Optional[Dict[str, Any]]) -> bool:
+    metadata = batch_metadata if isinstance(batch_metadata, dict) else {}
+    source = str(metadata.get("source") or metadata.get("queue_source") or "").strip().lower()
+    repair_source = str(metadata.get("repair_source") or metadata.get("repair_queue_source") or "").strip().lower()
+    rerun_mode = str(metadata.get("rerun_mode") or "").strip().lower()
+    question_id = str(metadata.get("question_id") or metadata.get("current_question_id") or "").strip()
+    return bool(question_id) or rerun_mode == "question" or source == "self_healing_repair" or repair_source == "self_healing_repair"
 
 
 def _mark_recovery_state(
@@ -2366,6 +2418,8 @@ class EntityPipelineWorker:
         control_state = read_pipeline_control_state()
         if control_state.get("requested_state") == "paused" or control_state.get("observed_state") == "paused":
             return None
+        if should_skip_manifest_auto_advance_for_batch_metadata(batch_metadata):
+            return None
 
         current_metadata = source_run.get("metadata") if isinstance(source_run.get("metadata"), dict) else {}
         next_entity = self._find_next_manifest_entity(
@@ -3105,9 +3159,7 @@ class EntityPipelineWorker:
         rerun_mode = str(latest_metadata.get("rerun_mode") or "").strip().lower()
         cascade_dependents = bool(latest_metadata.get("cascade_dependents", True))
         if (
-            rerun_mode == "question"
-            and not cascade_dependents
-            and current_repair_question_id
+            current_repair_question_id
             and next_repair_question_id == current_repair_question_id
         ):
             exhausted_question_ids.add(next_repair_question_id)

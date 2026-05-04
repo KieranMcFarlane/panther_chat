@@ -32,6 +32,7 @@ from entity_pipeline_worker import (
     derive_monitoring_summary,
     normalize_pipeline_control_state_for_worker_start,
     build_post_batch_idle_control_state,
+    should_skip_manifest_auto_advance_for_batch_metadata,
     _mark_recovery_state,
     resolve_pipeline_timeout,
     resolve_fastapi_url,
@@ -423,6 +424,13 @@ def test_post_batch_idle_control_state_preserves_operator_pause():
     assert state["current_action"] is None
 
 
+def test_repair_batches_do_not_manifest_auto_advance():
+    assert should_skip_manifest_auto_advance_for_batch_metadata({"question_id": "q2_digital_stack"}) is True
+    assert should_skip_manifest_auto_advance_for_batch_metadata({"rerun_mode": "question"}) is True
+    assert should_skip_manifest_auto_advance_for_batch_metadata({"source": "self_healing_repair"}) is True
+    assert should_skip_manifest_auto_advance_for_batch_metadata({"queue_mode": "durable_worker"}) is False
+
+
 def test_read_pipeline_control_state_exposes_cursor_fields(tmp_path, monkeypatch):
     control_path = tmp_path / "pipeline-control-state.json"
     control_path.write_text(
@@ -567,7 +575,7 @@ def test_write_pipeline_control_state_persists_cursor_to_postgres_singleton_row(
     assert captured["payload"]["state"]["current_entity_id"] == "entity-new"
     assert captured["payload"]["state"]["current_canonical_entity_id"] == "canonical-new"
     assert captured["payload"]["state"]["cursor_source"] == "manifest_next_claim"
-    assert not control_path.exists()
+    assert json.loads(control_path.read_text(encoding="utf-8"))["current_batch_id"] == "batch-new"
     assert state["current_entity_name"] == "Entity New"
 
 
@@ -5297,6 +5305,44 @@ def test_derive_follow_on_repair_metadata_clears_self_referential_next_batch():
     assert metadata["next_repair_status"] is None
     assert metadata["next_repair_batch_id"] is None
     assert metadata["next_repair_batch_status"] is None
+
+
+def test_derive_follow_on_repair_metadata_exhausts_repeated_same_question():
+    worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
+    worker._queue_follow_on_repair = lambda **kwargs: pytest.fail("same derived question should not be re-queued")
+
+    metadata = worker._derive_follow_on_repair_metadata(
+        run={
+            "id": "batch-q11_entity-1",
+            "batch_id": "batch-q11",
+            "entity_id": "entity-1",
+            "entity_name": "Entity 1",
+            "canonical_entity_id": "entity-1",
+        },
+        latest_metadata={
+            "question_id": "q11_decision_owner",
+            "repair_retry_count": 1,
+            "repair_retry_budget": 3,
+            "canonical_entity_id": "entity-1",
+        },
+        result={
+            "artifacts": {
+                "dossier": {
+                    "quality_state": "blocked",
+                    "questions": [
+                        {"question_id": "q11_decision_owner", "terminal_state": "no_signal"},
+                        {"question_id": "q12_connections", "terminal_state": "blocked", "depends_on": ["q11_decision_owner"]},
+                    ],
+                },
+            },
+        },
+        publication_succeeded=True,
+        reconcile_required=False,
+    )
+
+    assert metadata["repair_state"] == "exhausted"
+    assert metadata["next_repair_status"] == "exhausted"
+    assert "q11_decision_owner" in metadata["exhausted_question_ids"]
 
 
 def test_process_batch_stops_pipeline_when_follow_on_question_also_fails(tmp_path, monkeypatch):
