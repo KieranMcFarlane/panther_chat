@@ -818,8 +818,12 @@ function buildQuestionFirstDiscoverySummary(questions: Record<string, any>[], an
 
   const decisionOwnerRecord = getQuestionAnswerRecord(ensureObject(questions.find((question) => toText(question.question_id) === 'q11_decision_owner') || answerByQuestionId.get('q11_decision_owner') || {}))
   const decisionOwnerAnswerRecord = ensureObject(decisionOwnerRecord.answer)
+  const decisionOwnerRaw = ensureObject(decisionOwnerAnswerRecord.raw_structured_output)
   const decisionOwnerStructured = ensureObject(decisionOwnerAnswerRecord.structured_signal || decisionOwnerAnswer.structured_signal)
+  const decisionOwnerRawPrimaryOwner = ensureObject(decisionOwnerRaw.primary_owner)
   const decisionOwnerName = firstMeaningfulCommercialText([
+    decisionOwnerRawPrimaryOwner.name,
+    ensureObject(decisionOwnerAnswer.primary_owner).name,
     decisionOwnerStructured.decision_owner_name,
     decisionOwnerStructured.name,
     decisionOwnerAnswerRecord.value,
@@ -829,6 +833,8 @@ function buildQuestionFirstDiscoverySummary(questions: Record<string, any>[], an
     decisionOwnerAnswer.answer,
   ])
   const decisionOwnerTitle = firstMeaningfulCommercialText([
+    decisionOwnerRawPrimaryOwner.title,
+    ensureObject(decisionOwnerAnswer.primary_owner).title,
     decisionOwnerStructured.decision_owner_title,
     decisionOwnerStructured.title,
     decisionOwnerStructured.role,
@@ -877,7 +883,6 @@ function buildQuestionFirstDiscoverySummary(questions: Record<string, any>[], an
   const resolvedYpFit = (ypFitValidationState && !['no_signal', 'failed', 'blocked'].includes(ypFitValidationState) && (toDisplayText(ypFitRaw.best_service || ypFitRaw.recommended_service) || isMeaningfulCommercialText(ypFitRaw.fit_rationale)))
     ? {
         ...synthesizedYpFit,
-        ...ypFitRaw,
         best_service: toDisplayText(ypFitRaw.best_service || ypFitRaw.recommended_service) || synthesizedYpFit.best_service,
         service_fit: Array.isArray(ypFitRaw.service_fit) && ypFitRaw.service_fit.length > 0 ? ypFitRaw.service_fit : synthesizedYpFit.service_fit,
         fit_rationale: firstMeaningfulCommercialText([ypFitRaw.fit_rationale, ypFitRaw.answer, ypFitRaw.summary, synthesizedYpFit.fit_rationale]),
@@ -896,7 +901,6 @@ function buildQuestionFirstDiscoverySummary(questions: Record<string, any>[], an
   const resolvedOutreach = (outreachValidationState && !['no_signal', 'failed', 'blocked'].includes(outreachValidationState) && (toDisplayText(outreachStrategyRaw.recommended_target || outreachStrategyRaw.recommended_angle || outreachStrategyRaw.recommended_route) || isMeaningfulCommercialText(outreachStrategyRaw.summary)))
     ? {
         ...synthesizedOutreach,
-        ...outreachStrategyRaw,
         recommended_target: toDisplayText(outreachStrategyRaw.recommended_target || decisionOwnerName) || synthesizedOutreach.recommended_target,
         recommended_route: toDisplayText(outreachStrategyRaw.recommended_route || bestPath?.path_type) || synthesizedOutreach.recommended_route,
         recommended_angle: firstMeaningfulCommercialText([outreachStrategyRaw.recommended_angle, outreachStrategyRaw.answer, outreachStrategyRaw.summary, synthesizedOutreach.recommended_angle]),
