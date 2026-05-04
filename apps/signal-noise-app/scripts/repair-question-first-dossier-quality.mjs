@@ -111,7 +111,7 @@ function firstMeaningfulCommercialText(values) {
 function isConciseBuyerTargetText(value) {
   const text = toText(value)
   if (!hasMeaningfulCommercialText(text)) return false
-  if (!/[A-Za-zÀ-ÖØ-öø-ÿ]/.test(text) || /^(?:19|20)\d{2}$/.test(text)) return false
+  if (!/[A-Za-zÀ-ÖØ-öø-ÿ]/.test(text) || /^\d{4}$/.test(text)) return false
   const words = text.split(/\s+/).filter(Boolean)
   if (text.length > 90 || words.length > 8) return false
   return !/[.;:]|\b(leverages?|comprising|comprises|including|technology stack|partnership stack|website|wordpress|woocommerce|evidence|summary)\b/i.test(text)

@@ -255,6 +255,150 @@ test('pipeline runtime synchronizes top-level control cursor fields from current
   assert.equal(snapshot.control.cursor_source, 'live_runtime_projection')
 })
 
+test('pipeline runtime uses fresh worker cursor when matching running row has no heartbeat yet', () => {
+  const workerActivityAt = new Date(Date.now() - 5_000).toISOString()
+  const snapshot = buildPipelineRuntimeSnapshot({
+    snapshot_at: '2026-05-04T16:45:00.000Z',
+    control: {
+      is_paused: false,
+      pause_reason: null,
+      stop_reason: null,
+      stop_details: null,
+      updated_at: '2026-05-04T16:44:00.000Z',
+      desired_state: 'running',
+      requested_state: 'running',
+      observed_state: 'running',
+      transition_state: 'running',
+    },
+    worker: {
+      worker_process_state: 'running',
+      worker_health: 'healthy',
+      worker_pid: 123,
+      worker_command: 'npm run worker:entity-pipeline',
+      worker_state_path: '/tmp/entity-pipeline-worker-state.json',
+      worker_pid_path: '/tmp/entity-pipeline-worker.pid',
+      started_at: '2026-05-04T16:40:00.000Z',
+      stopped_at: null,
+      updated_at: workerActivityAt,
+      last_error: null,
+      current_batch_id: 'operator_q3_123',
+      current_entity_id: 'as-roma',
+      current_canonical_entity_id: 'as-roma',
+      current_entity_name: 'AS Roma',
+      current_question_id: 'q3_leadership',
+      current_question_text: null,
+      current_action: 'q3_leadership',
+      current_phase: 'dossier_generation',
+      current_started_at: '2026-05-04T16:44:30.000Z',
+      current_activity_at: workerActivityAt,
+    },
+    fastmcp: {
+      url: 'http://127.0.0.1:8000/health',
+      reachable: true,
+      status_code: 200,
+      latency_ms: 10,
+      error: null,
+    },
+    rows: [
+      {
+        batch_id: 'operator_q3_123',
+        entity_id: 'as-roma',
+        canonical_entity_id: 'as-roma',
+        entity_name: 'AS Roma',
+        status: 'running',
+        phase: 'entity_registration',
+        started_at: new Date(Date.now() - 30_000).toISOString(),
+        completed_at: null,
+        metadata: {
+          source: 'entity_dossier_operator_rerun',
+          rerun_mode: 'question',
+          question_id: 'q3_leadership',
+        },
+      },
+    ],
+    dossiers: [],
+  })
+
+  assert.equal(snapshot.current_live_run?.entity_name, 'AS Roma')
+  assert.equal(snapshot.current_live_run?.current_question_id, 'q3_leadership')
+  assert.equal(snapshot.current_live_run?.current_action, 'q3_leadership')
+  assert.equal(snapshot.current_live_run?.phase, 'dossier_generation')
+  assert.equal(snapshot.current_live_run?.queue_state, 'running')
+  assert.equal(snapshot.current_live_run?.heartbeat_at, workerActivityAt)
+  assert.equal(snapshot.control.current_entity_name, 'AS Roma')
+  assert.equal(snapshot.control.current_question_id, 'q3_leadership')
+})
+
+test('pipeline runtime prefers fresh worker cursor over stale DB question metadata for the same run', () => {
+  const heartbeatAt = new Date(Date.now() - 5_000).toISOString()
+  const snapshot = buildPipelineRuntimeSnapshot({
+    snapshot_at: '2026-05-04T16:45:00.000Z',
+    control: {
+      is_paused: false,
+      pause_reason: null,
+      stop_reason: null,
+      stop_details: null,
+      updated_at: '2026-05-04T16:44:00.000Z',
+      desired_state: 'running',
+      requested_state: 'running',
+      observed_state: 'running',
+      transition_state: 'running',
+    },
+    worker: {
+      worker_process_state: 'running',
+      worker_health: 'healthy',
+      worker_pid: 123,
+      worker_command: 'npm run worker:entity-pipeline',
+      worker_state_path: '/tmp/entity-pipeline-worker-state.json',
+      worker_pid_path: '/tmp/entity-pipeline-worker.pid',
+      started_at: '2026-05-04T16:40:00.000Z',
+      stopped_at: null,
+      updated_at: heartbeatAt,
+      last_error: null,
+      current_batch_id: 'operator_q3_456',
+      current_entity_id: 'moto3',
+      current_canonical_entity_id: 'moto3',
+      current_entity_name: 'Moto3 World Championship',
+      current_question_id: 'q11_decision_owner',
+      current_question_text: null,
+      current_action: 'q11_decision_owner',
+      current_phase: 'dossier_generation',
+      current_started_at: '2026-05-04T16:44:30.000Z',
+      current_activity_at: heartbeatAt,
+    },
+    fastmcp: {
+      url: 'http://127.0.0.1:8000/health',
+      reachable: true,
+      status_code: 200,
+      latency_ms: 10,
+      error: null,
+    },
+    rows: [
+      {
+        batch_id: 'operator_q3_456',
+        entity_id: 'moto3',
+        canonical_entity_id: 'moto3',
+        entity_name: 'Moto3 World Championship',
+        status: 'running',
+        phase: 'dossier_generation',
+        started_at: new Date(Date.now() - 30_000).toISOString(),
+        completed_at: null,
+        metadata: {
+          heartbeat_at: heartbeatAt,
+          current_question_id: 'q15_outreach_strategy',
+          current_action: 'dossier_generation',
+        },
+      },
+    ],
+    dossiers: [],
+  })
+
+  assert.equal(snapshot.current_live_run?.current_question_id, 'q11_decision_owner')
+  assert.equal(snapshot.current_live_run?.current_action, 'q11_decision_owner')
+  assert.equal(snapshot.control.current_question_id, 'q11_decision_owner')
+  assert.equal(snapshot.control.current_action, 'q11_decision_owner')
+})
+
 test('pipeline runtime clears stale top-level control cursor fields when no fresh live run exists', () => {
   const snapshot = buildPipelineRuntimeSnapshot({
     snapshot_at: '2026-05-03T15:25:00.000Z',

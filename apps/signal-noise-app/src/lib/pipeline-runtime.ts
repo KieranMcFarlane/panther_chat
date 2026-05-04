@@ -693,6 +693,39 @@ function isCurrentLiveRun(record: PipelineRuntimeRunRecord) {
     && (record.heartbeat_age_seconds ?? Number.MAX_SAFE_INTEGER) <= OPERATIONAL_HEARTBEAT_STALE_SECONDS
 }
 
+function hasFreshWorkerCursor(worker: PipelineRuntimeWorkerState) {
+  const activityAt = toText(worker.current_activity_at || worker.updated_at)
+  if (!activityAt) return false
+  const parsed = Date.parse(activityAt)
+  if (!Number.isFinite(parsed)) return false
+  return Math.max(0, Math.floor((Date.now() - parsed) / 1000)) <= OPERATIONAL_HEARTBEAT_STALE_SECONDS
+}
+
+function projectWorkerCursorOntoRun(
+  record: PipelineRuntimeRunRecord,
+  worker: PipelineRuntimeWorkerState,
+): PipelineRuntimeRunRecord {
+  const activityAt = toText(worker.current_activity_at || worker.updated_at) || record.heartbeat_at
+  const parsed = activityAt ? Date.parse(activityAt) : Number.NaN
+  const heartbeatAgeSeconds = Number.isFinite(parsed)
+    ? Math.max(0, Math.floor((Date.now() - parsed) / 1000))
+    : record.heartbeat_age_seconds
+  return {
+    ...record,
+    entity_id: toText(worker.current_entity_id) || record.entity_id,
+    canonical_entity_id: toText(worker.current_canonical_entity_id) || record.canonical_entity_id,
+    entity_name: toText(worker.current_entity_name) || record.entity_name,
+    phase: toText(worker.current_phase) || record.phase,
+    current_question_id: toText(worker.current_question_id) || record.current_question_id,
+    current_question_text: toText(worker.current_question_text) || record.current_question_text,
+    current_action: toText(worker.current_action) || record.current_action,
+    current_stage: toText(worker.current_phase) || record.current_stage,
+    heartbeat_at: activityAt,
+    heartbeat_age_seconds: heartbeatAgeSeconds,
+    queue_state: 'running',
+  }
+}
+
 function selectCurrentLiveRun(records: PipelineRuntimeRunRecord[]) {
   return records
     .filter(isCurrentLiveRun)
@@ -715,12 +748,16 @@ function selectWorkerReferencedRun(
   const workerEntityId = toText(worker.current_canonical_entity_id || worker.current_entity_id)
   if (!workerBatchId && !workerEntityId) return null
 
-  return records.find((record) => {
-    if (!isCurrentLiveRun(record)) return false
+  const matchingRecord = records.find((record) => {
     if (workerBatchId && toText(record.batch_id) === workerBatchId) return true
     if (workerEntityId && toText(record.canonical_entity_id || record.entity_id) === workerEntityId) return true
     return false
   }) ?? null
+  if (!matchingRecord) return null
+  if (!hasFreshWorkerCursor(worker)) return isCurrentLiveRun(matchingRecord) ? matchingRecord : null
+  const status = toText(matchingRecord.status).toLowerCase()
+  if (!['running', 'retrying', 'reconciling', 'claiming'].includes(status)) return null
+  return projectWorkerCursorOntoRun(matchingRecord, worker)
 }
 
 function rankNoteworthyRun(record: PipelineRuntimeRunRecord) {
@@ -830,7 +867,7 @@ export function buildPipelineRuntimeSnapshot(readSet: PipelineRuntimeReadSet): P
     return buildPipelineRuntimeRunRecord(row, workerHealthy, dossierData)
   })
   const workerReferencedRun = selectWorkerReferencedRun(runtimeRecords, worker)
-  const currentLiveRun = selectCurrentLiveRun(runtimeRecords) ?? workerReferencedRun
+  const currentLiveRun = workerReferencedRun ?? selectCurrentLiveRun(runtimeRecords)
   const control = synchronizeControlStateWithCurrentLiveRun(rawControl, currentLiveRun)
   const latestNoteworthyRun = selectLatestNoteworthyRun(runtimeRecords, currentLiveRun)
   const currentRun = currentLiveRun ?? latestNoteworthyRun

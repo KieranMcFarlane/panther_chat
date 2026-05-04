@@ -305,13 +305,13 @@ test('year strings are not treated as buyer names or outreach targets', () => {
         primary_owner: undefined,
         answer: {
           kind: 'list',
-          summary: '2026',
+          summary: '1875',
           raw_structured_output: {
             primary_owner: {
-              name: '2026',
+              name: '1875',
               title: null,
             },
-            answer: '2026',
+            answer: '1875',
           },
         },
       }
@@ -337,7 +337,7 @@ test('year strings are not treated as buyer names or outreach targets', () => {
 
   const normalized = normalizeQuestionFirstDossier(dossier, 'milan-cortina-2026')
 
-  assert.notEqual(normalized.discovery_summary.graphiti_sales_brief.buyer_name, '2026')
-  assert.notEqual(normalized.discovery_summary.outreach_strategy.recommended_target, '2026')
+  assert.notEqual(normalized.discovery_summary.graphiti_sales_brief.buyer_name, '1875')
+  assert.notEqual(normalized.discovery_summary.outreach_strategy.recommended_target, '1875')
   assert.equal(normalized.discovery_summary.outreach_strategy.status, 'insufficient_signal')
 })

@@ -673,7 +673,7 @@ function isConciseBuyerTargetText(value: unknown): boolean {
   if (!isMeaningfulCommercialText(text)) {
     return false
   }
-  if (!/[A-Za-zÀ-ÖØ-öø-ÿ]/.test(text) || /^(?:19|20)\d{2}$/.test(text)) {
+  if (!/[A-Za-zÀ-ÖØ-öø-ÿ]/.test(text) || /^\d{4}$/.test(text)) {
     return false
   }
   const words = text.split(/\s+/).filter(Boolean)

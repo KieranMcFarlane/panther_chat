@@ -257,13 +257,13 @@ test('repairDossierPayload does not promote year strings as buyer targets', () =
         primary_owner: undefined,
         answer: {
           kind: 'list',
-          summary: '2026',
+          summary: '1875',
           raw_structured_output: {
             primary_owner: {
-              name: '2026',
+              name: '1875',
               title: null,
             },
-            answer: '2026',
+            answer: '1875',
           },
         },
       }
@@ -280,8 +280,8 @@ test('repairDossierPayload does not promote year strings as buyer targets', () =
   const repair = repairDossierPayload(pack, 'milan-cortina-2026')
   const answers = Object.fromEntries(repair.repaired_dossier.question_first.answers.map((item) => [item.question_id, item]))
 
-  assert.notEqual(repair.repaired_dossier.discovery_summary.graphiti_sales_brief.buyer_name, '2026')
-  assert.notEqual(answers.q15_outreach_strategy.answer.raw_structured_output.recommended_target, '2026')
+  assert.notEqual(repair.repaired_dossier.discovery_summary.graphiti_sales_brief.buyer_name, '1875')
+  assert.notEqual(answers.q15_outreach_strategy.answer.raw_structured_output.recommended_target, '1875')
   assert.equal(answers.q12_connections.validation_state, 'no_signal')
 })
 
