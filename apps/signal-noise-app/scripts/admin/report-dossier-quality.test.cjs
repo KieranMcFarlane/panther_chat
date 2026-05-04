@@ -7,6 +7,7 @@ const {
   artifactCoverage,
   hasBuyerRouteEligibility,
   hasCommercialSynthesisEligibility,
+  hasQ14CommercialFitEligibility,
   perQuestionQuality,
   qualityState,
   targetedRerunBacklog,
@@ -104,6 +105,8 @@ test('perQuestionQuality reports validation and zero-confidence counts', () => {
       zero_confidence: 1,
       eligible_total: 0,
       eligible_zero_confidence: 0,
+      insufficient_signal_count: 1,
+      performance_gap_only_count: 0,
     },
     q15_outreach_strategy: {
       total: 2,
@@ -277,6 +280,67 @@ test('commercial synthesis eligibility does not count buyer route alone as a tri
   const stats = perQuestionQuality([{ dossier_data: dossier }])
   assert.equal(stats.q14_yp_fit.eligible_total, 0)
   assert.equal(stats.q15_outreach_strategy.eligible_total, 0)
+})
+
+test('q14 commercial fit eligibility rejects performance-only q13 gap output', () => {
+  const dossier = {
+    answers: [
+      {
+        question_id: 'q13_capability_gap',
+        validation_state: 'validated',
+        confidence: 0.82,
+        answer: 'AS Roma has squad depth, tactical consistency, and on-field performance gaps versus top Serie A peers.',
+      },
+      {
+        question_id: 'q14_yp_fit',
+        validation_state: 'no_signal',
+        confidence: 0,
+        structured_signal: {
+          status: 'insufficient_signal',
+          summary: 'Insufficient commercial evidence for Yellow Panther fit.',
+        },
+      },
+    ],
+  }
+
+  assert.equal(hasCommercialSynthesisEligibility(dossier), true)
+  assert.equal(hasQ14CommercialFitEligibility(dossier), false)
+
+  const stats = perQuestionQuality([{ dossier_data: dossier }])
+  assert.equal(stats.q14_yp_fit.eligible_total, 0)
+  assert.equal(stats.q14_yp_fit.eligible_zero_confidence, 0)
+  assert.equal(stats.q14_yp_fit.insufficient_signal_count, 1)
+  assert.equal(stats.q14_yp_fit.performance_gap_only_count, 1)
+})
+
+test('q14 commercial fit eligibility accepts commercial q13 gap output', () => {
+  const dossier = {
+    answers: [
+      {
+        question_id: 'q13_capability_gap',
+        validation_state: 'validated',
+        confidence: 0.82,
+        answer: 'The club has a revenue shortfall, weak sponsorship platform, and digital partnership gap versus peers.',
+      },
+      {
+        question_id: 'q14_yp_fit',
+        validation_state: 'no_signal',
+        confidence: 0,
+        structured_signal: {
+          status: 'insufficient_signal',
+          summary: 'Insufficient commercial evidence for Yellow Panther fit.',
+        },
+      },
+    ],
+  }
+
+  assert.equal(hasQ14CommercialFitEligibility(dossier), true)
+
+  const stats = perQuestionQuality([{ dossier_data: dossier }])
+  assert.equal(stats.q14_yp_fit.eligible_total, 1)
+  assert.equal(stats.q14_yp_fit.eligible_zero_confidence, 1)
+  assert.equal(stats.q14_yp_fit.insufficient_signal_count, 1)
+  assert.equal(stats.q14_yp_fit.performance_gap_only_count, 0)
 })
 
 test('perQuestionQuality requires buyer route eligibility for q15 outreach denominator', () => {

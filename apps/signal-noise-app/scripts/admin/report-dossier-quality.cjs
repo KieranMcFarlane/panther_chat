@@ -108,6 +108,39 @@ function hasCommercialSynthesisEligibility(dossierData) {
   })
 }
 
+const Q14_COMMERCIAL_FIT_PATTERN = /\b(revenue|commercial|commerce|sponsor|sponsorship|partnership|partner|crm|ticketing|membership|hospitality|retail|merchandise|fan engagement|fan experience|digital|platform|app|website|ott|streaming|video|content|data|analytics|procurement|rfp|tender|vendor|technology|product|transformation|stakeholder|go[- ]?to[- ]?market|growth strategy)\b/i
+const Q13_COMMERCIAL_GAP_PATTERN = /\b(revenue|commercial|commerce|sponsor|sponsorship|partnership|partner|crm|ticketing|membership|hospitality|retail|merchandise|fan engagement|fan experience|digital|platform|app|website|ott|streaming|video|content|data|analytics|procurement|rfp|tender|vendor|stakeholder|go[- ]?to[- ]?market)\b/i
+
+function hasQ14CommercialFitSignal(answer) {
+  if (!answer || answerConfidence(answer) <= 0) return false
+  const state = answerValidationState(answer)
+  if (!['validated', 'confirmed', 'provisional'].includes(state)) return false
+  const text = answerText(answer)
+  const questionId = String(asRecord(answer).question_id || asRecord(answer).id || '').trim()
+  const commercialPattern = questionId === 'q13_capability_gap'
+    ? Q13_COMMERCIAL_GAP_PATTERN
+    : Q14_COMMERCIAL_FIT_PATTERN
+  return hasMeaningfulText(text) && commercialPattern.test(text)
+}
+
+function hasQ14CommercialFitEligibility(dossierData) {
+  const answers = questionAnswerMap(dossierData)
+  return [
+    answers.q2_digital_stack,
+    answers.q6_launch_signal,
+    answers.q7_procurement_signal,
+    answers.q9_news_signal,
+    answers.q10_hiring_signal,
+    answers.q13_capability_gap,
+  ].some(hasQ14CommercialFitSignal)
+}
+
+function isInsufficientSignalAnswer(answer) {
+  const state = answerValidationState(answer)
+  return ['no_signal', 'no signal', 'insufficient_signal', 'insufficient signal'].includes(state)
+    || /\binsufficient[_ ]signal\b|insufficient commercial evidence|no .*yellow panther fit/i.test(answerText(answer))
+}
+
 const PRIORITY_RERUN_QUESTION_IDS = [
   'q1_foundation',
   'q2_digital_stack',
@@ -282,6 +315,7 @@ function perQuestionQuality(rows) {
   rows.forEach((row) => {
     const buyerRouteEligible = hasBuyerRouteEligibility(row.dossier_data)
     const commercialSynthesisEligible = hasCommercialSynthesisEligibility(row.dossier_data)
+    const q14CommercialFitEligible = hasQ14CommercialFitEligibility(row.dossier_data)
     answerRecords(row.dossier_data).forEach((answer) => {
       const questionId = String(answer.question_id || answer.id || '').trim()
       if (!questionId) return
@@ -312,9 +346,19 @@ function perQuestionQuality(rows) {
       if (['q14_yp_fit', 'q15_outreach_strategy'].includes(questionId)) {
         bucket.eligible_total = Number(bucket.eligible_total || 0)
         bucket.eligible_zero_confidence = Number(bucket.eligible_zero_confidence || 0)
+        if (questionId === 'q14_yp_fit') {
+          bucket.insufficient_signal_count = Number(bucket.insufficient_signal_count || 0)
+          bucket.performance_gap_only_count = Number(bucket.performance_gap_only_count || 0)
+          if (isInsufficientSignalAnswer(answer)) {
+            bucket.insufficient_signal_count += 1
+            if (commercialSynthesisEligible && !q14CommercialFitEligible) {
+              bucket.performance_gap_only_count += 1
+            }
+          }
+        }
         const eligibleForQuestion = questionId === 'q15_outreach_strategy'
           ? commercialSynthesisEligible && buyerRouteEligible
-          : commercialSynthesisEligible
+          : q14CommercialFitEligible
         if (eligibleForQuestion) {
           bucket.eligible_total += 1
           if (answerConfidence(answer) === 0) {
@@ -507,5 +551,6 @@ module.exports = {
   qualityState,
   hasBuyerRouteEligibility,
   hasCommercialSynthesisEligibility,
+  hasQ14CommercialFitEligibility,
   targetedRerunBacklog,
 }

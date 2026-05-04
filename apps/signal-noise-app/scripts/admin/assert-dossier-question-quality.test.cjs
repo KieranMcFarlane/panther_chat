@@ -85,6 +85,27 @@ test('evaluateReport uses eligible q11/q12 denominators when present', () => {
   assert.deepEqual(evaluation.failures, [])
 })
 
+test('evaluateReport does not fail honest q14 insufficient-signal rows without commercial eligibility', () => {
+  const fixture = report()
+  fixture.per_question_quality.q14_yp_fit = {
+    ...perQuestionStats({ total: 100, zero: 90 }),
+    eligible_total: 0,
+    eligible_zero_confidence: 0,
+    insufficient_signal_count: 90,
+    performance_gap_only_count: 8,
+  }
+
+  const evaluation = evaluateReport(fixture, {
+    requiredQuestions: ['q14_yp_fit'],
+    maxZeroConfidenceRate: 0.2,
+    maxFailedRate: 1,
+    minArtifactCoverage: 1,
+  })
+
+  assert.equal(evaluation.ok, true)
+  assert.deepEqual(evaluation.failures, [])
+})
+
 test('evaluateReport fails when commercial artifact coverage disappears', () => {
   const evaluation = evaluateReport(report({
     artifact_coverage: {
