@@ -24,6 +24,10 @@ import {
 
 import { Entity, formatValue, getEntityPriority } from './types'
 import { buildDossierTabs } from '@/lib/dossier-tabs'
+import {
+  buildRecommendedApproachText,
+  buildYellowPantherOpportunityText,
+} from '@/lib/dossier-display-artifacts'
 
 interface FinalRalphClubDossierProps {
   entity: Entity
@@ -236,6 +240,14 @@ export function FinalRalphClubDossier({ entity, onEmailEntity, dossier }: FinalR
   const evidenceQuestions = questionRecords.filter((item: any) => getQuestionBucket(item) === 'evidence-sources')
   const metadata = dossier?.metadata || {}
   const opportunities = strategic?.opportunity_scoring || {}
+  const yellowPantherOpportunityText = buildYellowPantherOpportunityText(
+    dossier,
+    valueOrFallback(opportunities?.immediate_launch?.[0]?.opportunity, 'Opportunity not yet identified'),
+  )
+  const recommendedApproachText = buildRecommendedApproachText(
+    dossier,
+    valueOrFallback(strategic.recommended_approach, 'Begin with evidence gathering and a scoped pilot'),
+  )
 
   const activeOpportunityList = Array.isArray(opportunities?.immediate_launch) ? opportunities.immediate_launch : []
   const promotedOpportunitySignals = Array.isArray(discoverySummary?.opportunity_signals) ? discoverySummary.opportunity_signals : []
@@ -382,12 +394,12 @@ export function FinalRalphClubDossier({ entity, onEmailEntity, dossier }: FinalR
                 <div className="rounded-lg border border-green-200 bg-green-50 p-4">
                   <div className="text-sm font-semibold text-green-900">Yellow Panther Opportunity</div>
                   <p className="mt-1 text-sm text-green-700">
-                    {valueOrFallback(opportunities?.immediate_launch?.[0]?.opportunity, 'Opportunity not yet identified')}
+                    {yellowPantherOpportunityText}
                   </p>
                 </div>
                 <div className="rounded-lg border border-sky-200 bg-sky-50 p-4">
                   <div className="text-sm font-semibold text-sky-900">Recommended Approach</div>
-                  <p className="mt-1 text-sm text-sky-700">{valueOrFallback(strategic.recommended_approach, 'Begin with evidence gathering and a scoped pilot')}</p>
+                  <p className="mt-1 text-sm text-sky-700">{recommendedApproachText}</p>
                 </div>
               </CardContent>
             </Card>

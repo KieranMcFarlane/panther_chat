@@ -300,22 +300,20 @@ export async function getEntityForDossierPage(entityId: string, tier = 'standard
 
   let dossier = null
 
-  if (entity.properties.dossier_data) {
+  const persistedDossier = await getPersistedDossier(
+    entity.id?.toString() || entityId,
+    entity.neo4j_id,
+    entity.properties?.name,
+    entity.uuid || null,
+  )
+  dossier = persistedDossier ? normalizeQuestionFirstDossier(persistedDossier, entityId, entity) : null
+
+  if (!dossier && entity.properties.dossier_data) {
     try {
-      dossier = dossier ?? normalizeQuestionFirstDossier(JSON.parse(entity.properties.dossier_data), entityId, entity)
+      dossier = normalizeQuestionFirstDossier(JSON.parse(entity.properties.dossier_data), entityId, entity)
     } catch (error) {
       console.log('⚠️ Invalid dossier_data, skipping dossier parse:', error)
     }
-  }
-
-  if (!dossier) {
-    const persistedDossier = await getPersistedDossier(
-      entity.id?.toString() || entityId,
-      entity.neo4j_id,
-      entity.properties?.name,
-      entity.uuid || null,
-    )
-    dossier = persistedDossier ? normalizeQuestionFirstDossier(persistedDossier, entityId, entity) : null
   }
 
   return {

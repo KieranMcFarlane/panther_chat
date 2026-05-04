@@ -10,11 +10,23 @@ const loaderSource = readFileSync(loaderPath, 'utf8')
 const dossierPageSource = readFileSync(dossierPagePath, 'utf8')
 const dossierClientSource = readFileSync(dossierClientPath, 'utf8')
 
-test('entity loader falls back to persisted entity_dossiers when cached entity properties lack dossier_data', () => {
+test('entity loader can fall back to embedded entity dossier_data when no persisted dossier exists', () => {
   assert.match(loaderSource, /from\('entity_dossiers'\)/)
   assert.match(loaderSource, /select\('dossier_data, created_at, generated_at'\)/)
-  assert.match(loaderSource, /if \(!dossier\)/)
+  assert.match(loaderSource, /if \(!dossier && entity\.properties\.dossier_data\)/)
   assert.match(loaderSource, /getPersistedDossier/)
+})
+
+test('entity loader prefers repaired persisted dossiers before embedded entity dossier_data', () => {
+  const persistedLookupIndex = loaderSource.indexOf('const persistedDossier = await getPersistedDossier(')
+  const embeddedLookupIndex = loaderSource.indexOf('if (!dossier && entity.properties.dossier_data)')
+
+  assert.notEqual(persistedLookupIndex, -1)
+  assert.notEqual(embeddedLookupIndex, -1)
+  assert.ok(
+    persistedLookupIndex < embeddedLookupIndex,
+    'persisted entity_dossiers rows should win over stale embedded entity.properties.dossier_data',
+  )
 })
 
 test('entity loader does not search filesystem dossier stores on surfaced reads', () => {
