@@ -111,7 +111,32 @@ async function loadPipelineRuntimeModule() {
   return import(`${pathToFileURL(tempPath).href}?t=${Date.now()}`)
 }
 
-const { buildPipelineRuntimeSnapshot } = await loadPipelineRuntimeModule()
+const {
+  buildPipelineRuntimeSnapshot,
+  RUNTIME_DOSSIER_DATA_SELECT_SQL,
+  RUNTIME_RECENT_RUN_METADATA_SELECT_SQL,
+  RUNTIME_RUN_METADATA_SELECT_SQL,
+} = await loadPipelineRuntimeModule()
+
+test('pipeline runtime SQL strips oversized run metadata payloads', () => {
+  assert.match(RUNTIME_RUN_METADATA_SELECT_SQL, /jsonb_build_object/)
+  assert.doesNotMatch(RUNTIME_RUN_METADATA_SELECT_SQL, /reconciliation_payloads/)
+  assert.doesNotMatch(RUNTIME_RUN_METADATA_SELECT_SQL, /discovery_context/)
+  assert.doesNotMatch(RUNTIME_RUN_METADATA_SELECT_SQL, /phase_details_by_phase/)
+})
+
+test('pipeline runtime SQL uses minimal metadata for recent history rows', () => {
+  assert.match(RUNTIME_RECENT_RUN_METADATA_SELECT_SQL, /jsonb_build_object/)
+  assert.match(RUNTIME_RECENT_RUN_METADATA_SELECT_SQL, /publication_status/)
+  assert.doesNotMatch(RUNTIME_RECENT_RUN_METADATA_SELECT_SQL, /question_first_checkpoint/)
+  assert.doesNotMatch(RUNTIME_RECENT_RUN_METADATA_SELECT_SQL, /current_question_text/)
+})
+
+test('pipeline runtime SQL trims dossier data to question text context', () => {
+  assert.match(RUNTIME_DOSSIER_DATA_SELECT_SQL, /jsonb_build_object/)
+  assert.match(RUNTIME_DOSSIER_DATA_SELECT_SQL, /questions/)
+  assert.doesNotMatch(RUNTIME_DOSSIER_DATA_SELECT_SQL, /yellow_panther_fit/)
+})
 
 test('pipeline runtime treats fresh DB activity as live when supervisor crash metadata is stale', () => {
   const snapshot = buildPipelineRuntimeSnapshot({

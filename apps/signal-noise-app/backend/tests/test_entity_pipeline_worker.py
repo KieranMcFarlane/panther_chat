@@ -31,6 +31,7 @@ from entity_pipeline_worker import (
     derive_discovery_context,
     derive_monitoring_summary,
     normalize_pipeline_control_state_for_worker_start,
+    build_post_batch_idle_control_state,
     _mark_recovery_state,
     resolve_pipeline_timeout,
     resolve_fastapi_url,
@@ -392,6 +393,34 @@ def test_read_pipeline_control_state_exposes_ignition_transition_fields(tmp_path
     assert state["observed_state"] == "running"
     assert state["transition_state"] == "running"
     assert state["desired_state"] == "running"
+
+
+def test_post_batch_idle_control_state_preserves_operator_pause():
+    state = build_post_batch_idle_control_state(
+        {
+            "is_paused": True,
+            "pause_reason": "maintenance window",
+            "requested_state": "paused",
+            "observed_state": "running",
+            "transition_state": "running",
+            "desired_state": "paused",
+            "current_batch_id": "batch-1",
+            "current_entity_id": "entity-1",
+            "current_entity_name": "Paused Entity",
+            "current_action": "dossier_generation",
+            "current_phase": "dossier_generation",
+        },
+        now_iso="2026-05-04T21:40:00+00:00",
+    )
+
+    assert state["is_paused"] is True
+    assert state["pause_reason"] == "maintenance window"
+    assert state["requested_state"] == "paused"
+    assert state["observed_state"] == "paused"
+    assert state["transition_state"] == "paused"
+    assert state["current_batch_id"] is None
+    assert state["current_entity_id"] is None
+    assert state["current_action"] is None
 
 
 def test_read_pipeline_control_state_exposes_cursor_fields(tmp_path, monkeypatch):

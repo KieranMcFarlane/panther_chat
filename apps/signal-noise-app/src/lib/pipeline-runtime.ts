@@ -1,4 +1,3 @@
-import { cachedEntitiesSupabase as supabase } from '@/lib/cached-entities-supabase'
 import { OPERATIONAL_HEARTBEAT_STALE_SECONDS } from '@/lib/operational-heartbeat'
 import { resolveOperationalHeartbeatDetails } from '@/lib/operational-heartbeat'
 import { query as queryPostgres } from '@/lib/pg-client'
@@ -107,6 +106,74 @@ export type PipelineRuntimeReadSet = {
   rows: PipelineRunRow[]
   dossiers: PipelineDossierRow[]
 }
+
+export const RUNTIME_RUN_METADATA_SELECT_SQL = `
+  jsonb_build_object(
+    'question_first_checkpoint', limited_runs.metadata->'question_first_checkpoint',
+    'current_question_id', limited_runs.metadata->'current_question_id',
+    'active_question_id', limited_runs.metadata->'active_question_id',
+    'next_repair_question_id', limited_runs.metadata->'next_repair_question_id',
+    'last_completed_question', limited_runs.metadata->'last_completed_question',
+    'current_question_text', limited_runs.metadata->'current_question_text',
+    'active_question_text', limited_runs.metadata->'active_question_text',
+    'next_repair_question_text', limited_runs.metadata->'next_repair_question_text',
+    'last_completed_question_text', limited_runs.metadata->'last_completed_question_text',
+    'current_action', limited_runs.metadata->'current_action',
+    'next_action', limited_runs.metadata->'next_action',
+    'run_phase', limited_runs.metadata->'run_phase',
+    'current_substep', limited_runs.metadata->'current_substep',
+    'substep', limited_runs.metadata->'substep',
+    'current_substep_label', limited_runs.metadata->'current_substep_label',
+    'current_substep_progress', limited_runs.metadata->'current_substep_progress',
+    'phase0_substeps', limited_runs.metadata->'phase0_substeps',
+    'questions_answered', limited_runs.metadata->'questions_answered',
+    'questions_total', limited_runs.metadata->'questions_total',
+    'publication_status', limited_runs.metadata->'publication_status',
+    'quality_state', limited_runs.metadata->'quality_state',
+    'reconciliation_state', limited_runs.metadata->'reconciliation_state',
+    'retry_state', limited_runs.metadata->'retry_state',
+    'heartbeat_at', limited_runs.metadata->'heartbeat_at',
+    'stop_details', limited_runs.metadata->'stop_details',
+    'stop_reason', limited_runs.metadata->'stop_reason',
+    'continue_pipeline_on_failure', limited_runs.metadata->'continue_pipeline_on_failure',
+    'error_type', limited_runs.metadata->'error_type',
+    'failure_type', limited_runs.metadata->'failure_type',
+    'error_message', limited_runs.metadata->'error_message',
+    'execution_backend', limited_runs.metadata->'execution_backend',
+    'execution_model', limited_runs.metadata->'execution_model',
+    'execution_provider', limited_runs.metadata->'execution_provider',
+    'brightdata_transport', limited_runs.metadata->'brightdata_transport',
+    'repair_state', limited_runs.metadata->'repair_state',
+    'next_repair_status', limited_runs.metadata->'next_repair_status',
+    'next_repair_batch_id', limited_runs.metadata->'next_repair_batch_id'
+  )
+`
+
+export const RUNTIME_RECENT_RUN_METADATA_SELECT_SQL = `
+  jsonb_strip_nulls(jsonb_build_object(
+    'publication_status', limited_runs.metadata->'publication_status',
+    'quality_state', limited_runs.metadata->'quality_state',
+    'reconciliation_state', limited_runs.metadata->'reconciliation_state',
+    'retry_state', limited_runs.metadata->'retry_state',
+    'heartbeat_at', limited_runs.metadata->'heartbeat_at',
+    'stop_details', limited_runs.metadata->'stop_details',
+    'stop_reason', limited_runs.metadata->'stop_reason',
+    'continue_pipeline_on_failure', limited_runs.metadata->'continue_pipeline_on_failure',
+    'error_type', limited_runs.metadata->'error_type',
+    'failure_type', limited_runs.metadata->'failure_type',
+    'error_message', limited_runs.metadata->'error_message'
+  ))
+`
+
+export const RUNTIME_DOSSIER_DATA_SELECT_SQL = `
+  jsonb_strip_nulls(jsonb_build_object(
+    'questions', limited_dossiers.dossier_data->'questions',
+    'question_first', jsonb_build_object(
+      'questions', limited_dossiers.dossier_data#>'{question_first,questions}',
+      'answers', limited_dossiers.dossier_data#>'{question_first,answers}'
+    )
+  ))
+`
 
 function synchronizeControlStateWithCurrentLiveRun(
   control: PipelineControlState,
@@ -587,17 +654,35 @@ async function probeFastMcpHealth(): Promise<PipelineRuntimeFastMcpState> {
 }
 
 async function loadRecentRuntimeRuns(): Promise<PipelineRunRow[]> {
-  const response = await supabase
-    .from('entity_pipeline_runs')
-    .select('batch_id, entity_id, canonical_entity_id, entity_name, status, phase, started_at, completed_at, metadata')
-    .order('started_at', { ascending: false })
-    .limit(50)
+  const response = await queryPostgres(`
+    SELECT
+      batch_id,
+      entity_id,
+      canonical_entity_id,
+      entity_name,
+      status,
+      phase,
+      started_at,
+      completed_at,
+      ${RUNTIME_RECENT_RUN_METADATA_SELECT_SQL} AS metadata
+    FROM (
+      SELECT
+        batch_id,
+        entity_id,
+        canonical_entity_id,
+        entity_name,
+        status,
+        phase,
+        started_at,
+        completed_at,
+        metadata
+      FROM entity_pipeline_runs
+      ORDER BY started_at DESC
+      LIMIT 50
+    ) AS limited_runs
+  `)
 
-  if (response.error) {
-    throw response.error
-  }
-
-  return Array.isArray(response.data) ? (response.data as PipelineRunRow[]) : []
+  return Array.isArray(response.rows) ? (response.rows as PipelineRunRow[]) : []
 }
 
 async function loadActiveRuntimeRuns(): Promise<PipelineRunRow[]> {
@@ -613,36 +698,60 @@ async function loadActiveRuntimeRuns(): Promise<PipelineRunRow[]> {
       phase,
       started_at,
       completed_at,
-      metadata
-    FROM entity_pipeline_runs
-    WHERE status IN ('running', 'queued', 'retrying', 'reconciling')
-    ORDER BY
-      CASE status
-        WHEN 'running' THEN 0
-        WHEN 'retrying' THEN 1
-        WHEN 'reconciling' THEN 2
-        WHEN 'queued' THEN 3
-        ELSE 4
-      END,
-      started_at DESC
-    LIMIT 50
+      ${RUNTIME_RUN_METADATA_SELECT_SQL} AS metadata
+    FROM (
+      SELECT
+        batch_id,
+        entity_id,
+        canonical_entity_id,
+        entity_name,
+        status,
+        phase,
+        started_at,
+        completed_at,
+        metadata
+      FROM entity_pipeline_runs
+      WHERE status IN ('running', 'queued', 'retrying', 'reconciling')
+      ORDER BY
+        CASE status
+          WHEN 'running' THEN 0
+          WHEN 'retrying' THEN 1
+          WHEN 'reconciling' THEN 2
+          WHEN 'queued' THEN 3
+          ELSE 4
+        END,
+        started_at DESC
+      LIMIT 50
+    ) AS limited_runs
   `)
 
   return Array.isArray(response.rows) ? (response.rows as PipelineRunRow[]) : []
 }
 
 async function loadRecentRuntimeDossiers(): Promise<PipelineDossierRow[]> {
-  const response = await supabase
-    .from('entity_dossiers')
-    .select('entity_id, canonical_entity_id, entity_name, entity_type, generated_at, dossier_data')
-    .order('generated_at', { ascending: false })
-    .limit(50)
+  const response = await queryPostgres(`
+    SELECT
+      entity_id,
+      canonical_entity_id,
+      entity_name,
+      entity_type,
+      generated_at,
+      ${RUNTIME_DOSSIER_DATA_SELECT_SQL} AS dossier_data
+    FROM (
+      SELECT
+        entity_id,
+        canonical_entity_id,
+        entity_name,
+        entity_type,
+        generated_at,
+        dossier_data
+      FROM entity_dossiers
+      ORDER BY generated_at DESC NULLS LAST
+      LIMIT 50
+    ) AS limited_dossiers
+  `)
 
-  if (response.error) {
-    throw response.error
-  }
-
-  return Array.isArray(response.data) ? (response.data as PipelineDossierRow[]) : []
+  return Array.isArray(response.rows) ? (response.rows as PipelineDossierRow[]) : []
 }
 
 function buildFailureBuckets(records: PipelineRuntimeRunRecord[]) {
@@ -816,13 +925,23 @@ export async function loadPipelineRuntimeSnapshot(): Promise<PipelineRuntimeSnap
 
 export async function loadPipelineRuntimeReadSet(): Promise<PipelineRuntimeReadSet> {
   const snapshot_at = new Date().toISOString()
+  const timed = async <T>(label: string, promise: Promise<T>): Promise<T> => {
+    const startedAt = Date.now()
+    try {
+      return await promise
+    } finally {
+      if (process.env.PIPELINE_RUNTIME_DEBUG_TIMINGS === '1') {
+        console.log(`[pipeline-runtime] ${label} ${Date.now() - startedAt}ms`)
+      }
+    }
+  }
   const [control, worker, activeRows, recentRows, dossiers, fastmcp] = await Promise.all([
-    readPipelineControlState(),
-    inspectPipelineWorkerSupervisorState(),
-    loadActiveRuntimeRuns(),
-    loadRecentRuntimeRuns(),
-    loadRecentRuntimeDossiers(),
-    probeFastMcpHealth(),
+    timed('control', readPipelineControlState()),
+    timed('worker', inspectPipelineWorkerSupervisorState()),
+    timed('activeRows', loadActiveRuntimeRuns()),
+    timed('recentRows', loadRecentRuntimeRuns()),
+    timed('dossiers', loadRecentRuntimeDossiers()),
+    timed('fastmcp', probeFastMcpHealth()),
   ])
   const rows = [...activeRows, ...recentRows].filter((row, index, allRows) => {
     const key = `${toText(row.batch_id)}::${toText(row.entity_id)}::${toText(row.started_at)}`

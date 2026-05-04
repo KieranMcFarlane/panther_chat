@@ -461,6 +461,45 @@ def _clear_pipeline_runtime_state_fields(payload: Optional[Dict[str, Any]]) -> D
     return next_payload
 
 
+def build_post_batch_idle_control_state(
+    control_state: Optional[Dict[str, Any]],
+    *,
+    now_iso: str,
+) -> Dict[str, Any]:
+    """Clear the live cursor after a batch without overriding an operator pause."""
+    current = dict(control_state or {})
+    pause_requested = (
+        current.get("is_paused") is True
+        or str(current.get("requested_state") or "").strip().lower() == "paused"
+        or str(current.get("observed_state") or "").strip().lower() == "paused"
+    )
+    if pause_requested:
+        return _mark_recovery_state(
+            {
+                **_clear_pipeline_runtime_state_fields(current),
+                "is_paused": True,
+                "desired_state": "paused",
+                "requested_state": "paused",
+                "observed_state": "paused",
+                "transition_state": "paused",
+                "updated_at": now_iso,
+            },
+            state="blocked_manual" if str(current.get("stop_reason") or "").strip().lower() == "manual_stop" else "degraded",
+            health_class="blocked_manual" if str(current.get("stop_reason") or "").strip().lower() == "manual_stop" else "degraded",
+        )
+    return {
+        "is_paused": False,
+        "pause_reason": None,
+        "stop_reason": None,
+        "stop_details": None,
+        "desired_state": "running",
+        "requested_state": "running",
+        "observed_state": "running",
+        "transition_state": "running",
+        "updated_at": now_iso,
+    }
+
+
 def _mark_recovery_state(
     payload: Optional[Dict[str, Any]],
     *,
@@ -4029,17 +4068,10 @@ class EntityPipelineWorker:
                 )
             elif final_runs:
                 write_pipeline_control_state(
-                    {
-                        "is_paused": False,
-                        "pause_reason": None,
-                        "stop_reason": None,
-                        "stop_details": None,
-                        "desired_state": "running",
-                        "requested_state": "running",
-                        "observed_state": "running",
-                        "transition_state": "running",
-                        "updated_at": self._now_iso(),
-                    }
+                    build_post_batch_idle_control_state(
+                        read_pipeline_control_state(),
+                        now_iso=self._now_iso(),
+                    )
                 )
                 log_worker_transition(
                     "claim_cycle_empty",

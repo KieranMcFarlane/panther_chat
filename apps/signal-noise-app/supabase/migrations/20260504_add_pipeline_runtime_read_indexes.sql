@@ -6,3 +6,6 @@ CREATE INDEX IF NOT EXISTS idx_entity_pipeline_runs_status_started_at_desc
 
 CREATE INDEX IF NOT EXISTS idx_entity_dossiers_canonical_entity_id
   ON entity_dossiers(canonical_entity_id);
+
+CREATE INDEX IF NOT EXISTS idx_entity_dossiers_generated_at_desc_nulls_last
+  ON entity_dossiers(generated_at DESC NULLS LAST);
