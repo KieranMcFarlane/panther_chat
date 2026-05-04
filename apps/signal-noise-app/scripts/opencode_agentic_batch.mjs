@@ -352,7 +352,7 @@ function _toDisplayText(value) {
 function _isMeaningfulCommercialText(value) {
   const text = _toDisplayText(value);
   if (!text) return false;
-  return !/(^no_signal$|^no signal$|source pending$|question execution failed|no deterministic answer was produced|no completed brightdata leads were recoverable|returned no results matching|no results matching|searches? (for|across).* (returned|found) no|limited to unrelated|no web evidence found|insufficient signal|^\[object object\]$)/i.test(text);
+  return !/(^no_signal$|^no signal$|source pending$|question execution failed|no deterministic answer was produced|no completed brightdata leads were recoverable|no brightdata-backed evidence|initial search returned only generic|follow-up search timed out|returned no results matching|no results matching|no hiring leads found|bounded retrieval|lead with a .* angle tied to the active signal|points to insufficient_signal|current dossier evidence points to insufficient[_ ]signal|searches? (for|across).* (returned|found) no|limited to unrelated|kind:\s*summary(\.|;|$)|kind:\s*summary;\s*value:\s*(;|null)|value:\s*null|summary:\s*null|raw structured output:\s*(;|null)|no web evidence found|insufficient signal|^\[object object\]$)/i.test(text);
 }
 
 function _firstMeaningfulCommercialText(values) {

@@ -231,6 +231,128 @@ test('shouldRepairDossier targets zero-confidence q12 when q11 has buyer evidenc
   assert.equal(shouldRepairDossier(pack), true)
 })
 
+test('repairDossierPayload fills q15 target from q12 buyer path', () => {
+  const pack = weakFifteenPack()
+  pack.discovery_summary = {
+    graphiti_sales_brief: { status: 'available' },
+    yellow_panther_fit: {
+      status: 'available',
+      best_service: 'DIGITAL_TRANSFORMATION',
+      fit_rationale: 'Digital launch evidence creates a platform delivery opportunity.',
+    },
+    outreach_strategy: {
+      status: 'available',
+      recommended_angle: 'Lead with the digital launch trigger.',
+      first_message_strategy: 'Open with the launch trigger and verify the owner.',
+      why_now: 'Digital launch is current.',
+    },
+  }
+  pack.answers = pack.answers.map((item) => {
+    if (item.question_id === 'q11_decision_owner') {
+      return {
+        ...item,
+        validation_state: 'provisional',
+        confidence: 0.58,
+        answer: {
+          kind: 'person',
+          summary: 'Nathan Bombrys is the likely buyer.',
+          raw_structured_output: {
+            primary_owner: { name: 'Nathan Bombrys', title: 'CEO' },
+          },
+        },
+      }
+    }
+    if (item.question_id === 'q12_connections') {
+      return {
+        ...item,
+        validation_state: 'provisional',
+        confidence: 0.52,
+        answer: {
+          kind: 'connections_path',
+          summary: 'Nathan Bombrys is the buyer path to verify via cold.',
+          raw_structured_output: {
+            target_person: 'Nathan Bombrys',
+            target_role: 'CEO',
+            recommended_route: 'cold',
+          },
+        },
+      }
+    }
+    if (item.question_id === 'q15_outreach_strategy') {
+      return answer('q15_outreach_strategy')
+    }
+    return item
+  })
+
+  const repair = repairDossierPayload(pack, 'canadian-rugby-union')
+  const answers = Object.fromEntries(repair.repaired_dossier.question_first.answers.map((item) => [item.question_id, item]))
+
+  assert.equal(answers.q15_outreach_strategy.validation_state, 'provisional')
+  assert.equal(answers.q15_outreach_strategy.answer.raw_structured_output.recommended_target, 'Nathan Bombrys')
+})
+
+test('repairDossierPayload overwrites provisional q15 when target is missing but q12 has buyer path', () => {
+  const pack = weakFifteenPack()
+  pack.discovery_summary = {
+    graphiti_sales_brief: { status: 'available' },
+    yellow_panther_fit: {
+      status: 'available',
+      best_service: 'DIGITAL_TRANSFORMATION',
+      fit_rationale: 'Digital launch evidence creates a platform delivery opportunity.',
+    },
+    outreach_strategy: {
+      status: 'available',
+      recommended_angle: 'Lead with the digital launch trigger.',
+      first_message_strategy: 'Open with the launch trigger and verify the owner.',
+      why_now: 'Digital launch is current.',
+    },
+  }
+  pack.answers = pack.answers.map((item) => {
+    if (item.question_id === 'q11_decision_owner') {
+      return answer('q11_decision_owner')
+    }
+    if (item.question_id === 'q12_connections') {
+      return {
+        ...item,
+        validation_state: 'provisional',
+        confidence: 0.52,
+        answer: {
+          kind: 'connections_path',
+          summary: 'Corin Haines is the buyer path to verify via cold.',
+          raw_structured_output: {
+            target_person: 'Corin Haines',
+            target_role: 'CEO',
+            recommended_route: 'cold',
+          },
+        },
+      }
+    }
+    if (item.question_id === 'q15_outreach_strategy') {
+      return {
+        ...item,
+        validation_state: 'provisional',
+        confidence: 0.56,
+        answer: {
+          kind: 'scorecard',
+          summary: 'Verify the buyer: Lead with the digital launch trigger.',
+          raw_structured_output: {
+            recommended_target: null,
+            recommended_route: 'cold',
+            recommended_angle: 'Lead with the digital launch trigger.',
+            why_now: 'Digital launch is current.',
+          },
+        },
+      }
+    }
+    return item
+  })
+
+  const repair = repairDossierPayload(pack, 'colchester-united')
+  const answers = Object.fromEntries(repair.repaired_dossier.question_first.answers.map((item) => [item.question_id, item]))
+
+  assert.equal(answers.q15_outreach_strategy.answer.raw_structured_output.recommended_target, 'Corin Haines')
+})
+
 test('repairDossierPayload demotes mechanically complete packs with no commercial artifacts', () => {
   const emptyPack = weakFifteenPack()
   emptyPack.answers = emptyPack.answers.map((item) => ({
@@ -350,4 +472,94 @@ test('repairDossierPayload replaces stale checked-absence fit artifacts with ins
 
   assert.equal(repair.repaired_dossier.yellow_panther_fit.status, 'insufficient_signal')
   assert.equal(repair.repaired_dossier.discovery_summary.outreach_strategy.status, 'insufficient_signal')
+})
+
+test('repairDossierPayload replaces stale no-hiring q14 and q15 records with insufficient signal', () => {
+  const pack = weakFifteenPack()
+  pack.discovery_summary = {
+    graphiti_sales_brief: { status: 'available', buyer_name: 'Norsk Toppfotball' },
+    yellow_panther_fit: {
+      status: 'insufficient_signal',
+      fit_rationale: 'insufficient_signal',
+    },
+    outreach_strategy: {
+      status: 'insufficient_signal',
+    },
+  }
+  pack.answers = pack.answers.map((item) => {
+    if (item.question_id === 'q14_yp_fit') {
+      return {
+        ...item,
+        validation_state: 'provisional',
+        confidence: 0.58,
+        answer: {
+          kind: 'scorecard',
+          summary: 'PROJECT DELIVERY is the strongest capability match because current dossier evidence points to no hiring leads found in bounded retrieval.',
+          raw_structured_output: {
+            best_service: 'PROJECT_DELIVERY',
+            fit_rationale: 'PROJECT DELIVERY is the strongest capability match because current dossier evidence points to no hiring leads found in bounded retrieval.',
+          },
+        },
+      }
+    }
+    if (item.question_id === 'q15_outreach_strategy') {
+      return {
+        ...item,
+        validation_state: 'provisional',
+        confidence: 0.56,
+        answer: {
+          kind: 'scorecard',
+          summary: 'Norsk Toppfotball: No hiring leads found in bounded retrieval.',
+          raw_structured_output: {
+            recommended_target: 'Norsk Toppfotball',
+            recommended_angle: 'No hiring leads found in bounded retrieval.',
+            why_now: 'No hiring leads found in bounded retrieval.',
+          },
+        },
+      }
+    }
+    return item
+  })
+
+  const repair = repairDossierPayload(pack, 'eliteserien')
+  const answers = Object.fromEntries(repair.repaired_dossier.question_first.answers.map((item) => [item.question_id, item]))
+
+  assert.equal(answers.q14_yp_fit.validation_state, 'no_signal')
+  assert.equal(answers.q14_yp_fit.answer.raw_structured_output.status, 'insufficient_signal')
+  assert.equal(answers.q15_outreach_strategy.validation_state, 'no_signal')
+  assert.equal(answers.q15_outreach_strategy.answer.raw_structured_output.status, 'insufficient_signal')
+})
+
+test('repairDossierPayload replaces generic placeholder q15 outreach with insufficient signal', () => {
+  const pack = weakFifteenPack()
+  pack.discovery_summary = {
+    graphiti_sales_brief: { status: 'available', buyer_name: 'Ivo Ferriani' },
+    yellow_panther_fit: { status: 'insufficient_signal' },
+    outreach_strategy: { status: 'insufficient_signal' },
+  }
+  pack.answers = pack.answers.map((item) => {
+    if (item.question_id === 'q15_outreach_strategy') {
+      return {
+        ...item,
+        validation_state: 'provisional',
+        confidence: 0.56,
+        answer: {
+          kind: 'scorecard',
+          summary: 'Ivo Ferriani: Lead with a current commercial trigger angle tied to the active signal.',
+          raw_structured_output: {
+            recommended_target: 'Ivo Ferriani',
+            recommended_angle: 'Lead with a current commercial trigger angle tied to the active signal.',
+            why_now: 'Lead with a current commercial trigger angle tied to the active signal.',
+          },
+        },
+      }
+    }
+    return item
+  })
+
+  const repair = repairDossierPayload(pack, 'ibsf')
+  const answers = Object.fromEntries(repair.repaired_dossier.question_first.answers.map((item) => [item.question_id, item]))
+
+  assert.equal(answers.q15_outreach_strategy.validation_state, 'no_signal')
+  assert.equal(answers.q15_outreach_strategy.answer.raw_structured_output.status, 'insufficient_signal')
 })

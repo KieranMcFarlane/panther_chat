@@ -100,11 +100,15 @@ test('perQuestionQuality reports validation and zero-confidence counts', () => {
       total: 2,
       validation_states: { no_signal: 1, validated: 1 },
       zero_confidence: 1,
+      eligible_total: 0,
+      eligible_zero_confidence: 0,
     },
     q15_outreach_strategy: {
       total: 2,
       validation_states: { validated: 1, failed: 1 },
       zero_confidence: 1,
+      eligible_total: 0,
+      eligible_zero_confidence: 0,
     },
   })
 })
@@ -159,6 +163,38 @@ test('perQuestionQuality uses buyer eligibility for q11 and q12 denominators', (
   assert.equal(stats.q12_connections.zero_confidence, 1)
   assert.equal(stats.q12_connections.eligible_total, 1)
   assert.equal(stats.q12_connections.eligible_zero_confidence, 0)
+})
+
+test('perQuestionQuality uses commercial synthesis eligibility for q14 and q15 denominators', () => {
+  const rows = [
+    {
+      dossier_data: {
+        answers: [
+          { question_id: 'q6_launch_signal', validation_state: 'no_signal', confidence: 0, answer: 'No launch signal found.' },
+          { question_id: 'q14_yp_fit', validation_state: 'no_signal', confidence: 0 },
+          { question_id: 'q15_outreach_strategy', validation_state: 'no_signal', confidence: 0 },
+        ],
+      },
+    },
+    {
+      dossier_data: {
+        answers: [
+          { question_id: 'q6_launch_signal', validation_state: 'validated', confidence: 0.82, answer: 'The club launched a new digital ticketing app.' },
+          { question_id: 'q14_yp_fit', validation_state: 'provisional', confidence: 0.58 },
+          { question_id: 'q15_outreach_strategy', validation_state: 'provisional', confidence: 0.56 },
+        ],
+      },
+    },
+  ]
+
+  const stats = perQuestionQuality(rows)
+
+  assert.equal(stats.q14_yp_fit.total, 2)
+  assert.equal(stats.q14_yp_fit.zero_confidence, 1)
+  assert.equal(stats.q14_yp_fit.eligible_total, 1)
+  assert.equal(stats.q14_yp_fit.eligible_zero_confidence, 0)
+  assert.equal(stats.q15_outreach_strategy.eligible_total, 1)
+  assert.equal(stats.q15_outreach_strategy.eligible_zero_confidence, 0)
 })
 
 test('hasBuyerRouteEligibility rejects checked absence leadership prose', () => {

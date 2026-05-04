@@ -39,7 +39,7 @@ function countBy(rows, selector) {
 function hasMeaningfulText(value) {
   const text = String(value || '').trim()
   return Boolean(text)
-    && !/^(no_signal|no signal|insufficient_signal|insufficient signal|failed|blocked|\[object object\])$/i.test(text)
+    && !/(^no_signal$|^no signal$|source pending$|question execution failed|no deterministic answer was produced|no completed brightdata leads were recoverable|no brightdata-backed evidence|no brightdata-backed evidence found|initial search returned only generic|follow-up search timed out|returned no results matching|no results matching|no results found|no evidence found|no hiring leads found|bounded retrieval|lead with a .* angle tied to the active signal|insufficient[_ ]signal|no entity identifiable|no commercial decision-making structure|searches? (for|across).* (returned|found) no|limited to unrelated|kind:\s*summary|value:\s*null|summary:\s*null|raw structured output:\s*(;|null)|no web evidence found|^\[object object\]$)/i.test(text)
 }
 
 function answerValidationState(answer) {
@@ -89,6 +89,24 @@ function hasBuyerRouteEligibility(dossierData) {
   return hasBuyerRoleSignal(answers.q3_leadership)
     || hasBuyerRoleSignal(answers.q11_decision_owner)
     || hasBuyerRoleSignal(answers.q12_connections)
+}
+
+function hasCommercialSynthesisEligibility(dossierData) {
+  const answers = questionAnswerMap(dossierData)
+  return [
+    answers.q6_launch_signal,
+    answers.q7_procurement_signal,
+    answers.q9_news_signal,
+    answers.q10_hiring_signal,
+    answers.q11_decision_owner,
+    answers.q12_connections,
+    answers.q13_capability_gap,
+  ].some((answer) => {
+    if (!answer || answerConfidence(answer) <= 0) return false
+    const state = answerValidationState(answer)
+    if (!['validated', 'confirmed', 'provisional'].includes(state)) return false
+    return hasMeaningfulText(answerText(answer))
+  })
 }
 
 function answerRecords(dossierData) {
@@ -219,6 +237,7 @@ function perQuestionQuality(rows) {
   const byQuestion = {}
   rows.forEach((row) => {
     const buyerRouteEligible = hasBuyerRouteEligibility(row.dossier_data)
+    const commercialSynthesisEligible = hasCommercialSynthesisEligibility(row.dossier_data)
     answerRecords(row.dossier_data).forEach((answer) => {
       const questionId = String(answer.question_id || answer.id || '').trim()
       if (!questionId) return
@@ -240,6 +259,16 @@ function perQuestionQuality(rows) {
         bucket.eligible_total = Number(bucket.eligible_total || 0)
         bucket.eligible_zero_confidence = Number(bucket.eligible_zero_confidence || 0)
         if (buyerRouteEligible) {
+          bucket.eligible_total += 1
+          if (answerConfidence(answer) === 0) {
+            bucket.eligible_zero_confidence += 1
+          }
+        }
+      }
+      if (['q14_yp_fit', 'q15_outreach_strategy'].includes(questionId)) {
+        bucket.eligible_total = Number(bucket.eligible_total || 0)
+        bucket.eligible_zero_confidence = Number(bucket.eligible_zero_confidence || 0)
+        if (commercialSynthesisEligible) {
           bucket.eligible_total += 1
           if (answerConfidence(answer) === 0) {
             bucket.eligible_zero_confidence += 1
@@ -428,4 +457,5 @@ module.exports = {
   perQuestionQuality,
   qualityState,
   hasBuyerRouteEligibility,
+  hasCommercialSynthesisEligibility,
 }

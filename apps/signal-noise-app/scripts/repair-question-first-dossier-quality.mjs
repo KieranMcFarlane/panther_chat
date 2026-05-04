@@ -72,7 +72,7 @@ function toText(value) {
 function hasMeaningfulCommercialText(value) {
   const text = toText(value)
   return Boolean(text)
-    && !/(^no_signal$|^no signal$|source pending$|question execution failed|no deterministic answer was produced|no completed brightdata leads were recoverable|no brightdata-backed evidence|initial search returned only generic|follow-up search timed out|returned no results matching|no results matching|no hiring leads found|bounded retrieval|points to insufficient_signal|current dossier evidence points to insufficient[_ ]signal|searches? (for|across).* (returned|found) no|limited to unrelated|kind:\s*summary(\.|;|$)|kind:\s*summary;\s*value:\s*(;|null)|value:\s*null|summary:\s*null|raw structured output:\s*(;|null)|no web evidence found|insufficient signal|^\[object object\]$)/i.test(text)
+    && !/(^no_signal$|^no signal$|source pending$|question execution failed|no deterministic answer was produced|no completed brightdata leads were recoverable|no brightdata-backed evidence|initial search returned only generic|follow-up search timed out|returned no results matching|no results matching|no hiring leads found|bounded retrieval|lead with a .* angle tied to the active signal|points to insufficient_signal|current dossier evidence points to insufficient[_ ]signal|searches? (for|across).* (returned|found) no|limited to unrelated|kind:\s*summary(\.|;|$)|kind:\s*summary;\s*value:\s*(;|null)|value:\s*null|summary:\s*null|raw structured output:\s*(;|null)|no web evidence found|insufficient signal|^\[object object\]$)/i.test(text)
 }
 
 function firstMeaningfulCommercialText(values) {
@@ -92,6 +92,22 @@ function makeStructuredAnswer(kind, summary, rawStructuredOutput) {
   }
 }
 
+function makeInsufficientPatch(questionId, reason, sourceQuestions = []) {
+  return {
+    validation_state: 'no_signal',
+    confidence: 0,
+    answer: makeStructuredAnswer('scorecard', 'insufficient_signal', {
+      answer: 'insufficient_signal',
+      summary: reason,
+      status: 'insufficient_signal',
+      confidence_caveat: reason,
+    }),
+    evidence_url: '',
+    source_questions: sourceQuestions.length > 0 ? sourceQuestions : [questionId],
+    force: true,
+  }
+}
+
 function answerRaw(record) {
   const answer = asRecord(record?.answer)
   return asRecord(answer.raw_structured_output || answer)
@@ -100,6 +116,11 @@ function answerRaw(record) {
 function validatedOrProvisional(record) {
   const state = String(record?.validation_state || '').trim().toLowerCase()
   return ['validated', 'confirmed', 'provisional'].includes(state)
+}
+
+function stalePositiveRecord(record) {
+  return Boolean(record)
+    && (validatedOrProvisional(record) || Number(record?.confidence || 0) > 0)
 }
 
 function candidateRoleScore(candidate) {
@@ -201,6 +222,7 @@ function decisionOwnerCandidate(record) {
 
 function shouldUsePatch(record, patch) {
   if (!patch) return false
+  if (patch.force) return true
   const existingConfidence = Number(record?.confidence || 0)
   return Number(patch.confidence || 0) > existingConfidence
     || ['no_signal', 'failed', 'blocked', 'exhausted', 'unknown', ''].includes(String(record?.validation_state || '').trim().toLowerCase())
@@ -367,7 +389,11 @@ function buildQuestionRecordPatches(repairedDossier) {
   }
 
   if (String(outreach.status || '').toLowerCase() === 'available' && hasMeaningfulCommercialText(outreach.recommended_target || outreach.recommended_angle || outreach.first_message_strategy)) {
-    const target = firstMeaningfulCommercialText([outreach.recommended_target, brief.outreach_target, brief.buyer_name])
+    const q12Raw = asRecord(asRecord(answers.q12_connections?.answer).raw_structured_output || answers.q12_connections?.answer)
+    const q11Raw = asRecord(asRecord(answers.q11_decision_owner?.answer).raw_structured_output || answers.q11_decision_owner?.answer)
+    const q11Owner = asRecord(q11Raw.primary_owner)
+    const currentQ15Raw = asRecord(asRecord(answers.q15_outreach_strategy?.answer).raw_structured_output || answers.q15_outreach_strategy?.answer)
+    const target = firstMeaningfulCommercialText([outreach.recommended_target, brief.outreach_target, brief.buyer_name, q12Raw.target_person, q11Owner.name])
     const angle = firstMeaningfulCommercialText([outreach.recommended_angle, outreach.why_now, outreach.first_message_strategy])
     const summary = `${target || 'Verify the buyer'}: ${angle}`
     const raw = {
@@ -386,7 +412,17 @@ function buildQuestionRecordPatches(repairedDossier) {
       confidence: Math.max(0.48, Number(answers.q15_outreach_strategy?.confidence || 0), 0.56),
       answer: makeStructuredAnswer('scorecard', summary, raw),
       source_questions: ['q6_launch_signal', 'q11_decision_owner', 'q12_connections', 'q14_yp_fit'],
+      force: Boolean(target && !firstMeaningfulCommercialText([currentQ15Raw.recommended_target])),
     }
+  }
+
+  const currentQ14Text = toText(answers.q14_yp_fit?.answer)
+  if (stalePositiveRecord(answers.q14_yp_fit) && !hasMeaningfulCommercialText(currentQ14Text)) {
+    patches.q14_yp_fit = makeInsufficientPatch('q14_yp_fit', 'Insufficient commercial evidence for Yellow Panther fit.', ['q6_launch_signal', 'q13_capability_gap'])
+  }
+  const currentQ15Text = toText(answers.q15_outreach_strategy?.answer)
+  if (stalePositiveRecord(answers.q15_outreach_strategy) && !hasMeaningfulCommercialText(currentQ15Text)) {
+    patches.q15_outreach_strategy = makeInsufficientPatch('q15_outreach_strategy', 'Insufficient commercial evidence for outreach strategy.', ['q11_decision_owner', 'q12_connections', 'q14_yp_fit'])
   }
 
   return patches
