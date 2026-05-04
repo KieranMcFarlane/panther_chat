@@ -78,6 +78,16 @@ def _is_meaningful_text(value: Any) -> bool:
         return False
     if "opportunity hypotheses: ;" in lowered:
         return False
+    if "returned no results matching" in lowered:
+        return False
+    if "no results matching" in lowered:
+        return False
+    if "limited to unrelated" in lowered:
+        return False
+    if "searches for" in lowered and ("returned no" in lowered or "found no" in lowered):
+        return False
+    if "searches across" in lowered and ("returned no" in lowered or "found no" in lowered):
+        return False
     return True
 
 

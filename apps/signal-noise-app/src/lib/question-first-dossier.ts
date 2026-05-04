@@ -661,7 +661,7 @@ function isMeaningfulCommercialText(value: unknown): boolean {
   if (!text) {
     return false
   }
-  return !/(^no_signal$|^no signal$|source pending$|question execution failed|no deterministic answer was produced|no completed brightdata leads were recoverable|kind:\s*summary;\s*value:\s*;\s*summary:\s*(;|$)|commercial interpretation:\s*themes:\s*;\s*summary:\s*;|raw structured output:\s*;|opportunity hypotheses:\s*;|no web evidence found|insufficient signal|^\[object object\]$)/i.test(text)
+  return !/(^no_signal$|^no signal$|source pending$|question execution failed|no deterministic answer was produced|no completed brightdata leads were recoverable|returned no results matching|no results matching|searches? (for|across).* (returned|found) no|limited to unrelated|kind:\s*summary;\s*value:\s*;\s*summary:\s*(;|$)|commercial interpretation:\s*themes:\s*;\s*summary:\s*;|raw structured output:\s*;|opportunity hypotheses:\s*;|no web evidence found|insufficient signal|^\[object object\]$)/i.test(text)
 }
 
 function firstMeaningfulCommercialText(values: unknown[]): string {

@@ -128,3 +128,22 @@ test('repairDossierPayload does not convert failed placeholder summaries into av
   assert.equal(repair.repaired_dossier.yellow_panther_fit.status, 'insufficient_signal')
   assert.equal(repair.repaired_dossier.discovery_summary.outreach_strategy.status, 'insufficient_signal')
 })
+
+test('repairDossierPayload does not treat checked-absence search text as a launch signal', () => {
+  const noSignalPack = weakFifteenPack()
+  noSignalPack.answers = noSignalPack.answers.map((item) => ({
+    ...item,
+    validation_state: 'no_signal',
+    confidence: 0,
+    answer: 'Web searches for launch app platform returned no results matching product, app, platform, or fan experience launches.',
+    primary_owner: undefined,
+    evidence_url: undefined,
+  }))
+
+  const repair = repairDossierPayload(noSignalPack, 'major-league-cricket')
+
+  assert.equal(repair.after_publish_status, 'published_partial')
+  assert.equal(repair.repaired_dossier.discovery_summary.graphiti_sales_brief.status, 'insufficient_signal')
+  assert.equal(repair.repaired_dossier.yellow_panther_fit.status, 'insufficient_signal')
+  assert.equal(repair.repaired_dossier.discovery_summary.outreach_strategy.status, 'insufficient_signal')
+})
