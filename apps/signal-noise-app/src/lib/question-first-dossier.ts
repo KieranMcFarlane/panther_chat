@@ -661,7 +661,7 @@ function isMeaningfulCommercialText(value: unknown): boolean {
   if (!text) {
     return false
   }
-  return !/(^no_signal$|^no signal$|source pending$|question execution failed|no web evidence found|insufficient signal|^\[object object\]$)/i.test(text)
+  return !/(^no_signal$|^no signal$|source pending$|question execution failed|no deterministic answer was produced|no web evidence found|insufficient signal|^\[object object\]$)/i.test(text)
 }
 
 function firstMeaningfulCommercialText(values: unknown[]): string {
@@ -819,21 +819,20 @@ function buildQuestionFirstDiscoverySummary(questions: Record<string, any>[], an
   const decisionOwnerRecord = getQuestionAnswerRecord(ensureObject(questions.find((question) => toText(question.question_id) === 'q11_decision_owner') || answerByQuestionId.get('q11_decision_owner') || {}))
   const decisionOwnerAnswerRecord = ensureObject(decisionOwnerRecord.answer)
   const decisionOwnerStructured = ensureObject(decisionOwnerAnswerRecord.structured_signal || decisionOwnerAnswer.structured_signal)
-  const decisionOwnerName = toText(
-    decisionOwnerStructured.decision_owner_name
-    || decisionOwnerStructured.name
-    || decisionOwnerAnswerRecord.value
-    || decisionOwnerAnswerRecord.summary
-    || decisionOwnerAnswer.summary
-    || decisionOwnerAnswer.value
-    || decisionOwnerAnswer.answer,
-  )
-  const decisionOwnerTitle = toText(
-    decisionOwnerStructured.decision_owner_title
-    || decisionOwnerStructured.title
-    || decisionOwnerStructured.role
-    || '',
-  )
+  const decisionOwnerName = firstMeaningfulCommercialText([
+    decisionOwnerStructured.decision_owner_name,
+    decisionOwnerStructured.name,
+    decisionOwnerAnswerRecord.value,
+    decisionOwnerAnswerRecord.summary,
+    decisionOwnerAnswer.summary,
+    decisionOwnerAnswer.value,
+    decisionOwnerAnswer.answer,
+  ])
+  const decisionOwnerTitle = firstMeaningfulCommercialText([
+    decisionOwnerStructured.decision_owner_title,
+    decisionOwnerStructured.title,
+    decisionOwnerStructured.role,
+  ])
 
   const connectionsRecord = getQuestionAnswerRecord(ensureObject(questions.find((question) => toText(question.question_id) === 'q12_connections') || connectionsAnswer || {}))
   const connectionsRaw = ensureObject(ensureObject(connectionsRecord.answer).raw_structured_output)

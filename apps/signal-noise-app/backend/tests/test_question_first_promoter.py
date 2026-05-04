@@ -656,3 +656,125 @@ def test_build_question_first_promotions_uses_direct_buyer_route_fields_when_con
     assert brief["path_type"] == "Direct (warm)"
     assert brief["buyer_relevance"] == "decision_owner"
     assert brief["outreach_target"] == "Juliet Slot"
+
+
+def test_build_question_first_promotions_synthesizes_yp_fit_and_outreach_from_adjacent_signal():
+    result = build_question_first_promotions(
+        answers=[
+            {
+                "question_id": "q6_launch_signal",
+                "entity_id": "major-league-cricket",
+                "entity_name": "Major League Cricket",
+                "question_type": "launch_signal",
+                "answer": "Major League Cricket is replacing its digital ticketing platform before the 2026 season.",
+                "confidence": 0.86,
+                "validation_state": "validated",
+                "signal_type": "LAUNCH_SIGNAL",
+                "evidence_url": "https://example.com/mlc-ticketing-launch",
+            },
+            {
+                "question_id": "q11_decision_owner",
+                "entity_id": "major-league-cricket",
+                "entity_name": "Major League Cricket",
+                "question_type": "decision_owner",
+                "answer": "A commercial operations lead is the likely buyer.",
+                "confidence": 0.62,
+                "validation_state": "provisional",
+                "signal_type": "DECISION_OWNER",
+                "primary_owner": {
+                    "name": "Commercial Operations Lead",
+                    "title": "Commercial Operations",
+                    "organization": "Major League Cricket",
+                },
+            },
+            {
+                "question_id": "q12_connections",
+                "question_type": "connections",
+                "answer": {
+                    "raw_structured_output": {
+                        "candidate_paths": [
+                            {
+                                "best_yp_owner": "Elliott Hillman",
+                                "path_type": "Cold",
+                                "buyer_relevance": "decision_owner",
+                                "route_confidence": 25,
+                            }
+                        ]
+                    }
+                },
+                "confidence": 0.35,
+                "validation_state": "no_signal",
+                "signal_type": "CONNECTIONS",
+            },
+            {
+                "question_id": "q14_yp_fit",
+                "question_type": "yp_fit",
+                "answer": None,
+                "confidence": 0,
+                "validation_state": "no_signal",
+                "signal_type": "YP_FIT",
+            },
+            {
+                "question_id": "q15_outreach_strategy",
+                "question_type": "outreach_strategy",
+                "answer": None,
+                "confidence": 0,
+                "validation_state": "no_signal",
+                "signal_type": "OUTREACH_STRATEGY",
+            },
+        ],
+        evidence_items=[],
+        promotion_candidates=[],
+        allowed_rollout_phase="phase_3_decision",
+    )
+
+    summary = result["discovery_summary"]
+    yp_fit = summary["yellow_panther_fit"]
+    outreach = summary["outreach_strategy"]
+    brief = summary["graphiti_sales_brief"]
+
+    assert yp_fit["status"] == "available"
+    assert yp_fit["best_service"] == "DIGITAL_TRANSFORMATION"
+    assert "ticketing platform" in yp_fit["fit_rationale"].lower()
+    assert outreach["status"] == "available"
+    assert outreach["recommended_target"] == "Commercial Operations Lead"
+    assert outreach["recommended_route"] == "Cold"
+    assert "ticketing platform" in outreach["recommended_angle"].lower()
+    assert brief["status"] == "available"
+    assert brief["buyer_name"] == "Commercial Operations Lead"
+    assert brief["outreach_target"] == "Commercial Operations Lead"
+    assert brief["outreach_angle"]
+
+
+def test_build_question_first_promotions_returns_insufficient_signal_fit_without_fake_negative_lookup():
+    result = build_question_first_promotions(
+        answers=[
+            {
+                "question_id": "q14_yp_fit",
+                "question_type": "yp_fit",
+                "answer": None,
+                "confidence": 0,
+                "validation_state": "no_signal",
+                "signal_type": "YP_FIT",
+            },
+            {
+                "question_id": "q15_outreach_strategy",
+                "question_type": "outreach_strategy",
+                "answer": None,
+                "confidence": 0,
+                "validation_state": "no_signal",
+                "signal_type": "OUTREACH_STRATEGY",
+            },
+        ],
+        evidence_items=[],
+        promotion_candidates=[],
+        allowed_rollout_phase="phase_3_decision",
+    )
+
+    yp_fit = result["discovery_summary"]["yellow_panther_fit"]
+    outreach = result["discovery_summary"]["outreach_strategy"]
+
+    assert yp_fit["status"] == "insufficient_signal"
+    assert yp_fit["fit_rationale"] == "insufficient_signal"
+    assert "panther" not in " ".join(str(value) for value in yp_fit.values()).lower()
+    assert outreach["status"] == "insufficient_signal"

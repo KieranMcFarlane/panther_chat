@@ -36,6 +36,12 @@ function countBy(rows, selector) {
   }, {})
 }
 
+function hasMeaningfulText(value) {
+  const text = String(value || '').trim()
+  return Boolean(text)
+    && !/^(no_signal|no signal|insufficient_signal|insufficient signal|failed|blocked|\[object object\])$/i.test(text)
+}
+
 function answerRecords(dossierData) {
   const dossier = asRecord(dossierData)
   const questionFirst = asRecord(dossier.question_first)
@@ -78,11 +84,108 @@ function evidenceCount(value, urls = new Set()) {
 function qualityState(row) {
   const dossier = asRecord(row.dossier_data)
   const explicit = String(dossier.quality_state || '').trim().toLowerCase()
-  if (explicit) return explicit
   const publication = String(dossier.publication_status || dossier.publish_status || '').trim().toLowerCase()
+  if (publication.startsWith('published') && !hasMeaningfulPublicationArtifacts(dossier)) {
+    return publication.includes('partial') ? 'partial' : 'partial'
+  }
+  if (explicit) return explicit
   if (publication.includes('partial')) return 'partial'
   if (publication.includes('client_ready')) return 'client_ready'
   return 'unknown'
+}
+
+function hasMeaningfulSalesBrief(dossierData) {
+  const dossier = asRecord(dossierData)
+  const discoverySummary = asRecord(dossier.discovery_summary || asRecord(dossier.question_first).discovery_summary)
+  const brief = asRecord(discoverySummary.graphiti_sales_brief || dossier.graphiti_sales_brief)
+  return String(brief.status || '').trim().toLowerCase() === 'available'
+    && (
+      hasMeaningfulText(brief.buyer_name)
+      || hasMeaningfulText(brief.outreach_target)
+      || hasMeaningfulText(brief.outreach_angle)
+    )
+}
+
+function hasMeaningfulYellowPantherFit(dossierData) {
+  const dossier = asRecord(dossierData)
+  const discoverySummary = asRecord(dossier.discovery_summary || asRecord(dossier.question_first).discovery_summary)
+  const fit = asRecord(discoverySummary.yellow_panther_fit || discoverySummary.yellow_panther_opportunity || dossier.yellow_panther_fit)
+  return hasMeaningfulText(fit.fit_rationale)
+    || hasMeaningfulText(fit.fit_feedback)
+    || hasMeaningfulText(fit.competitive_advantage)
+}
+
+function hasMeaningfulOutreachStrategy(dossierData) {
+  const dossier = asRecord(dossierData)
+  const discoverySummary = asRecord(dossier.discovery_summary || asRecord(dossier.question_first).discovery_summary)
+  const outreach = asRecord(discoverySummary.outreach_strategy || dossier.outreach_strategy)
+  return hasMeaningfulText(outreach.recommended_target)
+    || hasMeaningfulText(outreach.recommended_angle)
+    || hasMeaningfulText(outreach.first_message_strategy)
+}
+
+function hasMeaningfulSummary(dossierData) {
+  const dossier = asRecord(dossierData)
+  const executiveSummary = asRecord(dossier.executive_summary)
+  const strategicAnalysis = asRecord(dossier.strategic_analysis)
+  return hasMeaningfulText(executiveSummary.summary)
+    || hasMeaningfulText(executiveSummary.headline)
+    || hasMeaningfulText(strategicAnalysis.recommended_approach)
+    || hasMeaningfulText(strategicAnalysis.overall_assessment)
+}
+
+function hasMeaningfulSections(dossierData) {
+  return Object.keys(asRecord(asRecord(dossierData).sections)).length > 0
+}
+
+function hasMeaningfulPublicationArtifacts(dossierData) {
+  return hasMeaningfulSalesBrief(dossierData)
+    && hasMeaningfulYellowPantherFit(dossierData)
+    && hasMeaningfulSummary(dossierData)
+    && hasMeaningfulSections(dossierData)
+}
+
+function artifactCoverage(rows) {
+  return rows.reduce((acc, row) => {
+    const dossier = asRecord(row.dossier_data)
+    if (hasMeaningfulSalesBrief(dossier)) acc.graphiti_sales_brief += 1
+    if (hasMeaningfulYellowPantherFit(dossier)) acc.yellow_panther_fit += 1
+    if (hasMeaningfulOutreachStrategy(dossier)) acc.outreach_strategy += 1
+    if (hasMeaningfulSummary(dossier)) acc.executive_or_strategic_summary += 1
+    if (hasMeaningfulSections(dossier)) acc.sections += 1
+    return acc
+  }, {
+    graphiti_sales_brief: 0,
+    yellow_panther_fit: 0,
+    outreach_strategy: 0,
+    executive_or_strategic_summary: 0,
+    sections: 0,
+  })
+}
+
+function perQuestionQuality(rows) {
+  const byQuestion = {}
+  rows.forEach((row) => {
+    answerRecords(row.dossier_data).forEach((answer) => {
+      const questionId = String(answer.question_id || answer.id || '').trim()
+      if (!questionId) return
+      if (!byQuestion[questionId]) {
+        byQuestion[questionId] = {
+          total: 0,
+          validation_states: {},
+          zero_confidence: 0,
+        }
+      }
+      const bucket = byQuestion[questionId]
+      const validationState = String(answer.validation_state || 'unknown').trim().toLowerCase() || 'unknown'
+      bucket.total += 1
+      bucket.validation_states[validationState] = (bucket.validation_states[validationState] || 0) + 1
+      if (Number(answer.confidence || 0) === 0) {
+        bucket.zero_confidence += 1
+      }
+    })
+  })
+  return Object.fromEntries(Object.entries(byQuestion).sort(([left], [right]) => left.localeCompare(right)))
 }
 
 function providerFailureCount(rows) {
@@ -194,6 +297,8 @@ function summarizeDossiers(dossiers) {
   return {
     quality_counts: countBy(enriched, (row) => row.quality_state),
     answer_coverage_buckets: countBy(enriched, (row) => bucketForAnswerCount(row.answer_count)),
+    artifact_coverage: artifactCoverage(dossiers),
+    per_question_quality: perQuestionQuality(dossiers),
     failed_provider_failures: providerFailureCount(dossiers),
     top_recent_dossiers: enriched.slice(0, 15),
   }
@@ -225,6 +330,8 @@ async function buildReport(pool) {
     quality_counts: dossierSummary.quality_counts,
     ingestion_counts: summarizeIngestions(ingestionRows),
     answer_coverage_buckets: dossierSummary.answer_coverage_buckets,
+    artifact_coverage: dossierSummary.artifact_coverage,
+    per_question_quality: dossierSummary.per_question_quality,
     failed_provider_failures: dossierSummary.failed_provider_failures,
     top_recent_dossiers: dossierSummary.top_recent_dossiers,
     top_commercial_signal_candidates: topCommercialSignalCandidates,
@@ -250,8 +357,11 @@ if (require.main === module) {
 
 module.exports = {
   answerRecords,
+  artifactCoverage,
   bucketForAnswerCount,
   buildReport,
   createPgPool,
+  hasMeaningfulPublicationArtifacts,
+  perQuestionQuality,
   qualityState,
 }

@@ -34,6 +34,63 @@ def _safe_float(value: Any) -> float:
         return 0.0
 
 
+def _to_text(value: Any) -> str:
+    if value is None:
+        return ""
+    if isinstance(value, str):
+        return value.strip()
+    if isinstance(value, (int, float, bool)):
+        return str(value).strip()
+    if isinstance(value, dict):
+        for key in ("summary", "answer", "value", "name", "title", "recommended_angle", "fit_rationale", "top_gap", "gap_label"):
+            text = _to_text(value.get(key))
+            if text:
+                return text
+    return ""
+
+
+def _is_meaningful_text(value: Any) -> bool:
+    text = _to_text(value)
+    if not text:
+        return False
+    lowered = text.strip().lower()
+    if lowered in {
+        "no_signal",
+        "no signal",
+        "insufficient_signal",
+        "insufficient signal",
+        "failed",
+        "blocked",
+        "[object object]",
+    }:
+        return False
+    if "no deterministic answer was produced" in lowered:
+        return False
+    if "question execution failed" in lowered:
+        return False
+    return True
+
+
+def _first_meaningful_text(values: List[Any]) -> str:
+    for value in values:
+        text = _to_text(value)
+        if _is_meaningful_text(text):
+            return text
+    return ""
+
+
+def _unique_texts(values: List[Any]) -> List[str]:
+    seen = set()
+    result: List[str] = []
+    for value in values:
+        text = _to_text(value)
+        key = text.lower()
+        if text and key not in seen:
+            seen.add(key)
+            result.append(text)
+    return result
+
+
 _ROLLOUT_PHASE_RANK = {
     "phase_1_core": 1,
     "phase_2_conditional": 2,
@@ -107,6 +164,14 @@ def _question_is_strong_provisional(answer: Dict[str, Any] | None, *, min_confid
     )
 
 
+def _question_has_buyer_hypothesis(answer: Dict[str, Any] | None) -> bool:
+    if not isinstance(answer, dict):
+        return False
+    if _question_is_validated(answer) or _question_is_strong_provisional(answer, min_confidence=0.5):
+        return True
+    return bool(_buyer_from_decision_owner(answer).get("name"))
+
+
 def _extract_raw_structured_output(answer: Dict[str, Any] | None) -> Dict[str, Any]:
     if not isinstance(answer, dict):
         return {}
@@ -118,6 +183,212 @@ def _extract_raw_structured_output(answer: Dict[str, Any] | None) -> Dict[str, A
         return answer_value
     raw_structured_output = answer.get("raw_structured_output")
     return raw_structured_output if isinstance(raw_structured_output, dict) else {}
+
+
+def _buyer_from_decision_owner(decision_owner: Dict[str, Any] | None) -> Dict[str, Any]:
+    if not isinstance(decision_owner, dict):
+        return {}
+    primary_owner = decision_owner.get("primary_owner") if isinstance(decision_owner.get("primary_owner"), dict) else {}
+    raw = _extract_raw_structured_output(decision_owner)
+    name = _first_meaningful_text([
+        primary_owner.get("name"),
+        primary_owner.get("full_name"),
+        raw.get("decision_owner_name"),
+        raw.get("name"),
+        decision_owner.get("answer"),
+    ])
+    title = _first_meaningful_text([
+        primary_owner.get("title"),
+        primary_owner.get("role"),
+        raw.get("decision_owner_title"),
+        raw.get("title"),
+        raw.get("role"),
+    ])
+    return {
+        "name": name,
+        "title": title,
+    }
+
+
+def _answer_commercial_text(answer: Dict[str, Any] | None) -> str:
+    if not isinstance(answer, dict):
+        return ""
+    raw = _extract_raw_structured_output(answer)
+    structured_signal = answer.get("structured_signal") if isinstance(answer.get("structured_signal"), dict) else {}
+    return _first_meaningful_text([
+        answer.get("commercial_implication"),
+        answer.get("answer"),
+        answer.get("summary"),
+        raw.get("commercial_implication"),
+        raw.get("summary"),
+        raw.get("answer"),
+        raw.get("signal"),
+        raw.get("trigger"),
+        raw.get("top_gap"),
+        raw.get("gap_label"),
+        structured_signal.get("commercial_implication"),
+        structured_signal.get("summary"),
+    ])
+
+
+def _infer_yp_service(strongest_signal: str, capability_gap: str) -> str:
+    combined = f"{strongest_signal} {capability_gap}".lower()
+    if any(token in combined for token in ("app", "platform", "digital", "ticketing", "website", "fan experience", "stack", "launch")):
+        return "DIGITAL_TRANSFORMATION"
+    if any(token in combined for token in ("procurement", "vendor", "rfp", "tender", "commercial", "partnership", "sponsor", "revenue")):
+        return "COMMERCIAL_PARTNERSHIPS"
+    if any(token in combined for token in ("hiring", "delivery", "programme", "program", "project")):
+        return "PROJECT_DELIVERY"
+    if any(token in combined for token in ("strategy", "growth", "planning", "positioning")):
+        return "STRATEGY"
+    return "STAKEHOLDER_ENGAGEMENT"
+
+
+def _build_synthesized_yp_fit(*, strongest_signal: str, capability_gap: str, buyer: Dict[str, Any]) -> Dict[str, Any]:
+    evidence_basis = _unique_texts([strongest_signal, capability_gap])
+    if not any(_is_meaningful_text(item) for item in evidence_basis):
+        return {
+            "best_service": "",
+            "service_fit": [],
+            "fit_rationale": "insufficient_signal",
+            "buyer_context": buyer.get("name") or None,
+            "evidence_basis": [],
+            "confidence_caveat": "Need at least one validated commercial trigger before fit can be recommended.",
+            "status": "insufficient_signal",
+        }
+
+    best_service = _infer_yp_service(strongest_signal, capability_gap)
+    basis_text = _first_meaningful_text([capability_gap, strongest_signal])
+    return {
+        "best_service": best_service,
+        "service_fit": [best_service],
+        "fit_rationale": f"{best_service.replace('_', ' ')} is the strongest capability match because current dossier evidence points to {basis_text.lower()}.",
+        "buyer_context": ", ".join(_unique_texts([buyer.get("name"), buyer.get("title")])) or None,
+        "evidence_basis": evidence_basis,
+        "confidence_caveat": (
+            f"Verify recency and confirm {buyer['name']} is still the right route before outreach."
+            if buyer.get("name")
+            else "Verify the current buyer route before outreach."
+        ),
+        "status": "available",
+    }
+
+
+def _build_synthesized_outreach(
+    *,
+    strongest_signal: str,
+    buyer: Dict[str, Any],
+    connection_owner: str,
+    connection_path_type: str,
+    yp_fit: Dict[str, Any],
+) -> Dict[str, Any]:
+    best_service = _to_text(yp_fit.get("best_service") or yp_fit.get("recommended_service"))
+    has_fit = _is_meaningful_text(yp_fit.get("fit_rationale")) and yp_fit.get("status") != "insufficient_signal"
+    if not buyer.get("name") and not _is_meaningful_text(strongest_signal) and not has_fit:
+        return {
+            "recommended_target": None,
+            "recommended_route": None,
+            "recommended_angle": "",
+            "first_message_strategy": "",
+            "verification_needed": "Need a clearer buyer hypothesis before outreach.",
+            "why_now": "",
+            "status": "insufficient_signal",
+        }
+
+    route = connection_path_type or ("warm_intro" if connection_owner else "cold")
+    angle = _first_meaningful_text([
+        strongest_signal,
+        f"Lead with a {best_service.replace('_', ' ').lower() if best_service else 'verification-first'} angle tied to the strongest dossier signal.",
+    ])
+    return {
+        "recommended_target": buyer.get("name") or None,
+        "recommended_route": route,
+        "recommended_angle": angle,
+        "first_message_strategy": (
+            f"Open with the fresh trigger, connect it to {best_service.replace('_', ' ').lower() if best_service else 'the relevant Yellow Panther capability'}, and ask for a short discovery call with {buyer['name']}."
+            if buyer.get("name")
+            else "Open with the strongest trigger, explain the relevant Yellow Panther capability, and verify the right owner before deeper outreach."
+        ),
+        "verification_needed": (
+            f"Verify {connection_owner} is still the best intro route and validate signal recency."
+            if connection_owner
+            else "Validate signal recency and confirm the right buyer route before outreach."
+        ),
+        "why_now": strongest_signal or angle,
+        "status": "available",
+    }
+
+
+def _build_synthesis_artifacts(
+    answer_by_question: Dict[str, Dict[str, Any]],
+    *,
+    deterministic_connections: Dict[str, Any] | None = None,
+) -> Dict[str, Dict[str, Any]]:
+    deterministic_connections = deterministic_connections if isinstance(deterministic_connections, dict) else {}
+    buyer = _buyer_from_decision_owner(answer_by_question.get("q11_decision_owner"))
+    q12_raw = _extract_raw_structured_output(answer_by_question.get("q12_connections"))
+    candidate_paths = q12_raw.get("candidate_paths") if isinstance(q12_raw.get("candidate_paths"), list) else []
+    best_path = candidate_paths[0] if candidate_paths and isinstance(candidate_paths[0], dict) else {}
+    strongest_signal = _first_meaningful_text([
+        _answer_commercial_text(answer_by_question.get("q6_launch_signal")),
+        _answer_commercial_text(answer_by_question.get("q7_procurement_signal")),
+        _answer_commercial_text(answer_by_question.get("q9_budget_signal")),
+        _answer_commercial_text(answer_by_question.get("q9_news_signal")),
+        _answer_commercial_text(answer_by_question.get("q10_timing_window")),
+        _answer_commercial_text(answer_by_question.get("q10_hiring_signal")),
+        _answer_commercial_text(answer_by_question.get("q2_digital_stack")),
+    ])
+    capability_gap = _first_meaningful_text([
+        _answer_commercial_text(answer_by_question.get("q13_capability_gap")),
+        strongest_signal,
+    ])
+
+    existing_yp_fit = _extract_raw_structured_output(answer_by_question.get("q14_yp_fit"))
+    yp_fit_state = str((answer_by_question.get("q14_yp_fit") or {}).get("validation_state") or "").strip().lower()
+    synthesized_yp_fit = _build_synthesized_yp_fit(
+        strongest_signal=strongest_signal,
+        capability_gap=capability_gap,
+        buyer=buyer,
+    )
+    if yp_fit_state not in {"no_signal", "failed", "blocked"} and _is_meaningful_text(existing_yp_fit.get("fit_rationale")):
+        yp_fit = {**synthesized_yp_fit, **existing_yp_fit}
+    else:
+        yp_fit = synthesized_yp_fit
+
+    connection_owner = _first_meaningful_text([
+        best_path.get("best_yp_owner"),
+        best_path.get("recommended_yp_owner"),
+        deterministic_connections.get("best_path_owner"),
+    ])
+    connection_path_type = _first_meaningful_text([
+        best_path.get("path_type"),
+        deterministic_connections.get("path_type"),
+        deterministic_connections.get("route_type"),
+    ])
+    existing_outreach = _extract_raw_structured_output(answer_by_question.get("q15_outreach_strategy"))
+    outreach_state = str((answer_by_question.get("q15_outreach_strategy") or {}).get("validation_state") or "").strip().lower()
+    synthesized_outreach = _build_synthesized_outreach(
+        strongest_signal=strongest_signal,
+        buyer=buyer,
+        connection_owner=connection_owner,
+        connection_path_type=connection_path_type,
+        yp_fit=yp_fit,
+    )
+    if outreach_state not in {"no_signal", "failed", "blocked"} and (
+        _is_meaningful_text(existing_outreach.get("recommended_angle"))
+        or _is_meaningful_text(existing_outreach.get("recommended_target"))
+    ):
+        outreach = {**synthesized_outreach, **existing_outreach}
+    else:
+        outreach = synthesized_outreach
+    return {
+        "buyer": buyer,
+        "best_path": best_path,
+        "yellow_panther_fit": yp_fit,
+        "outreach_strategy": outreach,
+        "strongest_signal": {"text": strongest_signal},
+        "capability_gap": {"text": capability_gap},
+    }
 
 
 def _target_personnel_from_connections_graph(connections_graph: Dict[str, Any] | None, *, entity_id: str) -> List[Any]:
@@ -237,11 +508,12 @@ def _build_client_ready_summary(answer_by_question: Dict[str, Dict[str, Any]]) -
         "q3_leadership",
         "q11_decision_owner",
     ]
-    blockers = [
-        question_id
-        for question_id in required_questions
-        if not _question_is_validated(answer_by_question.get(question_id))
-    ]
+    blockers: List[str] = []
+    for question_id in required_questions:
+        if question_id == "q11_decision_owner" and _question_has_buyer_hypothesis(answer_by_question.get(question_id)):
+            continue
+        if not _question_is_validated(answer_by_question.get(question_id)):
+            blockers.append(question_id)
     buyer_support_questions = ["q12_connections", "q13_capability_gap", "q15_outreach_strategy"]
     has_buyer_support = any(
         _question_is_validated(answer_by_question.get(question_id))
@@ -260,14 +532,17 @@ def _build_graphiti_sales_brief(
     answer_by_question: Dict[str, Dict[str, Any]],
     *,
     deterministic_connections: Dict[str, Any] | None = None,
+    synthesis_artifacts: Dict[str, Dict[str, Any]] | None = None,
 ) -> Dict[str, Any]:
     decision_owner = answer_by_question.get("q11_decision_owner") or {}
-    if not _question_is_validated(decision_owner):
+    synthesis_artifacts = synthesis_artifacts if isinstance(synthesis_artifacts, dict) else {}
+    buyer = synthesis_artifacts.get("buyer") if isinstance(synthesis_artifacts.get("buyer"), dict) else _buyer_from_decision_owner(decision_owner)
+    if not _question_has_buyer_hypothesis(decision_owner) and not buyer.get("name"):
         return {"status": "insufficient_signal"}
 
     primary_owner = decision_owner.get("primary_owner") if isinstance(decision_owner.get("primary_owner"), dict) else {}
-    buyer_name = str(primary_owner.get("name") or decision_owner.get("answer") or "").strip()
-    buyer_title = str(primary_owner.get("title") or primary_owner.get("role") or "").strip() or None
+    buyer_name = str(buyer.get("name") or primary_owner.get("name") or decision_owner.get("answer") or "").strip()
+    buyer_title = str(buyer.get("title") or primary_owner.get("title") or primary_owner.get("role") or "").strip() or None
 
     connections = _extract_raw_structured_output(answer_by_question.get("q12_connections"))
     candidate_paths = connections.get("candidate_paths") if isinstance(connections.get("candidate_paths"), list) else []
@@ -277,6 +552,10 @@ def _build_graphiti_sales_brief(
     capability_gap = _extract_raw_structured_output(answer_by_question.get("q13_capability_gap"))
     outreach_strategy = _extract_raw_structured_output(answer_by_question.get("q15_outreach_strategy"))
     yp_fit = _extract_raw_structured_output(answer_by_question.get("q14_yp_fit"))
+    synthesized_yp_fit = synthesis_artifacts.get("yellow_panther_fit") if isinstance(synthesis_artifacts.get("yellow_panther_fit"), dict) else {}
+    synthesized_outreach = synthesis_artifacts.get("outreach_strategy") if isinstance(synthesis_artifacts.get("outreach_strategy"), dict) else {}
+    strongest_signal = synthesis_artifacts.get("strongest_signal") if isinstance(synthesis_artifacts.get("strongest_signal"), dict) else {}
+    capability_gap_text = synthesis_artifacts.get("capability_gap") if isinstance(synthesis_artifacts.get("capability_gap"), dict) else {}
 
     summary = {
         "status": "available",
@@ -291,17 +570,18 @@ def _build_graphiti_sales_brief(
         "path_type": str(best_path.get("path_type") or deterministic_connections.get("path_type") or "").strip() or None,
         "buyer_relevance": str(best_path.get("buyer_relevance") or deterministic_connections.get("buyer_relevance") or "").strip() or None,
         "route_confidence": best_path.get("route_confidence") or deterministic_connections.get("route_confidence"),
-        "capability_gap": str(capability_gap.get("top_gap") or capability_gap.get("gap_label") or "").strip() or None,
-        "yp_fit_service": str(yp_fit.get("best_service") or yp_fit.get("recommended_service") or "").strip() or None,
-        "outreach_target": str(outreach_strategy.get("recommended_target") or deterministic_connections.get("target_person") or buyer_name or "").strip() or None,
+        "capability_gap": str(capability_gap.get("top_gap") or capability_gap.get("gap_label") or capability_gap_text.get("text") or "").strip() or None,
+        "yp_fit_service": str(yp_fit.get("best_service") or yp_fit.get("recommended_service") or synthesized_yp_fit.get("best_service") or "").strip() or None,
+        "outreach_target": str(outreach_strategy.get("recommended_target") or synthesized_outreach.get("recommended_target") or deterministic_connections.get("target_person") or buyer_name or "").strip() or None,
         "outreach_route": str(
             outreach_strategy.get("recommended_route")
+            or synthesized_outreach.get("recommended_route")
             or best_path.get("path_type")
             or deterministic_connections.get("path_type")
             or ""
         ).strip() or None,
-        "outreach_angle": str(outreach_strategy.get("recommended_angle") or "").strip() or None,
-        "verification_needed": str(outreach_strategy.get("verification_needed") or deterministic_connections.get("verification_needed") or "").strip() or None,
+        "outreach_angle": str(outreach_strategy.get("recommended_angle") or synthesized_outreach.get("recommended_angle") or strongest_signal.get("text") or "").strip() or None,
+        "verification_needed": str(outreach_strategy.get("verification_needed") or synthesized_outreach.get("verification_needed") or deterministic_connections.get("verification_needed") or "").strip() or None,
         "source": "question_first_promotions",
     }
     if not any(summary.get(key) for key in ("best_path_owner", "capability_gap", "outreach_target", "outreach_angle")):
@@ -678,6 +958,10 @@ def build_question_first_promotions(
         poi_graph=poi_graph,
         connections_graph=connections_graph,
     )
+    synthesis_artifacts = _build_synthesis_artifacts(
+        answer_by_question,
+        deterministic_connections=deterministic_connections,
+    )
 
     discovery_summary: Dict[str, Any] = {
         "promoted_count": len(promoted),
@@ -689,7 +973,10 @@ def build_question_first_promotions(
     discovery_summary["graphiti_sales_brief"] = _build_graphiti_sales_brief(
         answer_by_question,
         deterministic_connections=deterministic_connections,
+        synthesis_artifacts=synthesis_artifacts,
     )
+    discovery_summary["yellow_panther_fit"] = synthesis_artifacts["yellow_panther_fit"]
+    discovery_summary["outreach_strategy"] = synthesis_artifacts["outreach_strategy"]
     if deterministic_connections:
         discovery_summary["deterministic_connections"] = deterministic_connections
     discovery_summary.update(grouped)

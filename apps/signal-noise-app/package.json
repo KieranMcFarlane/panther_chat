@@ -21,6 +21,8 @@
     "question-first:compare": "NODE_OPTIONS=--experimental-strip-types node scripts/question-first-comparison-report.mjs",
     "graphiti:dossier-ingestions:backfill": "node scripts/backfill-graphiti-dossier-ingestions.mjs",
     "graphiti:dossier-ingestions:backfill:apply": "node scripts/backfill-graphiti-dossier-ingestions.mjs --apply",
+    "dossiers:repair-quality": "NODE_OPTIONS=--experimental-strip-types node scripts/repair-question-first-dossier-quality.mjs",
+    "dossiers:repair-quality:apply": "NODE_OPTIONS=--experimental-strip-types node scripts/repair-question-first-dossier-quality.mjs --apply",
     "remediate:pipeline-state:local": "node scripts/remediate-pipeline-state-local.mjs",
     "remediate:pipeline-state:local:apply": "node scripts/remediate-pipeline-state-local.mjs --apply",
     "test:api-endpoints": "node tests/test-api-endpoints.mjs",
