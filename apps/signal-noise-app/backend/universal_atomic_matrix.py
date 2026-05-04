@@ -16,7 +16,7 @@ HOP_BUDGET = 8
 EVIDENCE_EXTENSION_CONFIDENCE_THRESHOLD = 0.65
 
 UPSTREAM_QUALITY_CONTRACT = {
-    "typed_outcomes": ["validated", "no_signal", "not_applicable", "failed"],
+    "typed_outcomes": ["validated", "provisional", "no_signal", "not_applicable", "failed"],
     "required_fields": [
         "validation_state",
         "confidence",
@@ -24,13 +24,78 @@ UPSTREAM_QUALITY_CONTRACT = {
         "commercial_implication",
         "applicability",
         "structured_signal",
+        "evidence_url_or_checked_source_rationale",
     ],
+    "no_signal_requires_checked_sources": True,
+    "commercial_signal_requires_commercial_implication": True,
+    "malformed_answer_policy": {
+        "empty_object": "failed",
+        "object_string": "failed",
+        "source_less_zero_confidence": "no_signal",
+    },
 }
 
 SPORT_CONTEXT_QUALITY_CONTRACT = {
     **UPSTREAM_QUALITY_CONTRACT,
     "not_applicable_for_entity_types": ["PERSON", "RFP", "NON_CURRENT_ENTITY"],
 }
+
+
+def _upstream_quality_contract(*required_structured_signal_fields: str, **extra: Any) -> Dict[str, Any]:
+    return {
+        **UPSTREAM_QUALITY_CONTRACT,
+        "required_structured_signal_fields": list(required_structured_signal_fields),
+        **extra,
+    }
+
+
+Q1_FOUNDATION_QUALITY_CONTRACT = _upstream_quality_contract(
+    "entity_classification",
+    "canonical_name",
+    "entity_type",
+    "geography",
+    "official_site",
+    "ambiguity_notes",
+)
+
+Q2_DIGITAL_STACK_QUALITY_CONTRACT = _upstream_quality_contract(
+    "official_site",
+    "platform_hints",
+    "vendor_hints",
+    "app_hints",
+    "ticketing_hints",
+    "video_hints",
+    "social_hints",
+    "ecommerce_hints",
+    "digital_footprint_unknown",
+)
+
+Q3_LEADERSHIP_QUALITY_CONTRACT = _upstream_quality_contract(
+    "ranked_people",
+    "buyer_relevant_roles",
+    "rejected_generic_facts",
+    "checked_absence_rationale",
+    reject_if_only_contains=["founding_year", "venue", "trophies", "generic_history", "generic_entity_fact"],
+)
+
+Q6_LAUNCH_SIGNAL_QUALITY_CONTRACT = _upstream_quality_contract(
+    "trigger_date",
+    "trigger_type",
+    "source",
+    "recency",
+    "commercial_implication",
+    "checked_absence_rationale",
+)
+
+Q9_NEWS_SIGNAL_QUALITY_CONTRACT = _upstream_quality_contract(
+    "news_date",
+    "news_type",
+    "source",
+    "recency",
+    "commercial_relevance",
+    "commercial_implication",
+    "checked_absence_rationale",
+)
 
 
 def _slugify(value: str) -> str:
@@ -161,7 +226,7 @@ UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
         "question_id": "q1_foundation",
         "question_family": "foundation",
         "question_type": "foundation",
-        "question": "What is the canonical identity and grounding profile for {entity}?",
+        "question": "What is the canonical identity and grounding profile for {entity}? Classify the entity shape as organisation, person, event, RFP/tender, ambiguous, defunct/non-current, or not-applicable; include official site evidence or checked-source rationale.",
         "query": '"{entity}" official website founded year',
         "source_priority": ["google_serp", "official_site", "wikipedia"],
         "search_patterns": Q1_FOUNDATION_SEARCH_QUERIES,
@@ -177,13 +242,13 @@ UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
         "fallback_to_retrieval": True,
         "hop_budget": HOP_BUDGET,
         "evidence_extension_budget": 1,
-        "quality_contract": UPSTREAM_QUALITY_CONTRACT,
+        "quality_contract": Q1_FOUNDATION_QUALITY_CONTRACT,
     },
     {
         "question_id": "q2_digital_stack",
         "question_family": "digital_stack",
         "question_type": "digital_stack",
-        "question": "What visible technologies, platforms, or vendors does {entity} use, and what do they imply commercially?",
+        "question": "What visible technologies, platforms, or vendors does {entity} use, and what do they imply commercially? Return official_site, app/platform/vendor/ticketing/video/social/ecommerce hints, or digital_footprint_unknown with checked-source rationale.",
         "query": '"{entity}" official website',
         "source_priority": ["apify_techstack", "google_serp", "news", "press_release", "official_site"],
         "search_patterns": Q2_DIGITAL_STACK_SEARCH_QUERIES,
@@ -201,7 +266,7 @@ UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
         "deterministic_input": {"source_question_id": "q1_foundation", "official_site_only": True},
         "hop_budget": HOP_BUDGET,
         "evidence_extension_budget": 2,
-        "quality_contract": UPSTREAM_QUALITY_CONTRACT,
+        "quality_contract": Q2_DIGITAL_STACK_QUALITY_CONTRACT,
         "adjacent_evidence_reuse": ["q6_launch_signal"],
     },
     {
@@ -236,13 +301,13 @@ UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
         "evidence_extension_budget": 2,
         "question_timeout_ms": 300000,
         "hop_timeout_ms": 300000,
-        "quality_contract": UPSTREAM_QUALITY_CONTRACT,
+        "quality_contract": Q3_LEADERSHIP_QUALITY_CONTRACT,
     },
     {
         "question_id": "q6_launch_signal",
         "question_family": "launch_signal",
         "question_type": "launch_signal",
-        "question": "What products, apps, platforms, or fan experiences has {entity} launched or announced?",
+        "question": "What products, apps, platforms, or fan experiences has {entity} launched or announced? Return dated trigger evidence with source, recency, trigger type, and commercial implication, or checked no-signal with searched-source rationale.",
         "query": '"{entity}" launch app platform',
         "source_priority": ["official_site", "press_release", "news", "google_serp"],
         "search_patterns": Q6_LAUNCH_SIGNAL_SEARCH_QUERIES,
@@ -259,7 +324,7 @@ UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
         "hop_budget": HOP_BUDGET,
         "evidence_extension_budget": 2,
         "commercial_output_enabled": True,
-        "quality_contract": UPSTREAM_QUALITY_CONTRACT,
+        "quality_contract": Q6_LAUNCH_SIGNAL_QUALITY_CONTRACT,
     },
     {
         "question_id": "q7_procurement_signal",
@@ -315,7 +380,7 @@ UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
         "question_id": "q9_news_signal",
         "question_family": "news_signal",
         "question_type": "news_signal",
-        "question": "What recent news, partnerships, and strategic themes are most relevant for {entity} right now?",
+        "question": "What recent news, partnerships, and strategic themes are most relevant for {entity} right now? Return dated trigger evidence with source, recency, news type, commercial relevance, and commercial implication, or checked no-signal with searched-source rationale.",
         "query": '"{entity}" news announcement partnership',
         "source_priority": ["news", "press_release", "official_site", "google_serp"],
         "search_patterns": Q9_NEWS_SIGNAL_SEARCH_QUERIES,
@@ -332,7 +397,7 @@ UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
         "hop_budget": HOP_BUDGET,
         "evidence_extension_budget": 2,
         "commercial_output_enabled": True,
-        "quality_contract": UPSTREAM_QUALITY_CONTRACT,
+        "quality_contract": Q9_NEWS_SIGNAL_QUALITY_CONTRACT,
     },
     {
         "question_id": "q10_hiring_signal",

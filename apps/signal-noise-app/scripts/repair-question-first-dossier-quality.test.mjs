@@ -5,6 +5,7 @@ import test from 'node:test'
 
 import {
   buildTargetedRerunRecommendations,
+  normalizeUpstreamAnswer,
   parseArgs,
   repairDossierPayload,
   shouldRepairDossier,
@@ -755,6 +756,51 @@ test('repairDossierPayload does not treat bounded no-hiring text as a commercial
   assert.equal(repair.repaired_dossier.discovery_summary.graphiti_sales_brief.status, 'insufficient_signal')
   assert.equal(repair.repaired_dossier.yellow_panther_fit.status, 'insufficient_signal')
   assert.equal(repair.repaired_dossier.discovery_summary.outreach_strategy.status, 'insufficient_signal')
+})
+
+test('normalizeUpstreamAnswer converts empty provider objects into explicit failed records', () => {
+  const patch = normalizeUpstreamAnswer({
+    question_id: 'q3_leadership',
+    validation_state: 'validated',
+    confidence: 0,
+    answer: {},
+  })
+
+  assert.equal(patch.validation_state, 'failed')
+  assert.equal(patch.confidence, 0)
+  assert.equal(patch.structured_signal.status, 'malformed_answer')
+  assert.equal(patch.structured_signal.malformed_answer_reason, 'empty_provider_object')
+  assert.match(patch.commercial_implication, /malformed answer/i)
+  assert.equal(patch.checked_sources[0].rationale, 'Provider returned an empty object instead of a typed q3_leadership answer.')
+})
+
+test('normalizeUpstreamAnswer converts [object Object] strings into explicit failed records', () => {
+  const patch = normalizeUpstreamAnswer({
+    question_id: 'q2_digital_stack',
+    validation_state: 'validated',
+    confidence: 0.4,
+    answer: '[object Object]',
+  })
+
+  assert.equal(patch.validation_state, 'failed')
+  assert.equal(patch.confidence, 0)
+  assert.equal(patch.structured_signal.status, 'malformed_answer')
+  assert.equal(patch.structured_signal.malformed_answer_reason, 'object_string')
+})
+
+test('normalizeUpstreamAnswer converts source-less zero-confidence upstream answers to checked no-signal', () => {
+  const patch = normalizeUpstreamAnswer({
+    question_id: 'q6_launch_signal',
+    validation_state: 'validated',
+    confidence: 0,
+    answer: 'No launch evidence found.',
+  })
+
+  assert.equal(patch.validation_state, 'no_signal')
+  assert.equal(patch.confidence, 0)
+  assert.equal(patch.structured_signal.status, 'checked_absent')
+  assert.equal(patch.structured_signal.checked_absence_rationale, 'No launch evidence found.')
+  assert.ok(patch.checked_sources.length > 0)
 })
 
 test('repairDossierPayload replaces stale checked-absence fit artifacts with insufficient signal', () => {

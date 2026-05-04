@@ -132,7 +132,76 @@ function checkedSource(record, rationale) {
   }
 }
 
-function normalizeUpstreamAnswer(record, adjacentAnswers = {}, entityInfo = {}) {
+function isEmptyPlainObject(value) {
+  return Boolean(value) && typeof value === 'object' && !Array.isArray(value) && Object.keys(value).length === 0
+}
+
+function isObjectString(value) {
+  return typeof value === 'string' && /^\[object object\]$/i.test(value.trim())
+}
+
+function malformedUpstreamAnswerReason(record) {
+  if (!record || typeof record !== 'object') return ''
+  const questionId = String(record.question_id || record.id || '').trim()
+  if (!UPSTREAM_QUESTION_IDS.has(questionId)) return ''
+  const answer = record.answer
+  const raw = answerRaw(record)
+  const hasFallbackContent = [
+    record.summary,
+    record.commercial_implication,
+    record.evidence_url,
+    record.structured_signal,
+    raw.summary,
+    raw.answer,
+    raw.commercial_implication,
+  ].some((value) => hasMeaningfulCommercialText(value))
+
+  if (isObjectString(answer) || isObjectString(record.summary) || isObjectString(record.commercial_implication)) {
+    return 'object_string'
+  }
+  if (isEmptyPlainObject(answer) && !hasFallbackContent) {
+    return 'empty_provider_object'
+  }
+  return ''
+}
+
+function sourceLessZeroConfidenceReason(record) {
+  const questionId = String(record?.question_id || record?.id || '').trim()
+  if (!UPSTREAM_QUESTION_IDS.has(questionId)) return ''
+  const confidence = Number(record?.confidence || 0)
+  if (confidence !== 0) return ''
+  if (asArray(record?.checked_sources).length > 0 || toText(record?.evidence_url)) return ''
+  const state = String(record?.validation_state || '').trim().toLowerCase()
+  if (['failed', 'blocked', 'not_applicable'].includes(state)) return ''
+  const text = toText(record?.answer || record?.summary || record?.commercial_implication)
+  if (!text || !hasMeaningfulCommercialText(text) || /no .*evidence|no signal|not found|unavailable|returned no|checked absence/i.test(text)) {
+    return text || 'Provider returned zero confidence without source-backed evidence.'
+  }
+  return ''
+}
+
+function malformedUpstreamPatch(record, normalized, currentStructuredSignal, reasonCode) {
+  const questionId = String(record.question_id || record.id || '').trim()
+  const reason = reasonCode === 'object_string'
+    ? `Provider returned [object Object] instead of a typed ${questionId} answer.`
+    : `Provider returned an empty object instead of a typed ${questionId} answer.`
+  return {
+    ...normalized,
+    validation_state: 'failed',
+    confidence: 0,
+    checked_sources: [checkedSource(record, reason)],
+    commercial_implication: 'No commercial implication available because the provider returned a malformed answer.',
+    structured_signal: {
+      ...currentStructuredSignal,
+      status: 'malformed_answer',
+      malformed_answer_reason: reasonCode,
+      raw_provider_answer: record.answer,
+    },
+    force: true,
+  }
+}
+
+export function normalizeUpstreamAnswer(record, adjacentAnswers = {}, entityInfo = {}) {
   if (!record || typeof record !== 'object') return null
   const questionId = String(record.question_id || record.id || '').trim()
   if (!UPSTREAM_QUESTION_IDS.has(questionId)) return null
@@ -144,6 +213,11 @@ function normalizeUpstreamAnswer(record, adjacentAnswers = {}, entityInfo = {}) 
     applicability: asRecord(record.applicability).status ? record.applicability : { status: 'applicable' },
     structured_signal: currentStructuredSignal,
     commercial_implication: toText(record.commercial_implication),
+  }
+
+  const malformedReason = malformedUpstreamAnswerReason(record)
+  if (malformedReason) {
+    return malformedUpstreamPatch(record, normalized, currentStructuredSignal, malformedReason)
   }
 
   if (questionId === 'q1_foundation' && NON_SPORT_ENTITY_TYPES.has(entityType)) {
@@ -203,10 +277,12 @@ function normalizeUpstreamAnswer(record, adjacentAnswers = {}, entityInfo = {}) 
 
   const state = String(record.validation_state || '').trim().toLowerCase()
   const text = toText(record.answer || record.summary || record.commercial_implication)
+  const sourceLessZeroConfidence = sourceLessZeroConfidenceReason(record)
   const checkedAbsent = state === 'no_signal'
+    || Boolean(sourceLessZeroConfidence)
     || /returned no relevant results|returned no results|no evidence|no hiring leads found|checked absence/i.test(text)
   if (checkedAbsent) {
-    const rationale = text || 'Checked sources did not produce a relevant signal.'
+    const rationale = sourceLessZeroConfidence || text || 'Checked sources did not produce a relevant signal.'
     return {
       ...normalized,
       validation_state: 'no_signal',
@@ -811,7 +887,8 @@ function hasRepairableBuyerRouteMiss(dossierData) {
 function isFailedUpstreamRecord(record) {
   if (!record) return false
   const state = String(record?.validation_state || '').trim().toLowerCase()
-  return ['failed', 'tool_call_missing', 'unknown', 'blocked', ''].includes(state)
+  return Boolean(malformedUpstreamAnswerReason(record))
+    || ['failed', 'tool_call_missing', 'unknown', 'blocked', ''].includes(state)
     || /provider infrastructure failure|insufficient balance|question execution failed|no deterministic answer was produced/i.test(toText(record?.answer || record?.commercial_implication))
 }
 

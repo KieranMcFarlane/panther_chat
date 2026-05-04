@@ -247,6 +247,55 @@ def test_universal_atomic_matrix_marks_conditional_questions_explicitly():
     assert questions["q8_explicit_rfp"]["question_role"] == "follow_up_negative_confirmation"
 
 
+def test_priority_upstream_questions_have_hard_answer_quality_contracts():
+    payload = build_universal_atomic_question_source(
+        entity_type="SPORT_CLUB",
+        entity_name="Arsenal Football Club",
+        entity_id="arsenal-fc",
+        preset="arsenal-atomic-matrix",
+    )
+    questions = _question_index(payload)
+
+    expected_fields_by_question = {
+        "q1_foundation": {"entity_classification", "canonical_name", "official_site", "ambiguity_notes"},
+        "q2_digital_stack": {"official_site", "platform_hints", "vendor_hints", "digital_footprint_unknown"},
+        "q3_leadership": {"ranked_people", "buyer_relevant_roles", "rejected_generic_facts"},
+        "q6_launch_signal": {"trigger_date", "trigger_type", "source", "recency", "commercial_implication"},
+        "q9_news_signal": {"news_date", "news_type", "source", "recency", "commercial_relevance"},
+    }
+
+    for question_id, required_signal_fields in expected_fields_by_question.items():
+        contract = questions[question_id]["quality_contract"]
+        assert set(contract["typed_outcomes"]) == {
+            "validated",
+            "provisional",
+            "no_signal",
+            "not_applicable",
+            "failed",
+        }
+        assert "evidence_url_or_checked_source_rationale" in contract["required_fields"]
+        assert contract["malformed_answer_policy"]["empty_object"] == "failed"
+        assert contract["malformed_answer_policy"]["object_string"] == "failed"
+        assert contract["no_signal_requires_checked_sources"] is True
+        assert set(contract["required_structured_signal_fields"]) >= required_signal_fields
+
+
+def test_priority_upstream_question_text_rejects_empty_or_generic_outputs():
+    payload = build_universal_atomic_question_source(
+        entity_type="SPORT_FEDERATION",
+        entity_name="Zimbabwe Cricket",
+        entity_id="zimbabwe-cricket",
+        preset="zimbabwe-cricket-atomic-matrix",
+    )
+    questions = _question_index(payload)
+
+    assert "organisation, person, event, RFP/tender, ambiguous, defunct/non-current" in questions["q1_foundation"]["question"]
+    assert "digital_footprint_unknown" in questions["q2_digital_stack"]["question"]
+    assert "do not return founding years, dates, trophies, venues, or generic entity facts as people" in questions["q3_leadership"]["question"]
+    assert "dated trigger evidence" in questions["q6_launch_signal"]["question"]
+    assert "dated trigger evidence" in questions["q9_news_signal"]["question"]
+
+
 def test_universal_atomic_matrix_uses_broader_procurement_tender_and_hiring_openers():
     payload = build_universal_atomic_question_source(
         entity_type="SPORT_LEAGUE",
@@ -337,9 +386,10 @@ def test_upstream_questions_define_typed_quality_contracts():
         "q10_hiring_signal",
     ]:
         contract = questions[question_id]["quality_contract"]
-        assert contract["typed_outcomes"] == ["validated", "no_signal", "not_applicable", "failed"]
+        assert contract["typed_outcomes"] == ["validated", "provisional", "no_signal", "not_applicable", "failed"]
         assert "checked_sources" in contract["required_fields"]
         assert "structured_signal" in contract["required_fields"]
+        assert "evidence_url_or_checked_source_rationale" in contract["required_fields"]
 
     assert questions["q2_digital_stack"]["adjacent_evidence_reuse"] == ["q6_launch_signal"]
     assert questions["q4_performance"]["quality_contract"]["not_applicable_for_entity_types"] == ["PERSON", "RFP", "NON_CURRENT_ENTITY"]
