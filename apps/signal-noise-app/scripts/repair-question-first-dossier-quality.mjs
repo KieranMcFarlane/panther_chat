@@ -108,6 +108,19 @@ function firstMeaningfulCommercialText(values) {
   return values.map(toText).find(hasMeaningfulCommercialText) || ''
 }
 
+function isConciseBuyerTargetText(value) {
+  const text = toText(value)
+  if (!hasMeaningfulCommercialText(text)) return false
+  if (!/[A-Za-zÀ-ÖØ-öø-ÿ]/.test(text) || /^(?:19|20)\d{2}$/.test(text)) return false
+  const words = text.split(/\s+/).filter(Boolean)
+  if (text.length > 90 || words.length > 8) return false
+  return !/[.;:]|\b(leverages?|comprising|comprises|including|technology stack|partnership stack|website|wordpress|woocommerce|evidence|summary)\b/i.test(text)
+}
+
+function firstConciseBuyerTargetText(values) {
+  return values.map(toText).find(isConciseBuyerTargetText) || ''
+}
+
 function normalizedEntityType(value) {
   return String(value || '').trim().toLowerCase().replace(/-/g, '_')
 }
@@ -326,7 +339,7 @@ function leadershipCandidatesFromText(value) {
 
 function normalizeLeadershipCandidate(candidate) {
   if (!candidate || typeof candidate !== 'object') return null
-  const name = firstMeaningfulCommercialText([
+  const name = firstConciseBuyerTargetText([
     candidate.name,
     candidate.full_name,
     candidate.person_name,
@@ -485,8 +498,8 @@ function buildQuestionRecordPatches(repairedDossier) {
   const q11PatchRaw = asRecord(patches.q11_decision_owner?.answer?.raw_structured_output)
   const q11PatchOwner = asRecord(q11PatchRaw.primary_owner)
   const existingDecisionOwner = decisionOwnerCandidate(answers.q11_decision_owner)
-  const q12TargetSource = firstMeaningfulCommercialText([q11PatchOwner.name, existingDecisionOwner?.name, brief.buyer_name, brief.outreach_target])
-  if ((String(brief.status || '').toLowerCase() === 'available' && hasMeaningfulCommercialText(brief.buyer_name || brief.outreach_target)) || hasMeaningfulCommercialText(q12TargetSource)) {
+  const q12TargetSource = firstConciseBuyerTargetText([q11PatchOwner.name, existingDecisionOwner?.name, brief.buyer_name, brief.outreach_target])
+  if (hasMeaningfulCommercialText(q12TargetSource)) {
     const target = q12TargetSource
     const route = firstMeaningfulCommercialText([brief.outreach_route, brief.path_type]) || 'cold_verification'
     const summary = `${target} is the buyer path to verify via ${route}.`
@@ -542,7 +555,7 @@ function buildQuestionRecordPatches(repairedDossier) {
       best_service: toText(fit.best_service || fit.recommended_service),
       service_fit: asArray(fit.service_fit).length > 0 ? fit.service_fit : [toText(fit.best_service)].filter(Boolean),
       fit_rationale: summary,
-      buyer_context: fit.buyer_context || brief.buyer_name || null,
+      buyer_context: firstConciseBuyerTargetText([fit.buyer_context, brief.buyer_name]) || null,
       evidence_basis: asArray(fit.evidence_basis),
       confidence_caveat: toText(fit.confidence_caveat) || 'Verify recency and buyer ownership before outreach.',
       status: 'available',
@@ -575,7 +588,7 @@ function buildQuestionRecordPatches(repairedDossier) {
         best_service: bestService,
         service_fit: [bestService],
         fit_rationale: summary,
-        buyer_context: brief.buyer_name || q12TargetSource || null,
+        buyer_context: firstConciseBuyerTargetText([brief.buyer_name, q12TargetSource]) || null,
         evidence_basis: [sourceQuestion, evidenceText].filter(Boolean),
         confidence_caveat: 'Verify recency and buyer ownership before outreach.',
         status: 'available',
@@ -594,7 +607,7 @@ function buildQuestionRecordPatches(repairedDossier) {
     const q11Raw = asRecord(asRecord(answers.q11_decision_owner?.answer).raw_structured_output || answers.q11_decision_owner?.answer)
     const q11Owner = asRecord(q11Raw.primary_owner)
     const currentQ15Raw = asRecord(asRecord(answers.q15_outreach_strategy?.answer).raw_structured_output || answers.q15_outreach_strategy?.answer)
-    const target = firstMeaningfulCommercialText([outreach.recommended_target, brief.outreach_target, brief.buyer_name, q12Raw.target_person, q11Owner.name])
+    const target = firstConciseBuyerTargetText([outreach.recommended_target, brief.outreach_target, brief.buyer_name, q12Raw.target_person, q11Owner.name])
     const angle = firstMeaningfulCommercialText([outreach.recommended_angle, outreach.why_now, outreach.first_message_strategy])
     const summary = `${target || 'Verify the buyer'}: ${angle}`
     const raw = {
@@ -620,7 +633,7 @@ function buildQuestionRecordPatches(repairedDossier) {
   if (!patches.q15_outreach_strategy) {
     const q12Raw = asRecord(asRecord(answers.q12_connections?.answer).raw_structured_output || answers.q12_connections?.answer)
     const currentQ15Raw = asRecord(asRecord(answers.q15_outreach_strategy?.answer).raw_structured_output || answers.q15_outreach_strategy?.answer)
-    const target = firstMeaningfulCommercialText([q12Raw.target_person])
+    const target = firstConciseBuyerTargetText([q12Raw.target_person])
     const angle = firstMeaningfulCommercialText([
       currentQ15Raw.recommended_angle,
       currentQ15Raw.why_now,

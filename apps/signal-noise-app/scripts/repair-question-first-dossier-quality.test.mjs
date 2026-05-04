@@ -200,6 +200,133 @@ test('repairDossierPayload synthesizes q12 from prose q11 buyer answer', () => {
   assert.equal(answers.q12_connections.answer.raw_structured_output.target_role, 'Chief Commercial Officer')
 })
 
+test('repairDossierPayload does not promote descriptive paragraphs as buyer targets', () => {
+  const pack = weakFifteenPack()
+  const descriptiveBuyer = "FDJ-Suez leverages a technology and partnership stack comprising Shimano, Garmin, TrainingPeaks, Vekta, INDIBA, Buycycle, and Dynamic, with WordPress and WooCommerce elements supporting commercial operations."
+  pack.answers = pack.answers.map((item) => {
+    if (item.question_id === 'q3_leadership') {
+      return answer('q3_leadership')
+    }
+    if (item.question_id === 'q11_decision_owner') {
+      return {
+        ...item,
+        validation_state: 'provisional',
+        confidence: 0.82,
+        primary_owner: undefined,
+        answer: {
+          kind: 'list',
+          summary: descriptiveBuyer,
+          raw_structured_output: {
+            primary_owner: {
+              name: descriptiveBuyer,
+              title: null,
+            },
+            answer: descriptiveBuyer,
+          },
+        },
+      }
+    }
+    if (item.question_id === 'q12_connections') {
+      return answer('q12_connections')
+    }
+    if (item.question_id === 'q15_outreach_strategy') {
+      return answer('q15_outreach_strategy')
+    }
+    return item
+  })
+
+  const repair = repairDossierPayload(pack, 'fdj-suez')
+  const answers = Object.fromEntries(repair.repaired_dossier.question_first.answers.map((item) => [item.question_id, item]))
+
+  assert.notEqual(repair.repaired_dossier.discovery_summary.graphiti_sales_brief.buyer_name, descriptiveBuyer)
+  assert.notEqual(answers.q15_outreach_strategy.answer.raw_structured_output.recommended_target, descriptiveBuyer)
+  assert.equal(answers.q12_connections.validation_state, 'no_signal')
+})
+
+test('repairDossierPayload does not promote year strings as buyer targets', () => {
+  const pack = weakFifteenPack()
+  pack.answers = pack.answers.map((item) => {
+    if (item.question_id === 'q3_leadership') {
+      return answer('q3_leadership')
+    }
+    if (item.question_id === 'q11_decision_owner') {
+      return {
+        ...item,
+        validation_state: 'provisional',
+        confidence: 0.82,
+        primary_owner: undefined,
+        answer: {
+          kind: 'list',
+          summary: '2026',
+          raw_structured_output: {
+            primary_owner: {
+              name: '2026',
+              title: null,
+            },
+            answer: '2026',
+          },
+        },
+      }
+    }
+    if (item.question_id === 'q12_connections') {
+      return answer('q12_connections')
+    }
+    if (item.question_id === 'q15_outreach_strategy') {
+      return answer('q15_outreach_strategy')
+    }
+    return item
+  })
+
+  const repair = repairDossierPayload(pack, 'milan-cortina-2026')
+  const answers = Object.fromEntries(repair.repaired_dossier.question_first.answers.map((item) => [item.question_id, item]))
+
+  assert.notEqual(repair.repaired_dossier.discovery_summary.graphiti_sales_brief.buyer_name, '2026')
+  assert.notEqual(answers.q15_outreach_strategy.answer.raw_structured_output.recommended_target, '2026')
+  assert.equal(answers.q12_connections.validation_state, 'no_signal')
+})
+
+test('repairDossierPayload replaces existing year-string buyer artifacts', () => {
+  const pack = weakFifteenPack()
+  pack.discovery_summary = {
+    graphiti_sales_brief: {
+      status: 'available',
+      buyer_name: '2026',
+      outreach_target: '2026',
+    },
+    outreach_strategy: {
+      status: 'available',
+      recommended_target: '2026',
+      recommended_angle: 'Open on the current event cycle.',
+    },
+  }
+  pack.answers = pack.answers.map((item) => {
+    if (item.question_id === 'q3_leadership') return answer('q3_leadership')
+    if (item.question_id === 'q11_decision_owner') {
+      return {
+        ...item,
+        validation_state: 'provisional',
+        confidence: 0.82,
+        primary_owner: undefined,
+        answer: {
+          kind: 'list',
+          summary: '2026',
+          raw_structured_output: {
+            primary_owner: { name: '2026', title: null },
+            answer: '2026',
+          },
+        },
+      }
+    }
+    return item
+  })
+
+  const repair = repairDossierPayload(pack, 'milan-cortina-2026')
+
+  assert.notEqual(repair.repaired_dossier.discovery_summary.graphiti_sales_brief.buyer_name, '2026')
+  assert.notEqual(repair.repaired_dossier.discovery_summary.outreach_strategy.recommended_target, '2026')
+  assert.equal(repair.repaired_dossier.discovery_summary.outreach_strategy.status, 'insufficient_signal')
+})
+
 test('shouldRepairDossier targets zero-confidence q12 when q11 has buyer evidence', () => {
   const pack = weakFifteenPack()
   pack.publish_status = 'draft'

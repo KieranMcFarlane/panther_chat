@@ -668,6 +668,25 @@ function firstMeaningfulCommercialText(values: unknown[]): string {
   return values.map((value) => toDisplayText(value)).find((value) => isMeaningfulCommercialText(value)) || ''
 }
 
+function isConciseBuyerTargetText(value: unknown): boolean {
+  const text = toDisplayText(value)
+  if (!isMeaningfulCommercialText(text)) {
+    return false
+  }
+  if (!/[A-Za-zÀ-ÖØ-öø-ÿ]/.test(text) || /^(?:19|20)\d{2}$/.test(text)) {
+    return false
+  }
+  const words = text.split(/\s+/).filter(Boolean)
+  if (text.length > 90 || words.length > 8) {
+    return false
+  }
+  return !/[.;:]|\b(leverages?|comprising|comprises|including|technology stack|partnership stack|website|wordpress|woocommerce|evidence|summary)\b/i.test(text)
+}
+
+function firstConciseBuyerTargetText(values: unknown[]): string {
+  return values.map((value) => toDisplayText(value)).find((value) => isConciseBuyerTargetText(value)) || ''
+}
+
 function inferYellowPantherService(signalText: string, capabilityGapText: string): string {
   const combined = `${signalText} ${capabilityGapText}`.toLowerCase()
   if (/\b(app|platform|digital|ott|product|launch|website|fan experience|stack)\b/.test(combined)) {
@@ -832,7 +851,7 @@ function buildQuestionFirstDiscoverySummary(questions: Record<string, any>[], an
   const decisionOwnerRaw = ensureObject(decisionOwnerAnswerRecord.raw_structured_output)
   const decisionOwnerStructured = ensureObject(decisionOwnerAnswerRecord.structured_signal || decisionOwnerAnswer.structured_signal)
   const decisionOwnerRawPrimaryOwner = ensureObject(decisionOwnerRaw.primary_owner)
-  const decisionOwnerName = firstMeaningfulCommercialText([
+  const decisionOwnerName = firstConciseBuyerTargetText([
     decisionOwnerRawPrimaryOwner.name,
     ensureObject(decisionOwnerAnswer.primary_owner).name,
     decisionOwnerStructured.decision_owner_name,
@@ -927,7 +946,7 @@ function buildQuestionFirstDiscoverySummary(questions: Record<string, any>[], an
   ))
     ? {
         ...synthesizedOutreach,
-        recommended_target: toDisplayText(outreachStrategyRaw.recommended_target || decisionOwnerName) || synthesizedOutreach.recommended_target,
+        recommended_target: firstConciseBuyerTargetText([outreachStrategyRaw.recommended_target, decisionOwnerName]) || synthesizedOutreach.recommended_target,
         recommended_route: toDisplayText(outreachStrategyRaw.recommended_route || bestPath?.path_type) || synthesizedOutreach.recommended_route,
         recommended_angle: firstMeaningfulCommercialText([outreachStrategyRaw.recommended_angle, outreachStrategyRaw.answer, outreachStrategyRaw.summary, synthesizedOutreach.recommended_angle]),
         first_message_strategy: firstMeaningfulCommercialText([outreachStrategyRaw.first_message_strategy, synthesizedOutreach.first_message_strategy]),
@@ -948,7 +967,7 @@ function buildQuestionFirstDiscoverySummary(questions: Record<string, any>[], an
     path_type: toText(bestPath?.path_type || ''),
     capability_gap: toText(capabilityGapRaw.top_gap || capabilityGapRaw.gap_label || capabilityGapRaw.answer || ''),
     yp_fit_service: toText(resolvedYpFit.best_service || resolvedYpFit.recommended_service || ''),
-    outreach_target: toText(resolvedOutreach.recommended_target || decisionOwnerName || ''),
+    outreach_target: firstConciseBuyerTargetText([resolvedOutreach.recommended_target, decisionOwnerName]),
     outreach_route: toText(resolvedOutreach.recommended_route || bestPath?.path_type || ''),
     outreach_angle: firstMeaningfulCommercialText([resolvedOutreach.recommended_angle, strongestOpportunity?.answer, strongestSignalText]),
     source: 'question_first_normalizer',
@@ -1019,10 +1038,17 @@ function hasUsableYpFitArtifact(value: unknown): boolean {
     && isMeaningfulCommercialText(fit.fit_rationale || fit.fit_feedback || fit.competitive_advantage)
 }
 
+function hasUsableSalesBriefArtifact(value: unknown): boolean {
+  const brief = ensureObject(value)
+  return toText(brief.status).toLowerCase() === 'available'
+    && Boolean(firstConciseBuyerTargetText([brief.buyer_name, brief.outreach_target]))
+}
+
 function hasUsableOutreachArtifact(value: unknown): boolean {
   const outreach = ensureObject(value)
   return toText(outreach.status).toLowerCase() !== 'insufficient_signal'
-    && isMeaningfulCommercialText(outreach.recommended_angle || outreach.first_message_strategy || outreach.why_now || outreach.recommended_target)
+    && Boolean(firstConciseBuyerTargetText([outreach.recommended_target]))
+    && isMeaningfulCommercialText(outreach.recommended_angle || outreach.first_message_strategy || outreach.why_now)
 }
 
 function getQuestionById(questions: Record<string, any>[], questionId: string): Record<string, any> | null {
@@ -1503,7 +1529,7 @@ export function normalizeQuestionFirstDossier(
         evidence_items: Array.isArray(existingDiscoverySummary.evidence_items) && existingDiscoverySummary.evidence_items.length > 0
           ? existingDiscoverySummary.evidence_items
           : syntheticDiscoverySummary.evidence_items,
-        graphiti_sales_brief: Object.keys(ensureObject(existingDiscoverySummary.graphiti_sales_brief)).length > 0
+        graphiti_sales_brief: hasUsableSalesBriefArtifact(existingDiscoverySummary.graphiti_sales_brief)
           ? existingDiscoverySummary.graphiti_sales_brief
           : syntheticDiscoverySummary.graphiti_sales_brief,
         yellow_panther_opportunity: Object.keys(ensureObject(existingDiscoverySummary.yellow_panther_opportunity)).length > 0

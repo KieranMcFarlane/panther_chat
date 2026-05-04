@@ -87,6 +87,88 @@ def test_claim_next_batch_prioritizes_question_first_continuations(monkeypatch):
     assert captured["sql"].index("CASE") < captured["sql"].index("started_at ASC")
 
 
+def test_claim_next_batch_prioritizes_operator_question_repairs(monkeypatch):
+    captured = {}
+
+    class _FakeCursor:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+        def execute(self, sql, params):
+            captured["sql"] = sql
+            captured["params"] = params
+
+        def fetchall(self):
+            return []
+
+    class _FakeConnection:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+        def cursor(self):
+            return _FakeCursor()
+
+    client = LocalPgClient("postgresql://localhost/signal_noise_app")
+    monkeypatch.setattr(client, "_connect", lambda: _FakeConnection())
+
+    client.rpc(
+        "claim_next_entity_import_batch",
+        {"worker_id": "worker-1", "lease_seconds": 300},
+    ).execute()
+
+    assert "entity_dossier_operator_rerun" in captured["sql"]
+    assert "metadata->>'rerun_mode' = 'question'" in captured["sql"]
+    assert captured["sql"].index("entity_dossier_operator_rerun") < captured["sql"].index("started_at ASC")
+
+
+def test_claim_next_batch_prioritizes_commercial_synthesis_follow_on_repairs(monkeypatch):
+    captured = {}
+
+    class _FakeCursor:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+        def execute(self, sql, params):
+            captured["sql"] = sql
+            captured["params"] = params
+
+        def fetchall(self):
+            return []
+
+    class _FakeConnection:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+        def cursor(self):
+            return _FakeCursor()
+
+    client = LocalPgClient("postgresql://localhost/signal_noise_app")
+    monkeypatch.setattr(client, "_connect", lambda: _FakeConnection())
+
+    client.rpc(
+        "claim_next_entity_import_batch",
+        {"worker_id": "worker-1", "lease_seconds": 300},
+    ).execute()
+
+    assert "self_healing_repair" in captured["sql"]
+    assert "q11_decision_owner" in captured["sql"]
+    assert "q15_outreach_strategy" in captured["sql"]
+    assert "q7_procurement_signal" not in captured["sql"]
+    assert captured["sql"].index("self_healing_repair") < captured["sql"].index("started_at ASC")
+
+
 def test_select_next_entity_cursor_candidate_prefers_resumable_work(monkeypatch):
     captured = {}
 

@@ -53,7 +53,7 @@ def test_select_repair_root_question_id_prefers_procurement_chain_root():
         source_payload=_source_payload(),
         canonical_dossier={
             "questions": [
-                _question("q7_procurement_signal", "no_signal"),
+                _question("q7_procurement_signal", "failed"),
                 _question("q8_explicit_rfp", "no_signal"),
                 _question("q11_decision_owner", "blocked"),
                 _question("q13_capability_gap", "blocked"),
@@ -65,6 +65,25 @@ def test_select_repair_root_question_id_prefers_procurement_chain_root():
     )
 
     assert question_id == "q7_procurement_signal"
+
+
+def test_select_repair_root_question_id_does_not_broad_retry_q7_checked_absence():
+    question_id = select_repair_root_question_id(
+        source_payload=_source_payload(),
+        canonical_dossier={
+            "questions": [
+                _question("q7_procurement_signal", "no_signal"),
+                _question("q8_explicit_rfp", "no_signal"),
+                _question("q11_decision_owner", "blocked"),
+                _question("q13_capability_gap", "blocked"),
+                _question("q14_yp_fit", "blocked"),
+                _question("q15_outreach_strategy", "no_signal"),
+            ]
+        },
+        exhausted_question_ids=set(),
+    )
+
+    assert question_id == "q11_decision_owner"
 
 
 def test_select_repair_root_question_id_skips_exhausted_roots():

@@ -309,7 +309,18 @@ class LocalPgRpc:
                         ORDER BY
                           CASE
                             WHEN metadata->>'source' = 'question_first_timeout_continuation' THEN 0
-                            ELSE 1
+                            WHEN metadata->>'source' = 'entity_dossier_operator_rerun'
+                              AND metadata->>'rerun_mode' = 'question' THEN 1
+                            WHEN metadata->>'source' = 'self_healing_repair'
+                              AND metadata->>'rerun_mode' = 'question'
+                              AND metadata->>'question_id' IN (
+                                'q11_decision_owner',
+                                'q12_connections',
+                                'q13_capability_gap',
+                                'q14_yp_fit',
+                                'q15_outreach_strategy'
+                              ) THEN 2
+                            ELSE 3
                           END,
                           started_at ASC
                         LIMIT 1

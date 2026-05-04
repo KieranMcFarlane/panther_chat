@@ -228,3 +228,116 @@ test('usable q14 raw fit promotes available status when synthesized fallback is 
   assert.equal(normalized.discovery_summary.outreach_strategy.status, 'insufficient_signal')
   assert.equal(normalized.publish_status, 'published_partial')
 })
+
+test('descriptive organization paragraphs are not treated as buyer names or outreach targets', () => {
+  const dossier = goldenDossier()
+  const descriptiveBuyer = "FDJ-Suez leverages a technology and partnership stack comprising Shimano, Garmin, TrainingPeaks, Vekta, INDIBA, Buycycle, and Dynamic, with WordPress and WooCommerce elements supporting commercial operations."
+  dossier.question_first.answers = dossier.question_first.answers.map((answer) => {
+    if (answer.question_id === 'q3_leadership') {
+      return {
+        ...answer,
+        validation_state: 'no_signal',
+        confidence: 0,
+        answer: null,
+      }
+    }
+    if (answer.question_id === 'q11_decision_owner') {
+      return {
+        ...answer,
+        validation_state: 'provisional',
+        confidence: 0.82,
+        primary_owner: undefined,
+        answer: {
+          kind: 'list',
+          summary: descriptiveBuyer,
+          raw_structured_output: {
+            primary_owner: {
+              name: descriptiveBuyer,
+              title: null,
+            },
+            answer: descriptiveBuyer,
+          },
+        },
+      }
+    }
+    if (answer.question_id === 'q12_connections') {
+      return {
+        ...answer,
+        validation_state: 'no_signal',
+        confidence: 0,
+        answer: null,
+      }
+    }
+    if (answer.question_id === 'q15_outreach_strategy') {
+      return {
+        ...answer,
+        validation_state: 'no_signal',
+        confidence: 0,
+        answer: null,
+      }
+    }
+    return answer
+  })
+
+  const normalized = normalizeQuestionFirstDossier(dossier, 'fdj-suez')
+
+  assert.notEqual(normalized.discovery_summary.graphiti_sales_brief.buyer_name, descriptiveBuyer)
+  assert.notEqual(normalized.discovery_summary.outreach_strategy.recommended_target, descriptiveBuyer)
+  assert.equal(normalized.discovery_summary.outreach_strategy.status, 'insufficient_signal')
+})
+
+test('year strings are not treated as buyer names or outreach targets', () => {
+  const dossier = goldenDossier()
+  dossier.question_first.answers = dossier.question_first.answers.map((answer) => {
+    if (answer.question_id === 'q3_leadership') {
+      return {
+        ...answer,
+        validation_state: 'no_signal',
+        confidence: 0,
+        answer: null,
+      }
+    }
+    if (answer.question_id === 'q11_decision_owner') {
+      return {
+        ...answer,
+        validation_state: 'provisional',
+        confidence: 0.82,
+        primary_owner: undefined,
+        answer: {
+          kind: 'list',
+          summary: '2026',
+          raw_structured_output: {
+            primary_owner: {
+              name: '2026',
+              title: null,
+            },
+            answer: '2026',
+          },
+        },
+      }
+    }
+    if (answer.question_id === 'q12_connections') {
+      return {
+        ...answer,
+        validation_state: 'no_signal',
+        confidence: 0,
+        answer: null,
+      }
+    }
+    if (answer.question_id === 'q15_outreach_strategy') {
+      return {
+        ...answer,
+        validation_state: 'no_signal',
+        confidence: 0,
+        answer: null,
+      }
+    }
+    return answer
+  })
+
+  const normalized = normalizeQuestionFirstDossier(dossier, 'milan-cortina-2026')
+
+  assert.notEqual(normalized.discovery_summary.graphiti_sales_brief.buyer_name, '2026')
+  assert.notEqual(normalized.discovery_summary.outreach_strategy.recommended_target, '2026')
+  assert.equal(normalized.discovery_summary.outreach_strategy.status, 'insufficient_signal')
+})
