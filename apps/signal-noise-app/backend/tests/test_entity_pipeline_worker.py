@@ -1780,6 +1780,57 @@ def test_claim_next_batch_does_not_try_resumable_lookup_without_cursor(monkeypat
     assert select_calls[0]["current_canonical_entity_id"] is None
 
 
+def test_claim_next_batch_stops_after_scoped_pilot_batch_without_resume_claim(monkeypatch):
+    worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
+    worker.reconcile_stale_pipeline_state = lambda: None
+    worker.recover_stale_batches = lambda: None
+    worker.worker_id = "worker-1"
+    worker.lease_seconds = 60
+    worker._now_iso = lambda: "2026-05-05T00:10:00+01:00"
+    worker._backend_preflight = lambda: (True, None)
+    worker._get_batch_record = lambda batch_id: {
+        "id": batch_id,
+        "status": "completed",
+        "metadata": {
+            "targeted_pilot": True,
+            "suppress_cursor_resume_after_batch": True,
+        },
+    }
+
+    class FakeRpcQuery:
+        def execute(self):
+            return SimpleNamespace(data=[])
+
+    class FakeSupabase:
+        def rpc(self, name, params):
+            assert name == "claim_next_entity_import_batch"
+            return FakeRpcQuery()
+
+    worker.supabase = FakeSupabase()
+    worker._select_next_entity_cursor_candidate = lambda **_kwargs: (_ for _ in ()).throw(
+        AssertionError("scoped pilot batches must not fall through to resume cursor selection")
+    )
+    monkeypatch.setattr(
+        "entity_pipeline_worker.read_pipeline_control_state",
+        lambda: {
+            "is_paused": False,
+            "pause_reason": None,
+            "requested_state": "running",
+            "observed_state": "running",
+            "transition_state": "running",
+            "desired_state": "running",
+            "current_batch_id": "targeted_answer_quality_pilot_1",
+            "current_entity_id": "entity-1",
+            "current_canonical_entity_id": "entity-1",
+        },
+    )
+    monkeypatch.setattr("entity_pipeline_worker.write_pipeline_control_state", lambda payload: payload)
+
+    claimed = worker.claim_next_batch()
+
+    assert claimed is None
+
+
 def test_claim_next_batch_does_not_recover_queued_run_under_completed_batch(monkeypatch):
     worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
     worker.recover_stale_batches = lambda: None

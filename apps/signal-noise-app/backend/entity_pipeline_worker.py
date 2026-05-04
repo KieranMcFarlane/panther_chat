@@ -1701,6 +1701,18 @@ class EntityPipelineWorker:
             )
             return claimed
 
+        if self._should_stop_after_scoped_batch(control_state):
+            log_worker_transition(
+                "claim_cycle_scoped_batch_boundary",
+                worker_id=getattr(self, "worker_id", "worker-test"),
+                batch_id=control_state.get("current_batch_id"),
+                entity_id=control_state.get("current_entity_id"),
+                entity_name=control_state.get("current_entity_name"),
+                status="idle",
+                message="scoped batch completed; cursor resume disabled",
+            )
+            return None
+
         if cursor_entity_id or cursor_canonical_entity_id:
             resume_candidate = self._select_next_entity_cursor_candidate(
                 current_entity_id=cursor_entity_id or "",
@@ -1784,6 +1796,21 @@ class EntityPipelineWorker:
             message="no claimable batch available",
         )
         return None
+
+    def _should_stop_after_scoped_batch(self, control_state: Dict[str, Any]) -> bool:
+        batch_id = str((control_state or {}).get("current_batch_id") or "").strip()
+        if not batch_id:
+            return False
+        try:
+            batch = self._get_batch_record(batch_id)
+        except Exception:
+            return False
+        metadata = batch.get("metadata") if isinstance(batch, dict) and isinstance(batch.get("metadata"), dict) else {}
+        return (
+            metadata.get("suppress_cursor_resume_after_batch") is True
+            or metadata.get("targeted_pilot") is True
+            or str(metadata.get("auto_advance_guard") or "").strip().lower() in {"manual_batch_only", "pilot_batch_only"}
+        )
 
     def _persist_pipeline_cursor_state(
         self,
@@ -2998,6 +3025,16 @@ class EntityPipelineWorker:
         now_iso = self._now_iso()
         follow_on_batch_id = self._build_follow_on_repair_batch_id()
         queue_mode = str(latest_metadata.get("queue_mode") or QUEUE_MODE)
+        scoped_repair_metadata = {
+            key: latest_metadata.get(key)
+            for key in (
+                "targeted_pilot",
+                "pilot_id",
+                "auto_advance_guard",
+                "suppress_cursor_resume_after_batch",
+            )
+            if latest_metadata.get(key) is not None
+        }
         batch_row = {
             "id": follow_on_batch_id,
             "filename": None,
@@ -3025,6 +3062,7 @@ class EntityPipelineWorker:
                 "next_repair_batch_status": None,
                 "reconciliation_state": "pending" if reconcile_required else "healthy",
                 "rerun_reason": f"Auto-repair queued for {question_id}",
+                **scoped_repair_metadata,
             },
         }
         run_row = {
@@ -3064,6 +3102,7 @@ class EntityPipelineWorker:
                 "next_repair_batch_id": None,
                 "next_repair_batch_status": None,
                 "reconciliation_state": "pending" if reconcile_required else "healthy",
+                **scoped_repair_metadata,
             },
         }
         batch_inserted = self._safe_execute(
