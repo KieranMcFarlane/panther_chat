@@ -107,3 +107,55 @@ test('perQuestionQuality reports validation and zero-confidence counts', () => {
     },
   })
 })
+
+test('perQuestionQuality uses buyer eligibility for q11 and q12 denominators', () => {
+  const rows = [
+    {
+      dossier_data: {
+        answers: [
+          {
+            question_id: 'q3_leadership',
+            validation_state: 'no_signal',
+            confidence: 0,
+            answer: 'No leadership evidence found in checked sources.',
+          },
+          { question_id: 'q11_decision_owner', validation_state: 'no_signal', confidence: 0 },
+          { question_id: 'q12_connections', validation_state: 'no_signal', confidence: 0 },
+        ],
+      },
+    },
+    {
+      dossier_data: {
+        answers: [
+          {
+            question_id: 'q3_leadership',
+            validation_state: 'validated',
+            confidence: 0.78,
+            structured_signal: {
+              ranked_people: [
+                {
+                  name: 'Alex Buyer',
+                  role: 'Chief Commercial Officer',
+                  buyer_relevance: 'commercial owner',
+                },
+              ],
+            },
+          },
+          { question_id: 'q11_decision_owner', validation_state: 'validated', confidence: 0.71 },
+          { question_id: 'q12_connections', validation_state: 'validated', confidence: 0.62 },
+        ],
+      },
+    },
+  ]
+
+  const stats = perQuestionQuality(rows)
+
+  assert.equal(stats.q11_decision_owner.total, 2)
+  assert.equal(stats.q11_decision_owner.zero_confidence, 1)
+  assert.equal(stats.q11_decision_owner.eligible_total, 1)
+  assert.equal(stats.q11_decision_owner.eligible_zero_confidence, 0)
+  assert.equal(stats.q12_connections.total, 2)
+  assert.equal(stats.q12_connections.zero_confidence, 1)
+  assert.equal(stats.q12_connections.eligible_total, 1)
+  assert.equal(stats.q12_connections.eligible_zero_confidence, 0)
+})

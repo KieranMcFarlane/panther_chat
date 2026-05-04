@@ -42,6 +42,51 @@ function hasMeaningfulText(value) {
     && !/^(no_signal|no signal|insufficient_signal|insufficient signal|failed|blocked|\[object object\])$/i.test(text)
 }
 
+function answerValidationState(answer) {
+  return String(asRecord(answer).validation_state || asRecord(answer).status || 'unknown').trim().toLowerCase() || 'unknown'
+}
+
+function answerConfidence(answer) {
+  return Number(asRecord(answer).confidence || 0)
+}
+
+function answerText(answer) {
+  const record = asRecord(answer)
+  return JSON.stringify({
+    answer: record.answer,
+    summary: record.summary,
+    structured_signal: record.structured_signal,
+    structured_output: record.structured_output,
+    output: record.output,
+  }).toLowerCase()
+}
+
+function hasBuyerRoleSignal(answer) {
+  const state = answerValidationState(answer)
+  if (['failed', 'blocked', 'no_signal', 'no signal', 'insufficient_signal', 'insufficient signal'].includes(state)) {
+    return false
+  }
+  if (answerConfidence(answer) <= 0) return false
+  const text = answerText(answer)
+  return /\b(chief|director|head|vp|vice president|owner|founder|ceo|coo|cfo|cto|cmo|commercial|marketing|partnership|partnerships|sponsor|sponsorship|digital|technology|product|procurement|operations|strategy)\b/i.test(text)
+    && /\b(name|person|role|title|buyer|owner|decision|stakeholder|ranked_people|target_person)\b/i.test(text)
+}
+
+function questionAnswerMap(dossierData) {
+  return answerRecords(dossierData).reduce((acc, answer) => {
+    const questionId = String(answer.question_id || answer.id || '').trim()
+    if (questionId && !acc[questionId]) acc[questionId] = answer
+    return acc
+  }, {})
+}
+
+function hasBuyerRouteEligibility(dossierData) {
+  const answers = questionAnswerMap(dossierData)
+  return hasBuyerRoleSignal(answers.q3_leadership)
+    || hasBuyerRoleSignal(answers.q11_decision_owner)
+    || hasBuyerRoleSignal(answers.q12_connections)
+}
+
 function answerRecords(dossierData) {
   const dossier = asRecord(dossierData)
   const questionFirst = asRecord(dossier.question_first)
@@ -169,6 +214,7 @@ function artifactCoverage(rows) {
 function perQuestionQuality(rows) {
   const byQuestion = {}
   rows.forEach((row) => {
+    const buyerRouteEligible = hasBuyerRouteEligibility(row.dossier_data)
     answerRecords(row.dossier_data).forEach((answer) => {
       const questionId = String(answer.question_id || answer.id || '').trim()
       if (!questionId) return
@@ -180,11 +226,21 @@ function perQuestionQuality(rows) {
         }
       }
       const bucket = byQuestion[questionId]
-      const validationState = String(answer.validation_state || 'unknown').trim().toLowerCase() || 'unknown'
+      const validationState = answerValidationState(answer)
       bucket.total += 1
       bucket.validation_states[validationState] = (bucket.validation_states[validationState] || 0) + 1
-      if (Number(answer.confidence || 0) === 0) {
+      if (answerConfidence(answer) === 0) {
         bucket.zero_confidence += 1
+      }
+      if (['q11_decision_owner', 'q12_connections'].includes(questionId)) {
+        bucket.eligible_total = Number(bucket.eligible_total || 0)
+        bucket.eligible_zero_confidence = Number(bucket.eligible_zero_confidence || 0)
+        if (buyerRouteEligible) {
+          bucket.eligible_total += 1
+          if (answerConfidence(answer) === 0) {
+            bucket.eligible_zero_confidence += 1
+          }
+        }
       }
     })
   })
@@ -367,4 +423,5 @@ module.exports = {
   hasMeaningfulPublicationArtifacts,
   perQuestionQuality,
   qualityState,
+  hasBuyerRouteEligibility,
 }

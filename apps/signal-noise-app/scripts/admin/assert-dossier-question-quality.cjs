@@ -58,6 +58,24 @@ function rate(numerator, denominator) {
   return total > 0 ? Number(numerator || 0) / total : 0
 }
 
+function zeroConfidenceStats(stats) {
+  const eligibleTotal = stats && Object.prototype.hasOwnProperty.call(stats, 'eligible_total')
+    ? Number(stats.eligible_total || 0)
+    : null
+  if (eligibleTotal !== null) {
+    return {
+      numerator: Number(stats.eligible_zero_confidence || 0),
+      denominator: eligibleTotal,
+      label: 'eligible zero-confidence rate',
+    }
+  }
+  return {
+    numerator: Number(stats.zero_confidence || 0),
+    denominator: Number(stats.total || 0),
+    label: 'zero-confidence rate',
+  }
+}
+
 function evaluateReport(report, options = {}) {
   const config = {
     ...parseArgs([]),
@@ -75,10 +93,11 @@ function evaluateReport(report, options = {}) {
       continue
     }
     const total = Number(stats.total || 0)
-    const zeroRate = rate(stats.zero_confidence, total)
+    const zeroStats = zeroConfidenceStats(stats)
+    const zeroRate = rate(zeroStats.numerator, zeroStats.denominator)
     const failedRate = rate(stats.validation_states?.failed || 0, total)
     if (zeroRate > config.maxZeroConfidenceRate) {
-      failures.push(`${questionId}: zero-confidence rate ${zeroRate.toFixed(3)} exceeds ${config.maxZeroConfidenceRate}`)
+      failures.push(`${questionId}: ${zeroStats.label} ${zeroRate.toFixed(3)} exceeds ${config.maxZeroConfidenceRate}`)
     }
     if (failedRate > config.maxFailedRate) {
       failures.push(`${questionId}: failed rate ${failedRate.toFixed(3)} exceeds ${config.maxFailedRate}`)

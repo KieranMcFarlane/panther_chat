@@ -61,6 +61,30 @@ test('evaluateReport fails when q14/q15 have excessive zero-confidence rates', (
   assert.match(evaluation.failures.join('\n'), /q15_outreach_strategy/)
 })
 
+test('evaluateReport uses eligible q11/q12 denominators when present', () => {
+  const fixture = report()
+  fixture.per_question_quality.q11_decision_owner = {
+    ...perQuestionStats({ total: 100, zero: 99 }),
+    eligible_total: 1,
+    eligible_zero_confidence: 0,
+  }
+  fixture.per_question_quality.q12_connections = {
+    ...perQuestionStats({ total: 100, zero: 99 }),
+    eligible_total: 1,
+    eligible_zero_confidence: 0,
+  }
+
+  const evaluation = evaluateReport(fixture, {
+    requiredQuestions: ['q11_decision_owner', 'q12_connections'],
+    maxZeroConfidenceRate: 0.9,
+    maxFailedRate: 1,
+    minArtifactCoverage: 1,
+  })
+
+  assert.equal(evaluation.ok, true)
+  assert.deepEqual(evaluation.failures, [])
+})
+
 test('evaluateReport fails when commercial artifact coverage disappears', () => {
   const evaluation = evaluateReport(report({
     artifact_coverage: {
