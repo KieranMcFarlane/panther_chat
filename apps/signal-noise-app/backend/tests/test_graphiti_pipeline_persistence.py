@@ -250,6 +250,50 @@ async def test_entity_dossier_upsert_does_not_replace_checkpoint_with_shell():
 
 
 @pytest.mark.asyncio
+async def test_entity_dossier_upsert_demotes_weak_published_question_first_payload():
+    supabase = _DossierMonotonicSupabase(None)
+    svc = GraphitiService.__new__(GraphitiService)
+    svc.supabase_client = supabase
+
+    await GraphitiService._upsert_entity_dossier_from_pipeline_payload(
+        svc,
+        entity_id="gauteng-empty",
+        run_payload={
+            "entity_name": "Gauteng Empty",
+            "entity_type": "PROVINCE",
+            "dossier": {
+                "entity_id": "gauteng-empty",
+                "entity_name": "Gauteng Empty",
+                "entity_type": "PROVINCE",
+                "publish_status": "published",
+                "publication_status": "published",
+                "quality_state": "complete",
+                "question_first": {
+                    "questions_answered": 15,
+                    "questions_total": 15,
+                    "publish_status": "published",
+                    "quality_state": "complete",
+                    "discovery_summary": {
+                        "graphiti_sales_brief": None,
+                        "yellow_panther_fit": None,
+                        "outreach_strategy": None,
+                    },
+                },
+                "sections": None,
+                "executive_summary": {"summary": ""},
+                "strategic_analysis": {"recommended_approach": ""},
+            },
+        },
+    )
+
+    assert len(supabase.upsert_payloads) == 1
+    persisted = supabase.upsert_payloads[0]["dossier_data"]
+    assert persisted["publish_status"] == "published_partial"
+    assert persisted["publication_status"] == "published_partial"
+    assert persisted["question_first"]["publish_status"] == "published_partial"
+
+
+@pytest.mark.asyncio
 async def test_persist_pipeline_record_falkordb_uses_merge_with_driver():
     svc = GraphitiService.__new__(GraphitiService)
     svc.driver = _FakeDriver()

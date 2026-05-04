@@ -45,6 +45,10 @@ try:
     from backend.objective_profiles import DEFAULT_PIPELINE_OBJECTIVE, normalize_run_objective
 except ImportError:
     from objective_profiles import DEFAULT_PIPELINE_OBJECTIVE, normalize_run_objective
+try:
+    from backend.dossier_publication_quality import apply_publication_quality_gates
+except ImportError:
+    from dossier_publication_quality import apply_publication_quality_gates
 
 logger = logging.getLogger(__name__)
 DEFAULT_OPENCODE_MODEL = "zai-coding-plan/glm-5.1"
@@ -588,7 +592,7 @@ class PipelineOrchestrator:
                 metadata["question_first"]["repair_run"] = repair_meta
                 question_first["repair_run"] = repair_meta
 
-        return payload
+        return apply_publication_quality_gates(payload)
 
     def _build_default_persistence_coordinator(self):
         supabase_writer = getattr(self.graphiti_service, "persist_pipeline_record_supabase", None)
@@ -1733,6 +1737,8 @@ class PipelineOrchestrator:
         }
         try:
             signature = inspect.signature(enrichment)
+            accepted_params = set(signature.parameters)
+            kwargs = {key: value for key, value in kwargs.items() if key in accepted_params}
             if "phase_callback" in signature.parameters:
                 kwargs["phase_callback"] = phase_callback
         except (TypeError, ValueError):

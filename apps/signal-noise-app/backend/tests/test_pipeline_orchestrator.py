@@ -1139,12 +1139,59 @@ def test_canonical_publication_dossier_infers_quality_state_from_question_first(
     )
 
     assert dossier["quality_state"] == "partial"
-    assert dossier["publication_status"] == "published"
+    assert dossier["publication_status"] == "published_partial"
     assert dossier["metadata"]["quality_state"] == "partial"
     assert dossier["metadata"]["question_first"]["quality_state"] == "partial"
     assert dossier["question_first_checkpoint"]["questions_answered"] == 3
     assert dossier["question_first_checkpoint"]["last_completed_question_id"] == "q3_leadership"
     assert dossier["metadata"]["question_first_checkpoint"]["questions_answered"] == 3
+
+
+def test_canonical_publication_dossier_demotes_mechanically_complete_but_weak_question_first():
+    orchestrator = PipelineOrchestrator(
+        dossier_generator=FakeDossierGenerator(),
+        discovery=FakeDiscovery(),
+        ralph_validator=FakeRalph(),
+        graphiti_service=FakeGraphiti(),
+        dashboard_scorer=FakeDashboardScorer(),
+        persistence_coordinator=CapturingPersistenceCoordinator(),
+        brightdata_client=None,
+        claude_client=None,
+    )
+
+    answers = [
+        {"question_id": f"q{i}_placeholder", "validation_state": "no_signal", "confidence": 0}
+        for i in range(1, 16)
+    ]
+    dossier = orchestrator._build_canonical_publication_dossier(
+        dossier={
+            "question_first": {
+                "questions_answered": 15,
+                "questions_total": 15,
+                "quality_state": "complete",
+                "publish_status": "published",
+                "answers": answers,
+                "discovery_summary": {
+                    "graphiti_sales_brief": None,
+                    "yellow_panther_fit": None,
+                    "outreach_strategy": None,
+                },
+            },
+            "sections": None,
+            "yellow_panther_fit": None,
+            "executive_summary": {"summary": ""},
+            "strategic_analysis": {"recommended_approach": ""},
+        },
+        entity_id="gauteng-empty",
+        entity_name="Gauteng Empty",
+        entity_type="PROVINCE",
+        run_id="run-gauteng-empty",
+    )
+
+    assert dossier["quality_state"] == "complete"
+    assert dossier["publish_status"] == "published_partial"
+    assert dossier["publication_status"] == "published_partial"
+    assert dossier["question_first"]["publish_status"] == "published_partial"
 
 
 def test_canonical_publication_dossier_marks_provider_infrastructure_failure_as_failed():
@@ -1629,7 +1676,7 @@ async def test_pipeline_orchestrator_persists_fresh_canonical_question_repair_pa
     persisted_dossier = persistence.run_payloads[-1]["payload"]["dossier"]
 
     assert persisted_dossier["run_id"] == result["run_id"]
-    assert persisted_dossier["publish_status"] == "published"
+    assert persisted_dossier["publish_status"] == "published_partial"
     assert persisted_dossier["quality_state"] == "blocked"
     assert persisted_dossier["generated_at"] != "2026-04-10T07:36:45.501Z"
     assert persisted_dossier["questions"][1]["question_id"] == "q11_decision_owner"

@@ -23,6 +23,7 @@ import json
 import logging
 import re
 import urllib.parse
+from copy import deepcopy
 from datetime import datetime, timezone, timedelta
 from typing import Dict, List, Optional, Any
 from dataclasses import dataclass, asdict
@@ -30,6 +31,10 @@ from enum import Enum
 from pathlib import Path
 
 from canonical_ids import normalize_canonical_entity_id
+try:
+    from dossier_publication_quality import apply_publication_quality_gates
+except ImportError:  # pragma: no cover - package import fallback
+    from backend.dossier_publication_quality import apply_publication_quality_gates
 
 # Load environment variables from .env.local
 project_root = Path(__file__).parent.parent
@@ -599,6 +604,7 @@ class GraphitiService:
         dossier = run_payload.get("dossier")
         if not isinstance(dossier, dict) or not dossier:
             return
+        dossier = apply_publication_quality_gates(deepcopy(dossier))
 
         metadata = dossier.get("metadata") if isinstance(dossier.get("metadata"), dict) else {}
         sections = dossier.get("sections") if isinstance(dossier.get("sections"), list) else []
