@@ -661,7 +661,7 @@ function isMeaningfulCommercialText(value: unknown): boolean {
   if (!text) {
     return false
   }
-  return !/(^no_signal$|^no signal$|source pending$|question execution failed|no deterministic answer was produced|no completed brightdata leads were recoverable|no brightdata-backed evidence|initial search returned only generic|follow-up search timed out|returned no results matching|no results matching|no hiring leads found|bounded retrieval|points to insufficient_signal|current dossier evidence points to insufficient[_ ]signal|searches? (for|across).* (returned|found) no|limited to unrelated|kind:\s*summary(\.|;|$)|kind:\s*summary;\s*value:\s*(;|null)|value:\s*null|summary:\s*null|commercial interpretation:\s*themes:\s*;\s*summary:\s*;|raw structured output:\s*(;|null)|opportunity hypotheses:\s*;|no web evidence found|insufficient signal|^\[object object\]$)/i.test(text)
+  return !/(^no_signal$|^no signal$|^insufficient_signal$|source pending$|question execution failed|no deterministic answer was produced|no completed brightdata leads were recoverable|no brightdata-backed evidence|initial search returned only generic|follow-up search timed out|returned no results matching|no results matching|no hiring leads found|bounded retrieval|points to insufficient_signal|current dossier evidence points to insufficient[_ ]signal|searches? (for|across).* (returned|found) no|limited to unrelated|kind:\s*summary(\.|;|$)|kind:\s*summary;\s*value:\s*(;|null)|\"kind\"\s*:\s*\"list\"|value:\s*null|\"value\"\s*:\s*null|summary:\s*null|\"summary\"\s*:\s*\"insufficient_signal\"|commercial interpretation:\s*themes:\s*;\s*summary:\s*;|raw structured output:\s*(;|null)|\"raw_structured_output\"\s*:|opportunity hypotheses:\s*;|no web evidence found|insufficient signal|^\[object object\]$)/i.test(text)
 }
 
 function firstMeaningfulCommercialText(values: unknown[]): string {
@@ -680,7 +680,7 @@ function isConciseBuyerTargetText(value: unknown): boolean {
   if (text.length > 90 || words.length > 8) {
     return false
   }
-  return !/[.;:]|\b(leverages?|comprising|comprises|including|technology stack|partnership stack|website|wordpress|woocommerce|evidence|summary)\b/i.test(text)
+  return !/[{}[\]".;:]|\b(leverages?|comprising|comprises|including|technology stack|partnership stack|website|wordpress|woocommerce|evidence|summary|raw_structured_output|insufficient_signal)\b/i.test(text)
 }
 
 function firstConciseBuyerTargetText(values: unknown[]): string {

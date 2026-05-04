@@ -327,6 +327,41 @@ test('repairDossierPayload replaces existing year-string buyer artifacts', () =>
   assert.equal(repair.repaired_dossier.discovery_summary.outreach_strategy.status, 'insufficient_signal')
 })
 
+test('repairDossierPayload demotes insufficient-signal q11 answer objects', () => {
+  const pack = weakFifteenPack()
+  pack.answers = pack.answers.map((item) => {
+    if (item.question_id === 'q11_decision_owner') {
+      return {
+        ...item,
+        validation_state: 'provisional',
+        confidence: 0.52,
+        answer: {
+          kind: 'list',
+          value: null,
+          summary: 'insufficient_signal',
+          raw_structured_output: {
+            question: 'Who is the highest probability buyer?',
+            answer: 'insufficient_signal',
+            context: '',
+            sources: ['https://example.com/history'],
+            confidence: 0.52,
+          },
+        },
+      }
+    }
+    return item
+  })
+
+  const repair = repairDossierPayload(pack, 'baseball-australia')
+  const answers = Object.fromEntries(repair.repaired_dossier.question_first.answers.map((item) => [item.question_id, item]))
+  const summary = repair.repaired_dossier.discovery_summary
+
+  assert.equal(answers.q11_decision_owner.validation_state, 'no_signal')
+  assert.equal(answers.q11_decision_owner.confidence, 0)
+  assert.equal(summary.graphiti_sales_brief.status, 'insufficient_signal')
+  assert.equal(summary.graphiti_sales_brief.buyer_name, null)
+})
+
 test('shouldRepairDossier targets zero-confidence q12 when q11 has buyer evidence', () => {
   const pack = weakFifteenPack()
   pack.publish_status = 'draft'

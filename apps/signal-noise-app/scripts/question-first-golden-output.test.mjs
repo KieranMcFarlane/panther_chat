@@ -341,3 +341,66 @@ test('year strings are not treated as buyer names or outreach targets', () => {
   assert.notEqual(normalized.discovery_summary.outreach_strategy.recommended_target, '1875')
   assert.equal(normalized.discovery_summary.outreach_strategy.status, 'insufficient_signal')
 })
+
+test('insufficient-signal answer objects are not serialized into buyer names', () => {
+  const dossier = goldenDossier()
+  dossier.question_first.answers = dossier.question_first.answers.map((answer) => {
+    if (answer.question_id === 'q3_leadership') {
+      return {
+        ...answer,
+        validation_state: 'no_signal',
+        confidence: 0,
+        answer: {
+          kind: 'list',
+          value: null,
+          summary: 'insufficient_signal',
+          raw_structured_output: {
+            answer: 'insufficient_signal',
+            confidence: 0.52,
+            sources: ['https://example.com/history'],
+          },
+        },
+      }
+    }
+    if (answer.question_id === 'q11_decision_owner') {
+      return {
+        ...answer,
+        validation_state: 'provisional',
+        confidence: 0.52,
+        primary_owner: undefined,
+        answer: {
+          kind: 'list',
+          value: null,
+          summary: 'insufficient_signal',
+          top_signals: [],
+          commercial_interpretation: {},
+          opportunity_hypotheses: [],
+          maturity_signal: null,
+          raw_structured_output: {
+            question: 'Who is the highest probability buyer?',
+            answer: 'insufficient_signal',
+            context: '',
+            sources: ['https://example.com/history'],
+            confidence: 0.52,
+          },
+        },
+      }
+    }
+    if (answer.question_id === 'q12_connections' || answer.question_id === 'q15_outreach_strategy') {
+      return {
+        ...answer,
+        validation_state: 'no_signal',
+        confidence: 0,
+        answer: null,
+      }
+    }
+    return answer
+  })
+
+  const normalized = normalizeQuestionFirstDossier(dossier, 'baseball-australia')
+
+  assert.equal(normalized.discovery_summary.graphiti_sales_brief.status, 'insufficient_signal')
+  assert.equal(normalized.discovery_summary.graphiti_sales_brief.buyer_name, null)
+  assert.equal(normalized.discovery_summary.outreach_strategy.status, 'insufficient_signal')
+  assert.equal(normalized.discovery_summary.outreach_strategy.recommended_target, null)
+})

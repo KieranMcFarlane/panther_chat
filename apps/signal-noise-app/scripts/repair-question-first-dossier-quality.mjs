@@ -279,6 +279,7 @@ function makeInsufficientPatch(questionId, reason, sourceQuestions = []) {
       confidence_caveat: reason,
     }),
     evidence_url: '',
+    primary_owner: null,
     source_questions: sourceQuestions.length > 0 ? sourceQuestions : [questionId],
     force: true,
   }
@@ -297,6 +298,17 @@ function validatedOrProvisional(record) {
 function stalePositiveRecord(record) {
   return Boolean(record)
     && (validatedOrProvisional(record) || Number(record?.confidence || 0) > 0)
+}
+
+function insufficientSignalRecord(record) {
+  const raw = answerRaw(record)
+  return /(^|[\s:;])insufficient[_ ]signal([\s:;]|$)/i.test(toText([
+    record?.answer,
+    record?.summary,
+    raw.answer,
+    raw.summary,
+    raw.status,
+  ]))
 }
 
 function candidateRoleScore(candidate) {
@@ -421,6 +433,7 @@ function patchAnswerArray(records, patchByQuestionId) {
       structured_signal: patch.structured_signal || record.structured_signal,
       commercial_implication: patch.commercial_implication || record.commercial_implication,
       evidence_url: patch.evidence_url || record.evidence_url || '',
+      primary_owner: Object.prototype.hasOwnProperty.call(patch, 'primary_owner') ? patch.primary_owner : record.primary_owner,
       reasoning: {
         ...(asRecord(record.reasoning)),
         structured_output: asRecord(patch.answer).raw_structured_output || patch.structured_signal || asRecord(record.reasoning).structured_output,
@@ -495,10 +508,30 @@ function buildQuestionRecordPatches(repairedDossier) {
     }
   }
 
+  if (
+    !patches.q11_decision_owner
+    && stalePositiveRecord(answers.q11_decision_owner)
+    && (insufficientSignalRecord(answers.q11_decision_owner) || !decisionOwnerCandidate(answers.q11_decision_owner))
+  ) {
+    patches.q11_decision_owner = makeInsufficientPatch(
+      'q11_decision_owner',
+      'Insufficient named buyer evidence for decision-owner synthesis.',
+      ['q3_leadership'],
+    )
+  }
+
   const q11PatchRaw = asRecord(patches.q11_decision_owner?.answer?.raw_structured_output)
   const q11PatchOwner = asRecord(q11PatchRaw.primary_owner)
-  const existingDecisionOwner = decisionOwnerCandidate(answers.q11_decision_owner)
-  const q12TargetSource = firstConciseBuyerTargetText([q11PatchOwner.name, existingDecisionOwner?.name, brief.buyer_name, brief.outreach_target])
+  const q11HasInsufficientSignal = insufficientSignalRecord(answers.q11_decision_owner)
+  const existingDecisionOwner = q11HasInsufficientSignal
+    ? null
+    : decisionOwnerCandidate(answers.q11_decision_owner)
+  const q12TargetSource = firstConciseBuyerTargetText([
+    q11PatchOwner.name,
+    existingDecisionOwner?.name,
+    q11HasInsufficientSignal ? '' : brief.buyer_name,
+    q11HasInsufficientSignal ? '' : brief.outreach_target,
+  ])
   if (hasMeaningfulCommercialText(q12TargetSource)) {
     const target = q12TargetSource
     const route = firstMeaningfulCommercialText([brief.outreach_route, brief.path_type]) || 'cold_verification'
@@ -547,7 +580,7 @@ function buildQuestionRecordPatches(repairedDossier) {
     }
   }
 
-  if (String(fit.status || '').toLowerCase() === 'available' && hasMeaningfulCommercialText(fit.fit_rationale || fit.best_service)) {
+  if (!q11HasInsufficientSignal && String(fit.status || '').toLowerCase() === 'available' && hasMeaningfulCommercialText(fit.fit_rationale || fit.best_service)) {
     const summary = firstMeaningfulCommercialText([fit.fit_rationale, fit.best_service])
     const raw = {
       answer: summary,
@@ -555,7 +588,7 @@ function buildQuestionRecordPatches(repairedDossier) {
       best_service: toText(fit.best_service || fit.recommended_service),
       service_fit: asArray(fit.service_fit).length > 0 ? fit.service_fit : [toText(fit.best_service)].filter(Boolean),
       fit_rationale: summary,
-      buyer_context: firstConciseBuyerTargetText([fit.buyer_context, brief.buyer_name]) || null,
+      buyer_context: firstConciseBuyerTargetText([fit.buyer_context, q11HasInsufficientSignal ? '' : brief.buyer_name]) || null,
       evidence_basis: asArray(fit.evidence_basis),
       confidence_caveat: toText(fit.confidence_caveat) || 'Verify recency and buyer ownership before outreach.',
       status: 'available',
@@ -588,7 +621,7 @@ function buildQuestionRecordPatches(repairedDossier) {
         best_service: bestService,
         service_fit: [bestService],
         fit_rationale: summary,
-        buyer_context: firstConciseBuyerTargetText([brief.buyer_name, q12TargetSource]) || null,
+        buyer_context: firstConciseBuyerTargetText([q11HasInsufficientSignal ? '' : brief.buyer_name, q12TargetSource]) || null,
         evidence_basis: [sourceQuestion, evidenceText].filter(Boolean),
         confidence_caveat: 'Verify recency and buyer ownership before outreach.',
         status: 'available',
@@ -602,7 +635,7 @@ function buildQuestionRecordPatches(repairedDossier) {
     }
   }
 
-  if (String(outreach.status || '').toLowerCase() === 'available' && hasMeaningfulCommercialText(outreach.recommended_target || outreach.recommended_angle || outreach.first_message_strategy)) {
+  if (!q11HasInsufficientSignal && String(outreach.status || '').toLowerCase() === 'available' && hasMeaningfulCommercialText(outreach.recommended_target || outreach.recommended_angle || outreach.first_message_strategy)) {
     const q12Raw = asRecord(asRecord(answers.q12_connections?.answer).raw_structured_output || answers.q12_connections?.answer)
     const q11Raw = asRecord(asRecord(answers.q11_decision_owner?.answer).raw_structured_output || answers.q11_decision_owner?.answer)
     const q11Owner = asRecord(q11Raw.primary_owner)
@@ -714,6 +747,27 @@ function repairQuestionAnswerRecords(repairedDossier, entityInfo = {}, options =
     : upstreamRepaired
 }
 
+function clearStaleBuyerArtifacts(dossier) {
+  const discoverySummary = asRecord(dossier.discovery_summary)
+  const questionFirst = asRecord(dossier.question_first)
+  const questionFirstSummary = asRecord(questionFirst.discovery_summary)
+  const clearSummary = (summary) => ({
+    ...summary,
+    graphiti_sales_brief: null,
+    outreach_strategy: null,
+  })
+  return {
+    ...dossier,
+    graphiti_sales_brief: null,
+    outreach_strategy: null,
+    discovery_summary: clearSummary(discoverySummary),
+    question_first: {
+      ...questionFirst,
+      discovery_summary: clearSummary(questionFirstSummary),
+    },
+  }
+}
+
 export function answerRecords(dossierData) {
   const dossier = asRecord(dossierData)
   const questionFirst = asRecord(dossier.question_first)
@@ -808,11 +862,16 @@ export function repairDossierPayload(dossierData, canonicalEntityId, entityInfo 
       type: entityInfo.entity_type || dossier.entity_type,
     },
   }
-  const normalized = repairQuestionAnswerRecords(
-    normalizeQuestionFirstDossier(dossier, String(canonicalEntityId || dossier.entity_id || ''), entity),
+  const entityId = String(canonicalEntityId || dossier.entity_id || '')
+  const repairedAnswers = repairQuestionAnswerRecords(
+    normalizeQuestionFirstDossier(dossier, entityId, entity),
     entityInfo,
     options,
   )
+  const normalizedInput = insufficientSignalRecord(questionAnswerMap(repairedAnswers).q11_decision_owner)
+    ? clearStaleBuyerArtifacts(repairedAnswers)
+    : repairedAnswers
+  const normalized = normalizeQuestionFirstDossier(normalizedInput, entityId, entity)
   return {
     changed: contentHash(dossier) !== contentHash(normalized),
     before_publish_status: dossier.publish_status || dossier.publication_status || null,
