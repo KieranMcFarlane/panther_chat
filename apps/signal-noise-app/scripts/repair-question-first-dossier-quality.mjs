@@ -480,6 +480,42 @@ function buildQuestionRecordPatches(repairedDossier) {
     }
   }
 
+  if (!patches.q15_outreach_strategy) {
+    const q12Raw = asRecord(asRecord(answers.q12_connections?.answer).raw_structured_output || answers.q12_connections?.answer)
+    const currentQ15Raw = asRecord(asRecord(answers.q15_outreach_strategy?.answer).raw_structured_output || answers.q15_outreach_strategy?.answer)
+    const target = firstMeaningfulCommercialText([q12Raw.target_person])
+    const angle = firstMeaningfulCommercialText([
+      currentQ15Raw.recommended_angle,
+      currentQ15Raw.why_now,
+      currentQ15Raw.first_message_strategy,
+      String(fit.status || '').toLowerCase() === 'available' ? fit.fit_rationale : '',
+    ])
+    if (target && angle) {
+      const summary = `${target}: ${angle}`
+      const raw = {
+        answer: summary,
+        summary,
+        recommended_target: target,
+        recommended_route: toText(q12Raw.recommended_route || brief.outreach_route) || 'cold_verification',
+        recommended_angle: angle,
+        first_message_strategy: firstMeaningfulCommercialText([
+          currentQ15Raw.first_message_strategy,
+          `Open with the validated signal, connect it to the relevant Yellow Panther capability, and ask for a short discovery call with ${target}.`,
+        ]),
+        verification_needed: toText(currentQ15Raw.verification_needed) || `Confirm ${target} is still the right owner and validate signal recency before outreach.`,
+        why_now: firstMeaningfulCommercialText([currentQ15Raw.why_now, angle]),
+        status: 'available',
+      }
+      patches.q15_outreach_strategy = {
+        validation_state: 'provisional',
+        confidence: Math.max(0.48, Number(answers.q15_outreach_strategy?.confidence || 0), 0.56),
+        answer: makeStructuredAnswer('scorecard', summary, raw),
+        source_questions: ['q12_connections', 'q14_yp_fit'],
+        force: true,
+      }
+    }
+  }
+
   const currentQ14Text = toText(answers.q14_yp_fit?.answer)
   const q14PatchText = toText(patches.q14_yp_fit?.answer)
   if (stalePositiveRecord(answers.q14_yp_fit) && !hasMeaningfulCommercialText(currentQ14Text) && (!patches.q14_yp_fit || !hasMeaningfulCommercialText(q14PatchText))) {

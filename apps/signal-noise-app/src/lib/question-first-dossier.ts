@@ -730,13 +730,24 @@ function buildSynthesizedOutreachStrategy(
     strongestSignalText,
     ypFit.status === 'insufficient_signal' ? '' : toDisplayText(ypFit.fit_rationale),
   ].some((value) => isMeaningfulCommercialText(value))
-  if (!buyerName && !hasMeaningfulEvidence) {
+  if (!buyerName) {
     return {
       recommended_target: null,
       recommended_route: null,
       recommended_angle: '',
       first_message_strategy: '',
       verification_needed: 'Need a clearer buyer hypothesis before outreach.',
+      why_now: '',
+      status: 'insufficient_signal',
+    }
+  }
+  if (!hasMeaningfulEvidence) {
+    return {
+      recommended_target: buyerName,
+      recommended_route: null,
+      recommended_angle: '',
+      first_message_strategy: '',
+      verification_needed: `Need a stronger commercial trigger before outreach to ${buyerName}.`,
       why_now: '',
       status: 'insufficient_signal',
     }
@@ -880,7 +891,13 @@ function buildQuestionFirstDiscoverySummary(questions: Record<string, any>[], an
     decisionOwnerName,
     decisionOwnerTitle,
   )
-  const resolvedYpFit = (ypFitValidationState && !['no_signal', 'failed', 'blocked'].includes(ypFitValidationState) && (toDisplayText(ypFitRaw.best_service || ypFitRaw.recommended_service) || isMeaningfulCommercialText(ypFitRaw.fit_rationale)))
+  const hasUsableRawYpFitEvidence = [
+    ypFitRaw.fit_rationale,
+    ypFitRaw.answer,
+    ypFitRaw.summary,
+    ...(Array.isArray(ypFitRaw.evidence_basis) ? ypFitRaw.evidence_basis : []),
+  ].some((value) => isMeaningfulCommercialText(value))
+  const resolvedYpFit = (ypFitValidationState && !['no_signal', 'failed', 'blocked'].includes(ypFitValidationState) && hasUsableRawYpFitEvidence)
     ? {
         ...synthesizedYpFit,
         best_service: toDisplayText(ypFitRaw.best_service || ypFitRaw.recommended_service) || synthesizedYpFit.best_service,
@@ -889,6 +906,7 @@ function buildQuestionFirstDiscoverySummary(questions: Record<string, any>[], an
         buyer_context: firstMeaningfulCommercialText([ypFitRaw.buyer_context, synthesizedYpFit.buyer_context]) || null,
         evidence_basis: Array.isArray(ypFitRaw.evidence_basis) && ypFitRaw.evidence_basis.length > 0 ? ypFitRaw.evidence_basis : synthesizedYpFit.evidence_basis,
         confidence_caveat: firstMeaningfulCommercialText([ypFitRaw.confidence_caveat, synthesizedYpFit.confidence_caveat]),
+        status: 'available',
       }
     : synthesizedYpFit
   const synthesizedOutreach = buildSynthesizedOutreachStrategy(

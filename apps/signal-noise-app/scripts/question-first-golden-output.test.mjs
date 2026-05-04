@@ -174,3 +174,54 @@ test('golden weak full-pack dossier stays partial when q11-q15 have no usable si
   assert.equal(normalized.discovery_summary.yellow_panther_fit.status, 'insufficient_signal')
   assert.equal(normalized.discovery_summary.outreach_strategy.status, 'insufficient_signal')
 })
+
+test('usable q14 raw fit promotes available status when synthesized fallback is insufficient', () => {
+  const dossier = goldenDossier()
+  dossier.publish_status = 'published'
+  dossier.question_first.publish_status = 'published'
+  dossier.question_first.answers = dossier.question_first.answers.map((answer) => {
+    if (['q2_digital_stack', 'q6_launch_signal', 'q7_procurement_signal', 'q9_news_signal', 'q10_hiring_signal', 'q11_decision_owner', 'q12_connections', 'q13_capability_gap'].includes(answer.question_id)) {
+      return {
+        ...answer,
+        validation_state: 'no_signal',
+        confidence: 0,
+        answer: null,
+        primary_owner: undefined,
+      }
+    }
+    if (answer.question_id === 'q14_yp_fit') {
+      return {
+        ...answer,
+        validation_state: 'provisional',
+        confidence: 0.58,
+        answer: {
+          kind: 'scorecard',
+          raw_structured_output: {
+            status: 'available',
+            best_service: 'DIGITAL_TRANSFORMATION',
+            service_fit: ['DIGITAL_TRANSFORMATION'],
+            fit_rationale: 'Digital transformation is the strongest capability match because WSC Sports and Blinkfire evidence points to platform and sponsorship analytics needs.',
+            evidence_basis: ['q2_digital_stack'],
+          },
+        },
+      }
+    }
+    if (answer.question_id === 'q15_outreach_strategy') {
+      return {
+        ...answer,
+        validation_state: 'no_signal',
+        confidence: 0,
+        answer: null,
+      }
+    }
+    return answer
+  })
+
+  const normalized = normalizeQuestionFirstDossier(dossier, 'golden-club')
+
+  assert.equal(normalized.discovery_summary.yellow_panther_fit.status, 'available')
+  assert.equal(normalized.discovery_summary.yellow_panther_fit.best_service, 'DIGITAL_TRANSFORMATION')
+  assert.match(normalized.discovery_summary.yellow_panther_fit.fit_rationale, /WSC Sports and Blinkfire/i)
+  assert.equal(normalized.discovery_summary.outreach_strategy.status, 'insufficient_signal')
+  assert.equal(normalized.publish_status, 'published_partial')
+})
