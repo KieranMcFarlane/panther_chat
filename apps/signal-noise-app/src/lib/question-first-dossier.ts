@@ -661,7 +661,7 @@ function isMeaningfulCommercialText(value: unknown): boolean {
   if (!text) {
     return false
   }
-  return !/(^no_signal$|^no signal$|source pending$|question execution failed|no deterministic answer was produced|no web evidence found|insufficient signal|^\[object object\]$)/i.test(text)
+  return !/(^no_signal$|^no signal$|source pending$|question execution failed|no deterministic answer was produced|no completed brightdata leads were recoverable|kind:\s*summary;\s*value:\s*;\s*summary:\s*(;|$)|commercial interpretation:\s*themes:\s*;\s*summary:\s*;|raw structured output:\s*;|opportunity hypotheses:\s*;|no web evidence found|insufficient signal|^\[object object\]$)/i.test(text)
 }
 
 function firstMeaningfulCommercialText(values: unknown[]): string {
@@ -726,11 +726,11 @@ function buildSynthesizedOutreachStrategy(
   ypFit: Record<string, any>,
 ): Record<string, any> {
   const bestService = toDisplayText(ypFit.best_service || ypFit.recommended_service)
-  const evidenceBasis = uniqueStrings([
+  const hasMeaningfulEvidence = [
     strongestSignalText,
-    toDisplayText(ypFit.fit_rationale),
-  ])
-  if (!buyerName && evidenceBasis.length === 0) {
+    ypFit.status === 'insufficient_signal' ? '' : toDisplayText(ypFit.fit_rationale),
+  ].some((value) => isMeaningfulCommercialText(value))
+  if (!buyerName && !hasMeaningfulEvidence) {
     return {
       recommended_target: null,
       recommended_route: null,

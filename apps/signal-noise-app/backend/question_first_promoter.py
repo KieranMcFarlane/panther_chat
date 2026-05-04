@@ -68,6 +68,16 @@ def _is_meaningful_text(value: Any) -> bool:
         return False
     if "question execution failed" in lowered:
         return False
+    if "no completed brightdata leads were recoverable" in lowered:
+        return False
+    if "kind: summary; value: ; summary:" in lowered:
+        return False
+    if "commercial interpretation: themes: ; summary:" in lowered:
+        return False
+    if "raw structured output: ;" in lowered:
+        return False
+    if "opportunity hypotheses: ;" in lowered:
+        return False
     return True
 
 

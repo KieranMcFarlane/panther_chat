@@ -97,3 +97,34 @@ test('repairDossierPayload demotes mechanically complete packs with no commercia
   assert.equal(repair.repaired_dossier.discovery_summary.graphiti_sales_brief.status, 'insufficient_signal')
   assert.equal(repair.repaired_dossier.yellow_panther_fit.status, 'insufficient_signal')
 })
+
+test('repairDossierPayload does not convert failed placeholder summaries into available fit', () => {
+  const failedPack = weakFifteenPack()
+  failedPack.answers = failedPack.answers.map((item) => ({
+    ...item,
+    validation_state: 'failed',
+    confidence: 0,
+    answer: {
+      kind: 'summary',
+      value: '',
+      summary: '',
+      raw_structured_output: {},
+      opportunity_hypotheses: [],
+      commercial_interpretation: {
+        themes: [],
+        summary: '',
+        implication_strength: '',
+      },
+    },
+    commercial_implication: 'No completed BrightData leads were recoverable from the timed out retrieval pass.',
+    primary_owner: undefined,
+    evidence_url: undefined,
+  }))
+
+  const repair = repairDossierPayload(failedPack, 'major-league-cricket')
+
+  assert.equal(repair.after_publish_status, 'published_partial')
+  assert.equal(repair.repaired_dossier.discovery_summary.graphiti_sales_brief.status, 'insufficient_signal')
+  assert.equal(repair.repaired_dossier.yellow_panther_fit.status, 'insufficient_signal')
+  assert.equal(repair.repaired_dossier.discovery_summary.outreach_strategy.status, 'insufficient_signal')
+})
