@@ -118,6 +118,28 @@ function candidateRoleScore(candidate) {
   return 0
 }
 
+const BUYER_TITLE_PATTERN = '(Chief Commercial Officer|Commercial Director|Head of Commercial|Head of Partnerships|Partnerships Director|Sponsorship Director|Business Development Director|Chief Marketing Officer|Marketing Director|Chief Digital Officer|Digital Director|Chief Technology Officer|Technology Director|Product Director|Strategy Director|Chief Executive Officer|Managing Director|General Manager|CEO|CCO|CMO|CDO|CTO)'
+
+function leadershipCandidatesFromText(value) {
+  const text = toText(value)
+  if (!hasMeaningfulCommercialText(text)) return []
+  const candidates = []
+  const patterns = [
+    new RegExp(`\\b([A-Z][a-z]+(?:[-' ][A-Z][a-z]+){1,3})\\s*,\\s*${BUYER_TITLE_PATTERN}\\b`, 'g'),
+    new RegExp(`\\b([A-Z][a-z]+(?:[-' ][A-Z][a-z]+){1,3})\\s+(?:is|as|serves as|acts as|was named|leads[^.]{0,60}as)\\s+(?:the\\s+)?${BUYER_TITLE_PATTERN}\\b`, 'g'),
+  ]
+  for (const pattern of patterns) {
+    for (const match of text.matchAll(pattern)) {
+      candidates.push({
+        name: match[1],
+        title: match[2],
+        summary: text,
+      })
+    }
+  }
+  return candidates
+}
+
 function normalizeLeadershipCandidate(candidate) {
   if (!candidate || typeof candidate !== 'object') return null
   const name = firstMeaningfulCommercialText([
@@ -153,6 +175,7 @@ function leadershipBuyerCandidate(answers) {
     ...asArray(raw.leadership),
     ...asArray(raw.ranked_people),
     raw.primary_owner && typeof raw.primary_owner === 'object' ? raw.primary_owner : null,
+    ...leadershipCandidatesFromText(q3.answer),
   ]
     .filter(Boolean)
     .map(normalizeLeadershipCandidate)

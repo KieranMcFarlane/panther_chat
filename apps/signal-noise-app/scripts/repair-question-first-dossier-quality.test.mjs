@@ -136,6 +136,32 @@ test('repairDossierPayload synthesizes q11 and q12 from leadership buyer evidenc
   assert.equal(answers.q12_connections.answer.raw_structured_output.target_person, 'Jane Buyer')
 })
 
+test('repairDossierPayload extracts q11 buyer from prose leadership answer', () => {
+  const pack = leadershipBuyerPack()
+  pack.answers = pack.answers.map((item) => {
+    if (item.question_id === 'q3_leadership') {
+      return {
+        ...item,
+        validation_state: 'validated',
+        confidence: 0.82,
+        answer: 'Leadership evidence identifies Jane Buyer, Chief Commercial Officer, as responsible for commercial partnerships and sponsorship growth.',
+      }
+    }
+    if (item.question_id === 'q11_decision_owner') {
+      return answer('q11_decision_owner')
+    }
+    return item
+  })
+
+  const repair = repairDossierPayload(pack, 'major-league-cricket')
+  const answers = Object.fromEntries(repair.repaired_dossier.question_first.answers.map((item) => [item.question_id, item]))
+
+  assert.equal(answers.q11_decision_owner.validation_state, 'provisional')
+  assert.equal(answers.q11_decision_owner.answer.raw_structured_output.primary_owner.name, 'Jane Buyer')
+  assert.equal(answers.q11_decision_owner.answer.raw_structured_output.primary_owner.title, 'Chief Commercial Officer')
+  assert.equal(answers.q12_connections.answer.raw_structured_output.target_person, 'Jane Buyer')
+})
+
 test('repairDossierPayload demotes mechanically complete packs with no commercial artifacts', () => {
   const emptyPack = weakFifteenPack()
   emptyPack.answers = emptyPack.answers.map((item) => ({
