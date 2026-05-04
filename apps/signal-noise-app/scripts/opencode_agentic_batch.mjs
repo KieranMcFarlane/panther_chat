@@ -414,11 +414,13 @@ function _buyerContextFromPrior(priorById) {
   const q11 = priorById.get('q11_decision_owner') || {};
   const raw = _getAnswerRaw(q11);
   const primaryOwner = raw.primary_owner && typeof raw.primary_owner === 'object' ? raw.primary_owner : {};
+  const proseOwner = _leadershipCandidatesFromText(q11.answer)[0] || _leadershipCandidatesFromText(raw.answer)[0] || null;
   const structuredSignal = raw.structured_signal && typeof raw.structured_signal === 'object'
     ? raw.structured_signal
     : (q11.structured_signal && typeof q11.structured_signal === 'object' ? q11.structured_signal : {});
   const name = _firstMeaningfulCommercialText([
     primaryOwner.name,
+    proseOwner?.name,
     structuredSignal.decision_owner_name,
     structuredSignal.name,
     raw.name,
@@ -428,6 +430,7 @@ function _buyerContextFromPrior(priorById) {
   ]);
   const title = _firstMeaningfulCommercialText([
     primaryOwner.title,
+    proseOwner?.title,
     structuredSignal.decision_owner_title,
     structuredSignal.title,
     structuredSignal.role,

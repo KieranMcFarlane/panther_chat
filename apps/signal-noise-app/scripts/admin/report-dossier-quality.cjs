@@ -68,6 +68,10 @@ function hasBuyerRoleSignal(answer) {
   }
   if (answerConfidence(answer) <= 0) return false
   const text = answerText(answer)
+  if (/\b(no|not|without|could not|unable to|cannot)\b[^.]{0,120}\b(commercial|partnership|marketing|digital|technology|strategy|buyer|decision[- ]?maker|leadership|leader|owner|function|role|candidate)\b/i.test(text)
+    || /\b(no publicly available evidence|could not be confirmed|does not publicly disclose|no identifiable buyer|not an organisation|not an organization|blocked by upstream question state)\b/i.test(text)) {
+    return false
+  }
   return /\b(chief|director|head|vp|vice president|owner|founder|ceo|coo|cfo|cto|cmo|commercial|marketing|partnership|partnerships|sponsor|sponsorship|digital|technology|product|procurement|operations|strategy)\b/i.test(text)
     && /\b(name|person|role|title|buyer|owner|decision|stakeholder|ranked_people|target_person)\b/i.test(text)
 }

@@ -183,6 +183,22 @@ function leadershipBuyerCandidate(answers) {
     .sort((left, right) => right.score - left.score)[0] || null
 }
 
+function decisionOwnerCandidate(record) {
+  if (!validatedOrProvisional(record)) return null
+  const raw = answerRaw(record)
+  const primaryOwner = asRecord(raw.primary_owner || record?.primary_owner)
+  const proseCandidates = leadershipCandidatesFromText(record?.answer)
+  return [
+    primaryOwner,
+    ...proseCandidates,
+    raw,
+  ]
+    .filter(Boolean)
+    .map(normalizeLeadershipCandidate)
+    .filter(Boolean)
+    .sort((left, right) => right.score - left.score)[0] || null
+}
+
 function shouldUsePatch(record, patch) {
   if (!patch) return false
   const existingConfidence = Number(record?.confidence || 0)
@@ -279,7 +295,8 @@ function buildQuestionRecordPatches(repairedDossier) {
 
   const q11PatchRaw = asRecord(patches.q11_decision_owner?.answer?.raw_structured_output)
   const q11PatchOwner = asRecord(q11PatchRaw.primary_owner)
-  const q12TargetSource = firstMeaningfulCommercialText([brief.buyer_name, brief.outreach_target, q11PatchOwner.name])
+  const existingDecisionOwner = decisionOwnerCandidate(answers.q11_decision_owner)
+  const q12TargetSource = firstMeaningfulCommercialText([q11PatchOwner.name, existingDecisionOwner?.name, brief.buyer_name, brief.outreach_target])
   if ((String(brief.status || '').toLowerCase() === 'available' && hasMeaningfulCommercialText(brief.buyer_name || brief.outreach_target)) || hasMeaningfulCommercialText(q12TargetSource)) {
     const target = q12TargetSource
     const route = firstMeaningfulCommercialText([brief.outreach_route, brief.path_type]) || 'cold_verification'
@@ -288,7 +305,7 @@ function buildQuestionRecordPatches(repairedDossier) {
       answer: summary,
       summary,
       target_person: target,
-      target_role: toText(brief.buyer_title || q11PatchOwner.title),
+      target_role: toText(brief.buyer_title || q11PatchOwner.title || existingDecisionOwner?.title),
       best_yp_owner: toText(brief.best_path_owner || brief.recommended_owner),
       recommended_route: route,
       buyer_relevance: 'decision_owner',
@@ -406,6 +423,13 @@ export function answerRecords(dossierData) {
   return Array.from(byQuestion.values())
 }
 
+function hasRepairableBuyerRouteMiss(dossierData) {
+  const answers = questionAnswerMap(dossierData)
+  return answerRecords(dossierData).length >= 15
+    && Boolean(decisionOwnerCandidate(answers.q11_decision_owner))
+    && Number(answers.q12_connections?.confidence || 0) === 0
+}
+
 export function shouldRepairDossier(dossierData) {
   const dossier = asRecord(dossierData)
   const discoverySummary = asRecord(dossier.discovery_summary || asRecord(dossier.question_first).discovery_summary)
@@ -418,6 +442,7 @@ export function shouldRepairDossier(dossierData) {
       publishStatus.startsWith('published')
       || String(graphitiSalesBrief.status || '').toLowerCase() !== 'available'
       || !String(yellowPantherFit.fit_rationale || yellowPantherFit.fit_feedback || '').trim()
+      || hasRepairableBuyerRouteMiss(dossier)
     )
 }
 

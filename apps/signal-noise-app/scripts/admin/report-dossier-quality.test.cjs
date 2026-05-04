@@ -5,6 +5,7 @@ const test = require('node:test')
 
 const {
   artifactCoverage,
+  hasBuyerRouteEligibility,
   perQuestionQuality,
   qualityState,
 } = require('./report-dossier-quality.cjs')
@@ -158,4 +159,38 @@ test('perQuestionQuality uses buyer eligibility for q11 and q12 denominators', (
   assert.equal(stats.q12_connections.zero_confidence, 1)
   assert.equal(stats.q12_connections.eligible_total, 1)
   assert.equal(stats.q12_connections.eligible_zero_confidence, 0)
+})
+
+test('hasBuyerRouteEligibility rejects checked absence leadership prose', () => {
+  const dossier = {
+    answers: [
+      {
+        question_id: 'q3_leadership',
+        validation_state: 'provisional',
+        confidence: 0.55,
+        answer: 'Key leadership identified, but detailed figures for commercial, partnerships, marketing, digital, technology, and strategy functions could not be confirmed from available sources.',
+      },
+      { question_id: 'q11_decision_owner', validation_state: 'no_signal', confidence: 0 },
+      { question_id: 'q12_connections', validation_state: 'no_signal', confidence: 0 },
+    ],
+  }
+
+  assert.equal(hasBuyerRouteEligibility(dossier), false)
+})
+
+test('hasBuyerRouteEligibility rejects private entity leadership absence prose', () => {
+  const dossier = {
+    answers: [
+      {
+        question_id: 'q3_leadership',
+        validation_state: 'provisional',
+        confidence: 0.4,
+        answer: 'Fred Ridley serves as Chairman. The club does not publicly disclose its executive structure, board members, or staff in functional roles such as commercial, partnerships, marketing, digital, technology, or strategy. No publicly available evidence identifies individuals in those specific functional leadership positions.',
+      },
+      { question_id: 'q11_decision_owner', validation_state: 'no_signal', confidence: 0 },
+      { question_id: 'q12_connections', validation_state: 'no_signal', confidence: 0 },
+    ],
+  }
+
+  assert.equal(hasBuyerRouteEligibility(dossier), false)
 })

@@ -162,6 +162,75 @@ test('repairDossierPayload extracts q11 buyer from prose leadership answer', () 
   assert.equal(answers.q12_connections.answer.raw_structured_output.target_person, 'Jane Buyer')
 })
 
+test('repairDossierPayload synthesizes q12 from prose q11 buyer answer', () => {
+  const pack = weakFifteenPack()
+  pack.answers = pack.answers.map((item) => {
+    if (item.question_id === 'q3_leadership') {
+      return answer('q3_leadership')
+    }
+    if (item.question_id === 'q11_decision_owner') {
+      return {
+        ...item,
+        validation_state: 'provisional',
+        confidence: 0.78,
+        primary_owner: undefined,
+        answer: {
+          kind: 'list',
+          summary: 'Shaun Lockwood, Chief Commercial Officer, Club Doncaster',
+          raw_structured_output: {
+            answer: 'Shaun Lockwood, Chief Commercial Officer, Club Doncaster',
+            context: 'Shaun Lockwood oversees commercial partnerships, sponsorship, and sales.',
+          },
+        },
+      }
+    }
+    if (item.question_id === 'q12_connections') {
+      return answer('q12_connections')
+    }
+    return item
+  })
+
+  const repair = repairDossierPayload(pack, 'doncaster-rovers')
+  const answers = Object.fromEntries(repair.repaired_dossier.question_first.answers.map((item) => [item.question_id, item]))
+
+  assert.equal(answers.q12_connections.validation_state, 'provisional')
+  assert.equal(answers.q12_connections.answer.raw_structured_output.target_person, 'Shaun Lockwood')
+  assert.equal(answers.q12_connections.answer.raw_structured_output.target_role, 'Chief Commercial Officer')
+})
+
+test('shouldRepairDossier targets zero-confidence q12 when q11 has buyer evidence', () => {
+  const pack = weakFifteenPack()
+  pack.publish_status = 'draft'
+  pack.discovery_summary = {
+    graphiti_sales_brief: { status: 'available', buyer_name: 'Shaun Lockwood' },
+    yellow_panther_fit: { status: 'available', fit_rationale: 'Commercial partnership fit.' },
+    outreach_strategy: { status: 'available', recommended_target: 'Shaun Lockwood' },
+  }
+  pack.answers = pack.answers.map((item) => {
+    if (item.question_id === 'q11_decision_owner') {
+      return {
+        ...item,
+        validation_state: 'provisional',
+        confidence: 0.78,
+        primary_owner: undefined,
+        answer: {
+          kind: 'list',
+          summary: 'Shaun Lockwood, Chief Commercial Officer, Club Doncaster',
+          raw_structured_output: {
+            answer: 'Shaun Lockwood, Chief Commercial Officer, Club Doncaster',
+          },
+        },
+      }
+    }
+    if (item.question_id === 'q12_connections') {
+      return answer('q12_connections')
+    }
+    return item
+  })
+
+  assert.equal(shouldRepairDossier(pack), true)
+})
+
 test('repairDossierPayload demotes mechanically complete packs with no commercial artifacts', () => {
   const emptyPack = weakFifteenPack()
   emptyPack.answers = emptyPack.answers.map((item) => ({
