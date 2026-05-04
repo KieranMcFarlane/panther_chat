@@ -19,10 +19,15 @@ from datetime import datetime
 from pathlib import Path
 from uuid import UUID
 
+SIGNAL_NOISE_BACKEND_ROOT = Path(__file__).resolve().parent
+SIGNAL_NOISE_APP_ROOT = SIGNAL_NOISE_BACKEND_ROOT.parent
+if str(SIGNAL_NOISE_APP_ROOT) not in sys.path:
+    sys.path.insert(0, str(SIGNAL_NOISE_APP_ROOT))
+
 # Load environment variables from .env file
 try:
     from dotenv import load_dotenv
-    env_path = Path(__file__).parent.parent / '.env'
+    env_path = SIGNAL_NOISE_APP_ROOT / '.env'
     load_dotenv(env_path)
     logging.info(f"Loaded environment variables from {env_path}")
 except ImportError:
@@ -41,9 +46,6 @@ try:
     from backend.dossier_publication_quality import apply_publication_quality_gates
 except ImportError:
     from dossier_publication_quality import apply_publication_quality_gates
-
-# Add backend to path for imports
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)

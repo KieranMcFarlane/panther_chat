@@ -7,7 +7,7 @@ import {
   inspectPipelineWorkerSupervisorState,
   type PipelineWorkerSupervisorState,
 } from '@/lib/pipeline-worker-supervisor'
-import { resolveQuestionTextFromDossierData } from '@/lib/question-text-resolver'
+import { buildQuestionTextIndex, resolveQuestionTextFromDossierData } from '@/lib/question-text-resolver'
 
 export type PipelineRuntimeWorkerState = PipelineWorkerSupervisorState & {
   worker_health: 'healthy' | 'degraded' | 'stopped'
@@ -201,6 +201,7 @@ function getRunQuestionText(
   dossierData: Record<string, unknown> | null | undefined,
   questionId: string | null,
 ) {
+  const resolvedText = questionId ? resolveQuestionTextFromDossierData(dossierData ?? null, questionId) : null
   const explicitText = metadata && typeof metadata === 'object'
     ? toText(
         getCurrentPhaseDetailValue(metadata, row, 'current_question_text')
@@ -211,9 +212,20 @@ function getRunQuestionText(
         || metadata.last_completed_question_text,
       )
     : ''
-  if (explicitText) return explicitText
+  if (explicitText) {
+    if (resolvedText && dossierData && typeof dossierData === 'object') {
+      const normalizedExplicit = explicitText.toLowerCase()
+      const matchingQuestionIds = [...buildQuestionTextIndex(dossierData).entries()]
+        .filter(([, text]) => toText(text).toLowerCase() === normalizedExplicit)
+        .map(([id]) => id)
+      if (matchingQuestionIds.length > 0 && questionId && !matchingQuestionIds.includes(questionId.toLowerCase())) {
+        return resolvedText
+      }
+    }
+    return explicitText
+  }
   if (!questionId) return null
-  return resolveQuestionTextFromDossierData(dossierData ?? null, questionId)
+  return resolvedText
 }
 
 function getRunAction(metadata: Record<string, unknown> | null | undefined, row: PipelineRunRow) {

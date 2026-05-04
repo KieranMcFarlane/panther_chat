@@ -18,6 +18,7 @@ import {
   buildOpenCodeQuestionPrompt,
   buildOpenCodeSynthesisPrompt,
   buildQuestionState,
+  resolveExecutionQueryForQuestionPayload,
   prepareOpenCodeRunWorkspace,
   resolveQuestionSourceOrder,
   runOpenCodeCliQuestion,
@@ -75,6 +76,22 @@ test('buildOpenCodeConfig wires Z.AI coding plan GLM-5.1 and BrightData MCP for 
   } else {
     process.env.BRIGHTDATA_API_TOKEN = previousBrightDataToken;
   }
+});
+
+test('resolveExecutionQueryForQuestionPayload ignores stale tracker queries from another question', () => {
+  const question = {
+    question_id: 'q11_decision_owner',
+    query: '"Kick Sauber F1 Team" (commercial director OR leadership OR board) -wikipedia',
+  };
+  const existingQuestionState = {
+    question_id: 'q1_foundation',
+    last_executed_query: '"Kick Sauber F1 Team" official website founded year',
+  };
+
+  assert.equal(
+    resolveExecutionQueryForQuestionPayload(question, existingQuestionState),
+    question.query,
+  );
 });
 
 test('buildOpenCodeConfig omits unsupported top-level keys for the installed OpenCode schema', async () => {
@@ -247,7 +264,7 @@ test('resolveQuestionSourceOrder varies source ranking by entity type and questi
     question_type: 'procurement_signal',
   }, 'FEDERATION');
 
-  assert.deepEqual(clubDecisionOwner.slice(0, 3), ['official_site', 'linkedin_posts', 'news']);
+  assert.deepEqual(clubDecisionOwner.slice(0, 5), ['official_site', 'leadership_page', 'linkedin_company_profile', 'linkedin_people_search', 'linkedin_posts']);
   assert.deepEqual(leagueDigital.slice(0, 4), ['official_site', 'app_store', 'press_release', 'news']);
   assert.deepEqual(federationProcurement.slice(0, 4), ['official_site', 'tender_portal', 'press_release', 'partner_announcement']);
   assert.equal(federationProcurement.includes('linkedin_posts'), true);
@@ -285,6 +302,8 @@ test('buildOpenCodeQuestionPrompt includes entity-type-aware source guidance whe
 
   assert.match(prompt, /Entity type: CLUB/i);
   assert.match(prompt, /Prioritize sources in this order: official_site, linkedin_posts, news, press_release/i);
+  assert.match(prompt, /Use Wikipedia only as last-resort context/i);
+  assert.match(prompt, /perform one focused follow-up search/i);
 });
 
 test('buildOpenCodeQuestionPrompt requests commercial evidence fields for procurement questions', () => {

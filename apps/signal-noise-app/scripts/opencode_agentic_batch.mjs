@@ -223,7 +223,7 @@ export function resolveQuestionSourceOrder(question, entityType = 'ENTITY') {
 
   const familyOverrides = {
     procurement: ['vacancies', 'partner_announcement', 'vendor_page', 'tender_portal', 'press_release', 'news'],
-    'decision-owner': ['official_site', 'linkedin_posts', 'news', 'leadership_page', 'official_bio'],
+    'decision-owner': ['official_site', 'leadership_page', 'linkedin_company_profile', 'linkedin_people_search', 'linkedin_posts', 'news', 'official_bio', 'wikipedia'],
     digital: ['official_site', 'app_store', 'press_release', 'news', 'vendor_page', 'wikipedia'],
     capability: ['official_site', 'news', 'press_release', 'linkedin_posts'],
     generic: [],
@@ -1366,6 +1366,17 @@ export function buildQuestionState(question, { runId = 'cli', timestamp = new Da
   };
 }
 
+export function resolveExecutionQueryForQuestionPayload(question, existingQuestionState = {}) {
+  if (
+    existingQuestionState?.question_id &&
+    question?.question_id &&
+    existingQuestionState.question_id !== question.question_id
+  ) {
+    return question?.query || '';
+  }
+  return existingQuestionState?.last_executed_query || question?.query || '';
+}
+
 export function buildPresetRunState(questions, { preset = 'major-league-cricket', runId = 'cli', timestamp = new Date().toISOString(), creditBudgetOverrides = {}, confidenceThreshold } = {}) {
   return {
     run_id: runId,
@@ -1768,6 +1779,16 @@ export function buildOpenCodeQuestionPrompt(question, { standaloneHarness = fals
       promptLines.length - 1,
       0,
       'If hiring evidence is found, commercial_implication should explain what the role mix implies about investment priorities.',
+    );
+  }
+  if (['q3_leadership', 'q11_decision_owner'].includes(question?.question_id)) {
+    promptLines.splice(
+      promptLines.length - 1,
+      0,
+      'For buyer and leadership questions, prefer official leadership/team/board pages, LinkedIn company or people evidence, partner announcements, and credible news.',
+      'Use Wikipedia only as last-resort context; do not use event-history, venue, medal table, founding date, or generic Wikipedia pages as buyer evidence.',
+      'If search results are dominated by Wikipedia or generic history pages, perform one focused follow-up search with leadership, board, commercial director, partnerships director, digital director, or chief executive terms before returning no_signal.',
+      'Return a person or explicit role-owner only when the evidence names a current relevant role; otherwise return insufficient_signal.',
     );
   }
   if (question?.empty_result_policy === 'no_signal') {
@@ -3193,7 +3214,7 @@ export async function runOpenCodePresetBatch({
           },
           prompt_trace: existingQuestionState?.prompt_trace || null,
           message_trace: existingQuestionState?.message_trace || [],
-          execution_query: existingQuestionState?.last_executed_query || question.query,
+          execution_query: resolveExecutionQueryForQuestionPayload(question, existingQuestionState),
           answer: existingQuestionState?.best_answer || '',
           signal_type: question.question_type.toUpperCase(),
           confidence: existingQuestionState?.current_confidence || 0,
@@ -3368,7 +3389,7 @@ export async function runOpenCodePresetBatch({
           },
           prompt_trace: existingQuestionState?.prompt_trace || null,
           message_trace: existingQuestionState?.message_trace || [],
-          execution_query: existingQuestionState?.last_executed_query || question.query,
+          execution_query: resolveExecutionQueryForQuestionPayload(question, existingQuestionState),
           answer: existingQuestionState?.best_answer || '',
           signal_type: question.question_type.toUpperCase(),
           confidence: existingQuestionState?.current_confidence || 0,

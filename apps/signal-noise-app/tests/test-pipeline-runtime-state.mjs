@@ -64,8 +64,18 @@ async function loadPipelineRuntimeModule() {
   ].join('\n'), 'utf8')
 
   await writeFile(stubPaths.questionTextResolver, [
+    'export function buildQuestionTextIndex(dossierData) {',
+    '  const index = new Map()',
+    '  for (const question of Array.isArray(dossierData?.questions) ? dossierData.questions : []) {',
+    '    if (question?.question_id && (question?.question_text || question?.question)) {',
+    '      index.set(String(question.question_id).toLowerCase(), String(question.question_text || question.question))',
+    '    }',
+    '  }',
+    '  return index',
+    '}',
     'export function resolveQuestionTextFromDossierData(_dossierData, questionId) {',
-    "  return questionId ? `Question ${questionId}` : null",
+    '  if (!questionId) return null',
+    '  return buildQuestionTextIndex(_dossierData).get(String(questionId).toLowerCase()) || null',
     '}',
     '',
   ].join('\n'), 'utf8')
@@ -164,6 +174,91 @@ test('pipeline runtime treats fresh DB activity as live when supervisor crash me
   assert.equal(snapshot.control.current_question_text, 'Who owns the decision?')
   assert.equal(snapshot.control.cursor_source, 'live_runtime_projection')
   assert.equal(snapshot.failure_buckets.worker_stale, 0)
+})
+
+test('pipeline runtime prefers dossier question text when metadata text belongs to another question', () => {
+  const now = new Date().toISOString()
+  const snapshot = buildPipelineRuntimeSnapshot({
+    snapshot_at: now,
+    control: {
+      is_paused: false,
+      pause_reason: null,
+      stop_reason: null,
+      stop_details: null,
+      updated_at: now,
+      desired_state: 'running',
+      requested_state: 'running',
+      observed_state: 'running',
+      transition_state: 'running',
+    },
+    worker: {
+      worker_process_state: 'stopped',
+      worker_pid: null,
+      worker_command: null,
+      worker_state_path: '',
+      worker_pid_path: '',
+      started_at: null,
+      stopped_at: null,
+      updated_at: null,
+      last_error: null,
+    },
+    fastmcp: {
+      url: 'http://127.0.0.1:8000/health',
+      reachable: true,
+      status_code: 200,
+      latency_ms: 10,
+      error: null,
+    },
+    rows: [
+      {
+        batch_id: 'import_789',
+        entity_id: 'milan',
+        canonical_entity_id: 'milan',
+        entity_name: 'Milan Cortina 2026',
+        status: 'running',
+        phase: 'dossier_generation',
+        started_at: now,
+        completed_at: null,
+        metadata: {
+          heartbeat_at: now,
+          phase_details_by_phase: {
+            dossier_generation: {
+              current_question_id: 'q11_decision_owner',
+              current_question_text: 'Using the current buyer, connection, and capability evidence, what is the best outreach route?',
+            },
+          },
+        },
+      },
+    ],
+    dossiers: [
+      {
+        entity_id: 'milan',
+        canonical_entity_id: 'milan',
+        entity_name: 'Milan Cortina 2026',
+        entity_type: 'COMPETITION',
+        generated_at: now,
+        dossier_data: {
+          questions: [
+            {
+              question_id: 'q11_decision_owner',
+              question_text: 'Who is the highest probability named buyer at Milan Cortina 2026?',
+            },
+            {
+              question_id: 'q15_outreach_strategy',
+              question_text: 'Using the current buyer, connection, and capability evidence, what is the best outreach route?',
+            },
+          ],
+        },
+      },
+    ],
+  })
+
+  assert.equal(snapshot.current_live_run?.current_question_id, 'q11_decision_owner')
+  assert.equal(
+    snapshot.current_live_run?.current_question_text,
+    'Who is the highest probability named buyer at Milan Cortina 2026?',
+  )
+  assert.equal(snapshot.control.current_question_text, snapshot.current_live_run?.current_question_text)
 })
 
 test('pipeline runtime synchronizes top-level control cursor fields from current_live_run', () => {

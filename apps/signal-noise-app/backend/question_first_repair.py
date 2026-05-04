@@ -69,6 +69,56 @@ def _bounded_question(question: Dict[str, Any], question_id: str, *, rerun_profi
     return bounded
 
 
+def _source_text(source_payload: Dict[str, Any], *keys: str) -> str:
+    for key in keys:
+        value = source_payload.get(key)
+        if isinstance(value, str) and value.strip():
+            return value.strip()
+    metadata = source_payload.get("metadata") if isinstance(source_payload.get("metadata"), dict) else {}
+    for key in keys:
+        value = metadata.get(key)
+        if isinstance(value, str) and value.strip():
+            return value.strip()
+    entity = source_payload.get("entity") if isinstance(source_payload.get("entity"), dict) else {}
+    for key in keys:
+        value = entity.get(key)
+        if isinstance(value, str) and value.strip():
+            return value.strip()
+    return ""
+
+
+def _current_question_index(source_payload: Dict[str, Any]) -> Dict[str, Dict[str, Any]]:
+    entity_name = _source_text(source_payload, "entity_name", "name")
+    entity_id = _source_text(source_payload, "entity_id", "id") or _slugify(entity_name)
+    if not entity_name:
+        return {}
+    entity_type = _source_text(source_payload, "entity_type", "type") or "ENTITY"
+    preset = _source_text(source_payload, "preset", "question_source_label") or None
+    try:
+        try:
+            from backend.universal_atomic_matrix import build_universal_atomic_question_source
+        except ImportError:
+            from universal_atomic_matrix import build_universal_atomic_question_source  # type: ignore
+    except Exception:
+        return {}
+    try:
+        current_payload = build_universal_atomic_question_source(
+            entity_type=entity_type,
+            entity_name=entity_name,
+            entity_id=entity_id,
+            preset=preset,
+            question_source_label=_source_text(source_payload, "question_source_label") or None,
+        )
+    except Exception:
+        return {}
+    current_questions = current_payload.get("questions") if isinstance(current_payload.get("questions"), list) else []
+    return {
+        str(question.get("question_id") or "").strip(): question
+        for question in current_questions
+        if isinstance(question, dict) and str(question.get("question_id") or "").strip()
+    }
+
+
 def build_filtered_question_source_payload(
     *,
     source_payload: Dict[str, Any],
@@ -77,8 +127,13 @@ def build_filtered_question_source_payload(
 ) -> Dict[str, Any]:
     selected_ids = {str(question_id).strip() for question_id in question_ids if str(question_id or "").strip()}
     questions = source_payload.get("questions") if isinstance(source_payload.get("questions"), list) else []
+    current_questions = _current_question_index(source_payload)
     selected_questions = [
-        _bounded_question(question, str(question.get("question_id") or "").strip(), rerun_profile=rerun_profile)
+        _bounded_question(
+            current_questions.get(str(question.get("question_id") or "").strip()) or question,
+            str(question.get("question_id") or "").strip(),
+            rerun_profile=rerun_profile,
+        )
         for question in questions
         if isinstance(question, dict) and str(question.get("question_id") or "").strip() in selected_ids
     ]

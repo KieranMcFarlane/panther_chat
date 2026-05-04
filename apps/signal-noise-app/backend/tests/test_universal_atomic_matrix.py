@@ -176,7 +176,7 @@ def test_universal_atomic_matrix_marks_commercial_subset_and_uses_real_world_que
     assert questions["q11_decision_owner"]["hop_timeout_ms"] == 300000
 
 
-def test_universal_atomic_matrix_prioritizes_wikipedia_and_official_sources_for_people_questions():
+def test_universal_atomic_matrix_prioritizes_official_and_linkedin_sources_for_people_questions():
     payload = build_universal_atomic_question_source(
         entity_type="SPORT_FEDERATION",
         entity_name="Zimbabwe Cricket",
@@ -186,18 +186,20 @@ def test_universal_atomic_matrix_prioritizes_wikipedia_and_official_sources_for_
     questions = _question_index(payload)
 
     assert questions["q3_leadership"]["source_priority"][:4] == [
-        "wikipedia",
         "official_site",
+        "leadership_page",
         "linkedin_company_profile",
         "linkedin_people_search",
     ]
     assert questions["q11_decision_owner"]["source_priority"][:4] == [
-        "wikipedia",
         "official_site",
+        "leadership_page",
         "linkedin_company_profile",
         "linkedin_people_search",
     ]
     assert "linkedin_posts" in questions["q11_decision_owner"]["source_priority"]
+    assert questions["q3_leadership"]["source_priority"].index("wikipedia") > 4
+    assert questions["q11_decision_owner"]["source_priority"].index("wikipedia") > 4
 
 
 def test_universal_atomic_matrix_uses_role_specific_leadership_search_patterns_for_federations():

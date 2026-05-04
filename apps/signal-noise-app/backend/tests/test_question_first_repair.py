@@ -68,3 +68,33 @@ def test_build_filtered_question_source_payload_bounds_selected_repair_questions
     assert filtered["questions"][0]["question_timeout_ms"] == 300000
     assert filtered["questions"][0]["hop_timeout_ms"] == 300000
     assert filtered["questions"][0]["hop_budget"] == 4
+
+
+def test_build_filtered_question_source_payload_refreshes_selected_specs_from_current_matrix():
+    filtered = build_filtered_question_source_payload(
+        source_payload={
+            "entity_id": "milan-cortina-2026",
+            "entity_name": "Milan Cortina 2026 Winter Olympics",
+            "entity_type": "COMPETITION",
+            "questions": [
+                {
+                    "question_id": "q3_leadership",
+                    "question": "old leadership prompt",
+                    "query": '"Milan Cortina 2026 Winter Olympics" leadership',
+                    "source_priority": ["wikipedia", "official_site"],
+                },
+            ],
+        },
+        question_ids=["q3_leadership"],
+    )
+
+    selected = filtered["questions"][0]
+    assert selected["question_id"] == "q3_leadership"
+    assert selected["query"].endswith("-wikipedia")
+    assert selected["source_priority"][:4] == [
+        "official_site",
+        "leadership_page",
+        "linkedin_company_profile",
+        "linkedin_people_search",
+    ]
+    assert selected["source_priority"].index("wikipedia") > 4
