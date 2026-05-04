@@ -983,6 +983,18 @@ function buildQuestionFirstDiscoverySummary(questions: Record<string, any>[], an
   }
 }
 
+function hasUsableYpFitArtifact(value: unknown): boolean {
+  const fit = ensureObject(value)
+  return toText(fit.status).toLowerCase() !== 'insufficient_signal'
+    && isMeaningfulCommercialText(fit.fit_rationale || fit.fit_feedback || fit.competitive_advantage)
+}
+
+function hasUsableOutreachArtifact(value: unknown): boolean {
+  const outreach = ensureObject(value)
+  return toText(outreach.status).toLowerCase() !== 'insufficient_signal'
+    && isMeaningfulCommercialText(outreach.recommended_angle || outreach.first_message_strategy || outreach.why_now || outreach.recommended_target)
+}
+
 function getQuestionById(questions: Record<string, any>[], questionId: string): Record<string, any> | null {
   return questions.find((question) => toText(question?.question_id) === questionId) || null
 }
@@ -1467,6 +1479,12 @@ export function normalizeQuestionFirstDossier(
         yellow_panther_opportunity: Object.keys(ensureObject(existingDiscoverySummary.yellow_panther_opportunity)).length > 0
           ? existingDiscoverySummary.yellow_panther_opportunity
           : syntheticDiscoverySummary.yellow_panther_opportunity,
+        yellow_panther_fit: hasUsableYpFitArtifact(existingDiscoverySummary.yellow_panther_fit)
+          ? existingDiscoverySummary.yellow_panther_fit
+          : syntheticDiscoverySummary.yellow_panther_fit,
+        outreach_strategy: hasUsableOutreachArtifact(existingDiscoverySummary.outreach_strategy)
+          ? existingDiscoverySummary.outreach_strategy
+          : syntheticDiscoverySummary.outreach_strategy,
       }
     : syntheticDiscoverySummary
   const promotedRows = [

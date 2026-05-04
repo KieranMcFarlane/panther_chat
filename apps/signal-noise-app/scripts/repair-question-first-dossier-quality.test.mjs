@@ -147,3 +147,36 @@ test('repairDossierPayload does not treat checked-absence search text as a launc
   assert.equal(repair.repaired_dossier.yellow_panther_fit.status, 'insufficient_signal')
   assert.equal(repair.repaired_dossier.discovery_summary.outreach_strategy.status, 'insufficient_signal')
 })
+
+test('repairDossierPayload replaces stale checked-absence fit artifacts with insufficient signal', () => {
+  const stalePack = weakFifteenPack()
+  stalePack.answers = stalePack.answers.map((item) => ({
+    ...item,
+    validation_state: 'no_signal',
+    confidence: 0,
+    answer: 'Web searches for launch app platform returned no results matching product, app, platform, or fan experience launches.',
+    primary_owner: undefined,
+    evidence_url: undefined,
+  }))
+  stalePack.discovery_summary = {
+    graphiti_sales_brief: { status: 'insufficient_signal' },
+    yellow_panther_fit: {
+      status: 'available',
+      best_service: 'DIGITAL_TRANSFORMATION',
+      fit_rationale: 'DIGITAL TRANSFORMATION is the strongest capability match because current dossier evidence points to web searches for launch app platform returned no results matching product launches.',
+    },
+    outreach_strategy: {
+      status: 'available',
+      recommended_angle: 'Web searches for launch app platform returned no results matching product launches.',
+    },
+  }
+  stalePack.question_first = {
+    discovery_summary: stalePack.discovery_summary,
+    answers: stalePack.answers,
+  }
+
+  const repair = repairDossierPayload(stalePack, 'major-league-cricket')
+
+  assert.equal(repair.repaired_dossier.yellow_panther_fit.status, 'insufficient_signal')
+  assert.equal(repair.repaired_dossier.discovery_summary.outreach_strategy.status, 'insufficient_signal')
+})
