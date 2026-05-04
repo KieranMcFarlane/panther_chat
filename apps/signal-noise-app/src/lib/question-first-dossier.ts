@@ -1603,6 +1603,12 @@ export function normalizeQuestionFirstDossier(
     procurementSignals,
     executiveSummary,
   )
+  const normalizedPublishStatus = (publishStatus.startsWith('published') && !dossierHasMeaningfulPublicationArtifacts({
+    question_first: { discovery_summary: mergedDiscoverySummary },
+    discovery_summary: mergedDiscoverySummary,
+    executive_summary: executiveSummary,
+    strategic_analysis: strategicAnalysis,
+  })) ? 'published_partial' : (publishStatus || 'draft')
 
   const normalized = {
     ...dossier,
@@ -1613,6 +1619,8 @@ export function normalizeQuestionFirstDossier(
       ...metadata,
       question_first: {
         ...metadataQuestionFirst,
+        publish_status: normalizedPublishStatus,
+        publication_status: normalizedPublishStatus,
         run_rollup: metadataQuestionFirst.run_rollup ?? runRollup,
         categories: metadataQuestionFirst.categories ?? categories,
         question_timings: Object.keys(metadataQuestionFirst.question_timings ?? {}).length > 0
@@ -1625,6 +1633,8 @@ export function normalizeQuestionFirstDossier(
     },
     question_first: {
       ...questionFirst,
+      publish_status: normalizedPublishStatus,
+      publication_status: normalizedPublishStatus,
       discovery_summary: mergedDiscoverySummary,
       dossier_promotions: dossierPromotions,
       run_rollup: runRollup,
@@ -1662,12 +1672,8 @@ export function normalizeQuestionFirstDossier(
     quality_state: qualityState,
     quality_summary: qualitySummary,
     quality_blockers: qualityBlockers,
-    publish_status: (publishStatus.startsWith('published') && !dossierHasMeaningfulPublicationArtifacts({
-      question_first: { discovery_summary: mergedDiscoverySummary },
-      discovery_summary: mergedDiscoverySummary,
-      executive_summary: executiveSummary,
-      strategic_analysis: strategicAnalysis,
-    })) ? 'published_partial' : (publishStatus || 'draft'),
+    publish_status: normalizedPublishStatus,
+    publication_status: normalizedPublishStatus,
     run_id: runId || null,
     last_completed_question: lastCompletedQuestion || null,
     resume_from_question: resumeFromQuestion || null,
@@ -1695,6 +1701,7 @@ export function normalizeQuestionFirstDossier(
     quality_summary: qualitySummary,
     quality_blockers: qualityBlockers,
     publish_status: normalized.publish_status,
+    publication_status: normalized.publication_status,
     run_id: runId || null,
     last_completed_question: lastCompletedQuestion || null,
     resume_from_question: resumeFromQuestion || null,

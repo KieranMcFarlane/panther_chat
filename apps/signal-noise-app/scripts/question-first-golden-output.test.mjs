@@ -170,6 +170,9 @@ test('golden weak full-pack dossier stays partial when q11-q15 have no usable si
   const normalized = normalizeQuestionFirstDossier(weak, 'golden-club')
 
   assert.equal(normalized.publish_status, 'published_partial')
+  assert.equal(normalized.publication_status, 'published_partial')
+  assert.equal(normalized.question_first.publish_status, 'published_partial')
+  assert.equal(normalized.metadata.question_first.publish_status, 'published_partial')
   assert.equal(normalized.discovery_summary.graphiti_sales_brief.status, 'insufficient_signal')
   assert.equal(normalized.discovery_summary.yellow_panther_fit.status, 'insufficient_signal')
   assert.equal(normalized.discovery_summary.outreach_strategy.status, 'insufficient_signal')

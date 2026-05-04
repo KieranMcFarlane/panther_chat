@@ -80,9 +80,11 @@ def apply_publication_quality_gates(dossier: Dict[str, Any]) -> Dict[str, Any]:
             question_first = payload.get("question_first")
             if isinstance(question_first, dict):
                 question_first["publish_status"] = "published_partial"
+                question_first["publication_status"] = "published_partial"
             metadata = payload.get("metadata")
             if isinstance(metadata, dict):
                 metadata_question_first = metadata.get("question_first")
                 if isinstance(metadata_question_first, dict):
                     metadata_question_first["publish_status"] = "published_partial"
+                    metadata_question_first["publication_status"] = "published_partial"
     return payload
