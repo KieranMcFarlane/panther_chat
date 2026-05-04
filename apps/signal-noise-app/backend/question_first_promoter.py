@@ -115,6 +115,43 @@ def _first_meaningful_text(values: List[Any]) -> str:
     return ""
 
 
+def _is_concise_buyer_target_text(value: Any) -> bool:
+    text = _to_text(value)
+    if not _is_meaningful_text(text):
+        return False
+    if not any(ch.isalpha() for ch in text) or (len(text) == 4 and text.isdigit()):
+        return False
+    words = [word for word in text.split() if word]
+    if len(text) > 90 or len(words) > 8:
+        return False
+    lowered = text.lower()
+    blocked_terms = (
+        "founded",
+        "established",
+        "season",
+        "history",
+        "technology stack",
+        "partnership stack",
+        "website",
+        "wordpress",
+        "woocommerce",
+        "evidence",
+        "summary",
+        "including",
+    )
+    if any(mark in text for mark in (".", ";", ":")):
+        return False
+    return not any(term in lowered for term in blocked_terms)
+
+
+def _first_concise_buyer_target_text(values: List[Any]) -> str:
+    for value in values:
+        text = _to_text(value)
+        if _is_concise_buyer_target_text(text):
+            return text
+    return ""
+
+
 def _unique_texts(values: List[Any]) -> List[str]:
     seen = set()
     result: List[str] = []
@@ -203,8 +240,6 @@ def _question_is_strong_provisional(answer: Dict[str, Any] | None, *, min_confid
 def _question_has_buyer_hypothesis(answer: Dict[str, Any] | None) -> bool:
     if not isinstance(answer, dict):
         return False
-    if _question_is_validated(answer) or _question_is_strong_provisional(answer, min_confidence=0.5):
-        return True
     return bool(_buyer_from_decision_owner(answer).get("name"))
 
 
@@ -226,11 +261,14 @@ def _buyer_from_decision_owner(decision_owner: Dict[str, Any] | None) -> Dict[st
         return {}
     primary_owner = decision_owner.get("primary_owner") if isinstance(decision_owner.get("primary_owner"), dict) else {}
     raw = _extract_raw_structured_output(decision_owner)
-    name = _first_meaningful_text([
+    structured_signal = raw.get("structured_signal") if isinstance(raw.get("structured_signal"), dict) else {}
+    name = _first_concise_buyer_target_text([
         primary_owner.get("name"),
         primary_owner.get("full_name"),
         raw.get("decision_owner_name"),
         raw.get("name"),
+        structured_signal.get("decision_owner_name"),
+        structured_signal.get("name"),
         decision_owner.get("answer"),
     ])
     title = _first_meaningful_text([
@@ -546,7 +584,10 @@ def _build_client_ready_summary(answer_by_question: Dict[str, Dict[str, Any]]) -
     ]
     blockers: List[str] = []
     for question_id in required_questions:
-        if question_id == "q11_decision_owner" and _question_has_buyer_hypothesis(answer_by_question.get(question_id)):
+        if question_id == "q11_decision_owner":
+            if _question_has_buyer_hypothesis(answer_by_question.get(question_id)):
+                continue
+            blockers.append(question_id)
             continue
         if not _question_is_validated(answer_by_question.get(question_id)):
             blockers.append(question_id)

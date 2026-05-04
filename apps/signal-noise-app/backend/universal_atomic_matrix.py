@@ -208,8 +208,8 @@ UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
         "question_id": "q3_leadership",
         "question_family": "leadership",
         "question_type": "leadership",
-        "question": "Who are the key leadership, commercial, partnerships, marketing, digital, technology, and strategy figures at {entity}?",
-        "query": '"{entity}" chairman chief executive officer secretary general board',
+        "question": "Which named people currently hold leadership, commercial, partnerships, marketing, digital, technology, or strategy roles at {entity}? Return named people or explicit role-owner placeholders only; do not return founding years, dates, trophies, venues, or generic entity facts as people.",
+        "query": '"{entity}" leadership commercial partnerships digital director people',
         "source_priority": [
             "wikipedia",
             "official_site",
@@ -405,8 +405,8 @@ UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
         "question_id": "q11_decision_owner",
         "question_family": "decision_owner",
         "question_type": "decision_owner",
-        "question": "Who is the highest probability buyer at {entity} given the current commercial and product context?",
-        "query": '"{entity}" commercial partnerships leadership',
+        "question": "Who is the highest probability named buyer or explicit role-owner at {entity} given the current commercial and product context? Return insufficient_signal if evidence only contains founding years, dates, squad/performance facts, venues, or generic history rather than a buyer candidate.",
+        "query": '"{entity}" commercial partnerships digital director leadership',
         "source_priority": [
             "wikipedia",
             "official_site",

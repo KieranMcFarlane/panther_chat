@@ -505,6 +505,58 @@ def test_build_question_first_promotions_emits_graphiti_sales_brief_when_buyer_s
     assert brief["capability_gap"] == "digital_stack_maturity"
 
 
+def test_build_question_first_promotions_rejects_year_like_decision_owner_as_buyer():
+    result = build_question_first_promotions(
+        answers=[
+            {
+                "question_id": "q1_foundation",
+                "question_type": "foundation",
+                "answer": "1875",
+                "confidence": 0.95,
+                "validation_state": "validated",
+                "signal_type": "FOUNDATION",
+                "evidence_url": "https://example.com/history",
+            },
+            {
+                "question_id": "q3_leadership",
+                "question_type": "leadership",
+                "answer": "History page says the club was founded in 1875.",
+                "confidence": 0.91,
+                "validation_state": "validated",
+                "signal_type": "LEADERSHIP",
+                "evidence_url": "https://example.com/history",
+            },
+            {
+                "question_id": "q11_decision_owner",
+                "question_type": "decision_owner",
+                "answer": "1875",
+                "confidence": 0.97,
+                "validation_state": "validated",
+                "signal_type": "DECISION_OWNER",
+                "primary_owner": {"name": "1875", "title": "Commercial Director"},
+            },
+            {
+                "question_id": "q15_outreach_strategy",
+                "question_type": "outreach_strategy",
+                "answer": {
+                    "raw_structured_output": {"recommended_target": "1875", "recommended_route": "cold"}
+                },
+                "confidence": 0.58,
+                "validation_state": "provisional",
+                "signal_type": "OUTREACH_STRATEGY",
+            },
+        ],
+        evidence_items=[],
+        promotion_candidates=[],
+        allowed_rollout_phase="phase_3_decision",
+    )
+
+    summary = result["discovery_summary"]
+    assert summary["graphiti_sales_brief"]["status"] == "insufficient_signal"
+    assert summary["client_ready"] is False
+    assert "q11_decision_owner" in summary["client_ready_blockers"]
+
+
 def test_build_question_first_promotions_prefers_deterministic_connections_for_graphiti_sales_brief():
     result = build_question_first_promotions(
         answers=[

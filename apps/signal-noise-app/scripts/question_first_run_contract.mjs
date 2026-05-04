@@ -9,6 +9,27 @@ function _normalizeText(value) {
   return String(value || '').trim().toLowerCase().replace(/\s+/g, ' ');
 }
 
+function _toDisplayText(value) {
+  if (value == null) return '';
+  if (typeof value === 'string') return value.trim();
+  if (typeof value === 'number' || typeof value === 'boolean') return String(value).trim();
+  if (typeof value === 'object') {
+    for (const key of ['name', 'full_name', 'person_name', 'title', 'role', 'summary', 'answer']) {
+      const text = _toDisplayText(value[key]);
+      if (text) return text;
+    }
+  }
+  return '';
+}
+
+function _isPlausibleBuyerTargetText(value) {
+  const text = _toDisplayText(value);
+  if (!text || !/[A-Za-zÀ-ÖØ-öø-ÿ]/.test(text) || /^\d{4}$/.test(text)) return false;
+  const words = text.split(/\s+/).filter(Boolean);
+  if (text.length > 90 || words.length > 8) return false;
+  return !/[.;:]|\b(founded|established|season|history|website|technology stack|evidence|summary)\b/i.test(text);
+}
+
 function _answerKey(item) {
   const questionId = String(item?.question_id || '').trim();
   if (questionId) return `id:${questionId}`;
@@ -37,11 +58,11 @@ function _normalizeCandidate(value) {
   if (!value) return null;
   if (typeof value === 'string') {
     const name = value.trim();
-    return name ? { name } : null;
+    return _isPlausibleBuyerTargetText(name) ? { name } : null;
   }
   if (typeof value !== 'object') return null;
   const name = String(value.name || value.full_name || value.person || '').trim();
-  if (!name) return null;
+  if (!_isPlausibleBuyerTargetText(name)) return null;
   const title = String(value.title || value.role || '').trim();
   const organization = String(value.organization || value.company || '').trim();
   const linkedin_url = String(value.linkedin_url || value.linkedin || value.profile_url || '').trim();
@@ -650,10 +671,30 @@ export function validateQuestionFirstRunArtifact(artifact) {
     const status = String(answer?.status || '').trim().toLowerCase();
     if (status === 'failed' || status === 'no_signal') continue;
     if (questionType === 'decision_owner') {
-      const hasPrimaryOwner = Boolean(answer?.primary_owner && typeof answer.primary_owner === 'object' && String(answer.primary_owner.name || '').trim());
-      const hasCandidates = Array.isArray(answer?.supporting_candidates) || Array.isArray(answer?.candidates);
+      const rawStructuredOutput = answer?.answer?.raw_structured_output && typeof answer.answer.raw_structured_output === 'object'
+        ? answer.answer.raw_structured_output
+        : {};
+      const structuredSignal = rawStructuredOutput?.structured_signal && typeof rawStructuredOutput.structured_signal === 'object'
+        ? rawStructuredOutput.structured_signal
+        : {};
+      const topLevelPrimaryOwner = answer?.primary_owner && typeof answer.primary_owner === 'object' ? answer.primary_owner : {};
+      const rawPrimaryOwner = rawStructuredOutput?.primary_owner && typeof rawStructuredOutput.primary_owner === 'object' ? rawStructuredOutput.primary_owner : {};
+      const hasPrimaryOwner = [
+        topLevelPrimaryOwner.name,
+        rawPrimaryOwner.name,
+        rawStructuredOutput.decision_owner_name,
+        rawStructuredOutput.name,
+        structuredSignal.decision_owner_name,
+        structuredSignal.name,
+      ].some(_isPlausibleBuyerTargetText);
+      const candidates = []
+        .concat(Array.isArray(answer?.supporting_candidates) ? answer.supporting_candidates : [])
+        .concat(Array.isArray(answer?.candidates) ? answer.candidates : []);
+      const rawCandidates = rawStructuredOutput?.candidates;
+      if (Array.isArray(rawCandidates)) candidates.push(...rawCandidates);
+      const hasCandidates = candidates.some((candidate) => _isPlausibleBuyerTargetText(candidate?.name || candidate?.full_name || candidate?.person_name));
       if (!hasPrimaryOwner && !hasCandidates) {
-        throw new TypeError('decision_owner answers must include a primary_owner or ranked candidates');
+        throw new TypeError('decision_owner answers must include a plausible named person or role owner');
       }
     }
     if (questionType === 'connections') {

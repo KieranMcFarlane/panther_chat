@@ -307,6 +307,49 @@ test('buildQuestionFirstRunArtifact derives poi_graph from validated people answ
   assert.equal(artifact.poi_graph.edges[0].edge_type, 'primary_owner_of');
 });
 
+test('validateQuestionFirstRunArtifact rejects year-like decision owners', () => {
+  const artifact = buildQuestionFirstRunArtifact({
+    entity_id: 'birmingham-city',
+    entity_name: 'Birmingham City',
+    entity_type: 'SPORT_CLUB',
+    question_specs: [],
+    answer_records: [
+      {
+        question_id: 'q11_decision_owner',
+        question_type: 'decision_owner',
+        status: 'answered',
+        validation_state: 'validated',
+        confidence: 0.81,
+        signal_type: 'DECISION_OWNER',
+        answer: {
+          kind: 'list',
+          summary: '1875',
+        },
+        primary_owner: {
+          name: '1875',
+          title: 'Commercial Director',
+          organization: 'Birmingham City',
+        },
+        supporting_candidates: [],
+        evidence_refs: [],
+        trace_ref: null,
+        started_at: '2026-03-30T00:00:00+00:00',
+        completed_at: '2026-03-30T00:00:05+00:00',
+        duration_seconds: 5,
+      },
+    ],
+    evidence_items: [],
+    trace_index: [],
+    categories: [],
+    run_rollup: {},
+  });
+
+  assert.throws(
+    () => validateQuestionFirstRunArtifact(artifact),
+    /decision_owner answers must include a plausible named person or role owner/,
+  );
+});
+
 test('buildQuestionFirstRunArtifact writes trace refs instead of embedding raw execution trace', () => {
   const artifact = buildQuestionFirstRunArtifact({
     entity_id: 'celtic-fc',

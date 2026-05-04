@@ -352,11 +352,24 @@ function _toDisplayText(value) {
 function _isMeaningfulCommercialText(value) {
   const text = _toDisplayText(value);
   if (!text) return false;
-  return !/(^no_signal$|^no signal$|source pending$|question execution failed|no deterministic answer was produced|no completed brightdata leads were recoverable|no brightdata-backed evidence|initial search returned only generic|follow-up search timed out|returned no results matching|no results matching|no hiring leads found|bounded retrieval|lead with a .* angle tied to the active signal|points to insufficient_signal|current dossier evidence points to insufficient[_ ]signal|searches? (for|across).* (returned|found) no|limited to unrelated|kind:\s*summary(\.|;|$)|kind:\s*summary;\s*value:\s*(;|null)|value:\s*null|summary:\s*null|raw structured output:\s*(;|null)|no web evidence found|insufficient signal|^\[object object\]$)/i.test(text);
+  return !/(^no_signal$|^no signal$|^insufficient_signal$|source pending$|question execution failed|no deterministic answer was produced|no completed brightdata leads were recoverable|no brightdata-backed evidence|initial search returned only generic|follow-up search timed out|returned no results matching|no results matching|no hiring leads found|bounded retrieval|lead with a .* angle tied to the active signal|points to insufficient_signal|current dossier evidence points to insufficient[_ ]signal|searches? (for|across).* (returned|found) no|limited to unrelated|kind:\s*summary(\.|;|$)|kind:\s*summary;\s*value:\s*(;|null)|value:\s*null|summary:\s*null|raw structured output:\s*(;|null)|no web evidence found|insufficient signal|^\[object object\]$)/i.test(text);
 }
 
 function _firstMeaningfulCommercialText(values) {
   return values.map((value) => _toDisplayText(value)).find((text) => _isMeaningfulCommercialText(text)) || '';
+}
+
+function _isConciseBuyerTargetText(value) {
+  const text = _toDisplayText(value);
+  if (!_isMeaningfulCommercialText(text)) return false;
+  if (!/[A-Za-zÀ-ÖØ-öø-ÿ]/.test(text) || /^\d{4}$/.test(text)) return false;
+  const words = text.split(/\s+/).filter(Boolean);
+  if (text.length > 90 || words.length > 8) return false;
+  return !/[.;:]|\b(leverages?|comprising|comprises|including|technology stack|partnership stack|website|wordpress|woocommerce|evidence|summary|founded|established|season|history)\b/i.test(text);
+}
+
+function _firstConciseBuyerTargetText(values) {
+  return values.map((value) => _toDisplayText(value)).find((text) => _isConciseBuyerTargetText(text)) || '';
 }
 
 function _getAnswerRaw(questionPayload) {
@@ -418,7 +431,7 @@ function _buyerContextFromPrior(priorById) {
   const structuredSignal = raw.structured_signal && typeof raw.structured_signal === 'object'
     ? raw.structured_signal
     : (q11.structured_signal && typeof q11.structured_signal === 'object' ? q11.structured_signal : {});
-  const name = _firstMeaningfulCommercialText([
+  const name = _firstConciseBuyerTargetText([
     primaryOwner.name,
     proseOwner?.name,
     structuredSignal.decision_owner_name,
@@ -484,7 +497,7 @@ function _leadershipCandidatesFromText(value) {
 
 function _normalizeLeadershipCandidate(candidate) {
   if (!candidate || typeof candidate !== 'object') return null;
-  const name = _firstMeaningfulCommercialText([
+  const name = _firstConciseBuyerTargetText([
     candidate.name,
     candidate.full_name,
     candidate.person_name,
@@ -921,6 +934,22 @@ function _augmentCommercialStructuredOutput(question, structuredOutput, validati
     },
     confidence,
   };
+}
+
+function _hasPlausibleDecisionOwnerStructuredOutput(structuredOutput) {
+  const primaryOwner = structuredOutput?.primary_owner && typeof structuredOutput.primary_owner === 'object'
+    ? structuredOutput.primary_owner
+    : {};
+  const structuredSignal = structuredOutput?.structured_signal && typeof structuredOutput.structured_signal === 'object'
+    ? structuredOutput.structured_signal
+    : {};
+  const candidateNames = []
+    .concat(primaryOwner.name)
+    .concat(structuredSignal.decision_owner_name)
+    .concat(structuredSignal.name)
+    .concat(Array.isArray(structuredOutput?.supporting_candidates) ? structuredOutput.supporting_candidates.map((item) => item?.name || item?.full_name || item?.person_name) : [])
+    .concat(Array.isArray(structuredOutput?.candidates) ? structuredOutput.candidates.map((item) => item?.name || item?.full_name || item?.person_name) : []);
+  return Boolean(_firstConciseBuyerTargetText(candidateNames));
 }
 
 function _presetQuestionSpecs(entityName) {
@@ -2772,11 +2801,27 @@ function _buildQuestionPayload(
   const initialValidationState = _classifyValidationState(question, structuredOutput, cliResult);
   const { structuredOutput: enhancedStructuredOutput, commercialFields, confidence } =
     _augmentCommercialStructuredOutput(question, structuredOutput, initialValidationState);
-  const validationState = _capCommercialValidationState(question, initialValidationState, commercialFields, confidence);
-  const sources = Array.isArray(enhancedStructuredOutput.sources) ? enhancedStructuredOutput.sources : [];
-  const evidenceUrl = enhancedStructuredOutput.evidence_url || sources[0] || '';
-  const notes = enhancedStructuredOutput.notes || enhancedStructuredOutput.context || '';
-  const inferredSignalType = enhancedStructuredOutput.signal_type || (question.question_type ? question.question_type.toUpperCase() : 'NO_SIGNAL');
+  let finalStructuredOutput = enhancedStructuredOutput;
+  let finalConfidence = confidence;
+  let validationState = _capCommercialValidationState(question, initialValidationState, commercialFields, confidence);
+  if (question.question_id === 'q11_decision_owner' && !_hasPlausibleDecisionOwnerStructuredOutput(enhancedStructuredOutput)) {
+    finalStructuredOutput = {
+      ...enhancedStructuredOutput,
+      answer: 'insufficient_signal',
+      summary: 'insufficient_signal',
+      primary_owner: null,
+      supporting_candidates: [],
+      candidates: [],
+      confidence: 0,
+      confidence_caveat: 'Decision-owner evidence did not contain a plausible named person or role owner.',
+    };
+    finalConfidence = 0;
+    validationState = 'no_signal';
+  }
+  const sources = Array.isArray(finalStructuredOutput.sources) ? finalStructuredOutput.sources : [];
+  const evidenceUrl = finalStructuredOutput.evidence_url || sources[0] || '';
+  const notes = finalStructuredOutput.notes || finalStructuredOutput.context || '';
+  const inferredSignalType = finalStructuredOutput.signal_type || (question.question_type ? question.question_type.toUpperCase() : 'NO_SIGNAL');
   return {
     question_id: question.question_id,
     question_family: question.question_family,
@@ -2816,19 +2861,19 @@ function _buildQuestionPayload(
       stop_rule: `continue for up to ${question.hop_budget} hops within OpenCode steps budget`,
     },
     reasoning: {
-      structured_output: enhancedStructuredOutput,
+      structured_output: finalStructuredOutput,
       prompt_trace: normalizedPromptTrace,
       message_trace: messageTrace,
     },
     prompt_trace: normalizedPromptTrace,
     message_trace: messageTrace,
     execution_query: executionQuery || question.query,
-    answer: enhancedStructuredOutput.answer || '',
+    answer: finalStructuredOutput.answer || '',
     signal_type: inferredSignalType,
-    confidence,
+    confidence: finalConfidence,
     validation_state: validationState,
     evidence_url: evidenceUrl,
-    recommended_next_query: enhancedStructuredOutput.recommended_next_query || '',
+    recommended_next_query: finalStructuredOutput.recommended_next_query || '',
     notes,
     evidence_grade: commercialFields.evidence_grade,
     structured_signal: commercialFields.structured_signal,
