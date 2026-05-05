@@ -352,7 +352,7 @@ function _toDisplayText(value) {
 function _isMeaningfulCommercialText(value) {
   const text = _toDisplayText(value);
   if (!text) return false;
-  return !/(^no_signal$|^no signal$|^insufficient_signal$|source pending$|question execution failed|no deterministic answer was produced|no completed brightdata leads were recoverable|no brightdata-backed evidence|initial search returned only generic|follow-up search timed out|returned no results matching|no results matching|no hiring leads found|bounded retrieval|lead with a .* angle tied to the active signal|points to insufficient_signal|current dossier evidence points to insufficient[_ ]signal|searches? (for|across).* (returned|found) no|limited to unrelated|kind:\s*summary(\.|;|$)|kind:\s*summary;\s*value:\s*(;|null)|value:\s*null|summary:\s*null|raw structured output:\s*(;|null)|no web evidence found|insufficient signal|^\[object object\]$)/i.test(text);
+  return !/(^no_signal$|^no signal$|^insufficient_signal$|^no_answer$|source pending$|question execution failed|no deterministic answer was produced|no completed brightdata leads were recoverable|no brightdata-backed evidence|initial search returned only generic|follow-up search timed out|returned no results matching|no results matching|no hiring leads found|bounded retrieval|lead with a .* angle tied to the active signal|points to insufficient_signal|current dossier evidence points to insufficient[_ ]signal|searches? (for|across).* (returned|found) no|limited to unrelated|kind:\s*summary(\.|;|$)|kind:\s*summary;\s*value:\s*(;|null)|value:\s*null|summary:\s*null|raw structured output:\s*(;|null)|no web evidence found|insufficient signal|^\[object object\]$)/i.test(text);
 }
 
 function _firstMeaningfulCommercialText(values) {
@@ -950,6 +950,58 @@ function _hasPlausibleDecisionOwnerStructuredOutput(structuredOutput) {
     .concat(Array.isArray(structuredOutput?.supporting_candidates) ? structuredOutput.supporting_candidates.map((item) => item?.name || item?.full_name || item?.person_name) : [])
     .concat(Array.isArray(structuredOutput?.candidates) ? structuredOutput.candidates.map((item) => item?.name || item?.full_name || item?.person_name) : []);
   return Boolean(_firstConciseBuyerTargetText(candidateNames));
+}
+
+function _hasStructuredAnswerContent(structuredOutput) {
+  if (!structuredOutput || typeof structuredOutput !== 'object') return false;
+  const sourceUrls = _collectUniqueSourceUrls(structuredOutput);
+  if (sourceUrls.length > 0) return true;
+  if (_hasPlausibleDecisionOwnerStructuredOutput(structuredOutput)) return true;
+  const listFields = [
+    structuredOutput.candidates,
+    structuredOutput.supporting_candidates,
+    structuredOutput.people,
+    structuredOutput.leadership,
+    structuredOutput.ranked_people,
+    structuredOutput.top_signals,
+    structuredOutput.signals,
+    structuredOutput.technologies,
+  ];
+  if (listFields.some((items) => Array.isArray(items) && items.length > 0)) return true;
+  return [
+    structuredOutput.summary,
+    structuredOutput.context,
+    structuredOutput.notes,
+    structuredOutput.commercial_implication,
+  ].some((value) => _isMeaningfulCommercialText(value));
+}
+
+function _providerNoAnswerStructuredOutput(question, structuredOutput, reason) {
+  return {
+    ...structuredOutput,
+    answer: 'Provider returned an object answer without source-backed content.',
+    summary: 'Provider returned an object answer without source-backed content.',
+    context: 'The provider response could not be converted into a useful typed answer.',
+    sources: [],
+    confidence: 0,
+    validation_state: 'failed',
+    structured_signal: {
+      status: 'provider_no_answer',
+      provider_no_answer_reason: reason,
+      question_id: question?.question_id || '',
+    },
+  };
+}
+
+function _sanitizeProviderStructuredOutput(question, structuredOutput) {
+  if (!structuredOutput || typeof structuredOutput !== 'object') return structuredOutput;
+  const questionId = String(question?.question_id || '').trim();
+  if (!['q3_leadership', 'q11_decision_owner'].includes(questionId)) return structuredOutput;
+  if (!structuredOutput.answer || typeof structuredOutput.answer !== 'object' || Array.isArray(structuredOutput.answer)) {
+    return structuredOutput;
+  }
+  if (_hasStructuredAnswerContent(structuredOutput)) return structuredOutput;
+  return _providerNoAnswerStructuredOutput(question, structuredOutput, 'object_answer_without_sources');
 }
 
 function _presetQuestionSpecs(entityName) {
@@ -2818,10 +2870,11 @@ function _buildQuestionPayload(
   sessionId,
   { promptTrace = null, messageTrace = [], executionQuery = '', cliResult = null } = {},
 ) {
-  const normalizedPromptTrace = _decoratePromptTrace(question, structuredOutput, cliResult, promptTrace);
-  const initialValidationState = _classifyValidationState(question, structuredOutput, cliResult);
+  const sanitizedStructuredOutput = _sanitizeProviderStructuredOutput(question, structuredOutput);
+  const normalizedPromptTrace = _decoratePromptTrace(question, sanitizedStructuredOutput, cliResult, promptTrace);
+  const initialValidationState = _classifyValidationState(question, sanitizedStructuredOutput, cliResult);
   const { structuredOutput: enhancedStructuredOutput, commercialFields, confidence } =
-    _augmentCommercialStructuredOutput(question, structuredOutput, initialValidationState);
+    _augmentCommercialStructuredOutput(question, sanitizedStructuredOutput, initialValidationState);
   let finalStructuredOutput = enhancedStructuredOutput;
   let finalConfidence = confidence;
   let validationState = _capCommercialValidationState(question, initialValidationState, commercialFields, confidence);
@@ -2897,7 +2950,7 @@ function _buildQuestionPayload(
     recommended_next_query: finalStructuredOutput.recommended_next_query || '',
     notes,
     evidence_grade: commercialFields.evidence_grade,
-    structured_signal: commercialFields.structured_signal,
+    structured_signal: commercialFields.structured_signal || finalStructuredOutput.structured_signal,
     procurement_model: commercialFields.procurement_model,
     commercial_implication: commercialFields.commercial_implication,
     signal_density: commercialFields.signal_density,

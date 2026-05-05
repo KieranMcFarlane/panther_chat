@@ -1108,6 +1108,114 @@ test('runOpenCodeQuestionSourceBatch preserves execution-class failure provenanc
   }
 });
 
+test('runOpenCodeQuestionSourceBatch rejects object-valued q3 answers without sources as provider no-answer', async () => {
+  const outputDir = mkdtempSync(join(tmpdir(), 'opencode-q3-object-answer-'));
+  const sourcePath = join(outputDir, 'source.json');
+
+  writeFileSync(
+    sourcePath,
+    JSON.stringify(
+      {
+        entity_id: 'milan-cortina-2026',
+        entity_name: 'Milan Cortina 2026 Winter Olympics',
+        entity_type: 'EVENT',
+        questions: [
+          {
+            question_id: 'q3_leadership',
+            question_type: 'leadership',
+            question_text: 'Which named people currently hold leadership or commercial roles?',
+            query: '"Milan Cortina 2026" leadership commercial director',
+            hop_budget: 1,
+            source_priority: ['official_site', 'linkedin_people_search'],
+          },
+        ],
+      },
+      null,
+      2,
+    ),
+  );
+
+  const result = await runOpenCodeQuestionSourceBatch({
+    questionSourcePath: sourcePath,
+    outputDir,
+    questionRunner: async () => ({
+      structuredOutput: {
+        answer: { status: 'no_answer' },
+        context: '',
+        sources: [],
+        confidence: 0,
+      },
+      promptTrace: { exit_code: 0, has_structured_output: true },
+      messageTrace: [],
+      cliResult: { code: 0, stdout: '{"answer":{"status":"no_answer"}}', stderr: '' },
+    }),
+  });
+
+  const artifact = JSON.parse(readFileSync(result.question_first_run_path, 'utf8'));
+  const answer = artifact.answer_records[0];
+
+  assert.equal(answer.validation_state, 'failed');
+  assert.equal(answer.status, 'failed');
+  assert.equal(answer.structured_signal.status, 'provider_no_answer');
+  assert.equal(answer.structured_signal.provider_no_answer_reason, 'object_answer_without_sources');
+  assert.equal(answer.answer.summary, 'Provider returned an object answer without source-backed content.');
+  assert.notEqual(answer.answer.summary, '[object Object]');
+  assert.equal(artifact.merge_patch.question_first.answers[0].validation_state, 'failed');
+  assert.equal(artifact.merge_patch.question_first.answers[0].structured_signal.status, 'provider_no_answer');
+});
+
+test('runOpenCodeQuestionSourceBatch does not persist object-valued q11 answers as display text', async () => {
+  const outputDir = mkdtempSync(join(tmpdir(), 'opencode-q11-object-answer-'));
+  const sourcePath = join(outputDir, 'source.json');
+
+  writeFileSync(
+    sourcePath,
+    JSON.stringify(
+      {
+        entity_id: 'milan-cortina-2026',
+        entity_name: 'Milan Cortina 2026 Winter Olympics',
+        entity_type: 'EVENT',
+        questions: [
+          {
+            question_id: 'q11_decision_owner',
+            question_type: 'decision_owner',
+            question_text: 'Who is the highest probability named buyer?',
+            query: '"Milan Cortina 2026" commercial director',
+            hop_budget: 1,
+            source_priority: ['official_site', 'linkedin_people_search'],
+          },
+        ],
+      },
+      null,
+      2,
+    ),
+  );
+
+  const result = await runOpenCodeQuestionSourceBatch({
+    questionSourcePath: sourcePath,
+    outputDir,
+    questionRunner: async () => ({
+      structuredOutput: {
+        answer: { status: 'no_answer' },
+        context: '',
+        sources: [],
+        confidence: 0,
+      },
+      promptTrace: { exit_code: 0, has_structured_output: true },
+      messageTrace: [],
+      cliResult: { code: 0, stdout: '{"answer":{"status":"no_answer"}}', stderr: '' },
+    }),
+  });
+
+  const artifact = JSON.parse(readFileSync(result.question_first_run_path, 'utf8'));
+  const answer = artifact.answer_records[0];
+
+  assert.equal(answer.validation_state, 'no_signal');
+  assert.notEqual(answer.answer.summary, '[object Object]');
+  assert.match(answer.answer.summary, /insufficient_signal|provider returned/i);
+  assert.doesNotMatch(JSON.stringify(answer), /\\[object Object\\]/);
+});
+
 test('runOpenCodeQuestionSourceBatch creates a missing output directory before writing tracker files', async () => {
   const baseDir = mkdtempSync(join(tmpdir(), 'opencode-question-source-missing-output-'));
   const outputDir = join(baseDir, 'artifacts');
