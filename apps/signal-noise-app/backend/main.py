@@ -1245,7 +1245,7 @@ def iter_question_repair_source_roots() -> List[Path]:
 def resolve_question_repair_source_path(*, entity_id: str, entity_name: str) -> str:
     entity_slug = str(entity_id or "").strip().lower()
     name_slug = str(entity_name or "").strip().lower().replace(" ", "-")
-    candidates: List[tuple[float, str]] = []
+    candidates_by_suffix: Dict[str, List[tuple[float, str]]] = {}
     suffixes = ("_question_first_dossier.json", "_question_first_run_v2.json", "_question_first_run_v1.json")
 
     for root in iter_question_repair_source_roots():
@@ -1257,15 +1257,18 @@ def resolve_question_repair_source_path(*, entity_id: str, entity_name: str) -> 
                 if entity_slug and entity_slug not in lowered and name_slug and name_slug not in lowered:
                     continue
                 try:
-                    candidates.append((path.stat().st_mtime, str(path)))
+                    candidates_by_suffix.setdefault(suffix, []).append((path.stat().st_mtime, str(path)))
                 except OSError:
                     continue
 
-    if not candidates:
-        return ""
+    for suffix in suffixes:
+        candidates = candidates_by_suffix.get(suffix) or []
+        if not candidates:
+            continue
+        candidates.sort(key=lambda item: item[0], reverse=True)
+        return candidates[0][1]
 
-    candidates.sort(key=lambda item: item[0], reverse=True)
-    return candidates[0][1]
+    return ""
 
 
 @app.post("/api/dossiers/generate", response_model=DossierResponse)

@@ -33,6 +33,53 @@ function _firstDisplayText(...values) {
   return '';
 }
 
+function _normalizeDisplayEvidence(value) {
+  const items = Array.isArray(value) ? value : [];
+  return items
+    .map((item) => {
+      if (!item) return null;
+      if (typeof item === 'string') {
+        const url = item.trim();
+        return url ? { url, label: '' } : null;
+      }
+      if (typeof item !== 'object') return null;
+      const url = String(item.url || item.evidence_url || item.href || '').trim();
+      const label = String(item.label || item.title || item.source || '').trim();
+      const snippet = String(item.snippet || item.summary || '').trim();
+      if (!url && !label && !snippet) return null;
+      return {
+        ...(url ? { url } : {}),
+        ...(label ? { label } : {}),
+        ...(snippet ? { snippet } : {}),
+      };
+    })
+    .filter(Boolean)
+    .slice(0, 4);
+}
+
+function _normalizeDisplayAnswer(value) {
+  if (!value || typeof value !== 'object') return null;
+  const headline = _toDisplayText(value.headline);
+  const bullets = Array.isArray(value.bullets)
+    ? value.bullets.map(_toDisplayText).filter(Boolean).slice(0, 4)
+    : [];
+  const evidence = _normalizeDisplayEvidence(value.evidence);
+  const commercial_implication = _toDisplayText(value.commercial_implication);
+  const verification_needed = _toDisplayText(value.verification_needed);
+  const status_label = _toDisplayText(value.status_label);
+  if (!headline && bullets.length === 0 && evidence.length === 0 && !commercial_implication && !verification_needed && !status_label) {
+    return null;
+  }
+  return {
+    headline,
+    bullets,
+    evidence,
+    commercial_implication,
+    verification_needed,
+    status_label,
+  };
+}
+
 function _sanitizeRawStructuredOutput(value) {
   if (value == null) return value;
   if (typeof value === 'string') return value.trim() === '[object Object]' ? null : value;
@@ -89,6 +136,7 @@ function _normalizeCandidate(value) {
   const title = String(value.title || value.role || '').trim();
   const organization = String(value.organization || value.company || '').trim();
   const linkedin_url = String(value.linkedin_url || value.linkedin || value.profile_url || '').trim();
+  const evidence_url = String(value.evidence_url || value.url || '').trim();
   const source_url = typeof value.source_url === 'object'
     ? String(value.source_url?.url || value.source_url?.href || '').trim()
     : String(value.source_url || '').trim();
@@ -101,6 +149,7 @@ function _normalizeCandidate(value) {
   const candidate = { name };
   if (title) candidate.title = title;
   if (organization) candidate.organization = organization;
+  if (evidence_url) candidate.evidence_url = evidence_url;
   if (source_url) candidate.source_url = source_url;
   if (linkedin_url) candidate.linkedin_url = linkedin_url;
   if (email) candidate.email = email;
@@ -359,6 +408,8 @@ function _normalizeAnswerRecord(answer, questionTiming, questionSpec) {
     rollout_phase: String(normalized.rollout_phase || questionSpec?.rollout_phase || '').trim() || null,
     structured_output_schema: String(normalized.structured_output_schema || questionSpec?.structured_output_schema || '').trim() || null,
     answer: _normalizeAnswerPayload(normalized),
+    evidence_url: typeof normalized.evidence_url === 'string' ? normalized.evidence_url : null,
+    display_answer: _normalizeDisplayAnswer(normalized.display_answer),
     primary_owner: _normalizeCandidate(normalized.primary_owner),
     supporting_candidates: Array.isArray(normalized.supporting_candidates) ? normalized.supporting_candidates.map((item) => _normalizeCandidate(item)).filter(Boolean) : [],
     candidates: Array.isArray(normalized.candidates) ? normalized.candidates.map((item) => _normalizeCandidate(item)).filter(Boolean) : [],
@@ -591,6 +642,7 @@ export function buildQuestionFirstRunMergePatch({
         procurement_model: answer.procurement_model ?? null,
         commercial_implication: answer.commercial_implication ?? null,
         signal_density: answer.signal_density ?? null,
+        display_answer: _clone(answer.display_answer) ?? null,
         answer: _clone(answer.answer),
       })),
     },

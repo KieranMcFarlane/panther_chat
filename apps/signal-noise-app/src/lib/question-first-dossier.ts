@@ -366,7 +366,9 @@ function deriveQuestionTerminalSummary(input: {
   rawAnswerValue: unknown
 }): string {
   const commercialInterpretation = ensureObject(input.answer.commercial_interpretation)
+  const displayAnswer = ensureObject(input.answerRecord.display_answer || input.answer.display_answer)
   const summaryCandidates = [
+    toDisplayText(displayAnswer.headline),
     toDisplayText(input.answer.summary),
     toDisplayText(input.answer.value),
     typeof input.rawAnswerValue === 'string' || typeof input.rawAnswerValue === 'number' || typeof input.rawAnswerValue === 'boolean'
@@ -597,8 +599,10 @@ function getQuestionAnswerText(question: Record<string, any>): string {
   const answerRecord = getQuestionAnswerRecord(question)
   const answer = ensureObject(answerRecord.answer)
   const rawStructuredOutput = ensureObject(answer.raw_structured_output)
+  const displayAnswer = ensureObject(answerRecord.display_answer || answer.display_answer)
 
   return [
+    toDisplayText(displayAnswer.headline),
     toDisplayText(answer.summary),
     toDisplayText(answer.value),
     toDisplayText(answerRecord.terminal_summary),
@@ -613,11 +617,13 @@ function getQuestionEvidenceUrls(question: Record<string, any>): string[] {
   const answerRecord = getQuestionAnswerRecord(question)
   const answer = ensureObject(answerRecord.answer)
   const rawStructuredOutput = ensureObject(answer.raw_structured_output)
+  const displayAnswer = ensureObject(answerRecord.display_answer || answer.display_answer)
+  const displayEvidence = Array.isArray(displayAnswer.evidence) ? displayAnswer.evidence : []
   const sources = Array.isArray(rawStructuredOutput.sources) ? rawStructuredOutput.sources : []
   const evidenceRefs = Array.isArray(answerRecord.evidence_refs) ? answerRecord.evidence_refs : []
 
   return uniqueStrings(
-    [...sources, ...evidenceRefs]
+    [...displayEvidence, ...sources, ...evidenceRefs]
       .map((value) => toDisplayText(value))
       .filter(Boolean),
   )

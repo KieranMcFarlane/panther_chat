@@ -102,6 +102,23 @@ test('dossier-backed opportunities skip failed-only partial dossiers', () => {
   assert.match(readModelSource, /!isFailedOnlyOpportunityRow\(row\)/)
 })
 
+test('dossier-backed source selection blocks contaminated generic and duplicate signals upstream', () => {
+  assert.match(persistenceSource, /hasEntityContamination/)
+  assert.match(persistenceSource, /isToolFailureOpportunityText/)
+  assert.match(persistenceSource, /hasTriggerLikeLanguage/)
+  assert.match(persistenceSource, /isPureContextOnlyDossierSignal/)
+  assert.match(persistenceSource, /shouldRejectContaminatedDossierSource/)
+  assert.match(persistenceSource, /dedupeDossierOpportunitySources/)
+  assert.match(persistenceSource, /sourceSignalDedupeKey/)
+  assert.match(persistenceSource, /entity_id.*signal category.*trigger\/source/i)
+  assert.match(persistenceSource, /data_quality_blockers/)
+  assert.match(persistenceSource, /wrong_entity_blocked/)
+  assert.match(persistenceSource, /tool_failure_blocked/)
+  assert.match(persistenceSource, /generic_context_only/)
+  assert.match(persistenceSource, /commercial_qualification.*context_only/s)
+  assert.match(persistenceSource, /commercial_qualification.*watch/s)
+})
+
 test('opportunities read model sanitizes structured blob text and compresses oversized titles', () => {
   assert.match(readModelSource, /function extractStructuredText/)
   assert.match(readModelSource, /function sanitizeNarrativeText/)

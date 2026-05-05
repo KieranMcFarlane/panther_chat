@@ -220,6 +220,25 @@ def test_universal_atomic_matrix_uses_role_specific_leadership_search_patterns_f
     assert '"Zimbabwe Cricket" wikipedia' in search_patterns
 
 
+def test_universal_atomic_matrix_q3_prioritizes_buyer_role_discovery_over_generic_history():
+    payload = build_universal_atomic_question_source(
+        entity_type="SPORT_CLUB",
+        entity_name="Los Angeles Dodgers",
+        entity_id="los-angeles-dodgers",
+        preset="los-angeles-dodgers-atomic-matrix",
+    )
+    q3 = _question_index(payload)["q3_leadership"]
+    search_patterns = q3["search_strategy"]["search_queries"]
+
+    assert search_patterns[0] != '"Los Angeles Dodgers" wikipedia'
+    assert '"Los Angeles Dodgers" chief commercial officer' in search_patterns
+    assert '"Los Angeles Dodgers" head of partnerships' in search_patterns
+    assert '"Los Angeles Dodgers" digital director' in search_patterns
+    assert '"Los Angeles Dodgers" executive staff' in search_patterns
+    assert "founding years" in q3["question"].lower()
+    assert "generic entity facts" in q3["question"].lower()
+
+
 def test_universal_atomic_matrix_marks_conditional_questions_explicitly():
     payload = build_universal_atomic_question_source(
         entity_type="SPORT_LEAGUE",

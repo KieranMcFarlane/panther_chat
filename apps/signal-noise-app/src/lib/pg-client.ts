@@ -1,16 +1,73 @@
 /**
  * PostgreSQL client with Supabase-compatible query builder interface.
- * Drop-in replacement for @supabase/supabase-js that uses local PostgreSQL.
+ * Drop-in replacement for @supabase/supabase-js backed by DATABASE_URL.
  */
 import { Pool, PoolConfig } from 'pg';
 
 // ── Connection ──────────────────────────────────────────────────────────
 
+const LOCAL_SOCKET_DATABASE_URL = 'postgresql:///signal_noise_app?host=/tmp';
+
+function isProductionLikeRuntime(): boolean {
+  return Boolean(
+    process.env.VERCEL ||
+    process.env.VERCEL_ENV ||
+    process.env.NODE_ENV === 'production'
+  );
+}
+
+function getDatabaseUrl(): string {
+  const databaseUrl = process.env.DATABASE_URL?.trim();
+  const neonDatabaseUrl = process.env.NEON_DB_URL?.trim();
+
+  if (neonDatabaseUrl && (!databaseUrl || databaseUrl === LOCAL_SOCKET_DATABASE_URL)) {
+    return neonDatabaseUrl;
+  }
+  if (databaseUrl) return databaseUrl;
+  if (neonDatabaseUrl) return neonDatabaseUrl;
+
+  if (isProductionLikeRuntime()) {
+    throw new Error(
+      'DATABASE_URL or NEON_DB_URL is required for Vercel, preview, staging, and production Postgres connections.'
+    );
+  }
+
+  return LOCAL_SOCKET_DATABASE_URL;
+}
+
+function isLocalDatabaseUrl(databaseUrl: string): boolean {
+  if (databaseUrl.includes('host=/tmp')) return true;
+
+  try {
+    const parsed = new URL(databaseUrl);
+    return ['localhost', '127.0.0.1', '::1'].includes(parsed.hostname);
+  } catch {
+    return false;
+  }
+}
+
+function shouldUseSsl(databaseUrl: string): boolean {
+  if (databaseUrl.includes('sslmode=require')) return true;
+  if (databaseUrl.includes('.neon.tech')) return true;
+  return !isLocalDatabaseUrl(databaseUrl);
+}
+
+function getPoolMax(): number {
+  const configured = Number.parseInt(process.env.PG_POOL_MAX || '', 10);
+  if (Number.isFinite(configured) && configured > 0) return configured;
+  if (process.env.VERCEL || process.env.VERCEL_ENV) return 5;
+  if (process.env.NODE_ENV === 'production') return 10;
+  return 20;
+}
+
+const databaseUrl = getDatabaseUrl();
+
 const poolConfig: PoolConfig = {
-  connectionString: process.env.DATABASE_URL || `postgresql:///signal_noise_app?host=/tmp`,
-  max: 20,
+  connectionString: databaseUrl,
+  max: getPoolMax(),
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 30000,
+  ...(shouldUseSsl(databaseUrl) ? { ssl: { rejectUnauthorized: false } } : {}),
 };
 
 let _pool: Pool | null = null;

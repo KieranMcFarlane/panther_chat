@@ -825,6 +825,93 @@ async def test_pipeline_orchestrator_forwards_question_repair_metadata(monkeypat
 
 
 @pytest.mark.asyncio
+async def test_pipeline_orchestrator_question_repair_does_not_resume_completed_checkpoint(monkeypatch):
+    monkeypatch.setenv("PIPELINE_QUESTION_FIRST_ENABLED", "true")
+    monkeypatch.setenv("PIPELINE_QUESTION_FIRST_PERSIST_REPORTS", "false")
+
+    import question_first_dossier_runner as question_first_runner
+    try:
+        import backend.question_first_dossier_runner as backend_question_first_runner
+    except ModuleNotFoundError:
+        import question_first_dossier_runner as backend_question_first_runner
+
+    captured = {}
+
+    async def fake_run_question_first_dossier_from_payload(**kwargs):
+        captured["question_first_checkpoint"] = kwargs.get("question_first_checkpoint")
+        captured["resume"] = kwargs.get("resume")
+        captured["launch_source_payload"] = kwargs.get("launch_source_payload")
+        payload = dict(kwargs["source_payload"])
+        payload["question_first"] = {
+            "enabled": True,
+            "schema_version": "question_first_run_v2",
+            "questions_answered": 1,
+            "answers": [{"question_id": "q3_leadership", "validation_state": "failed"}],
+            "categories": [],
+        }
+        payload["question_first_run"] = {
+            "schema_version": "question_first_run_v2",
+            "generated_at": "2026-04-10T08:00:00+00:00",
+            "run_started_at": "2026-04-10T08:00:00+00:00",
+            "source": "opencode_agentic_batch",
+            "status": "ready",
+        }
+        payload["questions"] = [{"question_id": "q3_leadership", "validation_state": "failed"}]
+        return payload
+
+    monkeypatch.setattr(question_first_runner, "run_question_first_dossier_from_payload", fake_run_question_first_dossier_from_payload)
+    monkeypatch.setattr(backend_question_first_runner, "run_question_first_dossier_from_payload", fake_run_question_first_dossier_from_payload)
+
+    orchestrator = PipelineOrchestrator(
+        dossier_generator=FakeDossierGenerator(),
+        discovery=FakeDiscovery(),
+        ralph_validator=FakeRalph(),
+        graphiti_service=FakeGraphiti(),
+        dashboard_scorer=FakeDashboardScorer(),
+        persistence_coordinator=FakePersistenceCoordinator(),
+        brightdata_client=None,
+        claude_client=None,
+    )
+
+    await orchestrator.run_entity_pipeline(
+        entity_id="baseball-australia",
+        entity_name="Baseball Australia",
+        entity_type="SPORT_FEDERATION",
+        priority_score=91,
+        initial_dossier={
+            "entity_id": "baseball-australia",
+            "entity_name": "Baseball Australia",
+            "entity_type": "SPORT_FEDERATION",
+            "question_first_checkpoint": {
+                "answer_records": [
+                    {
+                        "question_id": "q3_leadership",
+                        "validation_state": "validated",
+                        "answer": "Stale leadership answer",
+                    }
+                ],
+                "terminal_states": {"q3_leadership": "validated"},
+            },
+            "questions": [
+                {"question_id": "q3_leadership", "question_text": "Who are the buyer-role leaders?"},
+                {"question_id": "q11_decision_owner", "question_text": "Who is the best buyer?", "depends_on": ["q3_leadership"]},
+            ],
+        },
+        run_objective="leadership_enrichment",
+        request_metadata={
+            "rerun_mode": "question",
+            "question_id": "q3_leadership",
+            "cascade_dependents": False,
+        },
+    )
+
+    assert captured["question_first_checkpoint"] is None
+    assert captured["resume"] is False
+    launch_question_ids = [question["question_id"] for question in captured["launch_source_payload"]["questions"]]
+    assert launch_question_ids == ["q3_leadership"]
+
+
+@pytest.mark.asyncio
 async def test_pipeline_orchestrator_applies_max_questions_to_opencode_fallback(monkeypatch):
     monkeypatch.setenv("PIPELINE_QUESTION_FIRST_ENABLED", "true")
     monkeypatch.setenv("PIPELINE_QUESTION_FIRST_PERSIST_REPORTS", "false")

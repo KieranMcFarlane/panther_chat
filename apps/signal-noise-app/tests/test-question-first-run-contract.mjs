@@ -57,6 +57,14 @@ test('buildQuestionFirstRunArtifact emits the canonical question_first_run_v2 sh
         procurement_model: 'unknown',
         commercial_implication: 'Clear official grounding supports commercial targeting.',
         signal_density: 0.66,
+        display_answer: {
+          headline: 'Major League Cricket was founded in 2023.',
+          bullets: ['Canonical identity confirmed from official evidence.'],
+          evidence: [{ url: 'https://example.com', label: 'Example' }],
+          commercial_implication: 'Clear official grounding supports commercial targeting.',
+          verification_needed: '',
+          status_label: 'validated',
+        },
         answer: {
           kind: 'fact',
           value: '2023',
@@ -144,11 +152,14 @@ test('buildQuestionFirstRunArtifact emits the canonical question_first_run_v2 sh
   assert.equal(artifact.answer_records[0].commercial_implication, 'Clear official grounding supports commercial targeting.');
   assert.equal(artifact.answer_records[0].signal_density, 0.66);
   assert.equal(artifact.answer_records[0].structured_signal.named_entities[0].name, 'Major League Cricket');
+  assert.equal(artifact.answer_records[0].display_answer.headline, 'Major League Cricket was founded in 2023.');
+  assert.equal(artifact.answer_records[0].display_answer.evidence[0].url, 'https://example.com');
   assert.equal(artifact.merge_patch.question_first.schema_version, QUESTION_FIRST_RUN_SCHEMA_VERSION);
   assert.equal(artifact.merge_patch.question_first.questions_answered, 1);
   assert.equal(artifact.merge_patch.question_first.answers[0].answer.value, '2023');
   assert.equal(artifact.merge_patch.question_first.answers[0].evidence_grade, 'strong');
   assert.equal(artifact.merge_patch.question_first.answers[0].commercial_implication, 'Clear official grounding supports commercial targeting.');
+  assert.equal(artifact.merge_patch.question_first.answers[0].display_answer.headline, 'Major League Cricket was founded in 2023.');
   assert.ok(!('questions' in artifact.merge_patch));
   assert.ok(!('question_first_answer' in artifact.question_specs[0]));
   assert.ok(!('raw_execution_trace' in artifact.answer_records[0]));

@@ -1,4 +1,5 @@
 import type { HomeGraphitiInsightEvidence, HomeGraphitiInsightRelationship } from '@/lib/home-graphiti-contract'
+import type { GraphitiOpportunityBriefing } from '@/lib/graphiti-opportunity-briefing'
 
 export type GraphitiOpportunityStatus = 'ready' | 'degraded' | 'empty'
 
@@ -60,6 +61,37 @@ export type GraphitiOpportunityRelatedPattern = {
   reason: string
 }
 
+export type GraphitiOpportunityStrategyBrief = {
+  schema_version: 'yp_bd_strategy_v1'
+  generated_at: string
+  model: string
+  source_profile: 'YELLOW-PANTHER-BUSINESS-PROFILE.md'
+  signal_title: string
+  signal_strength: 'High' | 'Medium' | 'Low'
+  verification_status: 'Ready for outreach' | 'Needs verification' | 'Needs enrichment' | 'Ignore'
+  service_wedge:
+    | 'mobile_app'
+    | 'fan_engagement'
+    | 'digital_transformation'
+    | 'analytics_ai'
+    | 'backend_integration'
+    | 'sports_platform'
+    | 'consulting'
+    | 'no_clear_fit'
+  pursuit_recommendation: 'outreach_ready' | 'verify_now' | 'needs_enrichment' | 'ignore'
+  decision_summary: string
+  what_happened: string
+  why_it_matters_now: string
+  yellow_panther_angle: string
+  suggested_route: string
+  next_move: string
+  outreach_opener: string
+  verify_before_action: string[]
+  disqualifiers: string[]
+  evidence_used: string[]
+  reasoning_notes: string
+}
+
 export type GraphitiOpportunityCard = {
   id: string
   title: string
@@ -104,6 +136,13 @@ export type GraphitiOpportunityCard = {
   findings?: GraphitiOpportunityFinding[]
   timeline?: GraphitiOpportunityTimelineEvent[]
   related_patterns?: GraphitiOpportunityRelatedPattern[]
+  briefing?: GraphitiOpportunityBriefing | GraphitiOpportunityStrategyBrief
+  strategy_brief?: GraphitiOpportunityStrategyBrief
+  commercial_state?: 'outreach_ready' | 'verify_now' | 'watch' | 'context_only' | 'data_issue'
+  commercial_confidence?: 'High' | 'Medium' | 'Low' | string
+  commercial_confidence_score?: number
+  yp_relevance?: number
+  commercial_truth_reasons?: string[]
 }
 
 export type GraphitiOpportunitySourceRow = {

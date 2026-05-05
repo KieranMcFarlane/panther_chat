@@ -1574,6 +1574,7 @@ class PipelineOrchestrator:
             and isinstance(source_payload.get("metadata", {}).get("question_first_repair"), dict)
             else {}
         )
+        is_question_repair = bool(repair_meta.get("mode") == "question" and repair_meta.get("question_id"))
         if repair_meta.get("mode") == "question" and repair_meta.get("question_id"):
             repaired_question_ids = derive_repair_question_ids(
                 source_payload=source_payload,
@@ -1586,6 +1587,14 @@ class PipelineOrchestrator:
                 source_payload=source_payload,
                 question_ids=repaired_question_ids,
             )
+            # A single-question repair must call the provider for the selected
+            # question. Reusing the prior checkpoint marks that question
+            # terminal and causes the runner to replay stale answers.
+            launch_source_payload.pop("question_first_checkpoint", None)
+            launch_metadata = launch_source_payload.get("metadata") if isinstance(launch_source_payload.get("metadata"), dict) else {}
+            if isinstance(launch_metadata, dict):
+                launch_metadata.pop("question_first_checkpoint", None)
+                launch_source_payload["metadata"] = launch_metadata
         elif self.question_first_max_questions > 0 and len(questions) > self.question_first_max_questions:
             capped_question_ids = [
                 str(question.get("question_id") or "").strip()
@@ -1704,8 +1713,12 @@ class PipelineOrchestrator:
             preset=source_payload.get("preset"),
             question_source_label=f"{entity_id}::question-first",
             progress_callback=_opencode_progress_callback,
-            question_first_checkpoint=durable_checkpoint if isinstance(durable_checkpoint, dict) else None,
-            resume=bool(durable_checkpoint),
+            question_first_checkpoint=(
+                None
+                if is_question_repair
+                else durable_checkpoint if isinstance(durable_checkpoint, dict) else None
+            ),
+            resume=False if is_question_repair else bool(durable_checkpoint),
         )
         final_dossier = merged_dossier if isinstance(merged_dossier, dict) else dossier
         if isinstance(final_dossier, dict):

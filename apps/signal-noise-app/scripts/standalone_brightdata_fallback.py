@@ -251,9 +251,51 @@ async def _run(question: Dict[str, Any]) -> Dict[str, Any]:
         await client.close()
 
 
+async def _prefetch(payload: Dict[str, Any]) -> Dict[str, Any]:
+    question = payload.get("question") or {}
+    query = str(payload.get("query") or question.get("query") or question.get("question_text") or "").strip()
+    scrape_url = str(payload.get("scrape_url") or "").strip()
+    client = BrightDataSDKClient()
+    http_client = BrightDataHTTPClient()
+    try:
+        if scrape_url:
+            scrape = await client.scrape_as_markdown(scrape_url)
+            if scrape.get("status") != "success":
+                scrape = await http_client.scrape_as_markdown(scrape_url)
+            return {
+                "content": str(scrape.get("content") or "")[:3000] if scrape.get("status") == "success" else "",
+                "status": scrape.get("status") or "empty",
+            }
+
+        if not query:
+            return {"results": [], "status": "empty"}
+
+        search = await client.search_engine(query, engine="google", num_results=5)
+        if search.get("status") != "success":
+            search = await http_client.search_engine(query, engine="google", num_results=5)
+        results = list(search.get("results") or []) if search.get("status") == "success" else []
+        return {
+            "results": [
+                {
+                    "title": str(item.get("title") or ""),
+                    "url": str(item.get("url") or ""),
+                    "snippet": str(item.get("snippet") or item.get("description") or ""),
+                }
+                for item in results[:5]
+            ],
+            "status": search.get("status") or "empty",
+        }
+    finally:
+        await client.close()
+
+
 def main() -> int:
     _load_env()
     payload = json.loads(sys.stdin.read() or "{}")
+    if payload.get("mode") == "prefetch":
+        result = asyncio.run(_prefetch(payload))
+        sys.stdout.write(json.dumps(result))
+        return 0
     question = payload.get("question") or {}
     result = asyncio.run(_run(question))
     sys.stdout.write(json.dumps(result))

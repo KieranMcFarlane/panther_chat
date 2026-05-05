@@ -487,6 +487,31 @@ async def test_run_entity_pipeline_recovers_question_repair_source_from_artifact
     assert result.artifacts["dossier"]["question_first"]["quality_state"] == "complete"
 
 
+def test_resolve_question_repair_source_path_prefers_full_dossier_over_newer_single_question_run(monkeypatch, tmp_path):
+    repair_root = tmp_path / "question-first-diagnostics" / "fc-porto-2027"
+    repair_root.mkdir(parents=True)
+    full_dossier = repair_root / "fc-porto-2027_question_first_dossier.json"
+    single_question_run = repair_root / "fc-porto-2027_opencode_batch_20260505_010203_question_first_run_v1.json"
+    full_dossier.write_text(json.dumps({"entity_id": "fc-porto-2027", "questions": [{"question_id": "q1"}]}), encoding="utf-8")
+    single_question_run.write_text(json.dumps({"entity_id": "fc-porto-2027", "answer_records": [{"question_id": "q3_leadership"}]}), encoding="utf-8")
+    newer_mtime = full_dossier.stat().st_mtime + 100
+    single_question_run.touch()
+    # Make the partial run newer than the full dossier. Repair source
+    # resolution should still choose the full dossier so question repairs patch
+    # the complete answer pack rather than starting from a one-question artifact.
+    import os
+
+    os.utime(single_question_run, (newer_mtime, newer_mtime))
+    monkeypatch.setenv("QUESTION_REPAIR_SOURCE_ROOTS", str(tmp_path))
+
+    resolved = main.resolve_question_repair_source_path(
+        entity_id="fc-porto-2027",
+        entity_name="FC Porto",
+    )
+
+    assert resolved == str(full_dossier)
+
+
 def test_resolve_phase0_timeout_seconds_defaults_to_300(monkeypatch):
     monkeypatch.delenv("DOSSIER_PHASE0_TIMEOUT_SECONDS", raising=False)
     assert main.resolve_phase0_timeout_seconds() == 300.0

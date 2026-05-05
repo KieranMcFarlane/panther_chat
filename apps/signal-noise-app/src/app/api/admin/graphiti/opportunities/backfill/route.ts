@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { materializeGraphitiOpportunities } from '@/lib/graphiti-opportunity-persistence'
 import { loadGraphitiOpportunitySourceRows } from '@/lib/graphiti-opportunity-persistence'
 import { backfillGraphitiDossierIngestions } from '@/lib/graphiti-dossier-ingestion'
+import { synthesizeAndPersistGraphitiOpportunityStrategyBriefs } from '@/lib/graphiti-opportunity-strategy-synthesis.mjs'
 import { getSupabaseAdmin } from '@/lib/supabase-client'
 import { requireApiSession, UnauthorizedError } from '@/lib/server-auth'
 
@@ -70,13 +71,32 @@ export async function POST(request: NextRequest) {
     const limit = Number(body?.limit || 500)
     const effectiveLimit = Number.isFinite(limit) && limit > 0 ? limit : 500
     const dryRun = body?.dry_run === true || body?.dryRun === true
+    const strategyLimitInput = body?.strategy_limit ?? body?.strategyLimit ?? 50
+    const strategyLimit = Number(strategyLimitInput)
+    const effectiveStrategyLimit = Number.isFinite(strategyLimit) && strategyLimit >= 0 ? strategyLimit : 50
+    const strategySynthesisSkipped = {
+      candidate_count: 0,
+      synthesized_count: 0,
+      updated_count: 0,
+      failed_count: 0,
+      dry_run: dryRun,
+      strategy_synthesis_skipped: true,
+    }
     const dossierIngestion = await backfillGraphitiDossierIngestions({
       limit: effectiveLimit,
       dryRun,
     })
     const sourceRows = await loadGraphitiOpportunitySourceRows(effectiveLimit)
+    const supabase = getSupabaseAdmin()
 
     if (dryRun) {
+      const strategySynthesis = effectiveStrategyLimit === 0
+        ? strategySynthesisSkipped
+        : await synthesizeAndPersistGraphitiOpportunityStrategyBriefs({
+          supabase,
+          limit: effectiveStrategyLimit,
+          dryRun: true,
+        })
       return NextResponse.json({
         ok: true,
         dry_run: true,
@@ -90,6 +110,7 @@ export async function POST(request: NextRequest) {
           changed_count: 0,
           failed_only_dossier_opportunities_deactivated: 0,
         },
+        strategy_synthesis: strategySynthesis,
         warnings: [],
         last_updated_at: new Date().toISOString(),
       })
@@ -97,7 +118,6 @@ export async function POST(request: NextRequest) {
 
     if (sourceRows.length > 0) {
       const parentRows = dedupeParentInsightRows(sourceRows.map(toParentInsightRow))
-      const supabase = getSupabaseAdmin()
       const parentResponse = await supabase
         .from('graphiti_materialized_insights')
         .upsert(parentRows, { onConflict: 'insight_id' })
@@ -108,6 +128,14 @@ export async function POST(request: NextRequest) {
     }
 
     const result = await materializeGraphitiOpportunities(effectiveLimit)
+    const strategySynthesis = effectiveStrategyLimit === 0
+      ? strategySynthesisSkipped
+      : await synthesizeAndPersistGraphitiOpportunityStrategyBriefs({
+        supabase,
+        limit: effectiveStrategyLimit,
+        dryRun: false,
+        concurrency: 2,
+      })
 
     return NextResponse.json({
       ok: true,
@@ -117,6 +145,7 @@ export async function POST(request: NextRequest) {
       failed_only_opportunities_deactivated: result.stats.failed_only_dossier_opportunities_deactivated,
       source_count: sourceRows.length,
       stats: result.stats,
+      strategy_synthesis: strategySynthesis,
       warnings: result.warnings,
       last_updated_at: result.lastUpdatedAt,
     })

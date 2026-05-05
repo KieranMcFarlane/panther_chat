@@ -61,6 +61,59 @@ test('dossier ingestion classifies OpenCode provider failures as failed infrastr
   assert.match(ingestionSource, /last_error: episode\.failure_reason/)
 })
 
+test('dossier ingestion uses useful evidenced facts instead of raw answer volume for quality', () => {
+  const ingestionSource = readFileSync(ingestionModulePath, 'utf8')
+
+  assert.match(ingestionSource, /raw_answer_count/)
+  assert.match(ingestionSource, /useful_fact_count/)
+  assert.match(ingestionSource, /failed_fact_count/)
+  assert.match(ingestionSource, /placeholder_fact_count/)
+  assert.match(ingestionSource, /no_signal_fact_count/)
+  assert.match(ingestionSource, /evidence_url_count/)
+  assert.match(ingestionSource, /MIN_COMPLETE_USEFUL_FACTS\s*=\s*5/)
+  assert.match(ingestionSource, /MIN_COMPLETE_EVIDENCE_URLS\s*=\s*3/)
+  assert.match(ingestionSource, /answer_count:\s*qualityMetrics\.useful_fact_count/)
+  assert.match(ingestionSource, /evidence_count:\s*qualityMetrics\.evidence_url_count/)
+  assert.match(ingestionSource, /qualityMetrics\.useful_fact_count\s*>=\s*MIN_COMPLETE_USEFUL_FACTS/)
+  assert.match(ingestionSource, /qualityMetrics\.evidence_url_count\s*>=\s*MIN_COMPLETE_EVIDENCE_URLS/)
+  assert.match(ingestionSource, /qualityMetrics\.raw_answer_count/)
+  assert.doesNotMatch(ingestionSource, /answer_count:\s*answerRecords\.length/)
+})
+
+test('dossier ingestion stores quality metrics in raw metadata without a migration', () => {
+  const ingestionSource = readFileSync(ingestionModulePath, 'utf8')
+
+  assert.match(ingestionSource, /quality_metrics:\s*episode\.quality_metrics/)
+  assert.match(ingestionSource, /raw_answer_count:\s*episode\.quality_metrics\.raw_answer_count/)
+  assert.match(ingestionSource, /useful_fact_count:\s*episode\.quality_metrics\.useful_fact_count/)
+  assert.match(ingestionSource, /evidence_url_count:\s*episode\.quality_metrics\.evidence_url_count/)
+})
+
+test('dossier ingestion tracks blocked wrong-entity tool-failure and generic-context facts', () => {
+  const ingestionSource = readFileSync(ingestionModulePath, 'utf8')
+
+  assert.match(ingestionSource, /wrong_entity_fact_count/)
+  assert.match(ingestionSource, /tool_failure_fact_count/)
+  assert.match(ingestionSource, /generic_context_fact_count/)
+  assert.match(ingestionSource, /isWrongEntityFact/)
+  assert.match(ingestionSource, /isToolFailureText/)
+  assert.match(ingestionSource, /isGenericContextFact/)
+  assert.match(ingestionSource, /wrong_entity_blocked/)
+  assert.match(ingestionSource, /tool_failure_blocked/)
+  assert.match(ingestionSource, /generic_context_only/)
+  assert.match(ingestionSource, /hasUsefulFactContent\(fact,\s*entityNames/)
+})
+
+test('dossier ingestion supersedes older ingested ledger rows for the same canonical entity', () => {
+  const ingestionSource = readFileSync(ingestionModulePath, 'utf8')
+  const scriptSource = readFileSync(backfillScriptPath, 'utf8')
+
+  assert.match(ingestionSource, /superseded_by_latest_quality_backfill/)
+  assert.match(ingestionSource, /where canonical_entity_id = \$1\s+and content_hash <> \$2\s+and status = 'ingested'/s)
+  assert.match(scriptSource, /superseded_by_latest_quality_backfill/)
+  assert.match(scriptSource, /where canonical_entity_id = \$1\s+and content_hash <> \$2\s+and status = 'ingested'/s)
+})
+
 test('opportunity materialization deactivates failed-only dossier rows instead of keeping them active', () => {
   assert.match(persistenceSource, /deactivateFailedOnlyDossierOpportunities/)
   assert.match(persistenceSource, /title\.ilike\('Question execution failed before a safe answer could be produced%'\)/)
@@ -81,6 +134,11 @@ test('admin backfill and status routes expose dossier ingestion counts separatel
   assert.match(adminStatusSource, /partial_dossiers_ingested/)
   assert.match(adminStatusSource, /opportunity_worthy_entities/)
   assert.match(adminStatusSource, /failed_only_opportunities_active/)
+  assert.match(adminStatusSource, /sparse_complete_entities/)
+  assert.match(adminStatusSource, /enrichment_required_entities/)
+  assert.match(adminStatusSource, /wrong_entity_blocked/)
+  assert.match(adminStatusSource, /tool_failure_blocked/)
+  assert.match(adminStatusSource, /generic_context_only/)
 })
 
 test('local postgres backfill script supports dry-run and apply modes for dossier ingestion', () => {

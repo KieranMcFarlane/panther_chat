@@ -513,6 +513,36 @@ test('person-title-only outreach angles fall back to strategic Yellow Panther po
   assert.doesNotMatch(reasoning.recommended_action, /Use the hiring signal as the outreach wedge\. Shaun Lockwood, Chief Commercial Officer/)
 })
 
+test('generic cold outreach route does not override a named buyer route', () => {
+  const reasoning = buildGraphitiOpportunityReasoning(baseInput({
+    entityName: 'Doncaster Rovers',
+    confidence: 80,
+    yellowPantherFit: 80,
+    supportingSignals: [
+      'Recruitment Analyst vacancy posted 17 Apr 2026 signals investment in data-led scouting.',
+      'Shaun Lockwood, Chief Commercial Officer, Club Doncaster.',
+    ],
+    evidence: [
+      { title: 'Recruitment Analyst vacancy posted 17 Apr 2026', url: 'https://example.com/2026/april/17/recruitment-analyst', source: 'q10_hiring_signal' },
+    ],
+    rawPayload: {
+      graphiti_sales_brief: {
+        outreach_route: 'cold',
+        outreach_target: 'Shaun Lockwood',
+        buyer_name: 'Shaun Lockwood',
+        outreach_angle: 'Recruitment Analyst vacancy signals investment in data-led scouting.',
+      },
+      yellow_panther_opportunity: {
+        entry_point: 'Shaun Lockwood',
+      },
+    },
+  }))
+
+  assert.equal(reasoning.commercial_qualification.yp_fit_breakdown.buyer_route, 'Shaun Lockwood')
+  assert.match(reasoning.recommended_action, /Route the first hypothesis through Shaun Lockwood/)
+  assert.doesNotMatch(reasoning.recommended_action, /through cold/)
+})
+
 test('visible findings exclude placeholders and question ids as source urls', () => {
   const reasoning = buildGraphitiOpportunityReasoning(baseInput({
     supportingSignals: [

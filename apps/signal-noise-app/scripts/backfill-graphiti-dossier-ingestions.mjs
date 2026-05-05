@@ -8,6 +8,9 @@ import { fileURLToPath } from 'node:url'
 const __dirname = dirname(fileURLToPath(import.meta.url))
 config({ path: resolve(__dirname, '..', '.env'), quiet: true })
 const OPENCODE_PROVIDER_INSUFFICIENT_BALANCE_ERROR = 'OpenCodeProviderInsufficientBalanceError'
+const MIN_COMPLETE_USEFUL_FACTS = 5
+const MIN_COMPLETE_EVIDENCE_URLS = 3
+const MIN_PARTIAL_USEFUL_FACTS = 2
 
 export function parseArgs(argv = process.argv.slice(2)) {
   return {
@@ -30,7 +33,28 @@ export function createPgPool() {
 }
 
 function toText(value) {
-  return value === null || value === undefined ? '' : String(value).trim()
+  if (value === null || value === undefined) return ''
+  if (typeof value === 'string') {
+    const text = value.trim()
+    return text === '[object Object]' ? '' : text
+  }
+  if (typeof value === 'number' || typeof value === 'boolean') return String(value)
+  if (Array.isArray(value)) return value.map(toText).filter(Boolean).join(' · ')
+  if (typeof value === 'object') {
+    const candidate = [
+      value.summary,
+      value.answer,
+      value.value,
+      value.text,
+      value.context,
+      value.title,
+      value.description,
+      value.label,
+      value.name,
+    ].map(toText).find(Boolean)
+    return candidate || ''
+  }
+  return String(value).trim()
 }
 
 function asRecord(value) {
@@ -47,9 +71,20 @@ function isPlaceholderText(value) {
     !text
     || text === 'n/a'
     || text === 'unknown'
+    || text === 'null'
+    || text === 'no_signal'
+    || text === 'skipped'
+    || text === 'failed'
+    || text === 'tool_call_missing'
     || text.includes('no deterministic answer was produced for this question')
     || text.includes('question execution failed before a safe answer could be produced')
     || text.includes(OPENCODE_PROVIDER_INSUFFICIENT_BALANCE_ERROR.toLowerCase())
+    || text.includes('retry_exhausted')
+    || text.includes('insufficient_signal')
+    || text.includes('no substantive')
+    || text.includes('no relevant results')
+    || text.includes('no web evidence')
+    || text.includes('returned no results')
   )
 }
 
@@ -140,14 +175,56 @@ function answerSummary(answer) {
   ].map(toText).find((value) => !isPlaceholderText(value)) || ''
 }
 
-function inferQualityState(dossier, answerCount, hasContent) {
+function isFailedFact(fact) {
+  const status = toText(fact.status).toLowerCase()
+  return status === 'failed'
+    || status === 'skipped'
+    || status === 'tool_call_missing'
+    || toText(fact.summary).toLowerCase().includes('question execution failed before a safe answer could be produced')
+}
+
+function isNoSignalFact(fact) {
+  const status = toText(fact.status).toLowerCase()
+  const summary = toText(fact.summary).toLowerCase()
+  return status === 'no_signal'
+    || summary === 'no_signal'
+    || summary.includes('insufficient_signal')
+}
+
+function hasUsefulFactContent(fact) {
+  const evidenceUrls = asArray(fact.evidence_urls).map(toText).filter(Boolean)
+  const summary = toText(fact.summary)
+  if (isFailedFact(fact) || isNoSignalFact(fact)) return false
+  if (evidenceUrls.length > 0) return true
+  if (isPlaceholderText(summary)) return false
+  return summary.length >= 20
+}
+
+function computeQualityMetrics(answers, questionFacts, evidenceUrls) {
+  return {
+    raw_answer_count: Number(answers.length),
+    useful_fact_count: questionFacts.filter(hasUsefulFactContent).length,
+    failed_fact_count: questionFacts.filter(isFailedFact).length,
+    placeholder_fact_count: questionFacts.filter((fact) => isPlaceholderText(fact.summary)).length,
+    no_signal_fact_count: questionFacts.filter(isNoSignalFact).length,
+    evidence_url_count: evidenceUrls.length,
+  }
+}
+
+function inferQualityState(dossier, qualityMetrics, failedOnly) {
   const explicit = toText(dossier.quality_state).toLowerCase()
-  if (['partial', 'complete', 'blocked', 'failed', 'empty', 'client_ready'].includes(explicit)) return explicit
   const publicationStatus = toText(dossier.publication_status || dossier.publish_status).toLowerCase()
-  if (publicationStatus.includes('client_ready')) return 'client_ready'
-  if (publicationStatus.includes('partial')) return 'partial'
-  if (!hasContent) return 'empty'
-  return answerCount >= 15 ? 'complete' : 'partial'
+  if (failedOnly) return 'failed'
+  if (explicit === 'blocked' || publicationStatus.includes('blocked')) return 'blocked'
+  if (explicit === 'failed' || explicit === 'empty') return explicit
+  if (
+    qualityMetrics.useful_fact_count >= MIN_COMPLETE_USEFUL_FACTS
+    && qualityMetrics.evidence_url_count >= MIN_COMPLETE_EVIDENCE_URLS
+  ) {
+    return explicit === 'client_ready' || publicationStatus.includes('client_ready') ? 'client_ready' : 'complete'
+  }
+  if (qualityMetrics.useful_fact_count >= MIN_PARTIAL_USEFUL_FACTS || qualityMetrics.evidence_url_count >= 1) return 'partial'
+  return 'empty'
 }
 
 function buildEpisode(row) {
@@ -162,17 +239,19 @@ function buildEpisode(row) {
     evidence_urls: Array.from(collectEvidenceUrls(answer)),
   })).filter((fact) => fact.question_id || fact.summary || fact.evidence_urls.length > 0)
   const evidenceUrls = Array.from(collectEvidenceUrls(dossier))
+  const qualityMetrics = computeQualityMetrics(answers, questionFacts, evidenceUrls)
   const discoverySummary = asRecord(asRecord(dossier.question_first).discovery_summary || dossier.discovery_summary)
   const graphitiSalesBrief = asRecord(discoverySummary.graphiti_sales_brief || dossier.graphiti_sales_brief)
   const yellowPanther = asRecord(discoverySummary.yellow_panther_opportunity || dossier.yellow_panther_opportunity)
   const providerInfrastructureFailure = answers.some(isProviderInfrastructureFailure) || isProviderInfrastructureFailure(dossier)
+  const failedOnly = questionFacts.length > 0 && qualityMetrics.useful_fact_count === 0
   const hasContent = !providerInfrastructureFailure && (
-    questionFacts.some((fact) => fact.summary)
-    || evidenceUrls.length > 0
+    qualityMetrics.useful_fact_count > 0
+    || qualityMetrics.evidence_url_count > 0
     || Object.keys(graphitiSalesBrief).length > 0
     || Object.keys(yellowPanther).length > 0
-  )
-  const qualityState = inferQualityState(dossier, answers.length, hasContent)
+  ) && !failedOnly
+  const qualityState = inferQualityState(dossier, qualityMetrics, failedOnly)
   const referenceTime = row.generated_at || row.created_at || new Date().toISOString()
   const body = {
     source_description: 'entity_dossiers',
@@ -186,6 +265,9 @@ function buildEpisode(row) {
     dossier: {
       dossier_id: row.id || null,
       quality_state: qualityState,
+      raw_answer_count: qualityMetrics.raw_answer_count,
+      useful_fact_count: qualityMetrics.useful_fact_count,
+      evidence_url_count: qualityMetrics.evidence_url_count,
       source_created_at: row.created_at || null,
       source_generated_at: row.generated_at || null,
     },
@@ -198,8 +280,9 @@ function buildEpisode(row) {
   return {
     status: providerInfrastructureFailure ? 'failed' : hasContent ? 'ingested' : 'skipped_empty',
     quality_state: providerInfrastructureFailure ? 'failed' : hasContent ? qualityState : 'empty',
-    answer_count: answers.length,
-    evidence_count: evidenceUrls.length,
+    answer_count: qualityMetrics.useful_fact_count,
+    evidence_count: qualityMetrics.evidence_url_count,
+    quality_metrics: qualityMetrics,
     content_hash: contentHash(body),
     episode_body: body,
     reference_time: referenceTime,
@@ -282,7 +365,33 @@ async function upsertLedger(pool, row, episode) {
     JSON.stringify({
       backfilled_by: 'backfill-graphiti-dossier-ingestions',
       failure_reason: episode.failure_reason,
+      quality_metrics: episode.quality_metrics,
+      raw_answer_count: episode.quality_metrics.raw_answer_count,
+      useful_fact_count: episode.quality_metrics.useful_fact_count,
+      failed_fact_count: episode.quality_metrics.failed_fact_count,
+      placeholder_fact_count: episode.quality_metrics.placeholder_fact_count,
+      no_signal_fact_count: episode.quality_metrics.no_signal_fact_count,
+      evidence_url_count: episode.quality_metrics.evidence_url_count,
     }),
+  ])
+
+  await pool.query(`
+    update graphiti_dossier_ingestions
+    set status = 'skipped_empty',
+        quality_state = 'empty',
+        updated_at = now(),
+        raw_metadata = coalesce(raw_metadata, '{}'::jsonb) || jsonb_build_object(
+          'superseded_by_latest_quality_backfill',
+          true,
+          'superseded_by_content_hash',
+          $2
+        )
+    where canonical_entity_id = $1
+      and content_hash <> $2
+      and status = 'ingested'
+  `, [
+    row.canonical_entity_id,
+    episode.content_hash,
   ])
 }
 
@@ -346,6 +455,8 @@ async function main() {
             quality_state: episode.quality_state,
             answer_count: episode.answer_count,
             evidence_count: episode.evidence_count,
+            raw_answer_count: episode.quality_metrics.raw_answer_count,
+            useful_fact_count: episode.quality_metrics.useful_fact_count,
           })
         }
         if (args.apply) {

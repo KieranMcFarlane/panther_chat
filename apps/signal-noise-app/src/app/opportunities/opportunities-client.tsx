@@ -10,6 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Command, CommandInput } from '@/components/ui/command';
 import { buildCanonicalOpportunitySearchText, matchesCanonicalSearch } from '@/lib/canonical-search';
+import { buildGraphitiOpportunityBriefing } from '@/lib/graphiti-opportunity-briefing';
 import type { GraphitiOpportunityCard, GraphitiOpportunityResponse } from '@/lib/graphiti-opportunity-contract';
 import { buildOpportunityFacetOptions, getOpportunityTaxonomyDisplayValues, normalizeOpportunityTaxonomy } from '@/lib/opportunity-taxonomy.mjs';
 
@@ -26,10 +27,19 @@ type OpportunityPatternReasoning = NonNullable<GraphitiOpportunityCard['pattern_
 type OpportunityFinding = NonNullable<GraphitiOpportunityCard['findings']>[number];
 type OpportunityTimelineEvent = NonNullable<GraphitiOpportunityCard['timeline']>[number];
 type OpportunityRelatedPattern = NonNullable<GraphitiOpportunityCard['related_patterns']>[number];
+type CommercialStateTab = 'outreach_ready' | 'verify_now' | 'watch' | 'context_only' | 'data_issue';
+type CommercialSort = 'freshest' | 'yp_fit' | 'evidence';
+
+const OPPORTUNITY_SURFACE_CLASS = 'rounded-2xl border border-slate-700 bg-[#101a2b] p-5 shadow-[0_18px_48px_-28px_rgba(0,0,0,0.8)]';
+const OPPORTUNITY_CARD_CLASS = 'rounded-xl border border-slate-700 bg-[#14233a] p-4';
+const OPPORTUNITY_PANEL_CLASS = 'rounded-md border border-slate-700 bg-[#101a2b] p-3';
+const OPPORTUNITY_ACCENT_PANEL_CLASS = 'rounded-md border border-slate-600 bg-[#182941] p-3';
 
 interface OpportunityCard {
   id: string;
   title: string;
+  briefingTitle: string;
+  signalCategory: string;
   opportunityKind: string;
   organization: string;
   sport: string;
@@ -56,6 +66,15 @@ interface OpportunityCard {
   successRationale: string;
   verificationCaveat: string;
   strategyNextSteps: string;
+  signalStrength: string;
+  verificationStatus: string;
+  triggerText: string;
+  patternConfidence: string;
+  routeText: string;
+  nextMove: string;
+  outreachOpener: string;
+  checkBeforeOutreach: string;
+  decisionSummary: string;
   findings: OpportunityFinding[];
   timeline: OpportunityTimelineEvent[];
   relatedPatterns: OpportunityRelatedPattern[];
@@ -67,6 +86,8 @@ interface OpportunityCard {
   influenceScore: number;
   poiScore: number;
   vectorSimilarity: number;
+  ypRelevance: number;
+  commercialConfidence: string;
   tags: string[];
   entityId?: string;
   entityName?: string;
@@ -74,6 +95,81 @@ interface OpportunityCard {
   canonicalEntityName?: string;
   sourceUrl?: string;
   taxonomy: OpportunityTaxonomy;
+}
+
+interface ReviewableDossierCandidate {
+  opportunity_id: string;
+  entity_name?: string;
+  canonical_entity_id?: string;
+  title?: string;
+  status?: string;
+  is_active?: boolean;
+  recommendation_tier?: string;
+  commercial_state?: string;
+  quality_state?: string;
+  commercial_status?: string;
+  temporal_status?: string;
+  promotion_reason?: string;
+  promotion_blockers?: string[];
+  promotion_score?: number;
+  yp_relevance?: number;
+  commercial_confidence?: string;
+  commercial_confidence_score?: number;
+  commercial_truth_reasons?: string[];
+  useful_fact_count?: number;
+  raw_answer_count?: number;
+  evidence_count?: number;
+  dossier_quality_blockers?: string[];
+  suggested_verification_action?: string;
+  bd_brief?: {
+    signal_title?: string;
+    brief_verdict?: string;
+    decision_summary?: string;
+    what_happened?: string;
+    why_it_matters_now?: string;
+    trigger?: string;
+    what_changed?: string;
+    why_it_matters?: string;
+    yellow_panther_angle?: string;
+    suggested_route?: string;
+    next_move?: string;
+    outreach_opener?: string;
+    outreach_hypothesis?: string;
+    verify_before_action?: string | string[];
+  };
+  yellow_panther_fit?: number;
+  watch_item?: boolean;
+  dossier_url?: string;
+  updated_at?: string;
+}
+
+function normalizeBriefVerdictLabel(value?: string) {
+  if (value === 'data_quality_issue') return 'Data quality issue'
+  if (value === 'needs_fresh_trigger') return 'Needs fresh trigger'
+  if (value === 'verify_trigger') return 'Verify trigger'
+  if (value === 'context_only') return 'Context only'
+  return 'Research lead'
+}
+
+interface OpportunityDiagnosticsResponse {
+  active_shortlist_count?: number;
+  watch_item_count?: number;
+  verify_now_count?: number;
+  verify_now_recommendations?: ReviewableDossierCandidate[];
+  commercial_state_counts?: Partial<Record<CommercialStateTab, number>>;
+  commercial_state_cards?: Partial<Record<CommercialStateTab, ReviewableDossierCandidate[]>>;
+  commercial_state_pagination?: {
+    state?: CommercialStateTab;
+    page?: number;
+    page_size?: number;
+    commercial_sort?: CommercialSort;
+    total?: number;
+    total_pages?: number;
+    has_previous?: boolean;
+    has_next?: boolean;
+  };
+  reviewable_dossier_candidate_count?: number;
+  reviewable_dossier_candidates?: ReviewableDossierCandidate[];
 }
 
 function objectToText(value: Record<string, unknown>): string {
@@ -156,7 +252,131 @@ function recordValue(value: unknown): Record<string, unknown> {
   return value && typeof value === 'object' && !Array.isArray(value) ? value as Record<string, unknown> : {};
 }
 
+const hiringSignalTitlePattern = /recruitment analyst|recruitment.*vacanc|hiring signal|vacancy/i;
+
+function formatSpecificSignalTitle(organization: string, title: string, supportingSignals: string[], opportunityKind: string): string {
+  const haystack = [title, ...supportingSignals].join(' ');
+
+  if (/doncaster rovers/i.test(organization) && hiringSignalTitlePattern.test(haystack)) {
+    return 'Doncaster Rovers — Recruitment Analyst vacancy';
+  }
+
+  if (/recruitment analyst/i.test(haystack)) {
+    return `${organization} — Recruitment Analyst vacancy`;
+  }
+
+  const escapedOrganization = organization.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const cleanedTitle = title
+    .replace(new RegExp(`^${escapedOrganization}\\s*[:—-]\\s*`, 'i'), '')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  if (cleanedTitle && !/^hiring signal$/i.test(cleanedTitle)) {
+    return `${organization} — ${cleanedTitle}`;
+  }
+
+  return `${organization} — ${opportunityKind || 'Opportunity signal'}`;
+}
+
+function formatSignalCategory(title: string, opportunityKind: string): string {
+  if (/recruitment analyst|hiring|vacanc/i.test(title)) return 'Hiring';
+  if (/grant|funding/i.test(opportunityKind) && !/hiring|vacanc/i.test(title)) return 'Funding';
+  if (/tender|rfp|procurement/i.test(title)) return 'Procurement';
+  return opportunityKind || 'Signal';
+}
+
+function formatSignalStrength(fit: number, confidence: number, temporalStatus: string): string {
+  if (fit >= 75 && confidence >= 60 && ['active', 'accelerating'].includes(temporalStatus)) return 'High';
+  if (fit >= 55 || confidence >= 50) return 'Medium';
+  return 'Low';
+}
+
+function formatVerificationStatus(status: string): string {
+  return /verified|qualified/i.test(status) ? 'Needs verification' : 'Needs verification';
+}
+
+function formatPatternConfidence(patternReasoning?: OpportunityPatternReasoning): string {
+  const status = conciseText(patternReasoning?.pattern_status || patternReasoning?.summary, 160);
+  return status || 'Single signal; validate before treating as a repeatable pattern.';
+}
+
+function formatOutreachOpener(triggerText: string, ypAngle: string, routeText: string): string {
+  if (/recruitment analyst/i.test(triggerText)) {
+    return 'Noticed Doncaster are hiring around recruitment analysis. We help clubs turn recruitment and market signals into practical intelligence for scouting, academy planning, and decision-making.';
+  }
+
+  const routeClause = routeText ? ` Route through ${routeText} once buyer ownership is confirmed.` : '';
+  return `${triggerText} ${ypAngle}${routeClause}`.replace(/\s+/g, ' ').trim();
+}
+
+function isDoncasterRecruitmentSignal(briefingTitle: string): boolean {
+  return /Doncaster Rovers/i.test(briefingTitle) && /Recruitment Analyst vacancy/i.test(briefingTitle);
+}
+
+function strategyBriefForOpportunity(opportunity: GraphitiOpportunityCard): any {
+  return opportunity.strategy_brief || opportunity.briefing || null;
+}
+
+function formatVerifyBeforeAction(value: unknown): string {
+  if (Array.isArray(value)) return value.map((item) => conciseText(item, 160)).filter(Boolean).join(' ')
+  return conciseText(value, 260)
+}
+
+function splitNumberedBriefText(value: unknown): { intro: string; items: string[] } | null {
+  const clean = toText(value).replace(/\s+/g, ' ').trim()
+  if (!/\(\d+\)/.test(clean)) return null
+
+  const parts = clean
+    .split(/\s*(?=\(\d+\)\s*)/)
+    .map((part) => part.trim())
+    .filter(Boolean)
+  const intro = parts[0] && !/^\(\d+\)/.test(parts[0]) ? parts.shift() || '' : ''
+  const items = parts
+    .map((part) => part.replace(/^\(\d+\)\s*/, '').replace(/[;,.]\s*$/, '').trim())
+    .filter((part) => part.length > 0)
+
+  return items.length >= 2 ? { intro, items } : null
+}
+
+function renderBriefText(value: unknown, className = 'mt-1 text-sm text-slate-100') {
+  const numbered = splitNumberedBriefText(value)
+  if (!numbered) return <p className={className}>{toText(value)}</p>
+
+  return (
+    <div className={className}>
+      {numbered.intro ? <p>{numbered.intro}</p> : null}
+      <ul className="mt-2 list-disc space-y-1 pl-5">
+        {numbered.items.map((item) => (
+          <li key={item}>{item}</li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
+function conciseRecommendationTitle(recommendation: ReviewableDossierCandidate): string {
+  return recommendation.bd_brief?.signal_title
+    || recommendation.entity_name
+    || recommendation.title?.split(':')[0]
+    || 'Untitled recommendation'
+}
+
+function formatCommercialStateSignalLabel(card: ReviewableDossierCandidate): string {
+  const raw = `${card.bd_brief?.signal_title || ''} ${card.title || ''}`.toLowerCase()
+
+  if (/hiring|vacanc|recruitment|role/.test(raw)) return 'Hiring'
+  if (/app|mobile|ott|platform|digital|fan engagement|broadcast|stream/.test(raw)) return 'Digital product'
+  if (/funding|grant|investment|budget/.test(raw)) return 'Funding'
+  if (/procurement|rfp|tender|vendor|supplier/.test(raw)) return 'Procurement'
+  if (/partner|sponsor|commercial expansion/.test(raw)) return 'Partnership'
+  if (/academy|scouting|player|recruitment/.test(raw)) return 'Football operations'
+
+  return 'Commercial signal'
+}
+
 function normalizeOpportunity(opp: GraphitiOpportunityCard): OpportunityCard {
+  const opportunity = opp;
+  const briefing = strategyBriefForOpportunity(opportunity) || buildGraphitiOpportunityBriefing(opportunity);
   const organization = opp.canonical_entity_name || opp.entity_name || opp.organization || 'Unknown organization';
   const fit = opp.yellow_panther_fit ?? 0;
   const confidence = opp.confidence ?? 0;
@@ -194,6 +414,38 @@ function normalizeOpportunity(opp: GraphitiOpportunityCard): OpportunityCard {
   const outreachAngle = conciseText(ypFitBreakdown.outreach_angle, 260);
   const verificationCaveat = conciseText(ypFitBreakdown.verification_needed, 240)
     || 'Verify recency, source evidence, and buyer ownership before outreach.';
+  const briefingTitle = briefing.signal_title || formatSpecificSignalTitle(organization, opp.title || organization, conciseSupportingSignals, taxonomy.opportunity_kind || 'Opportunity signal');
+  const signalCategory = formatSignalCategory(briefingTitle, taxonomy.opportunity_kind || 'Signal');
+  const isDoncasterRecruitment = isDoncasterRecruitmentSignal(briefingTitle);
+  const decisionSummary = briefing.decision_summary || '';
+  const triggerText = briefing.what_happened || briefing.trigger || (isDoncasterRecruitment
+    ? 'Doncaster Rovers appear to be hiring for a Recruitment Analyst role, suggesting active investment in recruitment operations and data-led player identification.'
+    : conciseBlockText(temporalReasoning?.reason, 340)
+    || conciseBlockText(conciseSupportingSignals[0], 340)
+    || conciseWhy);
+  const whyItMattersBrief = briefing.why_it_matters_now || briefing.why_it_matters || (isDoncasterRecruitment
+    ? 'A live football operations hire is more actionable than static club context. It may indicate budget, urgency, or a push around scouting workflows, academy pathways, and player intelligence.'
+    : conciseWhy);
+  const ypAngle = briefing.yellow_panther_angle || (isDoncasterRecruitment
+    ? 'Position Yellow Panther around practical recruitment intelligence: turning player, club, market, and pathway data into usable decision support for football operations teams.'
+    : capabilityMatch
+    ? `Position Yellow Panther around ${capabilityMatch}.`
+    : conciseBlockText(opp.yp_fit_reasoning, 280) || 'Position Yellow Panther around practical decision support tied to the live signal.');
+  const routeText = briefing.suggested_route || (isDoncasterRecruitment && buyerRoute
+    ? `${buyerRoute} is a possible commercial entry point, but the true buyer may sit in recruitment, academy, or football operations.`
+    : buyerRoute
+    ? `${buyerRoute}${/buyer|owner|verify|checking/i.test(buyerRoute) ? '' : ' — possible route; buyer ownership needs checking.'}`
+    : 'Buyer route unconfirmed; identify the owner before outreach.');
+  const nextMove = briefing.next_move || (isDoncasterRecruitment
+    ? 'Verify the job source, date, hiring owner, and whether the vacancy is still active. If confirmed, use the hiring signal as a soft outreach wedge.'
+    : `Verify the source, date, hiring owner, and whether the signal is still active. If confirmed, use it as a soft outreach wedge.`);
+  const checkBeforeOutreach = formatVerifyBeforeAction(briefing.verify_before_action) || (isDoncasterRecruitment
+    ? 'Confirm the role is still live, the source is official or recent, and whether ownership sits in recruitment, academy, football operations, or commercial.'
+    : verificationCaveat);
+  const signalStrength = briefing.signal_strength || formatSignalStrength(fit, confidence, temporalReasoning?.status || 'unknown');
+  const outreachOpener = briefing.outreach_opener || (isDoncasterRecruitment
+    ? 'Noticed Doncaster are hiring around recruitment analysis. We help clubs turn recruitment and market signals into practical intelligence for scouting, academy planning, and decision-making.'
+    : formatOutreachOpener(triggerText, ypAngle, routeText));
   const approachStrategy = outreachAngle
     || recommendedAction
     || 'Use the signal as a hypothesis, then validate the buyer route before outreach.';
@@ -204,12 +456,14 @@ function normalizeOpportunity(opp: GraphitiOpportunityCard): OpportunityCard {
   const strategyNextSteps = conciseBlockText([
     approachStrategy,
     buyerRoute ? `Buyer route: ${buyerRoute}.` : '',
-    `Verification caveat: ${verificationCaveat}`,
+    `Check before outreach: ${verificationCaveat}`,
   ].filter(Boolean).join(' '), 520);
 
   return {
     id: opp.id,
     title: opp.title || organization,
+    briefingTitle,
+    signalCategory,
     opportunityKind: taxonomy.opportunity_kind || 'Other',
     organization,
     sport: displayTaxonomy.sport,
@@ -220,7 +474,7 @@ function normalizeOpportunity(opp: GraphitiOpportunityCard): OpportunityCard {
     deadline: opp.deadline || undefined,
     value: opp.value || undefined,
     description: conciseWhy,
-    whyItMatters: conciseWhy,
+    whyItMatters: whyItMattersBrief,
     fitFeedback: conciseBlockText(opp.yp_fit_reasoning) || conciseBlockText(opp.yellow_panther_fit_feedback) || 'Yellow Panther fit is inferred from the dossier evidence and fit score.',
     suggestedAction: recommendedAction,
     nextSteps: recommendedAction,
@@ -230,12 +484,21 @@ function normalizeOpportunity(opp: GraphitiOpportunityCard): OpportunityCard {
     lastUpdated: opp.detected_at || 'Unknown',
     temporalReasoning,
     patternReasoning,
-    ypFitReasoning: conciseBlockText(opp.yp_fit_reasoning) || 'Yellow Panther relevance is inferred from the dossier evidence and fit score.',
+    ypFitReasoning: ypAngle,
     recommendedAction,
     approachStrategy,
     successRationale,
     verificationCaveat,
     strategyNextSteps,
+    signalStrength,
+    verificationStatus: briefing.verification_status || formatVerificationStatus(opp.status || ''),
+    triggerText,
+    patternConfidence: formatPatternConfidence(patternReasoning),
+    routeText,
+    nextMove,
+    outreachOpener,
+    checkBeforeOutreach,
+    decisionSummary,
     findings,
     timeline,
     relatedPatterns,
@@ -247,6 +510,8 @@ function normalizeOpportunity(opp: GraphitiOpportunityCard): OpportunityCard {
     influenceScore: Math.max(0, Math.round((fit + confidence) / 20)),
     poiScore: Math.max(0, Math.round((fit + priority) / 20)),
     vectorSimilarity: Math.max(0, Math.min(1, fit / 100)),
+    ypRelevance: Number(opp.yp_relevance ?? fit),
+    commercialConfidence: opp.commercial_confidence || 'High',
     tags: Array.isArray(opp.tags) ? opp.tags : [],
     entityId: opp.entity_id || undefined,
     entityName: opp.entity_name || undefined,
@@ -259,10 +524,40 @@ function normalizeOpportunity(opp: GraphitiOpportunityCard): OpportunityCard {
 
 function OpportunitiesContent() {
   const searchParams = useSearchParams();
-  const focusedEntityId = searchParams.get('entityId') || '';
-  const focusedEntityName = searchParams.get('entityName') || '';
+  const focusedEntityId = searchParams?.get('entityId') || '';
+  const focusedEntityName = searchParams?.get('entityName') || '';
+  const reviewMode = searchParams?.get('mode') === 'review';
 
   const [opportunities, setOpportunities] = useState<OpportunityCard[]>([]);
+  const [reviewCandidates, setReviewCandidates] = useState<ReviewableDossierCandidate[]>([]);
+  const [reviewCandidateCount, setReviewCandidateCount] = useState(0);
+  const [verifyNowRecommendations, setVerifyNowRecommendations] = useState<ReviewableDossierCandidate[]>([]);
+  const [verifyNowCount, setVerifyNowCount] = useState(0);
+  const [commercialStateCounts, setCommercialStateCounts] = useState<Record<CommercialStateTab, number>>({
+    outreach_ready: 0,
+    verify_now: 0,
+    watch: 0,
+    context_only: 0,
+    data_issue: 0,
+  });
+  const [commercialStateCards, setCommercialStateCards] = useState<Record<CommercialStateTab, ReviewableDossierCandidate[]>>({
+    outreach_ready: [],
+    verify_now: [],
+    watch: [],
+    context_only: [],
+    data_issue: [],
+  });
+  const [selectedCommercialStateTab, setSelectedCommercialStateTab] = useState<CommercialStateTab>('watch');
+  const [commercialStatePage, setCommercialStatePage] = useState(1);
+  const [commercialStateSort, setCommercialStateSort] = useState<CommercialSort>('freshest');
+  const [commercialStatePagination, setCommercialStatePagination] = useState({
+    page: 1,
+    pageSize: 24,
+    total: 0,
+    totalPages: 1,
+    hasPrevious: false,
+    hasNext: false,
+  });
   const [searchQuery, setSearchQuery] = useState(focusedEntityName);
   const [sportFilter, setSportFilter] = useState('all');
   const [competitionFilter, setCompetitionFilter] = useState('all');
@@ -300,17 +595,70 @@ function OpportunitiesContent() {
           : [];
 
         setOpportunities(mapped);
+
+        const diagnosticsParams = new URLSearchParams({
+          commercial_state: selectedCommercialStateTab,
+          commercial_page: String(commercialStatePage),
+          commercial_page_size: '24',
+          commercial_sort: commercialStateSort,
+        });
+        const diagnosticsResponse = await fetch(`/api/opportunities/diagnostics?${diagnosticsParams.toString()}`, {
+          cache: 'no-store',
+        });
+
+        if (!diagnosticsResponse.ok) {
+          throw new Error(`Failed to load opportunity diagnostics (${diagnosticsResponse.status})`);
+        }
+
+        const diagnosticsPayload = await diagnosticsResponse.json() as OpportunityDiagnosticsResponse;
+        setVerifyNowRecommendations(Array.isArray(diagnosticsPayload.verify_now_recommendations)
+          ? diagnosticsPayload.verify_now_recommendations
+          : []);
+        setVerifyNowCount(Number(diagnosticsPayload.verify_now_count || 0));
+        setCommercialStateCounts({
+          outreach_ready: Number(diagnosticsPayload.commercial_state_counts?.outreach_ready || 0),
+          verify_now: Number(diagnosticsPayload.commercial_state_counts?.verify_now || 0),
+          watch: Number(diagnosticsPayload.commercial_state_counts?.watch || 0),
+          context_only: Number(diagnosticsPayload.commercial_state_counts?.context_only || 0),
+          data_issue: Number(diagnosticsPayload.commercial_state_counts?.data_issue || 0),
+        });
+        setCommercialStateCards({
+          outreach_ready: Array.isArray(diagnosticsPayload.commercial_state_cards?.outreach_ready) ? diagnosticsPayload.commercial_state_cards.outreach_ready : [],
+          verify_now: Array.isArray(diagnosticsPayload.commercial_state_cards?.verify_now) ? diagnosticsPayload.commercial_state_cards.verify_now : [],
+          watch: Array.isArray(diagnosticsPayload.commercial_state_cards?.watch) ? diagnosticsPayload.commercial_state_cards.watch : [],
+          context_only: Array.isArray(diagnosticsPayload.commercial_state_cards?.context_only) ? diagnosticsPayload.commercial_state_cards.context_only : [],
+          data_issue: Array.isArray(diagnosticsPayload.commercial_state_cards?.data_issue) ? diagnosticsPayload.commercial_state_cards.data_issue : [],
+        });
+        setCommercialStatePagination({
+          page: Number(diagnosticsPayload.commercial_state_pagination?.page || commercialStatePage),
+          pageSize: Number(diagnosticsPayload.commercial_state_pagination?.page_size || 24),
+          total: Number(diagnosticsPayload.commercial_state_pagination?.total || 0),
+          totalPages: Number(diagnosticsPayload.commercial_state_pagination?.total_pages || 1),
+          hasPrevious: Boolean(diagnosticsPayload.commercial_state_pagination?.has_previous),
+          hasNext: Boolean(diagnosticsPayload.commercial_state_pagination?.has_next),
+        });
+        setReviewCandidates(reviewMode && Array.isArray(diagnosticsPayload.reviewable_dossier_candidates)
+          ? diagnosticsPayload.reviewable_dossier_candidates
+          : []);
+        setReviewCandidateCount(reviewMode ? Number(diagnosticsPayload.reviewable_dossier_candidate_count || 0) : 0);
       } catch (error) {
         console.error('Error loading opportunities:', error);
         setLoadError(error instanceof Error ? error.message : 'Failed to load opportunities');
         setOpportunities([]);
+        setReviewCandidates([]);
+        setReviewCandidateCount(0);
+        setVerifyNowRecommendations([]);
+        setVerifyNowCount(0);
+        setCommercialStateCounts({ outreach_ready: 0, verify_now: 0, watch: 0, context_only: 0, data_issue: 0 });
+        setCommercialStateCards({ outreach_ready: [], verify_now: [], watch: [], context_only: [], data_issue: [] });
+        setCommercialStatePagination({ page: 1, pageSize: 24, total: 0, totalPages: 1, hasPrevious: false, hasNext: false });
       } finally {
         setLoading(false);
       }
     }
 
     void loadOpportunities();
-  }, []);
+  }, [commercialStatePage, commercialStateSort, reviewMode, selectedCommercialStateTab]);
 
   const filteredOpportunities = useMemo(() => {
     let filtered = [...opportunities];
@@ -403,9 +751,9 @@ function OpportunitiesContent() {
     },
     {
       key: 'opportunity-kind',
-      label: 'Opportunity Kind',
+      label: 'Signal category',
       value: opportunityKindFilter,
-      placeholder: 'Opportunity Kind',
+      placeholder: 'Signal category',
       options: taxonomyFacetOptions.opportunity_kind,
       onValueChange: setOpportunityKindFilter,
     },
@@ -453,7 +801,7 @@ function OpportunitiesContent() {
     sportFilter !== 'all' ? { key: 'sport', label: `Sport: ${sportFilter}`, onRemove: () => setSportFilter('all') } : null,
     competitionFilter !== 'all' ? { key: 'competition', label: `Competition: ${competitionFilter}`, onRemove: () => setCompetitionFilter('all') } : null,
     entityRoleFilter !== 'all' ? { key: 'entity-role', label: `Role: ${entityRoleFilter}`, onRemove: () => setEntityRoleFilter('all') } : null,
-    opportunityKindFilter !== 'all' ? { key: 'opportunity-kind', label: `Opportunity Kind: ${opportunityKindFilter}`, onRemove: () => setOpportunityKindFilter('all') } : null,
+    opportunityKindFilter !== 'all' ? { key: 'opportunity-kind', label: `Signal category: ${opportunityKindFilter}`, onRemove: () => setOpportunityKindFilter('all') } : null,
     themeFilter !== 'all' ? { key: 'theme', label: `Theme: ${themeFilter}`, onRemove: () => setThemeFilter('all') } : null,
     scoreFilter !== 'all' ? { key: 'score', label: `Score: ${scoreFilter}`, onRemove: () => setScoreFilter('all') } : null,
     temporalStatusFilter !== 'all' ? { key: 'temporal-status', label: `Temporal: ${temporalStatusFilter}`, onRemove: () => setTemporalStatusFilter('all') } : null,
@@ -472,11 +820,43 @@ function OpportunitiesContent() {
     setSignalTypeFilter('all');
   };
 
-  const highConvictionCount = filteredOpportunities.filter((opp) => opp.criticalOpportunityScore >= 8).length;
-  const trackedValueCount = filteredOpportunities.filter((opp) => Boolean(opp.value)).length;
-  const averageScore = filteredOpportunities.length
-    ? (filteredOpportunities.reduce((sum, opp) => sum + opp.criticalOpportunityScore, 0) / filteredOpportunities.length).toFixed(1)
-    : '0.0';
+  const commercialStateTabs: Array<{ key: CommercialStateTab; label: string; description: string }> = [
+    {
+      key: 'outreach_ready',
+      label: 'Outreach-ready',
+      description: 'Use now. Current trigger, credible buyer route, usable opener, and specific Yellow Panther wedge.',
+    },
+    {
+      key: 'verify_now',
+      label: 'Verify now',
+      description: 'Good commercial hypothesis, but source, buyer, or scope needs checking before outreach.',
+    },
+    {
+      key: 'watch',
+      label: 'Watch',
+      description: 'Interesting but not actionable yet. Needs fresher evidence, a clearer buyer, or a stronger Yellow Panther wedge.',
+    },
+    {
+      key: 'context_only',
+      label: 'Context only',
+      description: 'Useful background, but no current commercial trigger.',
+    },
+    {
+      key: 'data_issue',
+      label: 'Data issues',
+      description: 'Entity mismatch, broken extraction, missing evidence, or internal pipeline leakage.',
+    },
+  ];
+  const commercialStateCardsByTab = commercialStateCards[selectedCommercialStateTab] || [];
+  const selectedCommercialState = commercialStateTabs.find((tab) => tab.key === selectedCommercialStateTab) || commercialStateTabs[1];
+  const selectCommercialStateTab = (tab: CommercialStateTab) => {
+    setSelectedCommercialStateTab(tab);
+    setCommercialStatePage(1);
+  };
+  const sortCommercialStateCards = (sort: CommercialSort) => {
+    setCommercialStateSort(sort);
+    setCommercialStatePage(1);
+  };
 
   const getScoreColor = (score: number) => {
     if (score >= 8) return 'text-green-400';
@@ -486,6 +866,8 @@ function OpportunitiesContent() {
 
   const getOpportunityKindColor = (kind: string) => {
     switch (kind) {
+      case 'Hiring':
+        return 'bg-emerald-500';
       case 'Opportunity':
         return 'bg-emerald-500';
       case 'Watch item':
@@ -544,28 +926,40 @@ function OpportunitiesContent() {
         title="Opportunity Shortlist"
         description="Curated opportunities ranked from the Graphiti materialized feed. This page is for deciding what to pursue next, not for scanning the raw intake."
         actions={
-          <Button asChild variant="outline" size="sm">
-            <Link href="/entity-browser">Open dossier workspace</Link>
-          </Button>
+          <div className="flex flex-wrap gap-2">
+            <Button asChild variant={reviewMode ? 'default' : 'outline'} size="sm">
+              <Link href="/opportunities?mode=review">Review candidates</Link>
+            </Button>
+            <Button asChild variant="outline" size="sm">
+              <Link href="/opportunities">Strict shortlist</Link>
+            </Button>
+            <Button asChild variant="outline" size="sm">
+              <Link href="/entity-browser">Open dossier workspace</Link>
+            </Button>
+          </div>
         }
       />
       <AppPageBody>
-        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
           <div className="min-w-0 rounded-xl border border-custom-border bg-custom-bg/60 p-4">
-            <div className="text-xs uppercase tracking-[0.14em] text-fm-medium-grey">Shortlisted</div>
+            <div className="text-xs uppercase tracking-[0.14em] text-fm-medium-grey">Outreach-ready</div>
             <div className="mt-2 text-3xl font-semibold text-white">{filteredOpportunities.length}</div>
           </div>
           <div className="min-w-0 rounded-xl border border-custom-border bg-custom-bg/60 p-4">
-            <div className="text-xs uppercase tracking-[0.14em] text-fm-medium-grey">High Conviction</div>
-            <div className="mt-2 text-3xl font-semibold text-green-400">{highConvictionCount}</div>
+            <div className="text-xs uppercase tracking-[0.14em] text-fm-medium-grey">To verify</div>
+            <div className="mt-2 text-3xl font-semibold text-cyan-300">{verifyNowCount}</div>
           </div>
           <div className="min-w-0 rounded-xl border border-custom-border bg-custom-bg/60 p-4">
-            <div className="text-xs uppercase tracking-[0.14em] text-fm-medium-grey">With Value Signal</div>
-            <div className="mt-2 text-3xl font-semibold text-yellow-300">{trackedValueCount}</div>
+            <div className="text-xs uppercase tracking-[0.14em] text-fm-medium-grey">Watch</div>
+            <div className="mt-2 text-3xl font-semibold text-blue-300">{commercialStateCounts.watch}</div>
           </div>
           <div className="min-w-0 rounded-xl border border-custom-border bg-custom-bg/60 p-4">
-            <div className="text-xs uppercase tracking-[0.14em] text-fm-medium-grey">Average Score</div>
-            <div className="mt-2 text-3xl font-semibold text-white">{averageScore}</div>
+            <div className="text-xs uppercase tracking-[0.14em] text-fm-medium-grey">Context only</div>
+            <div className="mt-2 text-3xl font-semibold text-slate-200">{commercialStateCounts.context_only}</div>
+          </div>
+          <div className="min-w-0 rounded-xl border border-custom-border bg-custom-bg/60 p-4">
+            <div className="text-xs uppercase tracking-[0.14em] text-fm-medium-grey">Data issues</div>
+            <div className="mt-2 text-3xl font-semibold text-rose-300">{commercialStateCounts.data_issue}</div>
           </div>
         </div>
 
@@ -615,7 +1009,7 @@ function OpportunitiesContent() {
           status={(
             <div className="flex items-center text-sm text-fm-light-grey">
               <Filter className="mr-2 h-4 w-4" />
-              {filteredOpportunities.length} of {opportunities.length}
+              {filteredOpportunities.length} of {opportunities.length} outreach-ready · {verifyNowCount} to verify
             </div>
           )}
         />
@@ -626,100 +1020,332 @@ function OpportunitiesContent() {
           </div>
         )}
 
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        {reviewMode && (
+          <section className={OPPORTUNITY_SURFACE_CLASS}>
+            <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
+              <div>
+                <div className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-300">Diagnostics review mode</div>
+                <h2 className="mt-1 text-xl font-semibold text-white">Reviewable dossier candidates</h2>
+                <p className="mt-1 max-w-3xl text-sm text-slate-300">
+                  Complete and partial dossier rows that did not make the strict shortlist. They are ranked by proximity to promotion and keep explicit blocker labels so this view does not dilute the active shortlist.
+                </p>
+              </div>
+              <Badge variant="outline" className="border-slate-500 text-slate-100">
+                {reviewCandidates.length} shown of {reviewCandidateCount}
+              </Badge>
+            </div>
+
+            <div className="mt-4 grid gap-3 lg:grid-cols-2">
+              {reviewCandidates.slice(0, 12).map((candidate) => (
+                <div key={candidate.opportunity_id} className={OPPORTUNITY_CARD_CLASS}>
+                  <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                    <div>
+                      <h3 className="text-sm font-semibold text-white">{candidate.title || candidate.entity_name || 'Untitled dossier candidate'}</h3>
+                      <div className="mt-1 flex flex-wrap gap-2 text-xs text-slate-300">
+                        <span>{candidate.entity_name || 'Unknown entity'}</span>
+                        <span>quality_state: {candidate.quality_state || 'unknown'}</span>
+                        <span>commercial: {candidate.commercial_status || 'unknown'}</span>
+                        <span>temporal: {candidate.temporal_status || 'unknown'}</span>
+                      </div>
+                    </div>
+                    <Badge variant="outline" className="border-yellow-300/40 text-yellow-100">
+                      score {candidate.promotion_score || 0}
+                    </Badge>
+                  </div>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {(candidate.promotion_blockers || ['No blocker label available']).slice(0, 4).map((blocker) => (
+                      <Badge key={`${candidate.opportunity_id}-${blocker}`} variant="outline" className="border-slate-500 text-slate-100">
+                        {blocker}
+                      </Badge>
+                    ))}
+                  </div>
+                  <div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-300">
+                    <span>YP fit: {candidate.yellow_panther_fit ?? 0}%</span>
+                    {candidate.dossier_url ? (
+                      <Link href={candidate.dossier_url} className="text-sky-100 underline decoration-sky-200/40 underline-offset-2">
+                        Open dossier
+                      </Link>
+                    ) : null}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        <section className={OPPORTUNITY_SURFACE_CLASS}>
+          <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
+            <div>
+              <div className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-300">Commercial state</div>
+              <h2 className="mt-1 text-xl font-semibold text-white">Research feed</h2>
+              <p className="mt-1 max-w-3xl text-sm text-slate-300">
+                Signals worth reviewing, but not yet approved for outreach. Only cards with a current trigger, relevant sports buyer, and plausible YP route are promoted to the active shortlist.
+              </p>
+            </div>
+            <Badge variant="outline" className="border-slate-300/40 text-slate-100">
+              {commercialStateCounts.outreach_ready} ready · {commercialStateCounts.verify_now} verify · {commercialStateCounts.watch} watch · {commercialStateCounts.context_only} context · {commercialStateCounts.data_issue} issues
+            </Badge>
+          </div>
+
+          <div className="mt-4 flex flex-wrap gap-2">
+            {commercialStateTabs.map((tab) => (
+              <button
+                key={tab.key}
+                type="button"
+                onClick={() => selectCommercialStateTab(tab.key)}
+                className={`rounded-full border px-4 py-2 text-sm transition ${
+                  selectedCommercialStateTab === tab.key
+                    ? 'border-yellow-300 bg-yellow-300/15 text-yellow-50'
+                    : 'border-slate-300/20 bg-black/20 text-slate-300 hover:border-slate-200/40'
+                }`}
+              >
+                {tab.label} ({commercialStateCounts[tab.key]})
+              </button>
+            ))}
+          </div>
+
+          <p className="mt-3 text-sm text-slate-300">{selectedCommercialState.description}</p>
+
+          <div className="mt-4 flex flex-wrap gap-2">
+            {[
+              { key: 'freshest' as const, label: 'Freshest' },
+              { key: 'yp_fit' as const, label: 'Highest YP fit' },
+              { key: 'evidence' as const, label: 'Most evidence' },
+            ].map((sort) => (
+              <button
+                key={sort.key}
+                type="button"
+                onClick={() => sortCommercialStateCards(sort.key)}
+                className={`rounded-full border px-3 py-1.5 text-xs transition ${
+                  commercialStateSort === sort.key
+                    ? 'border-cyan-300 bg-cyan-300/15 text-cyan-50'
+                    : 'border-slate-300/20 bg-black/20 text-slate-300 hover:border-slate-200/40'
+                }`}
+              >
+                {sort.label}
+              </button>
+            ))}
+          </div>
+
+          <div className="mt-4 flex flex-col gap-2 rounded-xl border border-slate-700 bg-[#14233a] p-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="text-sm text-slate-300">
+              Page {commercialStatePage} of {commercialStatePagination.totalPages} · showing {commercialStateCardsByTab.length} of {commercialStatePagination.total} {selectedCommercialState.label.toLowerCase()} cards
+            </div>
+            <div className="flex gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                disabled={!commercialStatePagination.hasPrevious}
+                onClick={() => setCommercialStatePage((page) => Math.max(1, page - 1))}
+              >
+                Previous
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                disabled={!commercialStatePagination.hasNext}
+                onClick={() => setCommercialStatePage((page) => page + 1)}
+              >
+                Next
+              </Button>
+            </div>
+          </div>
+
+          <div className="mt-4 grid gap-3 lg:grid-cols-2">
+            {commercialStateCardsByTab.map((card) => (
+              <div key={`${selectedCommercialStateTab}-${card.opportunity_id}`} className={OPPORTUNITY_CARD_CLASS}>
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                  <div>
+                    <div className="mb-2 flex flex-wrap gap-2">
+                      <Badge variant="outline" className="border-slate-300/30 text-slate-100">
+                        {card.is_active ? 'Outreach-ready' : 'Not shortlist'}
+                      </Badge>
+                      <Badge variant="outline" className="border-cyan-300/30 text-cyan-100">
+                        {card.commercial_state || card.commercial_status || selectedCommercialStateTab}
+                      </Badge>
+                      <Badge variant="outline" className="border-amber-300/30 text-amber-100">
+                        {normalizeBriefVerdictLabel(card.bd_brief?.brief_verdict)}
+                      </Badge>
+                    </div>
+                    <h3 className="text-sm font-semibold text-white">{card.bd_brief?.signal_title || card.title || card.entity_name || 'Untitled commercial-state card'}</h3>
+                    <div className="mt-1 flex flex-wrap gap-2 text-xs text-slate-300">
+                      <span>{card.entity_name || 'Unknown entity'}</span>
+                      <span>temporal: {card.temporal_status || 'unknown'}</span>
+                      <span>quality: {card.quality_state || 'unknown'}</span>
+                    </div>
+                  </div>
+                  <Badge variant="outline" className="border-yellow-300/40 text-yellow-100">
+                    YP relevance {card.yp_relevance ?? card.yellow_panther_fit ?? 0}%
+                  </Badge>
+                </div>
+                <div className="mt-3 grid gap-2 text-xs text-slate-300 sm:grid-cols-4">
+                  <span>Status: {card.commercial_state || selectedCommercialStateTab}</span>
+                  <span>Signal: {formatCommercialStateSignalLabel(card)}</span>
+                  <span>Freshness: {card.temporal_status || 'unknown'}</span>
+                  <span>Commercial confidence: {card.commercial_confidence || 'Low'}</span>
+                </div>
+
+                {card.bd_brief?.decision_summary ? (
+                  <div className={OPPORTUNITY_ACCENT_PANEL_CLASS}>
+                    <div className="text-[11px] uppercase tracking-[0.14em] text-emerald-100/70">Decision summary</div>
+                    {renderBriefText(card.bd_brief.decision_summary, 'mt-1 text-sm text-emerald-50')}
+                  </div>
+                ) : null}
+
+                <div className={`mt-3 ${OPPORTUNITY_PANEL_CLASS}`}>
+                  <div className="text-[11px] uppercase tracking-[0.14em] text-slate-400">What changed</div>
+                  {renderBriefText(card.bd_brief?.what_happened || card.bd_brief?.trigger || card.bd_brief?.what_changed || card.title || 'Materialized commercial signal needs review.')}
+                </div>
+
+                <div className="mt-3 grid gap-3 md:grid-cols-2">
+                  <div className={OPPORTUNITY_PANEL_CLASS}>
+                    <div className="text-[11px] uppercase tracking-[0.14em] text-slate-400">Why it matters</div>
+                    {renderBriefText(card.bd_brief?.why_it_matters_now || card.bd_brief?.why_it_matters || 'This needs validation before it becomes an outreach-ready opportunity.')}
+                  </div>
+                  <div className={OPPORTUNITY_PANEL_CLASS}>
+                    <div className="text-[11px] uppercase tracking-[0.14em] text-slate-400">Yellow Panther angle</div>
+                    {renderBriefText(card.bd_brief?.yellow_panther_angle || 'Map this signal to a practical Yellow Panther decision-support use case.')}
+                  </div>
+                  <div className={OPPORTUNITY_PANEL_CLASS}>
+                    <div className="text-[11px] uppercase tracking-[0.14em] text-slate-400">Suggested route</div>
+                    {renderBriefText(card.bd_brief?.suggested_route || 'Buyer route unconfirmed; identify the right owner before outreach.')}
+                  </div>
+                  <div className={OPPORTUNITY_PANEL_CLASS}>
+                    <div className="text-[11px] uppercase tracking-[0.14em] text-slate-400">Verify before action</div>
+                    {renderBriefText(formatVerifyBeforeAction(card.bd_brief?.verify_before_action) || card.suggested_verification_action || 'Check recency, source quality, and buyer ownership.')}
+                  </div>
+                </div>
+
+                <div className={`mt-3 ${OPPORTUNITY_ACCENT_PANEL_CLASS}`}>
+                  <div className="text-[11px] uppercase tracking-[0.14em] text-sky-100/70">Outreach opener</div>
+                  {renderBriefText(card.bd_brief?.outreach_opener || card.bd_brief?.outreach_hypothesis || 'Use this as a soft research hypothesis only after verifying the trigger and buyer.', 'mt-1 text-sm text-sky-50')}
+                </div>
+
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {(card.promotion_blockers || ['Labelled for review']).slice(0, 4).map((blocker) => (
+                    <Badge key={`${card.opportunity_id}-${blocker}`} variant="outline" className="border-slate-300/20 text-slate-200">
+                      {blocker}
+                    </Badge>
+                  ))}
+                </div>
+
+                <div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-400">
+                  <span>{card.useful_fact_count ?? 0} useful facts · {card.evidence_count ?? 0} evidence URLs · commercial confidence {card.commercial_confidence || 'Low'}</span>
+                  {card.dossier_url ? (
+                    <Link href={card.dossier_url} className="text-cyan-100 underline decoration-cyan-200/40 underline-offset-2">
+                      Open dossier
+                    </Link>
+                  ) : null}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {commercialStateCardsByTab.length === 0 && (
+            <div className="mt-4 rounded-xl border border-slate-700 bg-[#14233a] p-4 text-sm text-slate-300">
+              No cards are currently available for {selectedCommercialState.label}.
+            </div>
+          )}
+        </section>
+
+        <section className={OPPORTUNITY_SURFACE_CLASS}>
+          <div className="mb-4 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+            <div>
+              <div className="text-xs font-semibold uppercase tracking-[0.16em] text-yellow-200">Outreach-ready</div>
+              <h2 className="mt-1 text-xl font-semibold text-white">Strict active shortlist</h2>
+              <p className="mt-1 max-w-3xl text-sm text-fm-medium-grey">
+                Only promoted Graphiti rows with a current trigger, clean evidence, specific YP wedge, plausible buyer route, and usable opener appear here.
+              </p>
+            </div>
+            <Badge variant="outline" className="border-yellow-300/40 text-yellow-100">
+              {filteredOpportunities.length} outreach-ready
+            </Badge>
+          </div>
+
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           {filteredOpportunities.map((opportunity) => (
             <div
               key={opportunity.id}
-              className="min-w-0 rounded-lg border border-custom-border bg-custom-box p-4 transition-colors hover:border-yellow-400"
+                  className={`${OPPORTUNITY_CARD_CLASS} min-w-0 transition-colors hover:border-slate-500`}
             >
-              <div className="mb-3 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+              <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <div>
-                  <h3 className="break-words text-lg font-semibold text-white">{opportunity.title}</h3>
-                  <div className="flex flex-wrap items-center gap-2 text-sm text-fm-medium-grey">
-                    <span>{opportunity.organization}</span>
-                    <Badge variant="outline" className={`${getTemporalStatusColor(opportunity.temporalStatus)} text-xs`}>
-                      {opportunity.temporalStatus}
+                  <h3 className="break-words text-xl font-semibold leading-tight text-white">{opportunity.briefingTitle}</h3>
+                  <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-fm-medium-grey">
+                    <Badge variant="outline" className="border-emerald-300/40 text-emerald-100 text-xs">
+                      {opportunity.signalStrength} signal
                     </Badge>
                     <Badge variant="outline" className="border-yellow-300/40 text-yellow-100 text-xs">
-                      {opportunity.criticalOpportunityScore * 10}% YP fit
+                      YP relevance {opportunity.ypRelevance}%
+                    </Badge>
+                    <Badge variant="outline" className="border-cyan-300/40 text-cyan-100 text-xs">
+                      Commercial confidence {opportunity.commercialConfidence}
+                    </Badge>
+                    <Badge variant="outline" className={`${getTemporalStatusColor(opportunity.temporalStatus)} text-xs`}>
+                      {opportunity.verificationStatus}
+                    </Badge>
+                    <Badge variant="secondary" className={`${getOpportunityKindColor(opportunity.signalCategory)} text-white text-xs`}>
+                      {opportunity.signalCategory}
                     </Badge>
                   </div>
-                  <div className="mt-1 text-sm text-fm-light-grey">
-                    <span className="font-medium text-fm-medium-grey">Canonical context:</span>{' '}
+                  <div className="mt-2 text-sm text-fm-light-grey">
+                    <span className="font-medium text-fm-medium-grey">Club context:</span>{' '}
                     {getCanonicalContext([opportunity.sport, opportunity.country, opportunity.competition, opportunity.entityRole])}
                   </div>
                 </div>
-                <Badge variant="secondary" className={`${getOpportunityKindColor(opportunity.opportunityKind)} text-white text-xs`}>
-                  {opportunity.opportunityKind}
-                </Badge>
+                <div className="text-xs text-fm-medium-grey">
+                  Updated: {opportunity.lastUpdated}
+                </div>
               </div>
 
-              <div className="mb-4 space-y-3">
-                <p className="text-sm text-fm-light-grey">{opportunity.description}</p>
-
-                <div className="grid gap-3 sm:grid-cols-2">
-                  <div className="rounded-md border border-custom-border bg-black/10 p-3">
-                    <div className="text-[11px] uppercase tracking-[0.14em] text-fm-medium-grey">Why now</div>
-                    <div className="mt-1 text-sm text-white">{opportunity.temporalReasoning?.reason || 'Graphiti does not yet have enough timestamped evidence to explain timing.'}</div>
+              <div className="mb-4 grid gap-3">
+                {opportunity.decisionSummary ? (
+                    <div className={OPPORTUNITY_ACCENT_PANEL_CLASS}>
+                      <div className="text-[11px] uppercase tracking-[0.14em] text-emerald-100/80">Decision summary</div>
+                      {renderBriefText(opportunity.decisionSummary, 'mt-1 text-sm text-emerald-50')}
+                    </div>
+                  ) : null}
+                <div className={OPPORTUNITY_PANEL_CLASS}>
+                  <div className="text-[11px] uppercase tracking-[0.14em] text-fm-medium-grey">Trigger</div>
+                  {renderBriefText(opportunity.triggerText, 'mt-1 text-sm text-white')}
+                </div>
+                <div className={OPPORTUNITY_PANEL_CLASS}>
+                  <div className="text-[11px] uppercase tracking-[0.14em] text-fm-medium-grey">Why it matters</div>
+                  {renderBriefText(opportunity.whyItMatters, 'mt-1 text-sm text-white')}
+                </div>
+                <div className={OPPORTUNITY_PANEL_CLASS}>
+                  <div className="text-[11px] uppercase tracking-[0.14em] text-fm-medium-grey">Yellow Panther angle</div>
+                  {renderBriefText(opportunity.ypFitReasoning, 'mt-1 text-sm text-white')}
+                </div>
+                <div className="grid gap-3 md:grid-cols-2">
+                  <div className={OPPORTUNITY_PANEL_CLASS}>
+                    <div className="text-[11px] uppercase tracking-[0.14em] text-fm-medium-grey">Suggested route</div>
+                    {renderBriefText(opportunity.routeText, 'mt-1 text-sm text-white')}
                   </div>
-                  <div className="rounded-md border border-custom-border bg-black/10 p-3">
-                    <div className="text-[11px] uppercase tracking-[0.14em] text-fm-medium-grey">Why it fits</div>
-                    <div className="mt-1 text-sm text-white">{opportunity.ypFitReasoning}</div>
-                  </div>
-                  <div className="rounded-md border border-custom-border bg-black/10 p-3">
-                    <div className="text-[11px] uppercase tracking-[0.14em] text-fm-medium-grey">Graphiti pattern</div>
-                    <div className="mt-1 text-sm text-white">{opportunity.patternReasoning?.summary || 'Graphiti has not identified a repeatable pattern yet.'}</div>
-                  </div>
-                  <div className="rounded-md border border-custom-border bg-black/10 p-3">
-                    <div className="text-[11px] uppercase tracking-[0.14em] text-fm-medium-grey">Recommended action</div>
-                    <div className="mt-1 text-sm text-white">{opportunity.recommendedAction}</div>
-                  </div>
-                  <div className="rounded-md border border-custom-border bg-black/10 p-3">
-                    <div className="text-[11px] uppercase tracking-[0.14em] text-fm-medium-grey">Approach strategy</div>
-                    <div className="mt-1 text-sm text-white">{opportunity.approachStrategy}</div>
-                  </div>
-                  <div className="rounded-md border border-custom-border bg-black/10 p-3">
-                    <div className="text-[11px] uppercase tracking-[0.14em] text-fm-medium-grey">Success rationale</div>
-                    <div className="mt-1 text-sm text-white">{opportunity.successRationale}</div>
-                  </div>
-                  <div className="rounded-md border border-custom-border bg-black/10 p-3">
-                    <div className="text-[11px] uppercase tracking-[0.14em] text-fm-medium-grey">Verification caveat</div>
-                    <div className="mt-1 text-sm text-white">{opportunity.verificationCaveat}</div>
-                  </div>
-                  <div className="rounded-md border border-custom-border bg-black/10 p-3">
-                    <div className="text-[11px] uppercase tracking-[0.14em] text-fm-medium-grey">Why this is an opportunity</div>
-                    <div className="mt-1 text-sm text-white">{opportunity.whyItMatters}</div>
-                  </div>
-                  <div className="rounded-md border border-custom-border bg-black/10 p-3">
-                    <div className="text-[11px] uppercase tracking-[0.14em] text-fm-medium-grey">Yellow Panther fit</div>
-                    <div className="mt-1 text-sm text-white">{opportunity.fitFeedback}</div>
-                  </div>
-                  <div className="rounded-md border border-custom-border bg-black/10 p-3">
-                    <div className="text-[11px] uppercase tracking-[0.14em] text-fm-medium-grey">Suggested action</div>
-                    <div className="mt-1 text-sm text-white">{opportunity.suggestedAction}</div>
-                  </div>
-                  <div className="rounded-md border border-custom-border bg-black/10 p-3">
-                    <div className="text-[11px] uppercase tracking-[0.14em] text-fm-medium-grey">Next steps</div>
-                    <div className="mt-1 text-sm text-white">{opportunity.nextSteps}</div>
+                  <div className={OPPORTUNITY_PANEL_CLASS}>
+                    <div className="text-[11px] uppercase tracking-[0.14em] text-fm-medium-grey">Check before outreach</div>
+                    {renderBriefText(opportunity.checkBeforeOutreach, 'mt-1 text-sm text-white')}
                   </div>
                 </div>
-
-                {opportunity.signalSummary ? (
-                  <div className="rounded-md border border-yellow-400/20 bg-yellow-400/10 p-3 text-sm text-yellow-50">
-                    {opportunity.signalSummary}
-                  </div>
-                ) : null}
+                <div className={OPPORTUNITY_ACCENT_PANEL_CLASS}>
+                  <div className="text-[11px] uppercase tracking-[0.14em] text-yellow-100/80">Next move</div>
+                  {renderBriefText(opportunity.nextMove, 'mt-1 text-sm text-yellow-50')}
+                </div>
+                <div className={OPPORTUNITY_PANEL_CLASS}>
+                  <div className="text-[11px] uppercase tracking-[0.14em] text-fm-medium-grey">Outreach opener</div>
+                  {renderBriefText(opportunity.outreachOpener, 'mt-1 text-sm text-white')}
+                </div>
               </div>
 
-                {openOpportunityId === opportunity.id && (
-                <div className="mb-4 rounded-lg border border-yellow-400/20 bg-yellow-400/5 p-4">
+              {openOpportunityId === opportunity.id && (
+                <div className="mb-4 rounded-lg border border-slate-700 bg-[#101a2b] p-4">
                   <div className="text-[11px] uppercase tracking-[0.14em] text-fm-medium-grey">Read more</div>
                   <div className="mt-2 grid gap-3 text-sm text-white sm:grid-cols-2">
                     <div>
                       <div className="font-medium text-yellow-100">What to look for</div>
-                      <div className="mt-1 text-fm-light-grey">
-                        {opportunity.readMoreContext || 'Review the dossier for the supporting evidence, decision owners, and commercial signal details.'}
-                      </div>
+                        {renderBriefText(opportunity.readMoreContext || 'Review the dossier for the supporting evidence, decision owners, and commercial signal details.', 'mt-1 text-fm-light-grey')}
                       {opportunity.supportingSignals.length > 0 && (
                         <ul className="mt-3 space-y-1 text-fm-light-grey">
                           {opportunity.supportingSignals.slice(0, 4).map((signal) => (
@@ -733,11 +1359,13 @@ function OpportunitiesContent() {
                     </div>
                     <div>
                       <div className="font-medium text-yellow-100">What to do next</div>
-                      <div className="mt-1 text-fm-light-grey">{opportunity.strategyNextSteps}</div>
+                      {renderBriefText(opportunity.strategyNextSteps, 'mt-1 text-fm-light-grey')}
+                      <div className="mt-3 font-medium text-yellow-100">Pattern confidence</div>
+                      {renderBriefText(opportunity.patternConfidence, 'mt-1 text-fm-light-grey')}
                     </div>
                   </div>
                   {opportunity.timeline.length > 0 && (
-                    <div className="mt-4 rounded-md border border-custom-border/70 bg-black/10 p-3">
+                    <div className={`mt-4 ${OPPORTUNITY_PANEL_CLASS}`}>
                       <div className="font-medium text-yellow-100">Temporal timeline</div>
                       <div className="mt-2 flex flex-wrap gap-2 text-xs text-fm-light-grey">
                         {opportunity.timeline.slice(0, 5).map((event) => (
@@ -749,7 +1377,7 @@ function OpportunitiesContent() {
                     </div>
                   )}
                   {opportunity.findings.length > 0 && (
-                    <div className="mt-4 rounded-md border border-custom-border/70 bg-black/10 p-3">
+                    <div className={`mt-4 ${OPPORTUNITY_PANEL_CLASS}`}>
                       <div className="font-medium text-yellow-100">Graphiti findings</div>
                       <ul className="mt-2 space-y-2 text-sm text-fm-light-grey">
                         {opportunity.findings.slice(0, 5).map((finding, index) => (
@@ -769,7 +1397,7 @@ function OpportunitiesContent() {
                     </div>
                   )}
                   {opportunity.relatedPatterns.length > 0 && (
-                    <div className="mt-4 rounded-md border border-custom-border/70 bg-black/10 p-3">
+                    <div className={`mt-4 ${OPPORTUNITY_PANEL_CLASS}`}>
                       <div className="font-medium text-yellow-100">Related pattern cluster</div>
                       <div className="mt-2 flex flex-wrap gap-2">
                         {opportunity.relatedPatterns.slice(0, 4).map((pattern, index) => (
@@ -782,52 +1410,6 @@ function OpportunitiesContent() {
                   )}
                 </div>
               )}
-
-              <div className="mb-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
-                <div className="text-center">
-                  <div className={`text-2xl font-bold ${getScoreColor(opportunity.criticalOpportunityScore)}`}>
-                    {opportunity.criticalOpportunityScore}
-                  </div>
-                  <div className="text-xs text-fm-medium-grey">Critical Score</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-lg font-semibold text-yellow-400">{opportunity.value || 'N/A'}</div>
-                  <div className="text-xs text-fm-medium-grey">Value</div>
-                </div>
-              </div>
-
-              <div className="mb-4 grid grid-cols-2 gap-2 text-xs sm:grid-cols-4">
-                <div className="text-center">
-                  <div className={`font-medium ${getScoreColor(opportunity.priorityScore)}`}>{opportunity.priorityScore}</div>
-                  <div className="text-fm-medium-grey">Priority</div>
-                </div>
-                <div className="text-center">
-                  <div className={`font-medium ${getScoreColor(opportunity.trustScore)}`}>{opportunity.trustScore}</div>
-                  <div className="text-fm-medium-grey">Trust</div>
-                </div>
-                <div className="text-center">
-                  <div className={`font-medium ${getScoreColor(opportunity.influenceScore)}`}>{opportunity.influenceScore}</div>
-                  <div className="text-fm-medium-grey">Influence</div>
-                </div>
-                <div className="text-center">
-                  <div className={`font-medium ${getScoreColor(opportunity.poiScore)}`}>{opportunity.poiScore}</div>
-                  <div className="text-fm-medium-grey">POI</div>
-                </div>
-              </div>
-
-              <div className="mb-4 flex flex-wrap gap-1">
-                {opportunity.theme ? (
-                  <Badge key={`${opportunity.id}-theme`} variant="outline" className="text-xs">
-                    {opportunity.theme}
-                  </Badge>
-                ) : null}
-                {[...new Set(opportunity.tags)].map((tag, index) => (
-                  <Badge key={`${opportunity.id}-${tag}-${index}`} variant="outline" className="text-xs">
-                    {tag}
-                  </Badge>
-                ))}
-              </div>
-
               <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex flex-wrap items-center gap-4 text-xs text-fm-medium-grey">
                   {opportunity.deadline && (
@@ -870,7 +1452,81 @@ function OpportunitiesContent() {
               </div>
             </div>
           ))}
-        </div>
+          </div>
+        </section>
+
+        {verifyNowRecommendations.length > 0 && (
+          <section className={OPPORTUNITY_SURFACE_CLASS}>
+            <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
+              <div>
+                <div className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-300">Verify now</div>
+                <h2 className="mt-1 text-xl font-semibold text-white">Recommendations needing verification</h2>
+                <p className="mt-1 max-w-3xl text-sm text-slate-300">
+                  Strong dossier-backed recommendations that need source, trigger, or buyer verification before outreach.
+                </p>
+              </div>
+              <Badge variant="outline" className="border-slate-500 text-slate-100">
+                {verifyNowRecommendations.length} shown of {verifyNowCount} to verify
+              </Badge>
+            </div>
+
+            <div className="mt-4 grid gap-3 lg:grid-cols-2">
+              {verifyNowRecommendations.map((recommendation) => (
+                <div key={recommendation.opportunity_id} className={OPPORTUNITY_CARD_CLASS}>
+                  <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                    <div>
+                      <div className="mb-2 flex flex-wrap gap-2">
+                        <Badge variant="outline" className="border-cyan-200/40 text-cyan-100">
+                          {recommendation.recommendation_tier || 'verify_now'}
+                        </Badge>
+                        <Badge variant="outline" className="border-yellow-300/40 text-yellow-100">
+                          YP fit {recommendation.yellow_panther_fit ?? 0}%
+                        </Badge>
+                      </div>
+                      <h3 className="text-sm font-semibold text-white">{conciseRecommendationTitle(recommendation)}</h3>
+                      {recommendation.title && recommendation.title !== conciseRecommendationTitle(recommendation) ? (
+                        <div className="mt-2 rounded-md border border-slate-700 bg-[#101a2b] p-3">
+                          <div className="text-[11px] uppercase tracking-[0.14em] text-slate-400">Signal detail</div>
+                          {renderBriefText(recommendation.title, 'mt-1 text-sm text-slate-100')}
+                        </div>
+                      ) : null}
+                      <div className="mt-2 flex flex-wrap gap-2 text-xs text-slate-300">
+                        <span>{recommendation.entity_name || 'Unknown entity'}</span>
+                        <span>commercial: {recommendation.commercial_status || 'unknown'}</span>
+                        <span>temporal: {recommendation.temporal_status || 'unknown'}</span>
+                      </div>
+                    </div>
+                    <Badge variant="outline" className="border-emerald-300/40 text-emerald-100">
+                      score {recommendation.promotion_score || 0}
+                    </Badge>
+                  </div>
+
+                  <div className="mt-3 rounded-md border border-slate-700 bg-[#101a2b] p-3">
+                    <div className="text-[11px] uppercase tracking-[0.14em] text-slate-400">Verification action</div>
+                    {renderBriefText(recommendation.suggested_verification_action || 'Verify source recency, buyer ownership, and whether the signal is active enough for outreach.')}
+                  </div>
+
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {(recommendation.promotion_blockers || ['Below active shortlist threshold']).slice(0, 4).map((blocker) => (
+                      <Badge key={`${recommendation.opportunity_id}-${blocker}`} variant="outline" className="border-slate-500 text-slate-100">
+                        {blocker}
+                      </Badge>
+                    ))}
+                  </div>
+
+                  <div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-300">
+                    <span>{recommendation.useful_fact_count ?? 0} useful facts · {recommendation.evidence_count ?? 0} evidence URLs</span>
+                    {recommendation.dossier_url ? (
+                      <Link href={recommendation.dossier_url} className="text-sky-100 underline decoration-sky-200/40 underline-offset-2">
+                        Open dossier
+                      </Link>
+                    ) : null}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
 
         {filteredOpportunities.length === 0 && (
           <div className="py-12 text-center">

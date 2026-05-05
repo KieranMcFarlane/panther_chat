@@ -19,9 +19,9 @@ test('question repair queue dedupes active reruns by repair key and exposes reus
 })
 
 test('question repair reruns forward the canonical artifact path into repair source metadata', () => {
-  assert.match(rerunRouteSource, /canonical\.artifactPath/)
-  assert.match(rerunRouteSource, /canonical\.source === 'question_first_run'/)
-  assert.match(rerunRouteSource, /canonical\.source === 'question_first_dossier'/)
+  assert.match(rerunRouteSource, /snapshotRepairSourceDossierPath/)
+  assert.match(rerunRouteSource, /copyFile/)
+  assert.match(rerunRouteSource, /repair-source-snapshots/)
   assert.match(rerunRouteSource, /repairSourceRunPath,\s*\n\s*repairSourceDossierPath/)
   assert.match(rerunRouteSource, /body\?\.rerun_mode/)
 })

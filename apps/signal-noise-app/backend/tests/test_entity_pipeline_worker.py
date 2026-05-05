@@ -40,6 +40,8 @@ from entity_pipeline_worker import (
     write_pipeline_control_state,
     should_process_in_process,
     EntityPipelineWorker,
+    merge_question_repair_result_into_persisted_dossier,
+    select_question_repair_merge_base,
 )
 
 
@@ -68,7 +70,166 @@ def test_entity_pipeline_worker_prefers_local_postgres_when_database_url_is_set(
 def test_should_process_in_process_defaults_to_durable_worker_mode():
     assert should_process_in_process(None) is False
     assert should_process_in_process("in_process") is True
+
+
+def test_merge_question_repair_result_into_persisted_dossier_preserves_full_questions():
+    existing = {
+        "entity_id": "exeter-city",
+        "question_first": {
+            "answers": [
+                {"question_id": "q1_foundation", "answer": "Exeter City", "validation_state": "validated"},
+                {"question_id": "q3_leadership", "answer": "stale", "validation_state": "failed"},
+            ],
+            "questions_answered": 2,
+        },
+        "questions": [
+            {"question_id": "q1_foundation", "answer": "Exeter City", "validation_state": "validated"},
+            {"question_id": "q2_digital_stack", "answer": "site", "validation_state": "validated"},
+            {"question_id": "q3_leadership", "answer": "stale", "validation_state": "failed"},
+        ],
+    }
+    repair = {
+        "question_first": {
+            "answers": [
+                {
+                    "question_id": "q3_leadership",
+                    "answer": "Matt Kimberley is Head of Commercial.",
+                    "validation_state": "validated",
+                    "confidence": 0.9,
+                    "primary_owner": {"name": "Matt Kimberley", "title": "Head of Commercial"},
+                }
+            ],
+            "repair_run": {"mode": "question", "question_id": "q3_leadership"},
+        },
+        "questions": [
+            {
+                "question_id": "q3_leadership",
+                "answer": "Matt Kimberley is Head of Commercial.",
+                "validation_state": "validated",
+                "confidence": 0.9,
+            }
+        ],
+    }
+
+    merged = merge_question_repair_result_into_persisted_dossier(
+        existing_dossier=existing,
+        repair_dossier=repair,
+        question_id="q3_leadership",
+    )
+
+    assert len(merged["questions"]) == 3
+    answers_by_id = {answer["question_id"]: answer for answer in merged["question_first"]["answers"]}
+    questions_by_id = {question["question_id"]: question for question in merged["questions"]}
+    assert answers_by_id["q1_foundation"]["answer"] == "Exeter City"
+    assert answers_by_id["q3_leadership"]["validation_state"] == "validated"
+    assert answers_by_id["q3_leadership"]["primary_owner"]["name"] == "Matt Kimberley"
+    assert questions_by_id["q2_digital_stack"]["answer"] == "site"
+    assert questions_by_id["q3_leadership"]["validation_state"] == "validated"
     assert should_process_in_process("durable_worker") is False
+
+
+def test_merge_question_repair_result_rehydrates_answers_from_question_shells():
+    existing = {
+        "entity_id": "swiss-cricket",
+        "question_first": {
+            "answers": [
+                {"question_id": "q9_news_signal", "answer": "old one-question answer", "validation_state": "failed"},
+            ],
+            "questions_answered": 1,
+        },
+        "questions": [
+            {
+                "question_id": f"q{i}_test",
+                "question_first_answer": {
+                    "question_id": f"q{i}_test",
+                    "answer": f"answer {i}",
+                    "validation_state": "failed",
+                    "confidence": 0,
+                },
+            }
+            for i in range(1, 15)
+        ] + [
+            {
+                "question_id": "q9_news_signal",
+                "question_first_answer": {
+                    "question_id": "q9_news_signal",
+                    "answer": "old q9",
+                    "validation_state": "failed",
+                    "confidence": 0,
+                },
+            }
+        ],
+    }
+    repair = {
+        "question_first": {
+            "answers": [
+                {
+                    "question_id": "q9_news_signal",
+                    "answer": "checked no current commercial news",
+                    "validation_state": "no_signal",
+                    "confidence": 0,
+                    "structured_signal": {"status": "source_prefetch_empty"},
+                }
+            ],
+        },
+        "questions": [
+            {
+                "question_id": "q9_news_signal",
+                "answer": "checked no current commercial news",
+                "validation_state": "no_signal",
+                "confidence": 0,
+            }
+        ],
+    }
+
+    merged = merge_question_repair_result_into_persisted_dossier(
+        existing_dossier=existing,
+        repair_dossier=repair,
+        question_id="q9_news_signal",
+    )
+
+    answers_by_id = {answer["question_id"]: answer for answer in merged["question_first"]["answers"]}
+    assert len(answers_by_id) == 15
+    assert merged["question_first"]["questions_answered"] == 15
+    assert answers_by_id["q1_test"]["answer"] == "answer 1"
+    assert answers_by_id["q9_news_signal"]["validation_state"] == "no_signal"
+    assert answers_by_id["q9_news_signal"]["structured_signal"]["status"] == "source_prefetch_empty"
+
+
+def test_select_question_repair_merge_base_prefers_richer_repair_source_snapshot():
+    persisted_after_one_question_overwrite = {
+        "entity_id": "swiss-cricket",
+        "question_first": {
+            "answers": [
+                {"question_id": "q9_news_signal", "answer": "new q9 only", "validation_state": "no_signal"},
+            ],
+            "questions_answered": 1,
+        },
+        "questions": [{"question_id": f"q{i}_test"} for i in range(1, 16)],
+    }
+    repair_source_snapshot = {
+        "entity_id": "swiss-cricket",
+        "question_first": {
+            "answers": [
+                {
+                    "question_id": f"q{i}_test",
+                    "answer": f"full-pack answer {i}",
+                    "validation_state": "validated",
+                }
+                for i in range(1, 16)
+            ],
+            "questions_answered": 15,
+        },
+        "questions": [{"question_id": f"q{i}_test"} for i in range(1, 16)],
+    }
+
+    selected = select_question_repair_merge_base(
+        existing_dossier=persisted_after_one_question_overwrite,
+        repair_source_dossier=repair_source_snapshot,
+    )
+
+    assert selected is repair_source_snapshot
+    assert len(selected["question_first"]["answers"]) == 15
 
 
 def test_build_run_detail_url_points_to_import_run_detail_page():
@@ -1822,6 +1983,51 @@ def test_claim_next_batch_stops_after_scoped_pilot_batch_without_resume_claim(mo
             "current_batch_id": "targeted_answer_quality_pilot_1",
             "current_entity_id": "entity-1",
             "current_canonical_entity_id": "entity-1",
+        },
+    )
+    monkeypatch.setattr("entity_pipeline_worker.write_pipeline_control_state", lambda payload: payload)
+
+    claimed = worker.claim_next_batch()
+
+    assert claimed is None
+
+
+def test_claim_next_batch_does_not_manifest_fallback_after_paused_checkpoint_auto_resume(monkeypatch):
+    worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
+    worker.reconcile_stale_pipeline_state = lambda: None
+    worker.recover_stale_batches = lambda: None
+    worker.worker_id = "worker-1"
+    worker.lease_seconds = 60
+    worker._now_iso = lambda: "2026-05-05T00:10:00+01:00"
+    worker._backend_preflight = lambda: (True, None)
+    worker._get_batch_record = lambda _batch_id: {}
+
+    class FakeRpcQuery:
+        def execute(self):
+            return SimpleNamespace(data=[])
+
+    class FakeSupabase:
+        def rpc(self, name, params):
+            assert name == "claim_next_entity_import_batch"
+            return FakeRpcQuery()
+
+    worker.supabase = FakeSupabase()
+    worker._select_next_entity_cursor_candidate = lambda **_kwargs: (_ for _ in ()).throw(
+        AssertionError("paused checkpoint auto-resume must not fall through to manifest fallback")
+    )
+    monkeypatch.setattr(
+        "entity_pipeline_worker.read_pipeline_control_state",
+        lambda: {
+            "is_paused": False,
+            "pause_reason": None,
+            "requested_state": "running",
+            "observed_state": "running",
+            "transition_state": "running",
+            "desired_state": "running",
+            "current_batch_id": None,
+            "current_entity_id": None,
+            "current_canonical_entity_id": None,
+            "last_self_heal_action": "paused_checkpoint_auto_resume",
         },
     )
     monkeypatch.setattr("entity_pipeline_worker.write_pipeline_control_state", lambda payload: payload)
@@ -5315,6 +5521,52 @@ def test_queue_follow_on_repair_does_not_reuse_current_batch():
     assert queue_result["status"] == "queued"
     assert inserted_batches[-1]["id"] == "batch-follow-on"
     assert inserted_runs[-1][0]["batch_id"] == "batch-follow-on"
+
+
+def test_queue_follow_on_repair_skips_guarded_scoped_pilot_batches():
+    worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
+    worker._now_iso = lambda: "2026-04-11T13:00:00+00:00"
+    worker._build_follow_on_repair_batch_id = lambda: pytest.fail("guarded pilots must not queue follow-ons")
+    worker.find_active_repair_run = lambda *args, **kwargs: None
+
+    inserted = []
+
+    class FakeQuery:
+        def insert(self, payload):
+            inserted.append(payload)
+            return self
+
+        def execute(self):
+            return SimpleNamespace(data=[])
+
+    worker.supabase = SimpleNamespace(table=lambda _name: FakeQuery())
+
+    queue_result = worker._queue_follow_on_repair(
+        run={
+            "batch_id": "pilot-batch",
+            "entity_id": "fdj-suez",
+            "entity_name": "FDJ-Suez",
+            "canonical_entity_id": "fdj-suez",
+        },
+        latest_metadata={
+            "targeted_pilot": True,
+            "auto_advance_guard": "pilot_batch_only",
+            "suppress_cursor_resume_after_batch": True,
+            "queue_mode": "durable_worker",
+        },
+        result={},
+        question_id="q2_digital_stack",
+        repair_retry_count=1,
+        repair_retry_budget=3,
+        reconcile_required=False,
+    )
+
+    assert queue_result == {
+        "batch_id": None,
+        "status": "skipped",
+        "queue_source": "guarded_pilot",
+    }
+    assert inserted == []
 
 
 def test_derive_follow_on_repair_metadata_clears_self_referential_next_batch():

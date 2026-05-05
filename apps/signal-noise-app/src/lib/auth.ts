@@ -31,6 +31,8 @@ let libsqlKysely: Kysely<unknown> | null = null;
 let postgresKysely: Kysely<unknown> | null = null;
 let postgresPool: Pool | null = null;
 
+const LOCAL_SOCKET_DATABASE_URL = "postgresql:///signal_noise_app?host=/tmp";
+
 function isBuildPhase() {
   return process.env.NEXT_PHASE === "phase-production-build";
 }
@@ -44,7 +46,14 @@ function normalizeBaseUrl(value?: string | null) {
 }
 
 function getDatabaseUrl() {
-  return process.env.DATABASE_URL?.trim() || "";
+  const databaseUrl = process.env.DATABASE_URL?.trim() || "";
+  const neonDatabaseUrl = process.env.NEON_DB_URL?.trim() || "";
+
+  if (neonDatabaseUrl && (!databaseUrl || databaseUrl === LOCAL_SOCKET_DATABASE_URL)) {
+    return neonDatabaseUrl;
+  }
+
+  return databaseUrl || neonDatabaseUrl;
 }
 
 function getTursoDatabaseUrl() {

@@ -23,6 +23,7 @@ type NormalizedDossierIngestion = {
   quality_state: DossierIngestionQualityState
   answer_count: number
   evidence_count: number
+  quality_metrics: DossierIngestionQualityMetrics
   question_facts: JsonRecord[]
   evidence_urls: string[]
   has_informative_content: boolean
@@ -31,6 +32,21 @@ type NormalizedDossierIngestion = {
 }
 
 const OPENCODE_PROVIDER_INSUFFICIENT_BALANCE_ERROR = 'OpenCodeProviderInsufficientBalanceError'
+const MIN_COMPLETE_USEFUL_FACTS = 5
+const MIN_COMPLETE_EVIDENCE_URLS = 3
+const MIN_PARTIAL_USEFUL_FACTS = 2
+
+type DossierIngestionQualityMetrics = {
+  raw_answer_count: number
+  useful_fact_count: number
+  failed_fact_count: number
+  placeholder_fact_count: number
+  no_signal_fact_count: number
+  evidence_url_count: number
+  wrong_entity_fact_count: number
+  tool_failure_fact_count: number
+  generic_context_fact_count: number
+}
 
 function asRecord(value: unknown): JsonRecord {
   return value && typeof value === 'object' && !Array.isArray(value) ? value as JsonRecord : {}
@@ -80,6 +96,20 @@ function isFailedOnlyText(value: unknown): boolean {
     || text.includes(OPENCODE_PROVIDER_INSUFFICIENT_BALANCE_ERROR.toLowerCase())
     || text.includes('tool/runtime failure')
     || text.includes('failed before a safe answer')
+    || text.includes('retry_exhausted')
+    || text.includes('tool_call_missing')
+  )
+}
+
+function isToolFailureText(value: unknown): boolean {
+  const text = toText(value).toLowerCase()
+  return Boolean(text) && (
+    isFailedOnlyText(text)
+    || text.includes('no brightdata tool is available')
+    || text.includes('no brightdata tool or service is available')
+    || text.includes('no deterministic answer was produced')
+    || text.includes('tool_call_missing')
+    || text.includes('runtime failure')
   )
 }
 
@@ -113,10 +143,95 @@ function isPlaceholderText(value: unknown): boolean {
     || text === 'unknown'
     || text === 'null'
     || text === 'no_signal'
+    || text === 'skipped'
+    || text === 'failed'
+    || text === 'tool_call_missing'
     || text.includes('no deterministic answer was produced for this question')
     || text.includes('no brightdata tool or service is available')
-    || isFailedOnlyText(text)
+    || text.includes('insufficient_signal')
+    || text.includes('no substantive')
+    || text.includes('no relevant results')
+    || text.includes('no web evidence')
+    || text.includes('returned no results')
+    || isToolFailureText(text)
   )
+}
+
+function isFailedFact(fact: JsonRecord): boolean {
+  const status = toText(fact.status).toLowerCase()
+  return status === 'failed'
+    || status === 'skipped'
+    || status === 'tool_call_missing'
+    || isFailedOnlyText(fact.summary)
+}
+
+function isNoSignalFact(fact: JsonRecord): boolean {
+  const status = toText(fact.status).toLowerCase()
+  const summary = toText(fact.summary).toLowerCase()
+  return status === 'no_signal'
+    || summary === 'no_signal'
+    || summary.includes('insufficient_signal')
+}
+
+function normalizedNameTokens(values: string[]): string[] {
+  return values
+    .map((value) => value.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim())
+    .filter((value) => value.length >= 3)
+}
+
+function entityNamesForDossier(dossier: JsonRecord, fallback: string[] = []): string[] {
+  const questionFirst = asRecord(dossier.question_first)
+  const metadata = asRecord(dossier.metadata)
+  return [
+    ...fallback,
+    dossier.entity_name,
+    dossier.canonical_entity_name,
+    dossier.name,
+    questionFirst.entity_name,
+    questionFirst.canonical_entity_name,
+    metadata.entity_name,
+    metadata.canonical_entity_name,
+  ].map(toText).filter(Boolean)
+}
+
+function isWrongEntityFact(fact: JsonRecord, entityNames: string[]): boolean {
+  const expectedNames = normalizedNameTokens(entityNames)
+  if (expectedNames.length === 0) return false
+
+  const explicitNames = [
+    fact.entity_name,
+    fact.canonical_entity_name,
+    fact.subject_entity,
+    fact.organization,
+  ].map(toText).filter(Boolean)
+  const explicitTokens = normalizedNameTokens(explicitNames)
+  if (explicitTokens.length > 0) {
+    return explicitTokens.every((name) => !expectedNames.some((expected) => name === expected || name.includes(expected) || expected.includes(name)))
+  }
+
+  return false
+}
+
+function isGenericContextFact(fact: JsonRecord): boolean {
+  const summary = toText(fact.summary).toLowerCase()
+  return Boolean(summary) && (
+    summary.includes('finished the 2025') && summary.includes('season')
+    || summary.includes('competes in') && summary.includes('top tier')
+    || summary.includes('official site') && summary.includes('runs on')
+    || summary.startsWith('cms:')
+    || summary.includes('technology stack')
+    || summary.includes('multi-vendor digital stack')
+  )
+}
+
+function hasUsefulFactContent(fact: JsonRecord, entityNames: string[] = []): boolean {
+  const summary = toText(fact.summary)
+  const evidenceUrls = asArray(fact.evidence_urls).map(toText).filter(Boolean)
+  if (isFailedFact(fact) || isNoSignalFact(fact)) return false
+  if (isToolFailureText(summary) || isWrongEntityFact(fact, entityNames) || isGenericContextFact(fact)) return false
+  if (evidenceUrls.length > 0) return true
+  if (isPlaceholderText(summary)) return false
+  return summary.length >= 20
 }
 
 function stableJson(value: unknown): string {
@@ -207,6 +322,8 @@ function buildQuestionFacts(answerRecords: JsonRecord[]): JsonRecord[] {
       return {
         question_id: questionId,
         question_type: toText(answer.question_type || answer.type || answerBody.question_type),
+        entity_name: toText(answer.entity_name || rawStructuredOutput.entity_name || answerBody.entity_name),
+        canonical_entity_name: toText(answer.canonical_entity_name || rawStructuredOutput.canonical_entity_name || answerBody.canonical_entity_name),
         status,
         confidence: Number.isFinite(confidence) ? confidence : 0,
         summary,
@@ -217,51 +334,85 @@ function buildQuestionFacts(answerRecords: JsonRecord[]): JsonRecord[] {
     .filter((fact) => fact.question_id || fact.summary || (fact.evidence_urls as string[]).length > 0)
 }
 
-function inferQualityState(dossier: JsonRecord, answerCount: number, failedOnly: boolean): DossierIngestionQualityState {
-  const explicit = toText(dossier.quality_state).toLowerCase()
-  if (['partial', 'complete', 'blocked', 'failed', 'empty', 'client_ready'].includes(explicit)) {
-    return explicit as DossierIngestionQualityState
+function computeDossierQualityMetrics(answerRecords: JsonRecord[], questionFacts: JsonRecord[], evidenceUrls: string[], entityNames: string[] = []): DossierIngestionQualityMetrics {
+  const failedFactCount = questionFacts.filter(isFailedFact).length
+  const noSignalFactCount = questionFacts.filter(isNoSignalFact).length
+  const placeholderFactCount = questionFacts.filter((fact) => isPlaceholderText(fact.summary)).length
+  const wrongEntityFactCount = questionFacts.filter((fact) => isWrongEntityFact(fact, entityNames)).length
+  const toolFailureFactCount = questionFacts.filter((fact) => isToolFailureText(fact.summary)).length
+  const genericContextFactCount = questionFacts.filter(isGenericContextFact).length
+  const usefulFactCount = questionFacts.filter((fact) => hasUsefulFactContent(fact, entityNames)).length
+
+  return {
+    raw_answer_count: Number(answerRecords.length),
+    useful_fact_count: usefulFactCount,
+    failed_fact_count: failedFactCount,
+    placeholder_fact_count: placeholderFactCount,
+    no_signal_fact_count: noSignalFactCount,
+    evidence_url_count: evidenceUrls.length,
+    wrong_entity_fact_count: wrongEntityFactCount,
+    tool_failure_fact_count: toolFailureFactCount,
+    generic_context_fact_count: genericContextFactCount,
   }
+}
+
+function inferQualityState(dossier: JsonRecord, qualityMetrics: DossierIngestionQualityMetrics, failedOnly: boolean): DossierIngestionQualityState {
+  const explicit = toText(dossier.quality_state).toLowerCase()
   const publicationStatus = toText(dossier.publication_status || dossier.publish_status).toLowerCase()
-  if (publicationStatus.includes('client_ready')) return 'client_ready'
-  if (publicationStatus.includes('partial')) return 'partial'
-  if (publicationStatus.includes('blocked')) return 'blocked'
   if (failedOnly) return 'failed'
-  if (answerCount >= 15) return 'complete'
-  if (answerCount > 0 || dossier.question_first || dossier.question_first_checkpoint) return 'partial'
+  if (explicit === 'blocked' || publicationStatus.includes('blocked')) return 'blocked'
+  if (explicit === 'failed' || explicit === 'empty') return explicit as DossierIngestionQualityState
+  if (
+    qualityMetrics.useful_fact_count >= MIN_COMPLETE_USEFUL_FACTS
+    && qualityMetrics.evidence_url_count >= MIN_COMPLETE_EVIDENCE_URLS
+  ) {
+    return explicit === 'client_ready' || publicationStatus.includes('client_ready') ? 'client_ready' : 'complete'
+  }
+  if (qualityMetrics.useful_fact_count >= MIN_PARTIAL_USEFUL_FACTS || qualityMetrics.evidence_url_count >= 1) return 'partial'
   return 'empty'
 }
 
-export function normalizeDossierIngestionState(dossier: JsonRecord): NormalizedDossierIngestion {
+export function normalizeDossierIngestionState(dossier: JsonRecord, entityNames: string[] = []): NormalizedDossierIngestion {
   const answerRecords = collectAnswerRecords(dossier)
   const questionFacts = buildQuestionFacts(answerRecords)
   const evidenceUrls = Array.from(collectEvidenceUrls(dossier))
+  const allEntityNames = entityNamesForDossier(dossier, entityNames)
+  const qualityMetrics = computeDossierQualityMetrics(answerRecords, questionFacts, evidenceUrls, allEntityNames)
   const providerInfrastructureFailure = answerRecords.some(isProviderInfrastructureFailure) || isProviderInfrastructureFailure(dossier)
-  const failedOnly = questionFacts.length > 0 && questionFacts.every((fact) => !toText(fact.summary) && (fact.evidence_urls as string[]).length === 0)
-  const hasNarrativeFact = questionFacts.some((fact) => Boolean(toText(fact.summary)))
-  const hasEvidence = evidenceUrls.length > 0 || questionFacts.some((fact) => (fact.evidence_urls as string[]).length > 0)
+  const failedOnly = questionFacts.length > 0 && qualityMetrics.useful_fact_count === 0
   const discoverySummary = asRecord(asRecord(dossier.question_first).discovery_summary || dossier.discovery_summary)
   const graphitiSalesBrief = asRecord(discoverySummary.graphiti_sales_brief || dossier.graphiti_sales_brief)
   const yellowPanther = asRecord(discoverySummary.yellow_panther_opportunity || dossier.yellow_panther_opportunity)
   const hasCommercialContext = Object.keys(graphitiSalesBrief).length > 0 || Object.keys(yellowPanther).length > 0
-  const hasInformativeContent = (hasNarrativeFact || hasEvidence || hasCommercialContext) && !failedOnly && !providerInfrastructureFailure
-  const qualityState = inferQualityState(dossier, answerRecords.length, failedOnly)
+  const hasInformativeContent = (
+    qualityMetrics.useful_fact_count > 0
+    || qualityMetrics.evidence_url_count > 0
+    || hasCommercialContext
+  ) && !failedOnly && !providerInfrastructureFailure
+  const qualityState = inferQualityState(dossier, qualityMetrics, failedOnly)
+  const qualityBlockers = [
+    qualityMetrics.wrong_entity_fact_count > 0 ? 'wrong_entity_blocked' : '',
+    qualityMetrics.tool_failure_fact_count > 0 ? 'tool_failure_blocked' : '',
+    qualityMetrics.generic_context_fact_count > 0 && qualityMetrics.useful_fact_count === 0 ? 'generic_context_only' : '',
+  ].filter(Boolean)
 
   return {
     status: providerInfrastructureFailure ? 'failed' : hasInformativeContent ? 'ingested' : 'skipped_empty',
     quality_state: providerInfrastructureFailure ? 'failed' : hasInformativeContent ? qualityState : 'empty',
-    answer_count: answerRecords.length,
-    evidence_count: evidenceUrls.length,
+    answer_count: qualityMetrics.useful_fact_count,
+    evidence_count: qualityMetrics.evidence_url_count,
+    quality_metrics: qualityMetrics,
     question_facts: questionFacts,
     evidence_urls: evidenceUrls,
     has_informative_content: hasInformativeContent,
     failed_only: failedOnly || providerInfrastructureFailure,
-    failure_reason: providerInfrastructureFailure ? 'provider_infrastructure_failure' : null,
+    failure_reason: providerInfrastructureFailure ? 'provider_infrastructure_failure' : qualityBlockers[0] || null,
   }
 }
 
 export function buildGraphitiDossierEpisode(row: CanonicalDossierRow) {
-  const normalized = normalizeDossierIngestionState(row.dossier_data)
+  const normalized = normalizeDossierIngestionState(row.dossier_data, [row.entity_name || '', row.canonical_entity_id || ''])
+  const qualityMetrics = normalized.quality_metrics
   const discoverySummary = asRecord(asRecord(row.dossier_data.question_first).discovery_summary || row.dossier_data.discovery_summary)
   const referenceTime = toIso(row.generated_at || row.created_at) || new Date().toISOString()
   const episodeBody = {
@@ -276,6 +427,9 @@ export function buildGraphitiDossierEpisode(row: CanonicalDossierRow) {
     dossier: {
       dossier_id: row.id || null,
       quality_state: normalized.quality_state,
+      raw_answer_count: qualityMetrics.raw_answer_count,
+      useful_fact_count: qualityMetrics.useful_fact_count,
+      evidence_url_count: qualityMetrics.evidence_url_count,
       source_created_at: toIso(row.created_at),
       source_generated_at: toIso(row.generated_at),
     },
@@ -346,6 +500,19 @@ export async function upsertDossierIngestionLedger(row: CanonicalDossierRow, dry
       failed_only: episode.failed_only,
       has_informative_content: episode.has_informative_content,
       failure_reason: episode.failure_reason,
+      quality_metrics: episode.quality_metrics,
+      raw_answer_count: episode.quality_metrics.raw_answer_count,
+      useful_fact_count: episode.quality_metrics.useful_fact_count,
+      failed_fact_count: episode.quality_metrics.failed_fact_count,
+      placeholder_fact_count: episode.quality_metrics.placeholder_fact_count,
+      no_signal_fact_count: episode.quality_metrics.no_signal_fact_count,
+      evidence_url_count: episode.quality_metrics.evidence_url_count,
+      wrong_entity_fact_count: episode.quality_metrics.wrong_entity_fact_count,
+      tool_failure_fact_count: episode.quality_metrics.tool_failure_fact_count,
+      generic_context_fact_count: episode.quality_metrics.generic_context_fact_count,
+      wrong_entity_blocked: episode.quality_metrics.wrong_entity_fact_count,
+      tool_failure_blocked: episode.quality_metrics.tool_failure_fact_count,
+      generic_context_only: episode.quality_metrics.generic_context_fact_count > 0 && episode.quality_metrics.useful_fact_count === 0,
     },
   }
 
@@ -420,6 +587,25 @@ export async function upsertDossierIngestionLedger(row: CanonicalDossierRow, dry
     ],
   )
 
+  await queryPostgres(
+    `
+      update graphiti_dossier_ingestions
+      set status = 'skipped_empty',
+          quality_state = 'empty',
+          updated_at = now(),
+          raw_metadata = coalesce(raw_metadata, '{}'::jsonb) || jsonb_build_object(
+            'superseded_by_latest_quality_backfill',
+            true,
+            'superseded_by_content_hash',
+            $2
+          )
+      where canonical_entity_id = $1
+        and content_hash <> $2
+        and status = 'ingested'
+    `,
+    [payload.canonical_entity_id, payload.content_hash],
+  )
+
   return { action: 'upserted' as const, payload }
 }
 
@@ -444,14 +630,24 @@ export async function loadGraphitiDossierIngestionStats() {
       from entity_dossiers
       where canonical_entity_id is not null
     `),
-    queryPostgres(`
-      select
-        count(distinct canonical_entity_id) filter (where status = 'ingested')::int as dossiers_ingested_entities,
-        count(distinct canonical_entity_id) filter (where status = 'ingested' and quality_state = 'partial')::int as partial_dossiers_ingested,
-        count(distinct canonical_entity_id) filter (where status = 'skipped_empty')::int as skipped_empty_entities,
-        count(*) filter (where status = 'failed')::int as failed_ingestions
-      from graphiti_dossier_ingestions
-    `).catch(() => ({ rows: [{}] })),
+        queryPostgres(`
+          select
+            count(distinct canonical_entity_id) filter (where status = 'ingested')::int as dossiers_ingested_entities,
+            count(distinct canonical_entity_id) filter (where status = 'ingested' and quality_state = 'complete')::int as complete_dossiers_ingested,
+            count(distinct canonical_entity_id) filter (where status = 'ingested' and quality_state = 'partial')::int as partial_dossiers_ingested,
+            count(distinct canonical_entity_id) filter (where status = 'skipped_empty')::int as skipped_empty_entities,
+            count(*) filter (where status = 'failed')::int as failed_ingestions,
+            count(distinct canonical_entity_id) filter (where status = 'ingested' and quality_state = 'complete' and coalesce(evidence_count, 0) = 0)::int as sparse_complete_entities,
+            count(distinct canonical_entity_id) filter (where status = 'ingested' and quality_state = 'partial' and coalesce(evidence_count, 0) = 0)::int as sparse_partial_entities,
+            count(distinct canonical_entity_id) filter (where status = 'ingested' and coalesce(evidence_count, 0) = 0)::int as zero_evidence_entities,
+            count(distinct canonical_entity_id) filter (where status = 'ingested' and (coalesce(answer_count, 0) >= 2 or coalesce(evidence_count, 0) >= 1))::int as useful_dossier_entities,
+            count(distinct canonical_entity_id) filter (where status = 'ingested' and (coalesce(answer_count, 0) < 5 or coalesce(evidence_count, 0) < 3))::int as enrichment_required_entities,
+            count(distinct canonical_entity_id) filter (where status = 'ingested' and coalesce(answer_count, 0) >= 5 and coalesce(evidence_count, 0) >= 3)::int as materializable_dossier_candidates,
+            count(*) filter (where coalesce((raw_metadata->>'wrong_entity_blocked')::int, 0) > 0)::int as wrong_entity_blocked,
+            count(*) filter (where coalesce((raw_metadata->>'tool_failure_blocked')::int, 0) > 0)::int as tool_failure_blocked,
+            count(*) filter (where raw_metadata->>'generic_context_only' = 'true')::int as generic_context_only
+          from graphiti_dossier_ingestions
+        `).catch(() => ({ rows: [{}] })),
     queryPostgres(`
       select
         count(distinct canonical_entity_id) filter (
@@ -467,12 +663,31 @@ export async function loadGraphitiDossierIngestionStats() {
         )::int as accelerating_opportunities,
         count(*) filter (
           where raw_payload->>'source' = 'entity_dossiers'
+            and raw_payload->>'quality_state' = 'complete'
+        )::int as complete_materialized_rows,
+        count(*) filter (
+          where is_active and raw_payload->>'source' = 'entity_dossiers'
+            and raw_payload->>'quality_state' = 'complete'
+        )::int as complete_active_opportunities,
+        count(*) filter (
+          where raw_payload->>'source' = 'entity_dossiers'
+            and raw_payload->'commercial_qualification'->>'status' = 'no_buying_trigger'
+        )::int as no_buying_trigger_rows,
+        count(*) filter (
+          where raw_payload->>'source' = 'entity_dossiers'
+            and raw_payload->'temporal_reasoning'->>'status' = 'stale'
+        )::int as stale_opportunity_rows,
+        count(*) filter (
+          where raw_payload->>'source' = 'entity_dossiers'
             and raw_payload->>'watch_item' = 'true'
         )::int as watch_items,
         count(*) filter (
           where is_active and raw_payload->>'source' = 'entity_dossiers'
             and title ilike 'Question execution failed before a safe answer could be produced%'
-        )::int as failed_only_opportunities_active
+        )::int as failed_only_opportunities_active,
+        max(last_seen_at) filter (
+          where raw_payload->>'source' = 'entity_dossiers'
+        ) as latest_dossier_opportunity_seen_at
       from graphiti_materialized_opportunities
     `).catch(() => ({ rows: [{}] })),
   ])
@@ -486,15 +701,30 @@ export async function loadGraphitiDossierIngestionStats() {
     canonical_entities_total: universeCount ?? 0,
     dossiers_persisted_entities: Number(dossierRow.dossiers_persisted_entities || 0),
     dossiers_ingested_entities: dossiersIngestedEntities,
-    partial_dossiers_ingested: Number(ingestionRow.partial_dossiers_ingested || 0),
-    skipped_empty_entities: Number(ingestionRow.skipped_empty_entities || 0),
-    failed_ingestions: Number(ingestionRow.failed_ingestions || 0),
-    ingested_not_opportunity_worthy: Math.max(0, dossiersIngestedEntities - opportunityWorthyEntities),
+    complete_dossiers_ingested: Number(ingestionRow.complete_dossiers_ingested || 0),
+      partial_dossiers_ingested: Number(ingestionRow.partial_dossiers_ingested || 0),
+      skipped_empty_entities: Number(ingestionRow.skipped_empty_entities || 0),
+      failed_ingestions: Number(ingestionRow.failed_ingestions || 0),
+      sparse_complete_entities: Number(ingestionRow.sparse_complete_entities || 0),
+      sparse_partial_entities: Number(ingestionRow.sparse_partial_entities || 0),
+      zero_evidence_entities: Number(ingestionRow.zero_evidence_entities || 0),
+      useful_dossier_entities: Number(ingestionRow.useful_dossier_entities || 0),
+      enrichment_required_entities: Number(ingestionRow.enrichment_required_entities || 0),
+      materializable_dossier_candidates: Number(ingestionRow.materializable_dossier_candidates || 0),
+      wrong_entity_blocked: Number(ingestionRow.wrong_entity_blocked || 0),
+      tool_failure_blocked: Number(ingestionRow.tool_failure_blocked || 0),
+      generic_context_only: Number(ingestionRow.generic_context_only || 0),
+      ingested_not_opportunity_worthy: Math.max(0, dossiersIngestedEntities - opportunityWorthyEntities),
     opportunity_worthy_entities: opportunityWorthyEntities,
     watch_items: Number(opportunityRow.watch_items || 0),
     active_opportunities: Number(opportunityRow.active_opportunities || 0),
     accelerating_opportunities: Number(opportunityRow.accelerating_opportunities || 0),
+    complete_materialized_rows: Number(opportunityRow.complete_materialized_rows || 0),
+    complete_active_opportunities: Number(opportunityRow.complete_active_opportunities || 0),
+    no_buying_trigger_rows: Number(opportunityRow.no_buying_trigger_rows || 0),
+    stale_opportunity_rows: Number(opportunityRow.stale_opportunity_rows || 0),
     failed_only_opportunities_active: Number(opportunityRow.failed_only_opportunities_active || 0),
+    latest_dossier_opportunity_seen_at: opportunityRow.latest_dossier_opportunity_seen_at || null,
   }
 }
 

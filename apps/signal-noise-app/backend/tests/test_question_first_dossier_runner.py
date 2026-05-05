@@ -145,6 +145,99 @@ def test_find_latest_question_first_run_artifact_picks_timestamped_artifact(tmp_
     assert found == newer
 
 
+def test_merge_question_repair_artifact_replaces_selected_answer_without_downgrading_full_pack():
+    source_payload = {
+        "entity_id": "baseball-australia",
+        "entity_name": "Baseball Australia",
+        "metadata": {
+            "question_first_repair": {
+                "mode": "question",
+                "question_id": "q3_leadership",
+                "cascade_dependents": False,
+            }
+        },
+        "question_first": {
+            "schema_version": "question_first_run_v2",
+            "questions_answered": 2,
+            "answers": [
+                {
+                    "question_id": "q1_foundation",
+                    "validation_state": "validated",
+                    "answer": "Baseball Australia",
+                },
+                {
+                    "question_id": "q3_leadership",
+                    "validation_state": "failed",
+                    "answer": "stale q3 answer",
+                },
+            ],
+        },
+        "questions": [
+            {"question_id": "q1_foundation", "answer": "Baseball Australia", "validation_state": "validated"},
+            {"question_id": "q3_leadership", "answer": "stale q3 answer", "validation_state": "failed"},
+        ],
+    }
+    artifact = {
+        "schema_version": "question_first_run_v2",
+        "generated_at": "2026-05-05T03:39:06.241Z",
+        "run_started_at": "2026-05-05T03:38:00.000Z",
+        "source": "opencode_agentic_batch",
+        "status": "ready",
+        "entity": {"entity_id": "baseball-australia", "entity_name": "Baseball Australia"},
+        "question_specs": [{"question_id": "q3_leadership", "question_text": "Who are buyer-role leaders?"}],
+        "answer_records": [
+            {
+                "question_id": "q3_leadership",
+                "validation_state": "no_signal",
+                "answer": {"kind": "list", "summary": "Checked leadership sources but no buyer-role candidate found."},
+                "confidence": 0,
+            }
+        ],
+        "merge_patch": {
+            "question_first": {
+                "schema_version": "question_first_run_v2",
+                "questions_answered": 1,
+                "answers": [
+                    {
+                        "question_id": "q3_leadership",
+                        "validation_state": "no_signal",
+                        "answer": {"kind": "list", "summary": "Checked leadership sources but no buyer-role candidate found."},
+                        "confidence": 0,
+                    }
+                ],
+            },
+            "questions": [
+                {
+                    "question_id": "q3_leadership",
+                    "answer": {"kind": "list", "summary": "Checked leadership sources but no buyer-role candidate found."},
+                    "validation_state": "no_signal",
+                    "confidence": 0,
+                }
+            ],
+        },
+    }
+
+    merged = runner.merge_question_first_run_artifact_into_dossier(
+        dossier_payload=source_payload,
+        artifact=artifact,
+    )
+
+    answers_by_id = {
+        answer["question_id"]: answer
+        for answer in merged["question_first"]["answers"]
+    }
+    questions_by_id = {
+        question["question_id"]: question
+        for question in merged["questions"]
+    }
+    assert merged["question_first"]["questions_answered"] == 2
+    assert answers_by_id["q1_foundation"]["answer"] == "Baseball Australia"
+    assert answers_by_id["q3_leadership"]["validation_state"] == "no_signal"
+    assert "stale q3 answer" not in json.dumps(answers_by_id["q3_leadership"])
+    assert questions_by_id["q1_foundation"]["answer"] == "Baseball Australia"
+    assert questions_by_id["q3_leadership"]["validation_state"] == "no_signal"
+
+
 @pytest.mark.asyncio
 async def test_question_first_runner_uses_saved_questions_and_writes_plain_text_report(tmp_path):
     dossier_path = tmp_path / "leeds_dossier.json"

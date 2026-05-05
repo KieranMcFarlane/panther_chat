@@ -16,6 +16,8 @@ test('better auth keeps the supported memory adapter as the last-resort fallback
 
 test('better auth honors DATABASE_URL sqlite paths and refuses memory fallback in hosted production', () => {
   assert.match(authSource, /process\.env\.DATABASE_URL/)
+  assert.match(authSource, /process\.env\.NEON_DB_URL/)
+  assert.match(authSource, /LOCAL_SOCKET_DATABASE_URL/)
   assert.match(authSource, /join\("\/tmp",\s*basename\(configuredPath\)\)/)
   assert.match(authSource, /no durable database available in production/)
   assert.doesNotMatch(authSource, /process\.env\.NODE_ENV === "production".*isHostedProductionRuntime/s)

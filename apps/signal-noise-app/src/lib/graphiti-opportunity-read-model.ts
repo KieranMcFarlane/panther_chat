@@ -6,6 +6,8 @@ import type {
 } from '@/lib/graphiti-opportunity-contract'
 import { rankGraphitiOpportunities } from '@/lib/graphiti-opportunity-materializer'
 import { buildGraphitiOpportunityReasoning } from '@/lib/graphiti-opportunity-reasoning.mjs'
+import { strategyBriefToCardBrief } from '@/lib/graphiti-opportunity-strategy-synthesis.mjs'
+import { classifyGraphitiCommercialState, isOutreachReadyGraphitiRow } from '@/lib/graphiti-commercial-truth-filter.mjs'
 
 const PERSISTED_COLUMNS = [
   'opportunity_id',
@@ -154,7 +156,7 @@ function isCurrentDossierShortlistOpportunityRow(row: PersistedGraphitiOpportuni
   if (commercialStatus === 'context_only' || commercialStatus === 'watch' || commercialStatus === 'blocked' || commercialStatus === 'no_buying_trigger') return false
   if ((commercialStatus === 'active' || commercialStatus === 'accelerating') && buyingTriggers.length === 0) return false
 
-  return true
+  return isOutreachReadyGraphitiRow(row)
 }
 
 function firstSentence(value: string) {
@@ -348,6 +350,8 @@ function buildOpportunityLabel(row: PersistedGraphitiOpportunityRow): string {
 
 function toRecord(row: PersistedGraphitiOpportunityRow): GraphitiOpportunityCard {
   const rawPayload = asRecord(row.raw_payload)
+  const commercialTruth = classifyGraphitiCommercialState(row)
+  const strategyBrief = asRecord(rawPayload.bd_strategy_brief)
   const title = sanitizeNarrativeText(row.title)
   const summary = sanitizeNarrativeText(row.summary)
   const whyItMatters = sanitizeNarrativeText(row.why_it_matters)
@@ -477,6 +481,17 @@ function toRecord(row: PersistedGraphitiOpportunityRow): GraphitiOpportunityCard
     findings: findings as GraphitiOpportunityCard['findings'],
     timeline: timeline as GraphitiOpportunityCard['timeline'],
     related_patterns: relatedPatterns as GraphitiOpportunityCard['related_patterns'],
+    strategy_brief: strategyBrief.schema_version === 'yp_bd_strategy_v1'
+      ? strategyBrief as GraphitiOpportunityCard['strategy_brief']
+      : undefined,
+    briefing: strategyBrief.schema_version === 'yp_bd_strategy_v1'
+      ? strategyBriefToCardBrief(strategyBrief) as GraphitiOpportunityCard['briefing']
+      : undefined,
+    commercial_state: commercialTruth.commercial_state as GraphitiOpportunityCard['commercial_state'],
+    commercial_confidence: commercialTruth.commercial_confidence,
+    commercial_confidence_score: commercialTruth.commercial_confidence_score,
+    yp_relevance: commercialTruth.yp_relevance,
+    commercial_truth_reasons: commercialTruth.commercial_truth_reasons,
   }
 }
 

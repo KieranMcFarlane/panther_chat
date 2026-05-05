@@ -549,7 +549,23 @@ def should_skip_manifest_auto_advance_for_batch_metadata(batch_metadata: Optiona
     repair_source = str(metadata.get("repair_source") or metadata.get("repair_queue_source") or "").strip().lower()
     rerun_mode = str(metadata.get("rerun_mode") or "").strip().lower()
     question_id = str(metadata.get("question_id") or metadata.get("current_question_id") or "").strip()
-    return bool(question_id) or rerun_mode == "question" or source == "self_healing_repair" or repair_source == "self_healing_repair"
+    auto_advance_guard = str(metadata.get("auto_advance_guard") or "").strip().lower()
+    return (
+        bool(question_id)
+        or rerun_mode == "question"
+        or source == "self_healing_repair"
+        or repair_source == "self_healing_repair"
+        or metadata.get("suppress_cursor_resume_after_batch") is True
+        or metadata.get("targeted_pilot") is True
+        or auto_advance_guard in {"manual_batch_only", "pilot_batch_only", "paused_checkpoint_only"}
+    )
+
+
+def is_paused_checkpoint_auto_resume_control_state(control_state: Optional[Dict[str, Any]]) -> bool:
+    state = control_state if isinstance(control_state, dict) else {}
+    action = str(state.get("last_self_heal_action") or "").strip().lower()
+    recovery_source = str(state.get("recovery_source") or "").strip().lower()
+    return action == "paused_checkpoint_auto_resume" or recovery_source == "paused_checkpoint_auto_resume"
 
 
 def _mark_recovery_state(
@@ -1092,6 +1108,225 @@ def extract_question_first_checkpoint_from_payload(payload: Any) -> Optional[Dic
             }
 
     return None
+
+
+def _records_by_question_id(records: Any) -> Dict[str, Dict[str, Any]]:
+    if not isinstance(records, list):
+        return {}
+    return {
+        str(record.get("question_id") or "").strip(): record
+        for record in records
+        if isinstance(record, dict) and str(record.get("question_id") or "").strip()
+    }
+
+
+def _merge_records_by_question_id(existing: Any, incoming: Any) -> list[Dict[str, Any]]:
+    existing_records = [record for record in (existing if isinstance(existing, list) else []) if isinstance(record, dict)]
+    incoming_by_id = _records_by_question_id(incoming)
+    if not incoming_by_id:
+        return existing_records
+
+    merged: list[Dict[str, Any]] = []
+    seen: set[str] = set()
+    for record in existing_records:
+        question_id = str(record.get("question_id") or "").strip()
+        if question_id and question_id in incoming_by_id:
+            merged.append(deepcopy(incoming_by_id[question_id]))
+            seen.add(question_id)
+        else:
+            merged.append(record)
+            if question_id:
+                seen.add(question_id)
+    for question_id, record in incoming_by_id.items():
+        if question_id not in seen:
+            merged.append(deepcopy(record))
+    return merged
+
+
+def _answer_records_from_question_shells(questions: Any) -> list[Dict[str, Any]]:
+    if not isinstance(questions, list):
+        return []
+    answers: list[Dict[str, Any]] = []
+    for question in questions:
+        if not isinstance(question, dict):
+            continue
+        question_id = str(question.get("question_id") or "").strip()
+        if not question_id:
+            continue
+        question_first_answer = question.get("question_first_answer")
+        if isinstance(question_first_answer, dict):
+            answer = deepcopy(question_first_answer)
+            answer["question_id"] = str(answer.get("question_id") or question_id).strip() or question_id
+            answers.append(answer)
+            continue
+        if any(key in question for key in ("answer", "validation_state", "confidence", "signal_type")):
+            answers.append(
+                {
+                    "question_id": question_id,
+                    "answer": question.get("answer"),
+                    "confidence": question.get("confidence"),
+                    "validation_state": question.get("validation_state"),
+                    "signal_type": question.get("signal_type"),
+                    "evidence_url": question.get("evidence_url"),
+                    "notes": question.get("notes"),
+                }
+            )
+    return answers
+
+
+def _question_repair_answer_count(dossier: Any) -> int:
+    if not isinstance(dossier, dict):
+        return 0
+    question_first = dossier.get("question_first") if isinstance(dossier.get("question_first"), dict) else {}
+    answers = question_first.get("answers")
+    answer_count = len(answers) if isinstance(answers, list) else 0
+    shell_count = len(_answer_records_from_question_shells(dossier.get("questions")))
+    return max(answer_count, shell_count)
+
+
+def _unwrap_dossier_payload(payload: Any) -> Dict[str, Any]:
+    if not isinstance(payload, dict):
+        return {}
+    merged = payload.get("merged_dossier")
+    if isinstance(merged, dict):
+        return merged
+    dossier = payload.get("dossier")
+    if isinstance(dossier, dict):
+        return dossier
+    return payload
+
+
+def load_question_repair_source_dossier(path_value: Optional[str]) -> Dict[str, Any]:
+    normalized_path = str(path_value or "").strip()
+    if not normalized_path:
+        return {}
+    candidate_paths = [Path(normalized_path)]
+    if not Path(normalized_path).is_absolute():
+        candidate_paths.append(Path(__file__).resolve().parents[1] / normalized_path)
+        candidate_paths.append(Path(__file__).resolve().parents[2] / normalized_path)
+    for candidate in candidate_paths:
+        try:
+            if not candidate.exists() or not candidate.is_file():
+                continue
+            return _unwrap_dossier_payload(json.loads(candidate.read_text(encoding="utf-8")))
+        except Exception as exc:
+            logger.warning("Failed to load repair source dossier %s: %s", candidate, exc)
+            return {}
+    return {}
+
+
+def select_question_repair_merge_base(
+    *,
+    existing_dossier: Dict[str, Any],
+    repair_source_dossier: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
+    if not isinstance(repair_source_dossier, dict) or not repair_source_dossier:
+        return existing_dossier
+    existing_count = _question_repair_answer_count(existing_dossier)
+    source_count = _question_repair_answer_count(repair_source_dossier)
+    if source_count > existing_count:
+        return repair_source_dossier
+    return existing_dossier
+
+
+def merge_question_repair_result_into_persisted_dossier(
+    *,
+    existing_dossier: Dict[str, Any],
+    repair_dossier: Dict[str, Any],
+    question_id: str,
+) -> Dict[str, Any]:
+    """Merge a one-question repair result into an existing persisted dossier.
+
+    Single-question repair runs intentionally produce a small artifact. The app
+    needs the repaired answer promoted back into the full persisted dossier
+    without replacing the whole dossier with that one-question payload.
+    """
+    if not isinstance(existing_dossier, dict) or not isinstance(repair_dossier, dict):
+        return existing_dossier
+    normalized_question_id = str(question_id or "").strip()
+    if not normalized_question_id:
+        return existing_dossier
+
+    result = deepcopy(existing_dossier)
+    repair_question_first = repair_dossier.get("question_first") if isinstance(repair_dossier.get("question_first"), dict) else {}
+    repair_run = repair_dossier.get("question_first_run") if isinstance(repair_dossier.get("question_first_run"), dict) else {}
+    incoming_answers = []
+    if isinstance(repair_question_first.get("answers"), list):
+        incoming_answers.extend(
+            answer for answer in repair_question_first.get("answers") or []
+            if isinstance(answer, dict) and str(answer.get("question_id") or "").strip() == normalized_question_id
+        )
+    if isinstance(repair_run.get("answer_records"), list):
+        incoming_answers.extend(
+            answer for answer in repair_run.get("answer_records") or []
+            if isinstance(answer, dict) and str(answer.get("question_id") or "").strip() == normalized_question_id
+        )
+    incoming_answer = incoming_answers[-1] if incoming_answers else None
+
+    incoming_questions = [
+        question for question in (repair_dossier.get("questions") if isinstance(repair_dossier.get("questions"), list) else [])
+        if isinstance(question, dict) and str(question.get("question_id") or "").strip() == normalized_question_id
+    ]
+    incoming_question = incoming_questions[-1] if incoming_questions else None
+
+    if not isinstance(incoming_answer, dict) and not isinstance(incoming_question, dict):
+        return result
+
+    question_first = result.get("question_first") if isinstance(result.get("question_first"), dict) else {}
+    question_first = deepcopy(question_first)
+    if isinstance(incoming_answer, dict):
+        existing_answers = question_first.get("answers")
+        shell_answers = _answer_records_from_question_shells(result.get("questions"))
+        if len(shell_answers) > len(existing_answers if isinstance(existing_answers, list) else []):
+            existing_answers = shell_answers
+        question_first["answers"] = _merge_records_by_question_id(
+            existing_answers,
+            [incoming_answer],
+        )
+        question_first["questions_answered"] = len(question_first.get("answers") or [])
+        question_first["generated_at"] = repair_question_first.get("generated_at") or repair_dossier.get("generated_at") or question_first.get("generated_at")
+        result["question_first"] = question_first
+
+    questions = result.get("questions") if isinstance(result.get("questions"), list) else []
+    if isinstance(incoming_question, dict):
+        merged_question = deepcopy(incoming_question)
+    elif isinstance(incoming_answer, dict):
+        merged_question = {
+            "question_id": normalized_question_id,
+            "question_first_answer": deepcopy(incoming_answer),
+            "answer": incoming_answer.get("answer"),
+            "confidence": incoming_answer.get("confidence"),
+            "validation_state": incoming_answer.get("validation_state"),
+            "signal_type": incoming_answer.get("signal_type"),
+            "evidence_url": incoming_answer.get("evidence_url"),
+            "notes": incoming_answer.get("notes"),
+        }
+    else:
+        merged_question = {}
+    if merged_question:
+        result["questions"] = _merge_records_by_question_id(questions, [merged_question])
+
+    metadata = result.get("metadata") if isinstance(result.get("metadata"), dict) else {}
+    metadata = deepcopy(metadata)
+    metadata_question_first = metadata.get("question_first") if isinstance(metadata.get("question_first"), dict) else {}
+    metadata_question_first = {
+        **metadata_question_first,
+        "last_question_repair_merged_at": datetime.now(timezone.utc).isoformat(),
+        "last_repaired_question_id": normalized_question_id,
+    }
+    repair_run_metadata = (
+        repair_question_first.get("repair_run")
+        if isinstance(repair_question_first.get("repair_run"), dict)
+        else {}
+    )
+    if repair_run_metadata:
+        metadata_question_first["repair_run"] = deepcopy(repair_run_metadata)
+    if repair_run:
+        metadata_question_first["last_question_repair_run_id"] = str(repair_run.get("run_id") or "").strip() or None
+        metadata_question_first["last_question_repair_generated_at"] = str(repair_run.get("generated_at") or "").strip() or None
+    metadata["question_first"] = metadata_question_first
+    result["metadata"] = metadata
+    return result
 
 
 def should_queue_question_first_continuation(
@@ -1710,6 +1945,18 @@ class EntityPipelineWorker:
                 entity_name=control_state.get("current_entity_name"),
                 status="idle",
                 message="scoped batch completed; cursor resume disabled",
+            )
+            return None
+
+        if is_paused_checkpoint_auto_resume_control_state(control_state) and not (cursor_entity_id or cursor_canonical_entity_id):
+            log_worker_transition(
+                "claim_cycle_paused_checkpoint_boundary",
+                worker_id=getattr(self, "worker_id", "worker-test"),
+                batch_id=control_state.get("current_batch_id"),
+                entity_id=control_state.get("current_entity_id"),
+                entity_name=control_state.get("current_entity_name"),
+                status="idle",
+                message="paused checkpoint auto-resume found no cursor; manifest fallback suppressed",
             )
             return None
 
@@ -2857,6 +3104,44 @@ class EntityPipelineWorker:
             context=f"persist skipped question {entity_id}/{question_id}",
         )
 
+    def _persist_question_repair_result_to_entity_dossier(
+        self,
+        *,
+        entity_id: str,
+        canonical_entity_id: Optional[str],
+        question_id: str,
+        repair_dossier: Dict[str, Any],
+        repair_source_dossier_path: Optional[str] = None,
+    ) -> bool:
+        if not question_id or not isinstance(repair_dossier, dict) or not repair_dossier:
+            return False
+        row_id, existing_dossier = self._load_persisted_dossier(entity_id, canonical_entity_id)
+        if not existing_dossier:
+            return False
+        repair_source_dossier = load_question_repair_source_dossier(repair_source_dossier_path)
+        merge_base_dossier = select_question_repair_merge_base(
+            existing_dossier=existing_dossier,
+            repair_source_dossier=repair_source_dossier,
+        )
+        merged_dossier = merge_question_repair_result_into_persisted_dossier(
+            existing_dossier=merge_base_dossier,
+            repair_dossier=repair_dossier,
+            question_id=question_id,
+        )
+        if merged_dossier == existing_dossier:
+            return False
+        update_query = self.supabase.table("entity_dossiers").update({"dossier_data": merged_dossier})
+        if row_id:
+            update_query = update_query.eq("id", row_id)
+        elif canonical_entity_id:
+            update_query = update_query.eq("canonical_entity_id", canonical_entity_id)
+        else:
+            update_query = update_query.eq("entity_id", entity_id)
+        return self._safe_execute(
+            lambda: update_query.execute(),
+            context=f"persist question repair result {entity_id}/{question_id}",
+        )
+
     def _build_skip_metadata(
         self,
         *,
@@ -2976,6 +3261,29 @@ class EntityPipelineWorker:
         repair_retry_budget: int,
         reconcile_required: bool,
     ) -> Dict[str, Optional[str]]:
+        auto_advance_guard = str(latest_metadata.get("auto_advance_guard") or "").strip().lower()
+        if (
+            latest_metadata.get("suppress_cursor_resume_after_batch") is True
+            or latest_metadata.get("targeted_pilot") is True
+            or auto_advance_guard in {"manual_batch_only", "pilot_batch_only"}
+        ):
+            log_worker_transition(
+                "follow_on_repair_skipped_for_scoped_batch",
+                worker_id=getattr(self, "worker_id", "worker-test"),
+                batch_id=run.get("batch_id"),
+                entity_id=run.get("entity_id"),
+                entity_name=run.get("entity_name"),
+                question_id=question_id,
+                status="skipped",
+                current_action=f"repair question {question_id}",
+                message="scoped pilot/manual batch suppresses automatic follow-on repairs",
+            )
+            return {
+                "batch_id": None,
+                "status": "skipped",
+                "queue_source": "guarded_pilot",
+            }
+
         canonical_entity_id = str(
             run.get("canonical_entity_id")
             or latest_metadata.get("canonical_entity_id")
@@ -3481,6 +3789,36 @@ class EntityPipelineWorker:
                 completed_phases = [name for name, detail in phases.items() if detail.get("status") == "completed"]
                 last_phase = completed_phases[-1] if completed_phases else "dashboard_scoring"
                 latest_metadata = self._get_run_metadata(batch_id, run["entity_id"])
+                effective_metadata = latest_metadata if isinstance(latest_metadata, dict) else run_metadata
+                if str(effective_metadata.get("rerun_mode") or "").strip().lower() == "question":
+                    repaired_question_id = str(
+                        effective_metadata.get("question_id")
+                        or effective_metadata.get("current_question_id")
+                        or ""
+                    ).strip()
+                    repair_dossier = ((result.get("artifacts") or {}).get("dossier") or {})
+                    if repaired_question_id and isinstance(repair_dossier, dict):
+                        persisted_repair = self._persist_question_repair_result_to_entity_dossier(
+                            entity_id=str(run.get("entity_id") or ""),
+                            canonical_entity_id=str(
+                                run.get("canonical_entity_id")
+                                or effective_metadata.get("canonical_entity_id")
+                                or ""
+                            ).strip() or None,
+                            question_id=repaired_question_id,
+                            repair_dossier=repair_dossier,
+                            repair_source_dossier_path=str(
+                                effective_metadata.get("repair_source_dossier_path")
+                                or effective_metadata.get("repairSourceDossierPath")
+                                or ""
+                            ).strip() or None,
+                        )
+                        if persisted_repair:
+                            effective_metadata = {
+                                **effective_metadata,
+                                "question_repair_persisted_to_entity_dossier": True,
+                                "last_repaired_question_id": repaired_question_id,
+                            }
                 publication_status = str(result.get("publication_status") or "").strip().lower()
                 dual_write_ok = bool(result.get("dual_write_ok", True))
                 publication_succeeded = publication_status in {"published", "published_degraded"} or dual_write_ok
@@ -3490,13 +3828,13 @@ class EntityPipelineWorker:
                 )
                 follow_on_repair_metadata = self._derive_follow_on_repair_metadata(
                     run=run,
-                    latest_metadata=latest_metadata if isinstance(latest_metadata, dict) else run_metadata,
+                    latest_metadata=effective_metadata,
                     result=result,
                     publication_succeeded=publication_succeeded,
                     reconcile_required=reconcile_required,
                 )
                 metadata = merge_pipeline_run_metadata(
-                    build_run_success_metadata(latest_metadata if isinstance(latest_metadata, dict) else run_metadata),
+                    build_run_success_metadata(effective_metadata),
                     phases=phases,
                     phase_details_by_phase=(result.get("phase_details_by_phase") or phases),
                     scores=((result.get("artifacts") or {}).get("scores")),

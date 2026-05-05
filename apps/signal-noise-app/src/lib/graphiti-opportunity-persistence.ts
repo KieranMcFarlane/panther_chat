@@ -97,6 +97,7 @@ type EntityDossierOpportunityRow = {
   reference_time?: string | null
   episode_body?: Record<string, unknown> | null
   dossier_data?: Record<string, unknown> | null
+  raw_metadata?: Record<string, unknown> | null
 }
 
 function toIso(value: unknown, fallback = new Date().toISOString()) {
@@ -138,6 +139,106 @@ function isFailedOnlyText(value: unknown): boolean {
   )
 }
 
+function isToolFailureOpportunityText(value: unknown): boolean {
+  const text = toText(value).toLowerCase()
+  return Boolean(text) && (
+    isFailedOnlyText(text)
+    || text.includes('no brightdata tool is available')
+    || text.includes('no deterministic answer was produced')
+    || text.includes('tool_call_missing')
+    || text.includes('cold_verification')
+  )
+}
+
+function sourceNarrativeText(sourceRow: GraphitiOpportunitySourceRow): string {
+  const rawPayload = asRecord(sourceRow.raw_payload)
+  const episodeBody = asRecord(rawPayload.episode_body)
+  return [
+    sourceRow.title,
+    sourceRow.summary,
+    sourceRow.why_it_matters,
+    sourceRow.suggested_action,
+    rawPayload.capability_gap,
+    rawPayload.outreach_route,
+    rawPayload.graphiti_sales_brief,
+    rawPayload.yellow_panther_opportunity,
+    episodeBody.promoted_summary,
+    episodeBody.graphiti_sales_brief,
+    episodeBody.yellow_panther,
+  ].map(toReadableEpisodeText).filter(Boolean).join(' ')
+}
+
+function hasEntityContamination(row: EntityDossierOpportunityRow, sourceRow: GraphitiOpportunitySourceRow): boolean {
+  const metrics = asRecord(row.raw_metadata?.quality_metrics)
+  const wrongEntityFactCount = Number(metrics.wrong_entity_fact_count ?? row.raw_metadata?.wrong_entity_blocked ?? 0)
+  if (wrongEntityFactCount > 0) return true
+
+  const entityName = toText(row.entity_name || sourceRow.entity_name).toLowerCase()
+  const narrative = sourceNarrativeText(sourceRow).toLowerCase()
+  if (!entityName || !narrative) return false
+  return /\bSomalia\b/i.test(narrative) && !entityName.includes('somalia')
+}
+
+function hasTriggerLikeLanguage(sourceRow: GraphitiOpportunitySourceRow): boolean {
+  return /\b(?:hiring|vacancy|job opening|posted|procurement|rfp|tender|request for proposal|contract|bid|technology partner|app launch|platform launch|launched|announced|sponsorship deal|funding|grant|investment|partnership)\b/i.test(sourceNarrativeText(sourceRow))
+}
+
+function isPureContextOnlyDossierSignal(sourceRow: GraphitiOpportunitySourceRow): boolean {
+  const text = sourceNarrativeText(sourceRow).toLowerCase()
+  if (!text) return true
+  if (hasTriggerLikeLanguage(sourceRow)) return false
+  return (
+    text.includes('finished the 2025') && text.includes('season')
+    || text.includes('competes in') && text.includes('top tier')
+    || text.includes('official site') && text.includes('runs on')
+    || text.includes('cms:')
+    || text.includes('technology stack')
+    || text.includes('multi-vendor digital stack')
+    || text.includes('capability gaps versus peers')
+  )
+}
+
+function shouldRejectContaminatedDossierSource(row: EntityDossierOpportunityRow, sourceRow: GraphitiOpportunitySourceRow): boolean {
+  const metrics = asRecord(row.raw_metadata?.quality_metrics)
+  const toolFailureCount = Number(metrics.tool_failure_fact_count ?? row.raw_metadata?.tool_failure_blocked ?? 0)
+  const text = sourceNarrativeText(sourceRow)
+  return hasEntityContamination(row, sourceRow)
+    || isToolFailureOpportunityText(text)
+    || toolFailureCount > 0 && Number(row.answer_count || 0) <= toolFailureCount
+}
+
+function dataQualityBlockersForDossierSource(row: EntityDossierOpportunityRow, sourceRow: GraphitiOpportunitySourceRow): string[] {
+  return [
+    hasEntityContamination(row, sourceRow) ? 'wrong_entity_blocked' : '',
+    isToolFailureOpportunityText(sourceNarrativeText(sourceRow)) ? 'tool_failure_blocked' : '',
+    isPureContextOnlyDossierSignal(sourceRow) ? 'generic_context_only' : '',
+    !hasTriggerLikeLanguage(sourceRow) ? 'missing_trigger_like_language' : '',
+  ].filter(Boolean)
+}
+
+function sourceSignalDedupeKey(row: GraphitiOpportunitySourceRow): string {
+  // Dedupe by entity_id + signal category + trigger/source so repeated dossier rows do not crowd watch.
+  const rawPayload = asRecord(row.raw_payload)
+  const text = sourceNarrativeText(row).toLowerCase()
+  const signalCategory = /\bhiring|vacancy|job\b/i.test(text) ? 'hiring'
+    : /\brfp|tender|procurement|contract|bid\b/i.test(text) ? 'procurement'
+      : /\bapp|platform|digital|data|analytics\b/i.test(text) ? 'digital'
+        : /\bfunding|grant|investment\b/i.test(text) ? 'funding'
+          : 'context'
+  const triggerOrSource = toText(rawPayload.source_ledger_id || row.source_episode_id || row.title).toLowerCase().slice(0, 140)
+  return [row.entity_id, signalCategory, triggerOrSource].join('|').toLowerCase()
+}
+
+function dedupeDossierOpportunitySources(rows: GraphitiOpportunitySourceRow[]): GraphitiOpportunitySourceRow[] {
+  const seen = new Set<string>()
+  return rows.filter((row) => {
+    const key = sourceSignalDedupeKey(row)
+    if (seen.has(key)) return false
+    seen.add(key)
+    return true
+  })
+}
+
 function isEmptyStructuredText(value: unknown): boolean {
   const text = toText(value).toLowerCase()
   if (!text) return true
@@ -146,6 +247,40 @@ function isEmptyStructuredText(value: unknown): boolean {
     && text.includes('"opportunity_hypotheses":[]')
     && text.includes('"summary":null')
   )
+}
+
+function hasExplicitFreshBuyingTrigger(row: EntityDossierOpportunityRow, sourceRow: GraphitiOpportunitySourceRow): boolean {
+  const text = sourceNarrativeText(sourceRow)
+
+  return /\b(?:hiring|vacancy|job opening|posted|procurement|rfp|tender|request for proposal|contract|bid|technology partner|app launch|platform launch|sponsorship deal)\b/i.test(text)
+    && /\b(?:2025|2026|current|currently|active|live|recent|posted|announced|launched)\b/i.test(text)
+}
+
+function isGenericOrNonCurrentDossierText(sourceRow: GraphitiOpportunitySourceRow): boolean {
+  const text = [
+    sourceRow.title,
+    sourceRow.summary,
+    sourceRow.why_it_matters,
+    sourceRow.suggested_action,
+  ].map(toReadableEpisodeText).filter(Boolean).join(' ').toLowerCase()
+  if (!text) return true
+  return (
+    text.includes('insufficient_signal')
+    || text.includes('no_signal')
+    || text.includes('retry_exhausted')
+    || text.includes('question execution failed')
+    || text.includes('has a dossier-backed opportunity signal')
+    || text.includes('defunct')
+    || text.includes('no longer operates')
+    || text.includes('no longer participates')
+  )
+}
+
+function shouldSkipSparseDossierLedger(row: EntityDossierOpportunityRow, sourceRow: GraphitiOpportunitySourceRow): boolean {
+  const evidenceCount = Number(row.evidence_count || 0)
+  if (isGenericOrNonCurrentDossierText(sourceRow)) return true
+  if (Number(row.evidence_count || 0) <= 0 && !hasExplicitFreshBuyingTrigger(row, sourceRow)) return true
+  return evidenceCount <= 0 && !hasExplicitFreshBuyingTrigger(row, sourceRow)
 }
 
 function answerHasUsefulContent(answer: Record<string, unknown>): boolean {
@@ -318,6 +453,7 @@ function buildDossierOpportunitySourceFromLedgerEpisode(
       graphiti_sales_brief: graphiti,
       yellow_panther_opportunity: yellowPanther,
       service_fit: serviceFit,
+      quality_metrics: row.raw_metadata?.quality_metrics || null,
       capability_gap: graphiti.capability_gap || null,
       outreach_route: graphiti.outreach_route || graphiti.outreach_target || null,
     },
@@ -404,56 +540,79 @@ function toPersistedOpportunityRow(
   row: ReturnType<typeof materializeGraphitiOpportunity>,
   nowIso: string,
 ): PersistedGraphitiOpportunityRow {
+  const { freshness: _freshness, metadata: _metadata, ...persisted } = row
+
   return {
     opportunity_id: row.opportunity_id,
-    insight_id: row.insight_id,
-    entity_id: row.entity_id,
-    entity_name: row.entity_name,
-    entity_type: row.entity_type,
-    canonical_entity_id: row.canonical_entity_id || null,
-    canonical_entity_name: row.canonical_entity_name || null,
-    organization: row.organization,
-    title: row.title,
-    summary: row.summary,
-    why_it_matters: row.why_it_matters,
-    suggested_action: row.suggested_action,
-    why_this_is_an_opportunity: row.why_this_is_an_opportunity,
-    yellow_panther_fit_feedback: row.yellow_panther_fit_feedback,
-    next_steps: row.next_steps || [],
-    supporting_signals: row.supporting_signals || [],
-    read_more_context: row.read_more_context,
-    confidence: row.confidence,
-    confidence_score: row.confidence_score,
-    priority: row.priority,
-    priority_score: row.priority_score,
-    yellow_panther_fit: row.yellow_panther_fit,
-    category: row.category,
-    status: row.status,
-    location: row.location || null,
-    value: row.value || null,
-    deadline: row.deadline || null,
-    sport: row.sport,
-    competition: row.competition,
-    entity_role: row.entity_role,
-    opportunity_kind: row.opportunity_kind,
-    theme: row.theme,
-    taxonomy: row.taxonomy || {},
-    source_url: row.source_url,
-    tags: row.tags || [],
-    evidence: row.evidence || [],
-    relationships: row.relationships || [],
-    source_run_id: row.source_run_id || null,
-    source_signal_id: row.source_signal_id || null,
-    source_episode_id: row.source_episode_id || null,
-    source_objective: row.source_objective || null,
-    detected_at: row.detected_at,
+    insight_id: persisted.insight_id,
+    entity_id: persisted.entity_id,
+    entity_name: persisted.entity_name,
+    entity_type: persisted.entity_type,
+    canonical_entity_id: persisted.canonical_entity_id || null,
+    canonical_entity_name: persisted.canonical_entity_name || null,
+    organization: persisted.organization,
+    title: persisted.title,
+    summary: persisted.summary,
+    why_it_matters: persisted.why_it_matters,
+    suggested_action: persisted.suggested_action,
+    why_this_is_an_opportunity: persisted.why_this_is_an_opportunity,
+    yellow_panther_fit_feedback: persisted.yellow_panther_fit_feedback,
+    next_steps: persisted.next_steps || [],
+    supporting_signals: persisted.supporting_signals || [],
+    read_more_context: persisted.read_more_context,
+    confidence: persisted.confidence,
+    confidence_score: persisted.confidence_score,
+    priority: persisted.priority,
+    priority_score: persisted.priority_score,
+    yellow_panther_fit: persisted.yellow_panther_fit,
+    category: persisted.category,
+    status: persisted.status,
+    location: persisted.location || null,
+    value: persisted.value || null,
+    deadline: persisted.deadline || null,
+    sport: persisted.sport,
+    competition: persisted.competition,
+    entity_role: persisted.entity_role,
+    opportunity_kind: persisted.opportunity_kind,
+    theme: persisted.theme,
+    taxonomy: persisted.taxonomy || {},
+    source_url: persisted.source_url,
+    tags: persisted.tags || [],
+    evidence: persisted.evidence || [],
+    relationships: persisted.relationships || [],
+    source_run_id: persisted.source_run_id || null,
+    source_signal_id: persisted.source_signal_id || null,
+    source_episode_id: persisted.source_episode_id || null,
+    source_objective: persisted.source_objective || null,
+    detected_at: persisted.detected_at,
     materialized_at: nowIso,
     last_seen_at: nowIso,
-    state_hash: row.state_hash,
-    is_active: row.is_active,
-    raw_payload: row.raw_payload || {},
+    state_hash: persisted.state_hash,
+    is_active: persisted.is_active,
+    raw_payload: persisted.raw_payload || {},
     updated_at: nowIso,
   } as PersistedGraphitiOpportunityRow & { updated_at: string }
+}
+
+function preserveExistingStrategyPayload(
+  row: PersistedGraphitiOpportunityRow,
+  existing?: { raw_payload?: Record<string, unknown> },
+): PersistedGraphitiOpportunityRow {
+  const existingPayload = asRecord(existing?.raw_payload)
+  const nextPayload = asRecord(row.raw_payload)
+  const strategyPayload = {
+    ...(existingPayload.bd_strategy_brief ? { bd_strategy_brief: existingPayload.bd_strategy_brief } : {}),
+    ...(existingPayload.bd_strategy_status ? { bd_strategy_status: existingPayload.bd_strategy_status } : {}),
+    ...(existingPayload.bd_strategy_error !== undefined ? { bd_strategy_error: existingPayload.bd_strategy_error } : {}),
+  }
+
+  return {
+    ...row,
+    raw_payload: {
+      ...nextPayload,
+      ...strategyPayload,
+    },
+  }
 }
 
 function buildDossierOpportunitySource(
@@ -583,6 +742,7 @@ async function loadPersistedDossierOpportunitySources(limit: number): Promise<Gr
         i.evidence_count,
         i.reference_time,
         i.episode_body,
+        i.raw_metadata,
         d.entity_id,
         d.canonical_entity_id,
         d.entity_name,
@@ -595,7 +755,12 @@ async function loadPersistedDossierOpportunitySources(limit: number): Promise<Gr
       where i.status = 'ingested'
         and d.canonical_entity_id is not null
         and d.dossier_data is not null
-      order by i.canonical_entity_id, i.updated_at desc
+      order by
+        i.canonical_entity_id,
+        case i.quality_state when 'client_ready' then 4 when 'complete' then 3 when 'partial' then 2 when 'blocked' then 1 else 0 end desc,
+        coalesce(i.evidence_count, 0) desc,
+        coalesce(i.answer_count, 0) desc,
+        coalesce(i.source_generated_at, i.reference_time, i.updated_at) desc nulls last
       limit $1
     `,
     [Math.max(limit * 4, 100)],
@@ -620,6 +785,10 @@ async function loadPersistedDossierOpportunitySources(limit: number): Promise<Gr
     }) || buildDossierOpportunitySourceFromLedgerEpisode(row, normalized, fallbackEntityId)
 
     if (!sourceRow) continue
+    if (shouldRejectContaminatedDossierSource(row, sourceRow)) continue
+    if (shouldSkipSparseDossierLedger(row, sourceRow)) continue
+    const dataQualityBlockers = dataQualityBlockersForDossierSource(row, sourceRow)
+    const forceContextOnly = dataQualityBlockers.includes('generic_context_only') || !hasTriggerLikeLanguage(sourceRow)
     sourceRow.raw_payload = {
       ...(sourceRow.raw_payload || {}),
       source: 'entity_dossiers',
@@ -627,6 +796,14 @@ async function loadPersistedDossierOpportunitySources(limit: number): Promise<Gr
       quality_state: row.quality_state || sourceRow.raw_payload?.quality_state || null,
       answer_count: row.answer_count || sourceRow.raw_payload?.answer_count || 0,
       evidence_count: row.evidence_count || sourceRow.raw_payload?.evidence_count || 0,
+      quality_metrics: row.raw_metadata?.quality_metrics || sourceRow.raw_payload?.quality_metrics || null,
+      data_quality_blockers: dataQualityBlockers,
+      generic_context_only: dataQualityBlockers.includes('generic_context_only'),
+      force_context_only: forceContextOnly,
+      commercial_qualification: {
+        status: forceContextOnly ? 'context_only' : 'watch',
+        blockers: dataQualityBlockers,
+      },
       reference_time: row.reference_time || sourceRow.raw_payload?.reference_time || null,
       episode_body: row.episode_body,
     }
@@ -636,7 +813,7 @@ async function loadPersistedDossierOpportunitySources(limit: number): Promise<Gr
     sourceRows.push(sourceRow)
   }
 
-  return sourceRows
+  return dedupeDossierOpportunitySources(sourceRows)
 }
 
 function isStale(lastSeenAt: string | null | undefined) {
@@ -651,7 +828,7 @@ async function loadSourceOpportunities(limit: number) {
   const persistedDossierRows = await loadPersistedDossierOpportunitySources(limit)
   const seen = new Set<string>()
   return persistedDossierRows.filter((row) => {
-    const key = [row.entity_id, row.title.toLowerCase()].join('|')
+    const key = sourceSignalDedupeKey(row)
     if (seen.has(key)) return false
     seen.add(key)
     return true
@@ -766,7 +943,7 @@ export async function materializeGraphitiOpportunities(limit = 100) {
   const existingResponse = persistedSourceIds.length > 0
     ? await supabase
       .from('graphiti_materialized_opportunities')
-      .select('opportunity_id, state_hash, is_active')
+      .select('opportunity_id, state_hash, is_active, raw_payload')
       .in('opportunity_id', persistedSourceIds)
     : { data: [], error: null }
 
@@ -774,18 +951,20 @@ export async function materializeGraphitiOpportunities(limit = 100) {
     throw new Error(`Failed to load existing Graphiti opportunities: ${existingResponse.error.message}`)
   }
 
-  const existingMap = new Map<string, { state_hash: string; is_active: boolean }>(
+  const existingMap = new Map<string, { state_hash: string; is_active: boolean; raw_payload?: Record<string, unknown> }>(
     (Array.isArray(existingResponse.data) ? existingResponse.data : []).map((row: any) => [
       String(row.opportunity_id),
       {
         state_hash: String(row.state_hash || ''),
         is_active: Boolean(row.is_active),
+        raw_payload: asRecord(row.raw_payload),
       },
     ]),
   )
 
   const persistedRows = persistableOpportunityRows
     .map((row) => toPersistedOpportunityRow(row, nowIso))
+    .map((row) => preserveExistingStrategyPayload(row, existingMap.get(row.opportunity_id)))
 
   if (persistedRows.length > 0) {
     const upsertResponse = await supabase

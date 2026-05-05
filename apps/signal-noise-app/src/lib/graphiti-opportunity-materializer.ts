@@ -85,6 +85,11 @@ function toReadableArray(value: unknown): string[] {
     .filter(Boolean)
 }
 
+function isGenericRouteText(value: unknown): boolean {
+  const text = toReadableText(value).toLowerCase()
+  return ['cold', 'cold outreach', 'direct', 'direct outreach', 'warm_intro', 'warm intro'].includes(text)
+}
+
 function uniqueTextValues(values: Array<unknown>): string[] {
   const seen = new Set<string>()
   const output: string[] = []
@@ -201,7 +206,8 @@ export function materializeGraphitiOpportunity(
   const title = source.title || organization
   const graphitiCapabilityGap = toReadableText(graphitiSalesBrief.capability_gap)
   const graphitiOutreachAngle = toReadableText(graphitiSalesBrief.outreach_angle)
-  const graphitiOutreachRoute = toReadableText(graphitiSalesBrief.outreach_route)
+  const rawGraphitiOutreachRoute = toReadableText(graphitiSalesBrief.outreach_route)
+  const graphitiOutreachRoute = isGenericRouteText(rawGraphitiOutreachRoute) ? '' : rawGraphitiOutreachRoute
   const graphitiOutreachTarget = toReadableText(graphitiSalesBrief.outreach_target || graphitiSalesBrief.buyer_name)
   const graphitiBestPathOwner = toReadableText(graphitiSalesBrief.best_path_owner)
   const ypCompetitiveAdvantage = toReadableText(yellowPantherOpportunity.competitive_advantage)
@@ -301,6 +307,27 @@ export function materializeGraphitiOpportunity(
     evidenceCount: Number(rawPayload.evidence_count || 0),
     yellowPantherFit: fitScore,
   })
+  const forceContextOnly = rawPayload.force_context_only === true || rawPayload.generic_context_only === true
+  const promotionShortlist = forceContextOnly ? false : promotion.shortlist
+  const promotionWatchItem = forceContextOnly ? false : promotion.watch_item
+  const commercialQualification = forceContextOnly
+    ? {
+      ...(reasoning.commercial_qualification || {}),
+      status: 'context_only',
+      blockers: uniqueTextValues([
+        (reasoning.commercial_qualification as any)?.blockers,
+        'generic_context_only',
+      ]),
+    }
+    : reasoning.commercial_qualification
+  const effectivePromotion = forceContextOnly
+    ? {
+      ...promotion,
+      shortlist: promotionShortlist,
+      watch_item: promotionWatchItem,
+      promotion_reason: 'context_only',
+    }
+    : promotion
   const enrichedRawPayload = {
     ...rawPayload,
     source_ledger_id: rawPayload.source_ledger_id || null,
@@ -308,10 +335,10 @@ export function materializeGraphitiOpportunity(
     answer_count: rawPayload.answer_count || 0,
     evidence_count: rawPayload.evidence_count || 0,
     signal_family: reasoning.pattern_reasoning?.signal_type || null,
-    promotion_reason: promotion.promotion_reason,
-    shortlist_opportunity: promotion.shortlist,
-    watch_item: promotion.watch_item,
-    commercial_qualification: reasoning.commercial_qualification,
+    promotion_reason: effectivePromotion.promotion_reason,
+    shortlist_opportunity: effectivePromotion.shortlist,
+    watch_item: effectivePromotion.watch_item,
+    commercial_qualification: commercialQualification,
     temporal_reasoning: reasoning.temporal_reasoning as GraphitiOpportunityCard['temporal_reasoning'],
     pattern_reasoning: reasoning.pattern_reasoning as GraphitiOpportunityCard['pattern_reasoning'],
     yp_fit_reasoning: reasoning.yp_fit_reasoning,
@@ -355,7 +382,7 @@ export function materializeGraphitiOpportunity(
     priority_score: priorityScore,
     yellow_panther_fit: fitScore,
     category: toText(rawPayload['category']) || opportunityKind || 'Graphiti',
-    status: promotion.shortlist ? 'qualified' : promotion.watch_item ? 'watch' : 'not_promoted',
+    status: effectivePromotion.shortlist ? 'qualified' : effectivePromotion.watch_item ? 'watch' : 'not_promoted',
     location: toText(rawPayload['location']) || null,
     value: toText(rawPayload['value'] || rawPayload['budget']) || null,
     deadline: toText(rawPayload['deadline'] || rawPayload['due_date']) || null,
@@ -406,7 +433,7 @@ export function materializeGraphitiOpportunity(
       taxonomy: opportunity.taxonomy || {},
       metadata: enrichedRawPayload,
     }),
-    is_active: promotion.shortlist,
+    is_active: effectivePromotion.shortlist,
     raw_payload: enrichedRawPayload,
     source_run_id: source.source_run_id || null,
     source_signal_id: source.source_signal_id || null,

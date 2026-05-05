@@ -1,4 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { existsSync } from 'node:fs'
+import { copyFile, mkdir } from 'node:fs/promises'
+import path from 'node:path'
 
 import { markEntityDossierRerunRequested } from '@/lib/dossier-ops'
 import { queueDossierRefresh, resolveEntityForDossierQueue } from '@/lib/entity-dossier-queue'
@@ -8,6 +11,32 @@ import { UnauthorizedError } from '@/lib/server-auth'
 
 function toText(value: unknown): string {
   return String(value ?? '').trim()
+}
+
+async function snapshotRepairSourceDossierPath(sourcePath: string | null, entityId: string): Promise<string | null> {
+  const normalizedSourcePath = toText(sourcePath)
+  if (!normalizedSourcePath) return null
+  const candidates = [
+    path.resolve(process.cwd(), normalizedSourcePath),
+    path.resolve(process.cwd(), '..', '..', normalizedSourcePath),
+  ]
+  const source = candidates.find((candidate) => {
+    try {
+      return existsSync(candidate)
+    } catch {
+      return false
+    }
+  })
+  if (!source) return normalizedSourcePath
+  const snapshotDir = path.join(path.dirname(source), 'repair-source-snapshots')
+  await mkdir(snapshotDir, { recursive: true })
+  const safeEntityId = toText(entityId).replace(/[^a-zA-Z0-9_-]/g, '_') || 'entity'
+  const snapshotPath = path.join(
+    snapshotDir,
+    `${safeEntityId}_${Date.now()}_repair_source_snapshot.json`,
+  )
+  await copyFile(source, snapshotPath)
+  return snapshotPath
 }
 
 export async function POST(
@@ -53,6 +82,9 @@ export async function POST(
         return NextResponse.json({ error: `Unknown question_id: ${questionId}` }, { status: 400 })
       }
     }
+    const repairSourceDossierSnapshotPath = mode === 'question'
+      ? await snapshotRepairSourceDossierPath(repairSourceDossierPath, params.entityId)
+      : repairSourceDossierPath
 
     const queued = await queueDossierRefresh(params.entityId, 'entity_dossier_operator_rerun', {
       rerunReason,
@@ -61,7 +93,7 @@ export async function POST(
       cascadeDependents,
       repairSourceRunId: toText(canonicalDossier?.run_id || canonicalDossier?.question_first?.run_id) || null,
       repairSourceRunPath,
-      repairSourceDossierPath,
+      repairSourceDossierPath: repairSourceDossierSnapshotPath,
     })
     await markEntityDossierRerunRequested(
       params.entityId,

@@ -13,3 +13,9 @@ test('graphiti opportunity materializer prefers dossier-specific narrative over 
   assert.match(materializerSource, /Review the dossier and progress the strongest aligned opportunity\./)
   assert.doesNotMatch(materializerSource, /Decision owners: \[object Object\]/)
 })
+
+test('graphiti opportunity materializer suppresses generic route placeholders from display fields', () => {
+  assert.match(materializerSource, /isGenericRouteText/)
+  assert.match(materializerSource, /rawGraphitiOutreachRoute/)
+  assert.match(materializerSource, /const graphitiOutreachRoute = isGenericRouteText\(rawGraphitiOutreachRoute\)\s*\?\s*''\s*:\s*rawGraphitiOutreachRoute/)
+})

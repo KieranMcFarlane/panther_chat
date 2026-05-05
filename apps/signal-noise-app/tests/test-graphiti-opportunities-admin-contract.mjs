@@ -22,6 +22,12 @@ test('graphiti opportunities admin routes exist and wire to the materialization 
   assert.match(statusSource, /watch_items/)
   assert.match(statusSource, /active_opportunities/)
   assert.match(statusSource, /accelerating_opportunities/)
+  assert.match(statusSource, /complete_dossiers_ingested/)
+  assert.match(statusSource, /complete_materialized_rows/)
+  assert.match(statusSource, /complete_active_opportunities/)
+  assert.match(statusSource, /no_buying_trigger_rows/)
+  assert.match(statusSource, /stale_opportunity_rows/)
+  assert.match(statusSource, /latest_dossier_opportunity_seen_at/)
 })
 
 test('graphiti opportunities backfill de-duplicates parent insights before upsert', () => {
@@ -31,4 +37,12 @@ test('graphiti opportunities backfill de-duplicates parent insights before upser
   assert.match(backfillSource, /new Map/)
   assert.match(backfillSource, /row\.insight_id/)
   assert.match(backfillSource, /parentRows = dedupeParentInsightRows/)
+})
+
+test('graphiti opportunities backfill can rematerialize without strategy synthesis', () => {
+  const backfillSource = readFileSync(backfillRoutePath, 'utf8')
+
+  assert.match(backfillSource, /strategy_limit/)
+  assert.match(backfillSource, /effectiveStrategyLimit === 0/)
+  assert.match(backfillSource, /strategy_synthesis_skipped/)
 })

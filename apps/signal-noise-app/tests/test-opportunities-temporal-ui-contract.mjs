@@ -28,10 +28,10 @@ test('graphiti materializer and read model use deterministic temporal reasoning 
 })
 
 test('opportunity cards render temporal reasoning, graphiti findings, and temporal filter', () => {
-  assert.match(clientSource, /Why now/)
-  assert.match(clientSource, /Why it fits/)
-  assert.match(clientSource, /Graphiti pattern/)
-  assert.match(clientSource, /Recommended action/)
+  assert.match(clientSource, /Trigger/)
+  assert.match(clientSource, /Yellow Panther angle/)
+  assert.match(clientSource, /Pattern confidence/)
+  assert.match(clientSource, /Next move/)
   assert.match(clientSource, /Graphiti findings/)
   assert.match(clientSource, /temporalStatusFilter/)
   assert.match(clientSource, /label: 'Temporal Status'/)
@@ -58,10 +58,10 @@ test('opportunities page does not show the canonical pipeline status panel', () 
   assert.doesNotMatch(clientSource, /api\/home\/pipeline-status/)
 })
 
-test('opportunity cards show Yellow Panther strategy, success rationale, and verification caveat', () => {
-  assert.match(clientSource, /Approach strategy/)
-  assert.match(clientSource, /Success rationale/)
-  assert.match(clientSource, /Verification caveat/)
+test('opportunity cards show route, outreach opener, and verification fields without repeated strategy blocks', () => {
+  assert.match(clientSource, /Suggested route/)
+  assert.match(clientSource, /Outreach opener/)
+  assert.match(clientSource, /Check before outreach/)
   assert.match(clientSource, /strategyNextSteps/)
   assert.match(clientSource, /successRationale/)
   assert.match(clientSource, /verificationCaveat/)

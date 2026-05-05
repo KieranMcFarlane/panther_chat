@@ -649,6 +649,17 @@ function inferCapabilityMatch(signalType, signals) {
   return `${signalType} opportunity support`
 }
 
+function isGenericBuyerRoute(value) {
+  const text = toText(value).trim().toLowerCase()
+  return !text || ['cold', 'cold outreach', 'direct', 'direct outreach', 'warm_intro', 'warm intro'].includes(text)
+}
+
+function firstSpecificBuyerRoute(values) {
+  return values
+    .map(toText)
+    .find((value) => value && !isGenericBuyerRoute(value)) || ''
+}
+
 function buildYpFitBreakdown({ rawPayload, signalType, ypFitScore, signals }) {
   const graphitiSalesBrief = asRecord(rawPayload.graphiti_sales_brief)
   const yellowPantherOpportunity = asRecord(rawPayload.yellow_panther_opportunity)
@@ -662,16 +673,20 @@ function buildYpFitBreakdown({ rawPayload, signalType, ypFitScore, signals }) {
   const capabilityMatch = serviceFit.length > 0
     ? serviceFit.join(', ')
     : inferCapabilityMatch(signalType, signals)
-  const buyerRoute = toText(
-    graphitiSalesBrief.outreach_route
-      || graphitiSalesBrief.outreach_target
-      || graphitiSalesBrief.best_path_owner
-      || episodeGraphitiSalesBrief.outreach_route
-      || episodeGraphitiSalesBrief.outreach_target
-      || episodeGraphitiSalesBrief.best_path_owner
-      || yellowPantherOpportunity.buyer_route
-      || episodeYellowPanther.buyer_route,
-  ) || 'Confirm the buyer owner in the dossier before outreach.'
+  const buyerRoute = firstSpecificBuyerRoute([
+    graphitiSalesBrief.outreach_route,
+    graphitiSalesBrief.outreach_target,
+    graphitiSalesBrief.buyer_name,
+    graphitiSalesBrief.best_path_owner,
+    episodeGraphitiSalesBrief.outreach_route,
+    episodeGraphitiSalesBrief.outreach_target,
+    episodeGraphitiSalesBrief.buyer_name,
+    episodeGraphitiSalesBrief.best_path_owner,
+    yellowPantherOpportunity.buyer_route,
+    yellowPantherOpportunity.entry_point,
+    episodeYellowPanther.buyer_route,
+    episodeYellowPanther.entry_point,
+  ]) || 'Confirm the buyer owner in the dossier before outreach.'
   const rawOutreachAngle = toText(
     graphitiSalesBrief.outreach_angle
       || episodeGraphitiSalesBrief.outreach_angle

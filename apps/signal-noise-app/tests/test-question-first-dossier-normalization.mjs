@@ -113,6 +113,48 @@ test('normalizeQuestionFirstDossier promotes question-first answers into the dos
   assert.equal(summary.graphiti_sales_brief.buyer_name, 'Shaun Lockwood')
 })
 
+test('normalizeQuestionFirstDossier uses display_answer instead of dense raw answer text', () => {
+  const normalized = normalizeQuestionFirstDossier({
+    entity_id: 'arsenal-fc',
+    entity_name: 'Arsenal FC',
+    entity_type: 'Club',
+    question_first: {
+      answers: [
+        makeAnswer(
+          'q6_launch_signal',
+          'launch_signal',
+          'LAUNCH_SIGNAL',
+          {
+            kind: 'summary',
+            summary: '[object Object]',
+            raw_structured_output: {
+              answer: { nested: { dense: 'object' } },
+              sources: ['https://www.arsenal.com/news/fan-platform'],
+            },
+          },
+          {
+            confidence: 0.72,
+            validation_state: 'provisional',
+            display_answer: {
+              headline: 'Arsenal has a current fan-platform launch signal.',
+              bullets: ['Use this as a digital product timing trigger.'],
+              evidence: [{ url: 'https://www.arsenal.com/news/fan-platform', label: 'Arsenal news' }],
+              commercial_implication: 'Recent fan-platform activity suggests a current digital delivery window.',
+              verification_needed: 'Confirm recency before outreach.',
+              status_label: 'provisional',
+            },
+          },
+        ),
+      ],
+    },
+  })
+
+  const evidenceItem = normalized.question_first.discovery_summary.evidence_items.find((item) => item.question_id === 'q6_launch_signal')
+  assert.equal(evidenceItem.answer, 'Arsenal has a current fan-platform launch signal.')
+  assert.deepEqual(evidenceItem.evidence_urls, ['https://www.arsenal.com/news/fan-platform'])
+  assert.doesNotMatch(JSON.stringify(normalized.question_first.discovery_summary), /\\[object Object\\]/)
+})
+
 test('normalizeQuestionFirstDossier synthesizes dossier-facing summary fields for the club dossier page', () => {
   const normalized = normalizeQuestionFirstDossier(
     {

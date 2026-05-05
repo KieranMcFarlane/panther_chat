@@ -96,6 +96,67 @@ def _merge_question_first_run_patch(
 ) -> Dict[str, Any]:
     payload = dict(dossier_payload or {})
     patch = artifact.merge_patch if isinstance(artifact.merge_patch, dict) else {}
+    source_metadata = payload.get("metadata") if isinstance(payload.get("metadata"), dict) else {}
+    repair_meta = (
+        source_metadata.get("question_first_repair")
+        if isinstance(source_metadata.get("question_first_repair"), dict)
+        else {}
+    )
+    is_question_repair = bool(
+        str(repair_meta.get("mode") or "").strip().lower() == "question"
+        and str(repair_meta.get("question_id") or "").strip()
+    )
+
+    def _by_question_id(records: Any) -> Dict[str, Dict[str, Any]]:
+        if not isinstance(records, list):
+            return {}
+        return {
+            str(record.get("question_id") or "").strip(): record
+            for record in records
+            if isinstance(record, dict) and str(record.get("question_id") or "").strip()
+        }
+
+    def _merge_records_by_question_id(existing: Any, incoming: Any) -> List[Dict[str, Any]]:
+        existing_records = [record for record in (existing if isinstance(existing, list) else []) if isinstance(record, dict)]
+        incoming_by_id = _by_question_id(incoming)
+        if not incoming_by_id:
+            return existing_records
+        merged: List[Dict[str, Any]] = []
+        seen: set[str] = set()
+        for record in existing_records:
+            question_id = str(record.get("question_id") or "").strip()
+            if question_id and question_id in incoming_by_id:
+                merged.append(incoming_by_id[question_id])
+                seen.add(question_id)
+            else:
+                merged.append(record)
+                if question_id:
+                    seen.add(question_id)
+        for question_id, record in incoming_by_id.items():
+            if question_id not in seen:
+                merged.append(record)
+        return merged
+
+    def _merge_questions_by_question_id(existing: Any, incoming: Any) -> List[Dict[str, Any]]:
+        existing_questions = [record for record in (existing if isinstance(existing, list) else []) if isinstance(record, dict)]
+        incoming_by_id = _by_question_id(incoming)
+        if not incoming_by_id:
+            return existing_questions
+        merged: List[Dict[str, Any]] = []
+        seen: set[str] = set()
+        for question in existing_questions:
+            question_id = str(question.get("question_id") or "").strip()
+            if question_id and question_id in incoming_by_id:
+                merged.append({**question, **incoming_by_id[question_id]})
+                seen.add(question_id)
+            else:
+                merged.append(question)
+                if question_id:
+                    seen.add(question_id)
+        for question_id, question in incoming_by_id.items():
+            if question_id not in seen:
+                merged.append(question)
+        return merged
 
     metadata = payload.setdefault("metadata", {})
     if not isinstance(metadata, dict):
@@ -106,10 +167,25 @@ def _merge_question_first_run_patch(
     if isinstance(patch_metadata, dict):
         metadata.update(patch_metadata)
 
-    if "question_first" in patch and isinstance(patch["question_first"], dict):
+    if is_question_repair and "question_first" in patch and isinstance(patch["question_first"], dict):
+        existing_question_first = payload.get("question_first") if isinstance(payload.get("question_first"), dict) else {}
+        incoming_question_first = patch["question_first"]
+        merged_answers = _merge_records_by_question_id(
+            existing_question_first.get("answers") if isinstance(existing_question_first, dict) else [],
+            incoming_question_first.get("answers") or artifact.answers,
+        )
+        payload["question_first"] = {
+            **existing_question_first,
+            **incoming_question_first,
+            "answers": merged_answers,
+            "questions_answered": len(merged_answers),
+        }
+    elif "question_first" in patch and isinstance(patch["question_first"], dict):
         payload["question_first"] = patch["question_first"]
 
-    if "questions" in patch and isinstance(patch["questions"], list):
+    if is_question_repair and "questions" in patch and isinstance(patch["questions"], list):
+        payload["questions"] = _merge_questions_by_question_id(payload.get("questions"), patch["questions"])
+    elif "questions" in patch and isinstance(patch["questions"], list):
         payload["questions"] = patch["questions"]
     elif isinstance(payload.get("questions"), list) and artifact.answers:
         answer_by_id = {
@@ -162,7 +238,7 @@ def _merge_question_first_run_patch(
     if isinstance(metadata["question_first"], dict):
         metadata["question_first"].setdefault("schema_version", artifact.schema_version)
         metadata["question_first"].setdefault("generated_at", artifact.generated_at)
-        metadata["question_first"].setdefault("questions_answered", len(artifact.answers))
+        metadata["question_first"].setdefault("questions_answered", len(payload.get("question_first", {}).get("answers") or artifact.answers))
         metadata["question_first"].setdefault("categories", artifact.categories)
         metadata["question_first"].setdefault("evidence_items", artifact.evidence_items)
         metadata["question_first"].setdefault("trace_index", artifact.trace_index)
