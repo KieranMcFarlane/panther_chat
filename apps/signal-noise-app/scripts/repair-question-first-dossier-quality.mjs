@@ -140,6 +140,43 @@ function isObjectString(value) {
   return typeof value === 'string' && /^\[object object\]$/i.test(value.trim())
 }
 
+function containsObjectString(value) {
+  if (isObjectString(value)) return true
+  if (Array.isArray(value)) return value.some(containsObjectString)
+  if (value && typeof value === 'object') return Object.values(value).some(containsObjectString)
+  return false
+}
+
+function hasSourceUrl(record) {
+  const raw = answerRaw(record)
+  const sourceText = toText([
+    record?.evidence_url,
+    record?.checked_sources,
+    raw.sources,
+    raw.evidence_url,
+    raw.source_url,
+  ])
+  return /https?:\/\/|www\./i.test(sourceText)
+}
+
+function providerNoAnswerReason(record) {
+  if (!record || typeof record !== 'object') return ''
+  const questionId = String(record.question_id || record.id || '').trim()
+  if (!UPSTREAM_QUESTION_IDS.has(questionId)) return ''
+  const raw = answerRaw(record)
+  const text = toText([
+    record.answer,
+    record.summary,
+    record.commercial_implication,
+    raw.answer,
+    raw.summary,
+    raw.context,
+    raw.notes,
+  ])
+  if (!/no deterministic answer was produced|question execution failed before a safe answer/i.test(text)) return ''
+  return hasSourceUrl(record) ? '' : 'provider_no_answer'
+}
+
 function malformedUpstreamAnswerReason(record) {
   if (!record || typeof record !== 'object') return ''
   const questionId = String(record.question_id || record.id || '').trim()
@@ -157,6 +194,9 @@ function malformedUpstreamAnswerReason(record) {
   ].some((value) => hasMeaningfulCommercialText(value))
 
   if (isObjectString(answer) || isObjectString(record.summary) || isObjectString(record.commercial_implication)) {
+    return 'object_string'
+  }
+  if (containsObjectString(raw)) {
     return 'object_string'
   }
   if (isEmptyPlainObject(answer) && !hasFallbackContent) {
@@ -201,6 +241,25 @@ function malformedUpstreamPatch(record, normalized, currentStructuredSignal, rea
   }
 }
 
+function providerNoAnswerPatch(record, normalized, currentStructuredSignal, reasonCode) {
+  const questionId = String(record.question_id || record.id || '').trim()
+  const reason = `Provider produced no deterministic answer for ${questionId}; this needs a targeted rerun rather than a checked-absence interpretation.`
+  return {
+    ...normalized,
+    validation_state: 'failed',
+    confidence: 0,
+    checked_sources: [checkedSource(record, reason)],
+    commercial_implication: 'No commercial implication available because the provider produced no deterministic answer.',
+    structured_signal: {
+      ...currentStructuredSignal,
+      status: 'provider_no_answer',
+      provider_no_answer_reason: reasonCode,
+      raw_provider_answer: record.answer,
+    },
+    force: true,
+  }
+}
+
 export function normalizeUpstreamAnswer(record, adjacentAnswers = {}, entityInfo = {}) {
   if (!record || typeof record !== 'object') return null
   const questionId = String(record.question_id || record.id || '').trim()
@@ -218,6 +277,11 @@ export function normalizeUpstreamAnswer(record, adjacentAnswers = {}, entityInfo
   const malformedReason = malformedUpstreamAnswerReason(record)
   if (malformedReason) {
     return malformedUpstreamPatch(record, normalized, currentStructuredSignal, malformedReason)
+  }
+
+  const noAnswerReason = providerNoAnswerReason(record)
+  if (noAnswerReason) {
+    return providerNoAnswerPatch(record, normalized, currentStructuredSignal, noAnswerReason)
   }
 
   if (questionId === 'q1_foundation' && NON_SPORT_ENTITY_TYPES.has(entityType)) {
@@ -888,6 +952,7 @@ function isFailedUpstreamRecord(record) {
   if (!record) return false
   const state = String(record?.validation_state || '').trim().toLowerCase()
   return Boolean(malformedUpstreamAnswerReason(record))
+    || Boolean(providerNoAnswerReason(record))
     || ['failed', 'tool_call_missing', 'unknown', 'blocked', ''].includes(state)
     || /provider infrastructure failure|insufficient balance|question execution failed|no deterministic answer was produced/i.test(toText(record?.answer || record?.commercial_implication))
 }

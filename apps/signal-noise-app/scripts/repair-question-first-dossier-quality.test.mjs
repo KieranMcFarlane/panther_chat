@@ -788,6 +788,70 @@ test('normalizeUpstreamAnswer converts [object Object] strings into explicit fai
   assert.equal(patch.structured_signal.malformed_answer_reason, 'object_string')
 })
 
+test('normalizeUpstreamAnswer converts nested [object Object] strings into explicit failed records', () => {
+  const patch = normalizeUpstreamAnswer({
+    question_id: 'q3_leadership',
+    validation_state: 'no_signal',
+    confidence: 0,
+    answer: {
+      kind: 'list',
+      raw_structured_output: {
+        answer: '[object Object]',
+        summary: 'No deterministic answer was produced for this question.',
+        sources: [],
+      },
+    },
+  })
+
+  assert.equal(patch.validation_state, 'failed')
+  assert.equal(patch.confidence, 0)
+  assert.equal(patch.structured_signal.status, 'malformed_answer')
+  assert.equal(patch.structured_signal.malformed_answer_reason, 'object_string')
+})
+
+test('normalizeUpstreamAnswer converts provider no-answer placeholders into explicit failed records', () => {
+  const patch = normalizeUpstreamAnswer({
+    question_id: 'q3_leadership',
+    validation_state: 'no_signal',
+    confidence: 0,
+    answer: {
+      kind: 'list',
+      summary: 'No deterministic answer was produced for this question.',
+      raw_structured_output: {
+        answer: { kind: 'list', value: null, summary: null },
+        context: 'No deterministic answer was produced for this question.',
+        sources: [],
+        summary: 'No deterministic answer was produced for this question.',
+        validation_state: 'no_signal',
+      },
+    },
+  })
+
+  assert.equal(patch.validation_state, 'failed')
+  assert.equal(patch.confidence, 0)
+  assert.equal(patch.structured_signal.status, 'provider_no_answer')
+  assert.equal(patch.structured_signal.provider_no_answer_reason, 'provider_no_answer')
+  assert.match(patch.commercial_implication, /provider produced no deterministic answer/i)
+})
+
+test('normalizeUpstreamAnswer preserves sourced insufficient-signal upstream answers', () => {
+  const patch = normalizeUpstreamAnswer({
+    question_id: 'q3_leadership',
+    validation_state: 'no_signal',
+    confidence: 0,
+    answer: {
+      raw_structured_output: {
+        answer: 'insufficient_signal',
+        summary: 'Checked official team page and did not find buyer-role evidence.',
+        sources: ['https://example.com/team'],
+      },
+    },
+  })
+
+  assert.equal(patch.validation_state, 'no_signal')
+  assert.notEqual(patch.structured_signal.status, 'provider_no_answer')
+})
+
 test('normalizeUpstreamAnswer converts source-less zero-confidence upstream answers to checked no-signal', () => {
   const patch = normalizeUpstreamAnswer({
     question_id: 'q6_launch_signal',
