@@ -12,6 +12,7 @@ test('pipeline runtime auto-resumes stale paused checkpoints through the worker 
   assert.match(autoResumeSource, /requested_state.*paused/s)
   assert.match(autoResumeSource, /worker_process_state.*crashed.*stopped/s)
   assert.match(autoResumeSource, /manual_stop/)
+  assert.match(autoResumeSource, /operator_pause_after_fix/)
   assert.match(autoResumeSource, /backend_route_missing/)
   assert.match(autoResumeSource, /provider_infrastructure_failure/)
   assert.match(autoResumeSource, /startPipelineWorker/)

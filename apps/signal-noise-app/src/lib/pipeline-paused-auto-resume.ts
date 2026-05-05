@@ -52,6 +52,11 @@ function isManualPause(control: PipelineControlState) {
     || pauseReason === 'paused from live ops'
 }
 
+function isTimedAutoResumePause(control: PipelineControlState) {
+  const reason = normalizedText(control.stop_reason) || normalizedText(control.pause_reason)
+  return reason === 'operator_pause_after_fix' || !reason || hasResumableCheckpointSignal(control)
+}
+
 function isInfrastructureBlockedPause(control: PipelineControlState) {
   const reason = normalizedText(control.stop_reason) || normalizedText(control.pause_reason)
   return reason === 'backend_route_missing'
@@ -118,7 +123,7 @@ export function shouldAutoResumePausedPipeline(input: AutoResumeDecisionInput): 
   if (ageSeconds === null || ageSeconds < autoResumeAfterSeconds) return false
 
   if (worker.worker_process_state !== 'crashed' && worker.worker_process_state !== 'stopped') return false
-  return hasResumableCheckpointSignal(control)
+  return isTimedAutoResumePause(control)
 }
 
 export async function maybeAutoResumePausedPipeline(input: AutoResumeDecisionInput): Promise<PausedAutoResumeResult> {
