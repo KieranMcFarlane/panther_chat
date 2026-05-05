@@ -14,6 +14,7 @@ async function loadPipelineRuntimeModule() {
     cachedEntitiesSupabase: path.join(tempDir, 'cached-entities-supabase.ts'),
     operationalHeartbeat: path.join(tempDir, 'operational-heartbeat.ts'),
     pgClient: path.join(tempDir, 'pg-client.ts'),
+    pipelinePausedAutoResume: path.join(tempDir, 'pipeline-paused-auto-resume.ts'),
     pipelineControlState: path.join(tempDir, 'pipeline-control-state.ts'),
     pipelineWorkerSupervisor: path.join(tempDir, 'pipeline-worker-supervisor.ts'),
     questionTextResolver: path.join(tempDir, 'question-text-resolver.ts'),
@@ -45,6 +46,13 @@ async function loadPipelineRuntimeModule() {
   await writeFile(stubPaths.pgClient, [
     'export async function query() {',
     '  return { rows: [] }',
+    '}',
+    '',
+  ].join('\n'), 'utf8')
+
+  await writeFile(stubPaths.pipelinePausedAutoResume, [
+    'export async function maybeAutoResumePausedPipeline() {',
+    '  return { resumed: false, reason: null }',
     '}',
     '',
   ].join('\n'), 'utf8')
@@ -92,6 +100,10 @@ async function loadPipelineRuntimeModule() {
     .replaceAll(
       "'@/lib/pg-client'",
       JSON.stringify(pathToFileURL(stubPaths.pgClient).href),
+    )
+    .replaceAll(
+      "'@/lib/pipeline-paused-auto-resume'",
+      JSON.stringify(pathToFileURL(stubPaths.pipelinePausedAutoResume).href),
     )
     .replaceAll(
       "'@/lib/pipeline-control-state'",
