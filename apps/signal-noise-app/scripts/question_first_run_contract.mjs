@@ -11,7 +11,10 @@ function _normalizeText(value) {
 
 function _toDisplayText(value) {
   if (value == null) return '';
-  if (typeof value === 'string') return value.trim();
+  if (typeof value === 'string') {
+    const text = value.trim();
+    return text === '[object Object]' ? '' : text;
+  }
   if (typeof value === 'number' || typeof value === 'boolean') return String(value).trim();
   if (typeof value === 'object') {
     for (const key of ['name', 'full_name', 'person_name', 'title', 'role', 'summary', 'answer']) {
@@ -28,6 +31,18 @@ function _firstDisplayText(...values) {
     if (text) return text;
   }
   return '';
+}
+
+function _sanitizeRawStructuredOutput(value) {
+  if (value == null) return value;
+  if (typeof value === 'string') return value.trim() === '[object Object]' ? null : value;
+  if (Array.isArray(value)) return value.map((item) => _sanitizeRawStructuredOutput(item));
+  if (typeof value === 'object') {
+    return Object.fromEntries(
+      Object.entries(value).map(([key, item]) => [key, _sanitizeRawStructuredOutput(item)]),
+    );
+  }
+  return value;
 }
 
 function _isPlausibleBuyerTargetText(value) {
@@ -214,7 +229,7 @@ function _normalizeAnswerPayload(answer) {
   if (answer?.answer && typeof answer.answer === 'object' && answer.answer.kind) {
     return _clone(answer.answer);
   }
-  const structuredOutput = answer?.reasoning?.structured_output || {};
+  const structuredOutput = _sanitizeRawStructuredOutput(answer?.reasoning?.structured_output || {});
   const kind = _inferAnswerKind(answer, structuredOutput);
   if (kind === 'fact') {
     return {

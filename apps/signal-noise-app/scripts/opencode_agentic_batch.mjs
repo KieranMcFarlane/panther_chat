@@ -355,6 +355,10 @@ function _isMeaningfulCommercialText(value) {
   return !/(^no_signal$|^no signal$|^insufficient_signal$|^no_answer$|source pending$|question execution failed|no deterministic answer was produced|no completed brightdata leads were recoverable|no brightdata-backed evidence|initial search returned only generic|follow-up search timed out|returned no results matching|no results matching|no hiring leads found|bounded retrieval|lead with a .* angle tied to the active signal|points to insufficient_signal|current dossier evidence points to insufficient[_ ]signal|searches? (for|across).* (returned|found) no|limited to unrelated|kind:\s*summary(\.|;|$)|kind:\s*summary;\s*value:\s*(;|null)|value:\s*null|summary:\s*null|raw structured output:\s*(;|null)|no web evidence found|insufficient signal|^\[object object\]$)/i.test(text);
 }
 
+function _isObjectStringPlaceholder(value) {
+  return typeof value === 'string' && value.trim() === '[object Object]';
+}
+
 function _firstMeaningfulCommercialText(values) {
   return values.map((value) => _toDisplayText(value)).find((text) => _isMeaningfulCommercialText(text)) || '';
 }
@@ -997,6 +1001,9 @@ function _sanitizeProviderStructuredOutput(question, structuredOutput) {
   if (!structuredOutput || typeof structuredOutput !== 'object') return structuredOutput;
   const questionId = String(question?.question_id || '').trim();
   if (!['q3_leadership', 'q11_decision_owner'].includes(questionId)) return structuredOutput;
+  if (_isObjectStringPlaceholder(structuredOutput.answer) && !_hasStructuredAnswerContent(structuredOutput)) {
+    return _providerNoAnswerStructuredOutput(question, structuredOutput, 'object_string_without_sources');
+  }
   if (!structuredOutput.answer || typeof structuredOutput.answer !== 'object' || Array.isArray(structuredOutput.answer)) {
     return structuredOutput;
   }

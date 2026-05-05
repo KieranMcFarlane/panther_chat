@@ -293,6 +293,66 @@ test('buildQuestionFirstRunArtifact does not stringify object-valued no-answer p
   assert.equal(artifact.merge_patch.question_first.answers[0].answer.summary, null);
 });
 
+test('buildQuestionFirstRunArtifact strips stringified object placeholders from raw structured output', () => {
+  const artifact = buildQuestionFirstRunArtifact({
+    entity_id: 'dodgers',
+    entity_name: 'Los Angeles Dodgers',
+    entity_type: 'SPORT_CLUB',
+    question_specs: [
+      {
+        question_id: 'q11_decision_owner',
+        question_family: 'decision_owner',
+        question_type: 'decision_owner',
+        question_text: 'Who is the buyer?',
+        query: '',
+        hop_budget: 0,
+        evidence_extension_budget: 0,
+        source_priority: [],
+        evidence_focus: 'buyer',
+        promotion_target: 'decision_owner',
+        answer_kind: 'summary',
+        question_shape: 'atomic',
+        question_timeout_ms: 1000,
+        hop_timeout_ms: 1000,
+        evidence_extension_confidence_threshold: 0.65,
+        entity_name: 'Los Angeles Dodgers',
+        entity_id: 'dodgers',
+        entity_type: 'SPORT_CLUB',
+        preset: 'dodgers',
+        pack_role: 'discovery',
+      },
+    ],
+    answer_records: [
+      {
+        question_id: 'q11_decision_owner',
+        question_type: 'decision_owner',
+        status: 'failed',
+        validation_state: 'failed',
+        confidence: 0,
+        signal_type: 'DECISION_OWNER',
+        answer: '[object Object]',
+        reasoning: {
+          structured_output: {
+            answer: '[object Object]',
+            summary: '[object Object]',
+            context: '',
+            sources: [],
+            confidence: 0,
+          },
+        },
+      },
+    ],
+    evidence_items: [],
+    trace_index: [],
+    categories: [],
+    run_rollup: {},
+  });
+
+  assert.doesNotMatch(JSON.stringify(artifact), /\[object Object\]/);
+  assert.equal(artifact.answer_records[0].answer.summary, null);
+  assert.equal(artifact.answer_records[0].answer.raw_structured_output.answer, null);
+});
+
 test('validateQuestionFirstRunArtifact rejects malformed payloads', () => {
   assert.throws(
     () => validateQuestionFirstRunArtifact({ schema_version: 'not-the-right-version' }),
