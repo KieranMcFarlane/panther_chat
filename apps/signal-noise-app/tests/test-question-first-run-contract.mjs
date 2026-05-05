@@ -234,6 +234,65 @@ test('validateQuestionFirstRunArtifact requires typed connection and inference p
   );
 });
 
+test('buildQuestionFirstRunArtifact does not stringify object-valued no-answer payloads', () => {
+  const artifact = buildQuestionFirstRunArtifact({
+    entity_id: 'dodgers',
+    entity_name: 'Los Angeles Dodgers',
+    entity_type: 'SPORT_CLUB',
+    question_specs: [
+      {
+        question_id: 'q11_decision_owner',
+        question_family: 'decision_owner',
+        question_type: 'decision_owner',
+        question_text: 'Who is the buyer?',
+        query: '',
+        hop_budget: 0,
+        evidence_extension_budget: 0,
+        source_priority: [],
+        evidence_focus: 'buyer',
+        promotion_target: 'decision_owner',
+        answer_kind: 'summary',
+        question_shape: 'atomic',
+        question_timeout_ms: 1000,
+        hop_timeout_ms: 1000,
+        evidence_extension_confidence_threshold: 0.65,
+        entity_name: 'Los Angeles Dodgers',
+        entity_id: 'dodgers',
+        entity_type: 'SPORT_CLUB',
+        preset: 'dodgers',
+        pack_role: 'discovery',
+      },
+    ],
+    answer_records: [
+      {
+        question_id: 'q11_decision_owner',
+        question_type: 'decision_owner',
+        status: 'failed',
+        validation_state: 'failed',
+        confidence: 0,
+        signal_type: 'DECISION_OWNER',
+        answer: { status: 'no_answer' },
+        reasoning: {
+          structured_output: {
+            answer: { status: 'no_answer' },
+            sources: [],
+            confidence: 0,
+          },
+        },
+      },
+    ],
+    evidence_items: [],
+    trace_index: [],
+    categories: [],
+    run_rollup: {},
+  });
+
+  const serialized = JSON.stringify(artifact);
+  assert.doesNotMatch(serialized, /\[object Object\]/);
+  assert.equal(artifact.answer_records[0].answer.summary, null);
+  assert.equal(artifact.merge_patch.question_first.answers[0].answer.summary, null);
+});
+
 test('validateQuestionFirstRunArtifact rejects malformed payloads', () => {
   assert.throws(
     () => validateQuestionFirstRunArtifact({ schema_version: 'not-the-right-version' }),

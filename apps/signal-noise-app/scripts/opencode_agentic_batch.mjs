@@ -1191,7 +1191,7 @@ function _buildRunStateFromQuestionFirstCheckpoint(questions, checkpoint, { pres
     if (!answer && !_isTerminalQuestionState(terminalState)) {
       return questionState;
     }
-    const answerText = String(answer?.answer || answer?.summary || answer?.value || '').trim();
+    const answerText = _toDisplayText(answer?.answer) || _toDisplayText(answer?.summary) || _toDisplayText(answer?.value);
     const evidenceUrl = String(answer?.evidence_url || (Array.isArray(answer?.sources) ? answer.sources[0] : '') || '').trim();
     return {
       ...questionState,

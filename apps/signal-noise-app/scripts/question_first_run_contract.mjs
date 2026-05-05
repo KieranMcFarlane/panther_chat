@@ -22,6 +22,14 @@ function _toDisplayText(value) {
   return '';
 }
 
+function _firstDisplayText(...values) {
+  for (const value of values) {
+    const text = _toDisplayText(value);
+    if (text) return text;
+  }
+  return '';
+}
+
 function _isPlausibleBuyerTargetText(value) {
   const text = _toDisplayText(value);
   if (!text || !/[A-Za-zÀ-ÖØ-öø-ÿ]/.test(text) || /^\d{4}$/.test(text)) return false;
@@ -225,7 +233,7 @@ function _normalizeAnswerPayload(answer) {
     return {
       kind,
       value: null,
-      summary: String(answer?.answer || structuredOutput?.summary || structuredOutput?.answer || '').trim() || null,
+      summary: _firstDisplayText(answer?.answer, structuredOutput?.summary, structuredOutput?.answer) || null,
       top_signals: topSignals,
       commercial_interpretation: _normalizeCommercialInterpretation(answer, structuredOutput),
       opportunity_hypotheses: _normalizeOpportunityHypotheses(answer, structuredOutput),
@@ -243,7 +251,7 @@ function _normalizeAnswerPayload(answer) {
     return {
       kind,
       value: null,
-      summary: String(answer?.answer || structuredOutput?.summary || '').trim() || null,
+      summary: _firstDisplayText(answer?.answer, structuredOutput?.summary) || null,
       top_signals: [],
       commercial_interpretation: {},
       opportunity_hypotheses: [],
@@ -254,7 +262,7 @@ function _normalizeAnswerPayload(answer) {
   return {
     kind,
     value: null,
-    summary: String(answer?.answer || structuredOutput?.summary || structuredOutput?.answer || '').trim() || null,
+    summary: _firstDisplayText(answer?.answer, structuredOutput?.summary, structuredOutput?.answer) || null,
     top_signals: [],
     commercial_interpretation: _normalizeCommercialInterpretation(answer, structuredOutput),
     opportunity_hypotheses: _normalizeOpportunityHypotheses(answer, structuredOutput),
