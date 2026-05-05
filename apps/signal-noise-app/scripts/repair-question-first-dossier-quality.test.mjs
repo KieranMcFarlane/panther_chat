@@ -834,6 +834,99 @@ test('normalizeUpstreamAnswer converts provider no-answer placeholders into expl
   assert.match(patch.commercial_implication, /provider produced no deterministic answer/i)
 })
 
+test('normalizeUpstreamAnswer converts q11 provider no-answer placeholders into explicit failed records', () => {
+  const patch = normalizeUpstreamAnswer({
+    question_id: 'q11_decision_owner',
+    validation_state: 'no_signal',
+    confidence: 0,
+    answer: {
+      kind: 'summary',
+      raw_structured_output: {
+        answer: '[object Object]',
+        summary: 'No deterministic answer was produced for this question.',
+        sources: [],
+      },
+    },
+  })
+
+  assert.equal(patch.validation_state, 'failed')
+  assert.equal(patch.confidence, 0)
+  assert.equal(patch.structured_signal.status, 'malformed_answer')
+  assert.equal(patch.structured_signal.malformed_answer_reason, 'object_string')
+})
+
+test('normalizeUpstreamAnswer can classify q15 provider no-answer placeholders when explicitly invoked', () => {
+  const patch = normalizeUpstreamAnswer({
+    question_id: 'q15_outreach_strategy',
+    validation_state: 'no_signal',
+    confidence: 0,
+    answer: {
+      kind: 'scorecard',
+      raw_structured_output: {
+        answer: null,
+        summary: 'No deterministic answer was produced for this question.',
+        context: 'No deterministic answer was produced for this question.',
+        sources: [],
+      },
+    },
+  })
+
+  assert.equal(patch.validation_state, 'failed')
+  assert.equal(patch.confidence, 0)
+  assert.equal(patch.structured_signal.status, 'provider_no_answer')
+  assert.equal(patch.structured_signal.provider_no_answer_reason, 'provider_no_answer')
+})
+
+test('normalizeUpstreamAnswer converts empty typed q3 answer shells into provider no-answer failures', () => {
+  const patch = normalizeUpstreamAnswer({
+    question_id: 'q3_leadership',
+    validation_state: 'failed',
+    confidence: 0,
+    answer: {
+      kind: 'list',
+      value: null,
+      summary: null,
+      top_signals: [],
+      maturity_signal: null,
+      raw_structured_output: null,
+      opportunity_hypotheses: [],
+      commercial_interpretation: {},
+    },
+  })
+
+  assert.equal(patch.validation_state, 'failed')
+  assert.equal(patch.confidence, 0)
+  assert.equal(patch.structured_signal.status, 'provider_no_answer')
+  assert.equal(patch.structured_signal.provider_no_answer_reason, 'empty_typed_answer')
+})
+
+test('repairDossierPayload normalizes q11 provider no-answer placeholders in dossier records', () => {
+  const pack = weakFifteenPack()
+  pack.answers = pack.answers.map((item) => item.question_id === 'q11_decision_owner'
+    ? {
+        ...item,
+        validation_state: 'no_signal',
+        confidence: 0,
+        answer: {
+          kind: 'summary',
+          raw_structured_output: {
+            answer: '[object Object]',
+            summary: 'No deterministic answer was produced for this question.',
+            sources: [],
+          },
+        },
+      }
+    : item)
+
+  const repair = repairDossierPayload(pack, 'major-league-cricket')
+  const q11 = repair.repaired_dossier.answers.find((item) => item.question_id === 'q11_decision_owner')
+
+  assert.equal(q11.validation_state, 'failed')
+  assert.equal(q11.confidence, 0)
+  assert.equal(q11.structured_signal.status, 'malformed_answer')
+  assert.equal(q11.structured_signal.malformed_answer_reason, 'object_string')
+})
+
 test('normalizeUpstreamAnswer preserves sourced insufficient-signal upstream answers', () => {
   const patch = normalizeUpstreamAnswer({
     question_id: 'q3_leadership',

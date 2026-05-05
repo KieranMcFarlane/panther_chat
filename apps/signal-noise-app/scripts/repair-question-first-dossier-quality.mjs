@@ -59,6 +59,20 @@ const UPSTREAM_QUESTION_IDS = new Set([
   'q10_hiring_signal',
 ])
 
+const PROVIDER_FAILURE_NORMALIZATION_QUESTION_IDS = new Set([
+  ...UPSTREAM_QUESTION_IDS,
+  'q11_decision_owner',
+  'q12_connections',
+  'q13_capability_gap',
+  'q14_yp_fit',
+  'q15_outreach_strategy',
+])
+
+const REPAIR_PROVIDER_FAILURE_NORMALIZATION_QUESTION_IDS = new Set([
+  ...UPSTREAM_QUESTION_IDS,
+  'q11_decision_owner',
+])
+
 const PRIORITY_RERUN_QUESTION_IDS = [
   'q1_foundation',
   'q2_digital_stack',
@@ -162,7 +176,7 @@ function hasSourceUrl(record) {
 function providerNoAnswerReason(record) {
   if (!record || typeof record !== 'object') return ''
   const questionId = String(record.question_id || record.id || '').trim()
-  if (!UPSTREAM_QUESTION_IDS.has(questionId)) return ''
+  if (!PROVIDER_FAILURE_NORMALIZATION_QUESTION_IDS.has(questionId)) return ''
   const raw = answerRaw(record)
   const text = toText([
     record.answer,
@@ -173,14 +187,16 @@ function providerNoAnswerReason(record) {
     raw.context,
     raw.notes,
   ])
-  if (!/no deterministic answer was produced|question execution failed before a safe answer/i.test(text)) return ''
-  return hasSourceUrl(record) ? '' : 'provider_no_answer'
+  if (hasSourceUrl(record)) return ''
+  if (/no deterministic answer was produced|question execution failed before a safe answer/i.test(text)) return 'provider_no_answer'
+  if (isEmptyTypedAnswerShell(record.answer) || isEmptyTypedAnswerShell(raw)) return 'empty_typed_answer'
+  return ''
 }
 
 function malformedUpstreamAnswerReason(record) {
   if (!record || typeof record !== 'object') return ''
   const questionId = String(record.question_id || record.id || '').trim()
-  if (!UPSTREAM_QUESTION_IDS.has(questionId)) return ''
+  if (!PROVIDER_FAILURE_NORMALIZATION_QUESTION_IDS.has(questionId)) return ''
   const answer = record.answer
   const raw = answerRaw(record)
   const hasFallbackContent = [
@@ -218,6 +234,39 @@ function sourceLessZeroConfidenceReason(record) {
     return text || 'Provider returned zero confidence without source-backed evidence.'
   }
   return ''
+}
+
+function isEmptyTypedAnswerShell(value) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return false
+  const kind = String(value.kind || '').trim().toLowerCase()
+  if (!kind) return false
+  const explicitTerminalText = toText([
+    value.answer,
+    value.status,
+    value.summary,
+    value.validation_state,
+  ])
+  if (/insufficient[_ ]signal|checked[_ ]absent|not[_ ]applicable|no[_ ]signal/i.test(explicitTerminalText)) {
+    return false
+  }
+  const meaningful = [
+    value.value,
+    value.summary,
+    value.answer,
+    value.status,
+    value.maturity_signal,
+    value.raw_structured_output,
+    value.commercial_implication,
+  ].some((item) => hasMeaningfulCommercialText(item))
+  if (meaningful) return false
+  const listFields = [
+    value.top_signals,
+    value.opportunity_hypotheses,
+    value.sources,
+    value.evidence,
+  ]
+  if (listFields.some((item) => Array.isArray(item) && item.length > 0)) return false
+  return true
 }
 
 function malformedUpstreamPatch(record, normalized, currentStructuredSignal, reasonCode) {
@@ -263,7 +312,7 @@ function providerNoAnswerPatch(record, normalized, currentStructuredSignal, reas
 export function normalizeUpstreamAnswer(record, adjacentAnswers = {}, entityInfo = {}) {
   if (!record || typeof record !== 'object') return null
   const questionId = String(record.question_id || record.id || '').trim()
-  if (!UPSTREAM_QUESTION_IDS.has(questionId)) return null
+  if (!PROVIDER_FAILURE_NORMALIZATION_QUESTION_IDS.has(questionId)) return null
   const entityType = normalizedEntityType(record.entity_type || entityInfo.entity_type)
   const currentStructuredSignal = asRecord(record.structured_signal || answerRaw(record).structured_signal)
   const normalized = {
@@ -283,6 +332,8 @@ export function normalizeUpstreamAnswer(record, adjacentAnswers = {}, entityInfo
   if (noAnswerReason) {
     return providerNoAnswerPatch(record, normalized, currentStructuredSignal, noAnswerReason)
   }
+
+  if (!UPSTREAM_QUESTION_IDS.has(questionId)) return null
 
   if (questionId === 'q1_foundation' && NON_SPORT_ENTITY_TYPES.has(entityType)) {
     const reason = `${entityType || 'this entity type'} is outside the canonical organisation foundation target shape.`
@@ -570,7 +621,7 @@ function patchAnswerArray(records, patchByQuestionId) {
       answer: patch.answer,
       checked_sources: patch.checked_sources || record.checked_sources,
       applicability: patch.applicability || record.applicability,
-      structured_signal: patch.structured_signal || record.structured_signal,
+      structured_signal: patch.structured_signal || asRecord(patch.answer).raw_structured_output || record.structured_signal,
       commercial_implication: patch.commercial_implication || record.commercial_implication,
       evidence_url: patch.evidence_url || record.evidence_url || '',
       primary_owner: Object.prototype.hasOwnProperty.call(patch, 'primary_owner') ? patch.primary_owner : record.primary_owner,
@@ -859,7 +910,7 @@ function buildUpstreamNormalizationPatches(repairedDossier, entityInfo = {}) {
     Object.values(answers)
       .map((record) => {
         const questionId = String(record?.question_id || record?.id || '').trim()
-        if (!UPSTREAM_QUESTION_IDS.has(questionId)) return null
+        if (!REPAIR_PROVIDER_FAILURE_NORMALIZATION_QUESTION_IDS.has(questionId)) return null
         const patch = normalizeUpstreamAnswer(record, answers, {
           entity_type: entityInfo.entity_type || repairedDossier.entity_type,
         })
