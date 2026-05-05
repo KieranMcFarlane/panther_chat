@@ -786,6 +786,7 @@ test('normalizeUpstreamAnswer converts [object Object] strings into explicit fai
   assert.equal(patch.confidence, 0)
   assert.equal(patch.structured_signal.status, 'malformed_answer')
   assert.equal(patch.structured_signal.malformed_answer_reason, 'object_string')
+  assert.doesNotMatch(JSON.stringify(patch), /\[object Object\]/)
 })
 
 test('normalizeUpstreamAnswer converts nested [object Object] strings into explicit failed records', () => {
@@ -807,6 +808,7 @@ test('normalizeUpstreamAnswer converts nested [object Object] strings into expli
   assert.equal(patch.confidence, 0)
   assert.equal(patch.structured_signal.status, 'malformed_answer')
   assert.equal(patch.structured_signal.malformed_answer_reason, 'object_string')
+  assert.doesNotMatch(JSON.stringify(patch), /\[object Object\]/)
 })
 
 test('normalizeUpstreamAnswer converts provider no-answer placeholders into explicit failed records', () => {
@@ -925,6 +927,7 @@ test('repairDossierPayload normalizes q11 provider no-answer placeholders in dos
   assert.equal(q11.confidence, 0)
   assert.equal(q11.structured_signal.status, 'malformed_answer')
   assert.equal(q11.structured_signal.malformed_answer_reason, 'object_string')
+  assert.doesNotMatch(JSON.stringify(q11), /\[object Object\]/)
 })
 
 test('normalizeUpstreamAnswer preserves sourced insufficient-signal upstream answers', () => {

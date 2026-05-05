@@ -269,13 +269,27 @@ function isEmptyTypedAnswerShell(value) {
   return true
 }
 
+function sanitizeObjectStringDeep(value) {
+  if (value == null) return value
+  if (typeof value === 'string') return isObjectString(value) ? null : value
+  if (Array.isArray(value)) return value.map((item) => sanitizeObjectStringDeep(item))
+  if (typeof value === 'object') {
+    return Object.fromEntries(
+      Object.entries(value).map(([key, item]) => [key, sanitizeObjectStringDeep(item)]),
+    )
+  }
+  return value
+}
+
 function malformedUpstreamPatch(record, normalized, currentStructuredSignal, reasonCode) {
   const questionId = String(record.question_id || record.id || '').trim()
   const reason = reasonCode === 'object_string'
-    ? `Provider returned [object Object] instead of a typed ${questionId} answer.`
+    ? `Provider returned an object placeholder instead of a typed ${questionId} answer.`
     : `Provider returned an empty object instead of a typed ${questionId} answer.`
   return {
     ...normalized,
+    answer: sanitizeObjectStringDeep(normalized.answer),
+    reasoning: sanitizeObjectStringDeep(normalized.reasoning),
     validation_state: 'failed',
     confidence: 0,
     checked_sources: [checkedSource(record, reason)],
@@ -284,7 +298,7 @@ function malformedUpstreamPatch(record, normalized, currentStructuredSignal, rea
       ...currentStructuredSignal,
       status: 'malformed_answer',
       malformed_answer_reason: reasonCode,
-      raw_provider_answer: record.answer,
+      raw_provider_answer: sanitizeObjectStringDeep(record.answer),
     },
     force: true,
   }
@@ -295,6 +309,8 @@ function providerNoAnswerPatch(record, normalized, currentStructuredSignal, reas
   const reason = `Provider produced no deterministic answer for ${questionId}; this needs a targeted rerun rather than a checked-absence interpretation.`
   return {
     ...normalized,
+    answer: sanitizeObjectStringDeep(normalized.answer),
+    reasoning: sanitizeObjectStringDeep(normalized.reasoning),
     validation_state: 'failed',
     confidence: 0,
     checked_sources: [checkedSource(record, reason)],
@@ -303,7 +319,7 @@ function providerNoAnswerPatch(record, normalized, currentStructuredSignal, reas
       ...currentStructuredSignal,
       status: 'provider_no_answer',
       provider_no_answer_reason: reasonCode,
-      raw_provider_answer: record.answer,
+      raw_provider_answer: sanitizeObjectStringDeep(record.answer),
     },
     force: true,
   }
