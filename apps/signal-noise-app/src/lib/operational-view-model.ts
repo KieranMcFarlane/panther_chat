@@ -899,14 +899,18 @@ export function buildOperationalStatusViewModel(input: {
   const blockedOrPartialCount =
     Number(loopStatus?.quality_counts?.partial ?? 0) +
     Number(loopStatus?.quality_counts?.blocked ?? 0);
+  const universeTotal = loopStatus?.universe_count ?? loopStatus?.total_scheduled ?? "…";
+  const processedCanonicalCount = loopStatus?.processed_dossiers ?? loopStatus?.completed;
   const canonicalEntityLabel =
     inProgressEntity?.queue_position !== undefined && inProgressEntity?.queue_position !== null
-      ? `${inProgressEntity.queue_position}/${loopStatus?.universe_count ?? loopStatus?.total_scheduled ?? "…"}`
-      : String(loopStatus?.universe_count ?? loopStatus?.total_scheduled ?? "…");
+      ? `${inProgressEntity.queue_position}/${universeTotal}`
+      : typeof processedCanonicalCount === "number"
+        ? `${processedCanonicalCount}/${universeTotal}`
+        : String(universeTotal);
   const statusItems = [
     {
       label: "Universe",
-      value: String(loopStatus?.universe_count ?? loopStatus?.total_scheduled ?? "…"),
+      value: String(universeTotal),
       tone: "text-white",
     },
     {

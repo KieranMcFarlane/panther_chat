@@ -41,7 +41,7 @@ test('operational shell primitives expose the expected visible shell content', a
   assert.match(stripSource, /Canonical entity \$\{currentUniverseProgressLabel\}/)
   assert.match(stripSource, /Fast MCP \${fastmcpHealth}/)
   assert.match(stripSource, /Live state/)
-  assert.match(stripSource, /Backlog diagnostics: stale rows/)
+  assert.match(stripSource, /Historical stale rows/)
   assert.match(stripSource, /Canonical entity/)
   assert.doesNotMatch(stripSource, /Transport/)
   assert.match(stripSource, /flex min-w-0 flex-1 flex-row gap-2 xl:pl-3/)

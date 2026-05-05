@@ -939,6 +939,56 @@ test("status hero does not describe a queued checkpoint as active processing whe
   assert.match(vm.statusHero.supportingLine, /queue is ready|waiting for claimable work/i);
 });
 
+test("status view model shows processed canonical progress when idle instead of first queued entity", () => {
+  const vm = buildOperationalStatusViewModel({
+    drilldown: {
+      control: {
+        is_paused: false,
+        requested_state: "running",
+        observed_state: "running",
+        transition_state: "running",
+      },
+      operational_state: "waiting",
+      loop_status: {
+        universe_count: 3332,
+        total_scheduled: 1305,
+        completed: 1468,
+        processed_dossiers: 1468,
+        quality_counts: { blocked: 0, partial: 0 },
+        runtime_counts: { running: 0, stalled: 0, retryable: 0, resume_needed: 0, queued: 1 },
+      },
+      queue: {
+        in_progress_entity: null,
+        running_entities: [],
+        stale_active_rows: [],
+        completed_entities: [],
+        resume_needed_entities: [],
+        upcoming_entities: [
+          {
+            entity_id: "baseball-australia",
+            entity_name: "Baseball Australia",
+            queue_position: 1,
+          },
+        ],
+      },
+      dossier_quality: {
+        incomplete_entities: [],
+      },
+    },
+    controlState: {
+      is_paused: false,
+      requested_state: "running",
+      observed_state: "running",
+      transition_state: "running",
+    },
+  });
+
+  const canonicalItem = vm.statusItems.find((item) => item.label === "Canonical entity");
+
+  assert.equal(canonicalItem?.value, "1468/3332");
+  assert.notEqual(canonicalItem?.value, "1/3332");
+});
+
 test("status view model keeps stale backlog in a stopped state when the worker crashed even if control still says running", () => {
   const staleAt = new Date(Date.now() - 15 * 60_000).toISOString();
   const vm = buildOperationalStatusViewModel({

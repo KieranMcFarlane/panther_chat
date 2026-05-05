@@ -1,52 +1,42 @@
 {
-  "entity_id": "b61e07d3-b0e5-4d5c-908e-064de77eb955",
+  "entity_id": "arsenal-fc",
   "entity_name": "Arsenal FC",
-  "entity_type": "Organisation",
-  "preset": "arsenal-fc-atomic-matrix",
+  "entity_type": "club",
+  "preset": "canonical_two_question_parity_smoke",
   "questions": [
     {
       "question_id": "q1_foundation",
-      "question_text": "When was Arsenal FC founded?",
       "question_family": "foundation",
       "question_type": "foundation",
-      "query": "\"Arsenal FC\" official website founded year",
+      "question_text": "When was {entity} founded?",
+      "query": "\"{entity}\" founded",
+      "hop_budget": 1,
+      "source_priority": ["google_serp", "official_site", "wikipedia"],
       "structured_output_schema": "foundation_v1",
       "execution_class": "atomic_retrieval",
       "rollout_phase": "phase_1_core",
       "evidence_extension_budget": 1,
-      "graph_write_targets": [
-        "entity.identity.foundation"
-      ],
-      "current_section_label": "Core Information",
-      "current_strategy_label": "Direct factual lookup",
-      "current_source_order": [
-        "google_serp",
-        "official_site",
-        "wikipedia"
-      ]
+      "graph_write_targets": ["entity.identity.foundation"]
     },
     {
       "question_id": "q7_procurement_signal",
-      "question_text": "Is there evidence Arsenal FC is buying, reshaping vendors, or changing its ecosystem?",
       "question_family": "procurement_signal",
       "question_type": "procurement_signal",
-      "query": "\"Arsenal FC\" platform migration provider partnership",
+      "question_text": "Is there evidence {entity} is buying, reshaping vendors, or changing its ecosystem?",
+      "query": "\"{entity}\" procurement vendor platform partnership",
+      "hop_budget": 2,
+      "source_priority": [
+        "official_site",
+        "tender_portal",
+        "press_release",
+        "partner_announcement",
+        "linkedin_posts"
+      ],
       "structured_output_schema": "procurement_signal_v1",
       "execution_class": "commercial_signal",
       "rollout_phase": "phase_1_core",
       "evidence_extension_budget": 2,
-      "depends_on": [
-        "q1_foundation"
-      ],
-      "current_section_label": "Strategic Opportunities",
-      "current_strategy_label": "Broad web-first procurement signal discovery",
-      "current_source_order": [
-        "google_serp",
-        "news",
-        "press_release",
-        "linkedin_posts",
-        "official_site"
-      ]
+      "depends_on": ["q1_foundation"]
     }
   ]
 }

@@ -381,25 +381,30 @@ export function OperationalStatusStrip({
   const totalUniverseCount = Number.isFinite(totalUniverseCountValue) ? totalUniverseCountValue : null
   const processedUniverseCountValue = Number(loopStatus?.processed_dossiers ?? loopStatus?.completed ?? completedEntities.length ?? NaN)
   const processedUniverseCount = Number.isFinite(processedUniverseCountValue) ? processedUniverseCountValue : null
-  const universeFocusEntity = inProgressEntity
-    || runningEntities[0]
+  const activeUniverseEntity = inProgressEntity || runningEntities[0] || null
+  const universeFocusEntity = activeUniverseEntity
     || staleActiveRows[0]
     || resumedEntities[0]
-    || upcomingEntities[0]
     || blockedEntities[0]
     || completedEntities[0]
+    || upcomingEntities[0]
     || null
-  const currentUniversePosition = typeof universeFocusEntity?.queue_position === 'number'
-    ? universeFocusEntity.queue_position
+  const currentUniversePosition = typeof activeUniverseEntity?.queue_position === 'number'
+    ? activeUniverseEntity.queue_position
     : null
+  const processedUniversePosition = processedUniverseCount !== null ? processedUniverseCount : null
   const currentUniverseProgressLabel = currentUniversePosition !== null && totalUniverseCount !== null
     ? `${currentUniversePosition}/${totalUniverseCount}`
     : currentUniversePosition !== null
       ? String(currentUniversePosition)
-      : String(totalUniverseCount ?? '…')
+      : processedUniversePosition !== null && totalUniverseCount !== null
+        ? `${processedUniversePosition}/${totalUniverseCount}`
+        : String(totalUniverseCount ?? '…')
   const universeTileTitle = currentUniversePosition !== null
-    ? `${universeFocusEntity?.entity_name ? `${universeFocusEntity.entity_name} · ` : ''}canonical entity ${currentUniverseProgressLabel}${totalUniverseCount !== null ? ` of ${totalUniverseCount}` : ''}`
-    : String(totalUniverseCount ?? '…')
+    ? `${activeUniverseEntity?.entity_name ? `${activeUniverseEntity.entity_name} · ` : ''}canonical entity ${currentUniverseProgressLabel}${totalUniverseCount !== null ? ` of ${totalUniverseCount}` : ''}`
+    : processedUniversePosition !== null && totalUniverseCount !== null
+      ? `${processedUniversePosition} processed canonical entities of ${totalUniverseCount}`
+      : String(totalUniverseCount ?? '…')
 
   const statusHero = buildOperationalStatusHero({
     drilldown,
@@ -411,7 +416,7 @@ export function OperationalStatusStrip({
     compactTicker,
     `Fast MCP ${fastmcpHealth}`,
     `Worker ${workerState}`,
-    currentUniversePosition !== null ? `Canonical entity ${currentUniverseProgressLabel}` : null,
+    `Canonical entity ${currentUniverseProgressLabel}`,
   ].filter(Boolean) as string[]
 
   const liveOperationalState = liveState?.operational_state ?? drilldown?.operational_state

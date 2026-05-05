@@ -274,6 +274,75 @@ test('repairDossierPayload does not promote descriptive paragraphs as buyer targ
   assert.equal(answers.q12_connections.validation_state, 'no_signal')
 })
 
+test('normalizeUpstreamAnswer classifies q1 non-organisation entity shapes explicitly', () => {
+  const patch = normalizeUpstreamAnswer(
+    answer('q1_foundation', {
+      entity_type: 'event',
+      validation_state: 'validated',
+      confidence: 0.73,
+      answer: 'Milan Cortina 2026 is an event.',
+    }),
+  )
+
+  assert.equal(patch.validation_state, 'not_applicable')
+  assert.equal(patch.applicability.status, 'not_applicable')
+  assert.equal(patch.structured_signal.entity_classification, 'event')
+  assert.equal(patch.checked_sources.length, 1)
+})
+
+test('normalizeUpstreamAnswer marks q4 and q5 not applicable for non-sport target shapes', () => {
+  for (const questionId of ['q4_performance', 'q5_league_context']) {
+    const patch = normalizeUpstreamAnswer(
+      answer(questionId, {
+        entity_type: 'rfp',
+        validation_state: 'failed',
+        confidence: 0,
+        answer: 'No standings found.',
+      }),
+    )
+
+    assert.equal(patch.validation_state, 'not_applicable')
+    assert.equal(patch.applicability.status, 'not_applicable')
+    assert.equal(patch.structured_signal.status, 'not_applicable')
+  }
+})
+
+test('normalizeUpstreamAnswer rejects source-less positive q7 q8 and q10 claims', () => {
+  for (const questionId of ['q7_procurement_signal', 'q8_explicit_rfp', 'q10_hiring_signal']) {
+    const patch = normalizeUpstreamAnswer(
+      answer(questionId, {
+        validation_state: 'validated',
+        confidence: 0.81,
+        answer: 'The organisation is actively buying a new digital platform and hiring commercial technology staff.',
+        checked_sources: [],
+      }),
+    )
+
+    assert.equal(patch.validation_state, 'failed')
+    assert.equal(patch.confidence, 0)
+    assert.equal(patch.structured_signal.status, 'provider_no_answer')
+    assert.equal(patch.structured_signal.provider_no_answer_reason, 'source_less_positive_claim')
+  }
+})
+
+test('normalizeUpstreamAnswer preserves checked q7 q8 and q10 absences with rationale', () => {
+  for (const questionId of ['q7_procurement_signal', 'q8_explicit_rfp', 'q10_hiring_signal']) {
+    const patch = normalizeUpstreamAnswer(
+      answer(questionId, {
+        validation_state: 'no_signal',
+        confidence: 0,
+        answer: 'Checked official site and recent news; no relevant procurement, RFP, or hiring signal found.',
+        checked_sources: [],
+      }),
+    )
+
+    assert.equal(patch.validation_state, 'no_signal')
+    assert.equal(patch.structured_signal.status, 'checked_absent')
+    assert.ok(patch.checked_sources.length > 0)
+    assert.match(patch.structured_signal.checked_absence_rationale, /checked official site/i)
+  }
+})
+
 test('repairDossierPayload does not promote year strings as buyer targets', () => {
   const pack = weakFifteenPack()
   pack.answers = pack.answers.map((item) => {
@@ -900,6 +969,62 @@ test('normalizeUpstreamAnswer converts empty typed q3 answer shells into provide
   assert.equal(patch.confidence, 0)
   assert.equal(patch.structured_signal.status, 'provider_no_answer')
   assert.equal(patch.structured_signal.provider_no_answer_reason, 'empty_typed_answer')
+})
+
+test('normalizeUpstreamAnswer rejects q3 founded-year facts as leadership answers even with sources', () => {
+  const patch = normalizeUpstreamAnswer({
+    question_id: 'q3_leadership',
+    validation_state: 'validated',
+    confidence: 0.85,
+    answer: {
+      kind: 'list',
+      summary: '2005',
+      raw_structured_output: {
+        answer: '2005',
+        context: 'Recovered founded year 2005 from scraped canonical sources after the OpenCode run failed to finalize structured JSON.',
+        sources: [],
+      },
+    },
+    evidence_url: 'https://en.wikipedia.org/wiki/Baseball_Australia',
+    notes: '2005',
+  })
+
+  assert.equal(patch.validation_state, 'failed')
+  assert.equal(patch.confidence, 0)
+  assert.equal(patch.structured_signal.status, 'provider_no_answer')
+  assert.equal(patch.structured_signal.provider_no_answer_reason, 'generic_fact_without_leadership_candidate')
+  assert.doesNotMatch(JSON.stringify(patch), /Recovered founded year/i)
+  assert.doesNotMatch(JSON.stringify(patch), /2005/i)
+})
+
+test('shouldRepairDossier targets malformed q3 records even when publication gates are not the blocker', () => {
+  const pack = {
+    publication_status: 'published_partial',
+    quality_state: 'partial',
+    answers: [
+      {
+        question_id: 'q3_leadership',
+        validation_state: 'validated',
+        confidence: 0.85,
+        evidence_url: 'https://en.wikipedia.org/wiki/Baseball_Australia',
+        answer: {
+          kind: 'list',
+          summary: '2005',
+          raw_structured_output: {
+            answer: '2005',
+            context: 'Recovered founded year 2005 from scraped canonical sources after the OpenCode run failed to finalize structured JSON.',
+            sources: [],
+          },
+        },
+      },
+    ],
+    discovery_summary: {
+      graphiti_sales_brief: { status: 'insufficient_signal' },
+      yellow_panther_fit: { status: 'insufficient_signal' },
+    },
+  }
+
+  assert.equal(shouldRepairDossier(pack), true)
 })
 
 test('repairDossierPayload normalizes q11 provider no-answer placeholders in dossier records', () => {

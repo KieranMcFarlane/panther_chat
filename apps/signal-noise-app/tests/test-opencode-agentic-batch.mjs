@@ -16,8 +16,11 @@ import {
   buildOpenCodeConfig,
   buildOpenCodeRunArgs,
   buildOpenCodeQuestionPrompt,
+  buildOpenCodeEvidenceSynthesisPrompt,
   buildOpenCodeSynthesisPrompt,
   buildQuestionState,
+  prefetchQuestionEvidence,
+  resolveQuestionModelRouting,
   resolveExecutionQueryForQuestionPayload,
   prepareOpenCodeRunWorkspace,
   resolveQuestionSourceOrder,
@@ -38,21 +41,25 @@ const CANONICAL_PARITY_SMOKE_SOURCE = join(
   'canonical_two_question_parity_smoke.json',
 );
 
-test('buildOpenCodeConfig wires Z.AI coding plan GLM-5.1 and BrightData MCP for OpenCode', async () => {
+test('buildOpenCodeConfig wires Z.AI coding plan quota-conserving models and BrightData MCP for OpenCode', async () => {
   const previousZaiApiKey = process.env.ZAI_API_KEY;
   const previousBrightDataToken = process.env.BRIGHTDATA_API_TOKEN;
+  const previousDefaultModel = process.env.QF_MODEL_DEFAULT;
   process.env.ZAI_API_KEY = 'test-zai-token';
   process.env.BRIGHTDATA_API_TOKEN = 'test-brightdata-token';
+  delete process.env.QF_MODEL_DEFAULT;
   const config = await buildOpenCodeConfig({
     worktreeRoot: '/Users/kieranmcfarlane/Downloads/panther_chat/.worktrees/v5-yellow-panther-canonical',
   });
 
   assert.equal(config.$schema, 'https://opencode.ai/config.json');
-  assert.equal(config.model, 'zai-coding-plan/glm-5.1');
+  assert.equal(config.model, 'zai-coding-plan/glm-4.7-flash');
   assert.equal(config.provider['zai-coding-plan'].npm, '@ai-sdk/anthropic');
   assert.equal(config.provider['zai-coding-plan'].name, 'Z.AI Coding Plan');
   assert.equal(config.provider['zai-coding-plan'].options.baseURL, 'https://api.z.ai/api/anthropic/v1');
   assert.equal(config.provider['zai-coding-plan'].options.apiKey, '{env:ZAI_API_KEY}');
+  assert.equal(config.provider['zai-coding-plan'].models['glm-4.7-flash'].id, 'GLM-4.7-Flash');
+  assert.equal(config.provider['zai-coding-plan'].models['glm-4.5-air'].id, 'GLM-4.5-Air');
   assert.equal(config.provider['zai-coding-plan'].models['glm-5.1'].id, 'GLM-5.1');
   assert.equal(config.provider['zai-coding-plan'].models['glm-5.1'].name, 'GLM-5.1');
   assert.equal(config.provider['zai-coding-plan'].models['glm-5.1'].limit.output, 16384);
@@ -62,7 +69,7 @@ test('buildOpenCodeConfig wires Z.AI coding plan GLM-5.1 and BrightData MCP for 
   assert.equal(config.mcp.brightData.url, 'http://127.0.0.1:8014/mcp/');
   assert.equal(config.mcp.brightData.timeout, 15000);
   assert.equal(config.agent.discovery.steps, 4);
-  assert.equal(config.agent.discovery.model, 'zai-coding-plan/glm-5.1');
+  assert.equal(config.agent.discovery.model, 'zai-coding-plan/glm-4.7-flash');
   assert.deepEqual(config.tools, { 'brightData*': false, 'brightdata*': false });
   assert.deepEqual(config.agent.build.tools, { 'brightData*': true, 'brightdata*': true });
   assert.deepEqual(config.agent.discovery.tools, { 'brightData*': true, 'brightdata*': true });
@@ -76,6 +83,49 @@ test('buildOpenCodeConfig wires Z.AI coding plan GLM-5.1 and BrightData MCP for 
   } else {
     process.env.BRIGHTDATA_API_TOKEN = previousBrightDataToken;
   }
+  if (previousDefaultModel === undefined) {
+    delete process.env.QF_MODEL_DEFAULT;
+  } else {
+    process.env.QF_MODEL_DEFAULT = previousDefaultModel;
+  }
+});
+
+test('resolveQuestionModelRouting uses temporary quota-conserving defaults by question family', () => {
+  const env = {};
+
+  assert.deepEqual(
+    resolveQuestionModelRouting({ question_id: 'q3_leadership' }, env),
+    {
+      model_id: 'glm-4.7-flash',
+      model: 'zai-coding-plan/glm-4.7-flash',
+      model_tier: 'prefetch',
+      quota_policy: 'temporary_3_day_conserve',
+      escalation_allowed: false,
+      escalation_model: 'zai-coding-plan/glm-5.1',
+      escalation_reason: '',
+    },
+  );
+  assert.equal(resolveQuestionModelRouting({ question_id: 'q14_yp_fit' }, env).model, 'zai-coding-plan/glm-4.5-air');
+  assert.equal(resolveQuestionModelRouting({ question_id: 'q14_yp_fit' }, env).model_tier, 'synthesis');
+  assert.equal(resolveQuestionModelRouting({ question_id: 'q1_foundation' }, env).model, 'zai-coding-plan/glm-4.7-flash');
+  assert.equal(resolveQuestionModelRouting({ question_id: 'q1_foundation' }, env).model_tier, 'default');
+});
+
+test('resolveQuestionModelRouting honors force model and disables escalation by default', () => {
+  const forced = resolveQuestionModelRouting(
+    { question_id: 'q14_yp_fit' },
+    { QF_FORCE_MODEL: 'glm-5.1', QF_MODEL_ESCALATION_ENABLED: 'true' },
+  );
+  assert.equal(forced.model, 'zai-coding-plan/glm-5.1');
+  assert.equal(forced.model_tier, 'forced');
+  assert.equal(forced.escalation_allowed, false);
+
+  const routed = resolveQuestionModelRouting(
+    { question_id: 'q15_outreach_strategy' },
+    { QF_MODEL_SYNTHESIS: 'glm-4.5-air', QF_MODEL_ESCALATION_ENABLED: 'false' },
+  );
+  assert.equal(routed.model, 'zai-coding-plan/glm-4.5-air');
+  assert.equal(routed.escalation_allowed, false);
 });
 
 test('resolveExecutionQueryForQuestionPayload ignores stale tracker queries from another question', () => {
@@ -118,7 +168,7 @@ test('prepareOpenCodeRunWorkspace materializes repo-local OpenCode MCP config', 
     const config = JSON.parse(readFileSync(configPath, 'utf8'));
 
     assert.notEqual(prepared.cwd, workspaceRoot);
-  assert.equal(config.model, 'zai-coding-plan/glm-5.1');
+  assert.equal(config.model, 'zai-coding-plan/glm-4.7-flash');
     assert.equal(config.provider['zai-coding-plan'].options.baseURL, 'https://api.z.ai/api/anthropic/v1');
     assert.equal(config.provider['zai-coding-plan'].options.apiKey, '{env:ZAI_API_KEY}');
     assert.ok(config.mcp.brightData);
@@ -248,6 +298,375 @@ test('buildOpenCodeQuestionPrompt adds no-signal guidance for bounded negative p
 
   assert.match(prompt, /no meaningful public evidence is visible after a bounded search/i);
   assert.match(prompt, /no_signal/i);
+});
+
+test('buildOpenCodeQuestionPrompt gives q3 a typed buyer-role output contract', () => {
+  const prompt = buildOpenCodeQuestionPrompt({
+    question_id: 'q3_leadership',
+    question_text: 'Which named people currently hold leadership or commercial roles at Baseball Australia?',
+    question_type: 'leadership',
+    query: '"Baseball Australia" commercial director head of partnerships',
+    structured_output_schema: 'leadership_candidates_v1',
+    source_priority: ['official_site', 'leadership_page', 'linkedin_people_search'],
+  });
+
+  assert.match(prompt, /people array/i);
+  assert.match(prompt, /name, title, function, buyer_relevance, evidence_url/i);
+  assert.match(prompt, /Reject founded years, venues, trophies, event dates, and generic history/i);
+  assert.match(prompt, /checked_sources/i);
+});
+
+test('buildOpenCodeQuestionPrompt injects typed output contracts for priority upstream questions', () => {
+  const examples = [
+    {
+      question_id: 'q1_foundation',
+      question_type: 'foundation',
+      question_text: 'What is the canonical identity and grounding profile for Arsenal FC?',
+      query: '"Arsenal FC" official website founded year',
+      expected: [/entity_classification/i, /canonical_name/i, /official_site/i, /ambiguity_notes/i],
+    },
+    {
+      question_id: 'q2_digital_stack',
+      question_type: 'digital_stack',
+      question_text: 'What visible technologies, platforms, or vendors does Arsenal FC use?',
+      query: '"Arsenal FC" official website',
+      expected: [/platform_hints/i, /vendor_hints/i, /digital_footprint_unknown/i, /checked_sources/i],
+    },
+    {
+      question_id: 'q6_launch_signal',
+      question_type: 'launch_signal',
+      question_text: 'What products, apps, platforms, or fan experiences has Arsenal FC launched?',
+      query: '"Arsenal FC" launch app platform',
+      expected: [/trigger_date/i, /trigger_type/i, /recency/i, /commercial_implication/i],
+    },
+    {
+      question_id: 'q9_news_signal',
+      question_type: 'news_signal',
+      question_text: 'What recent news, partnerships, and strategic themes are most relevant?',
+      query: '"Arsenal FC" news announcement partnership',
+      expected: [/news_date/i, /news_type/i, /commercial_relevance/i, /checked_sources/i],
+    },
+    {
+      question_id: 'q10_hiring_signal',
+      question_type: 'hiring_signal',
+      question_text: 'What hiring signals suggest current investment priorities?',
+      query: '"Arsenal FC" careers jobs product engineering data',
+      expected: [/role_mix/i, /investment_priority/i, /checked_sources/i, /commercial_implication/i],
+    },
+  ];
+
+  for (const example of examples) {
+    const prompt = buildOpenCodeQuestionPrompt(example);
+    assert.match(prompt, /Return typed fields/i);
+    assert.match(prompt, /validation_state/i);
+    assert.match(prompt, /display_answer/i);
+    for (const pattern of example.expected) {
+      assert.match(prompt, pattern, `${example.question_id} prompt should include ${pattern}`);
+    }
+  }
+});
+
+test('prefetchQuestionEvidence accepts source-backed q2 digital hints and records diagnostics', async () => {
+  const result = await prefetchQuestionEvidence(
+    {
+      question_id: 'q2_digital_stack',
+      question_type: 'digital_stack',
+      entity_name: 'Arsenal FC',
+      query: '"Arsenal FC" official website',
+      search_strategy: {
+        search_queries: ['"Arsenal FC" app ticketing platform'],
+      },
+    },
+    {
+      now: () => '2026-05-05T08:00:00.000Z',
+      searchEngine: async (query) => ({
+        status: 'success',
+        results: [
+          {
+            title: 'Arsenal official app and ticketing',
+            url: 'https://www.arsenal.com/apps',
+            snippet: `Official Arsenal app, ticketing, video and ecommerce platform evidence for ${query}.`,
+          },
+        ],
+      }),
+      scrapeMarkdown: async () => ({
+        status: 'success',
+        content: 'Download the official app, access ticketing, video, ecommerce shop and digital membership.',
+      }),
+    },
+  );
+
+  assert.equal(result.leads.length, 1);
+  assert.equal(result.leads[0].source_type, 'official_site');
+  assert.equal(result.leads[0].acceptance_reason, 'digital_footprint_hint');
+  assert.equal(result.leads[0].retrieved_at, '2026-05-05T08:00:00.000Z');
+  assert.equal(result.diagnostics.accepted_source_count, 1);
+  assert.ok(result.diagnostics.query_variants_used.includes('"Arsenal FC" official website'));
+  assert.ok(result.checked_sources[0].url.includes('arsenal.com'));
+});
+
+test('prefetchQuestionEvidence rejects generic q2 pages even when they mention apps', async () => {
+  const result = await prefetchQuestionEvidence(
+    {
+      question_id: 'q2_digital_stack',
+      question_type: 'digital_stack',
+      entity_name: 'Arsenal FC',
+      query: '"Arsenal FC" app platform',
+    },
+    {
+      searchEngine: async () => ({
+        status: 'success',
+        results: [
+          {
+            title: 'Arsenal FC - Wikipedia',
+            url: 'https://en.wikipedia.org/wiki/Arsenal_F.C.',
+            snippet: 'Arsenal is a football club. Fans use apps and platforms to follow football generally.',
+          },
+        ],
+      }),
+      scrapeMarkdown: async () => ({
+        status: 'success',
+        content: 'Generic encyclopaedia history with no official digital product evidence.',
+      }),
+    },
+  );
+
+  assert.equal(result.leads.length, 0);
+  assert.equal(result.diagnostics.rejected_source_count, 1);
+  assert.match(result.retrieval_summary, /No accepted q2_digital_stack evidence/i);
+});
+
+test('prefetchQuestionEvidence rejects social pages as q2 official digital evidence', async () => {
+  const result = await prefetchQuestionEvidence(
+    {
+      question_id: 'q2_digital_stack',
+      question_type: 'digital_stack',
+      entity_name: 'Arsenal FC',
+      query: '"Arsenal FC" app platform',
+    },
+    {
+      searchEngine: async () => ({
+        status: 'success',
+        results: [
+          {
+            title: 'Arsenal fans discuss the club app',
+            url: 'https://www.reddit.com/r/Gunners/comments/example/arsenal_app/',
+            snippet: 'Fans discuss ticketing, apps and platforms on Reddit.',
+          },
+        ],
+      }),
+      scrapeMarkdown: async () => ({
+        status: 'success',
+        content: 'Reddit discussion of apps, ticketing and platforms.',
+      }),
+    },
+  );
+
+  assert.equal(result.leads.length, 0);
+  assert.equal(result.checked_sources[0].source_type, 'social');
+  assert.equal(result.diagnostics.rejected_source_count, 1);
+});
+
+test('prefetchQuestionEvidence rejects generic q3 history pages as buyer-role evidence', async () => {
+  const result = await prefetchQuestionEvidence(
+    {
+      question_id: 'q3_leadership',
+      question_type: 'leadership',
+      entity_name: 'Baseball Australia',
+      query: '"Baseball Australia" leadership commercial director',
+    },
+    {
+      searchEngine: async () => ({
+        status: 'success',
+        results: [
+          {
+            title: 'Baseball Australia history and founding',
+            url: 'https://example.com/baseball-australia-history',
+            snippet: 'Baseball Australia was founded in 2000 and has won trophies at historic venues.',
+          },
+        ],
+      }),
+      scrapeMarkdown: async () => ({
+        status: 'success',
+        content: 'History, venues, trophies and founding dates.',
+      }),
+    },
+  );
+
+  assert.equal(result.leads.length, 0);
+  assert.equal(result.diagnostics.accepted_source_count, 0);
+  assert.equal(result.diagnostics.rejected_source_count, 1);
+  assert.match(result.retrieval_summary, /No accepted q3_leadership evidence/i);
+});
+
+test('prefetchQuestionEvidence extracts q3 leadership snippets from card-style official page markup', async () => {
+  const result = await prefetchQuestionEvidence(
+    {
+      question_id: 'q3_leadership',
+      question_type: 'leadership',
+      entity_name: 'Major League Soccer',
+      query: '"Major League Soccer" executives',
+    },
+    {
+      searchEngine: async () => ({
+        status: 'success',
+        results: [
+          {
+            title: 'Executives',
+            url: 'https://www.mlssoccer.com/about/executives',
+            snippet: '',
+          },
+        ],
+      }),
+      scrapeMarkdown: async () => ({
+        status: 'success',
+        content: `
+          <div class="mls-o-block-header__title">Commissioner</div>
+          <a class="fm-card-wrap" title="Don Garber" aria-label="Don Garber">Don Garber</a>
+          <div class="mls-o-block-header__title">Executive Vice President; Chief Technology Officer</div>
+          <a class="fm-card-wrap" title="John Nicastro" aria-label="John Nicastro">John Nicastro</a>
+        `,
+      }),
+    },
+  );
+
+  assert.equal(result.leads.length, 1);
+  assert.match(result.leads[0].excerpt, /Don Garber\. Commissioner\./);
+  assert.match(result.leads[0].excerpt, /John Nicastro\. Chief Technology Officer\./);
+  assert.equal(result.diagnostics.accepted_source_count, 1);
+});
+
+test('prefetchQuestionEvidence accepts dated q6 and q9 commercial trigger evidence', async () => {
+  const q6 = await prefetchQuestionEvidence(
+    {
+      question_id: 'q6_launch_signal',
+      question_type: 'launch_signal',
+      entity_name: 'Milan Cortina 2026',
+      query: '"Milan Cortina 2026" launch app platform',
+    },
+    {
+      searchEngine: async () => ({
+        status: 'success',
+        results: [
+          {
+            title: 'Milan Cortina 2026 launches official app in 2026',
+            url: 'https://milanocortina2026.olympics.com/en/news/app-launch',
+            snippet: 'The organising committee announced the official app launch on 5 February 2026.',
+          },
+        ],
+      }),
+      scrapeMarkdown: async () => ({
+        status: 'success',
+        content: '5 February 2026 launch of the official app and digital fan platform.',
+      }),
+    },
+  );
+  const q9 = await prefetchQuestionEvidence(
+    {
+      question_id: 'q9_news_signal',
+      question_type: 'news_signal',
+      entity_name: 'FDJ-Suez',
+      query: '"FDJ-Suez" news announcement partnership',
+    },
+    {
+      searchEngine: async () => ({
+        status: 'success',
+        results: [
+          {
+            title: 'FDJ-Suez announces new commercial partnership in 2026',
+            url: 'https://www.fdj-suez.fr/news/partnership-2026',
+            snippet: 'FDJ-Suez announced a new strategic commercial partnership on 12 March 2026.',
+          },
+        ],
+      }),
+      scrapeMarkdown: async () => ({
+        status: 'success',
+        content: '12 March 2026 strategic commercial partnership announcement.',
+      }),
+    },
+  );
+
+  assert.equal(q6.leads[0].acceptance_reason, 'dated_launch_or_platform_trigger');
+  assert.equal(q9.leads[0].acceptance_reason, 'dated_commercial_news_trigger');
+});
+
+test('prefetchQuestionEvidence rejects stale q9 news as a current commercial trigger', async () => {
+  const result = await prefetchQuestionEvidence(
+    {
+      question_id: 'q9_news_signal',
+      question_type: 'news_signal',
+      entity_name: 'FDJ-Suez',
+      query: '"FDJ-Suez" news announcement partnership',
+    },
+    {
+      searchEngine: async () => ({
+        status: 'success',
+        results: [
+          {
+            title: 'FDJ-Suez partnership archive from 2019',
+            url: 'https://www.fdj-suez.fr/news/partnership-2019',
+            snippet: 'A strategic commercial partnership was announced on 12 March 2019.',
+          },
+        ],
+      }),
+      scrapeMarkdown: async () => ({
+        status: 'success',
+        content: '12 March 2019 strategic commercial partnership announcement.',
+      }),
+    },
+  );
+
+  assert.equal(result.leads.length, 0);
+  assert.equal(result.diagnostics.rejected_source_count, 1);
+});
+
+test('buildOpenCodeEvidenceSynthesisPrompt uses supplied retrieval evidence and forbids invention', () => {
+  const prompt = buildOpenCodeEvidenceSynthesisPrompt(
+    {
+      question_id: 'q6_launch_signal',
+      question_type: 'launch_signal',
+      question_text: 'What products, apps, platforms, or fan experiences has Arsenal FC launched?',
+      query: '"Arsenal FC" launch app platform',
+      structured_output_schema: 'launch_signal_v1',
+    },
+    {
+      prefetchEvidence: {
+        leads: [{ title: 'Official app launch', url: 'https://www.arsenal.com/apps', excerpt: 'Official app launch evidence.' }],
+        checked_sources: [{ url: 'https://www.arsenal.com/apps' }],
+        retrieval_summary: 'Accepted one official app launch lead.',
+      },
+    },
+  );
+
+  assert.match(prompt, /Use supplied retrieval evidence/i);
+  assert.match(prompt, /do not invent/i);
+  assert.match(prompt, /If evidence is insufficient return checked no_signal/i);
+  assert.match(prompt, /Official app launch/i);
+  assert.doesNotMatch(prompt, /Your first action must be one BrightData search/i);
+});
+
+test('buildOpenCodeQuestionPrompt keeps q14 and q15 as synthesis prompts without retrieval wording', () => {
+  const q14 = buildOpenCodeQuestionPrompt({
+    question_id: 'q14_yp_fit',
+    question_type: 'yp_fit',
+    question_text: 'Based on current dossier evidence, which Yellow Panther capability fits best?',
+    query: '',
+    execution_class: 'derived_inference',
+  });
+  const q15 = buildOpenCodeQuestionPrompt({
+    question_id: 'q15_outreach_strategy',
+    question_type: 'outreach_strategy',
+    question_text: 'Using buyer, connection, and capability evidence, what is the best outreach route?',
+    query: '',
+    execution_class: 'derived_inference',
+  });
+
+  assert.match(q14, /derived synthesis/i);
+  assert.match(q14, /best_service/i);
+  assert.match(q15, /derived synthesis/i);
+  assert.match(q15, /recommended_target/i);
+  assert.doesNotMatch(q14, /search for Yellow Panther|lookup Yellow Panther|Yellow Panther search/i);
+  assert.doesNotMatch(q15, /search for Yellow Panther|lookup Yellow Panther|Yellow Panther search/i);
 });
 
 test('resolveQuestionSourceOrder varies source ranking by entity type and question family', () => {
@@ -431,6 +850,363 @@ test('runOpenCodeCliQuestion short-circuits q7 when retrieval times out with no 
   assert.equal(result.promptTrace.stage_count, 1);
   assert.equal(result.promptTrace.retrieval_recovered_from_failure, true);
   assert.equal(result.promptTrace.synthesis_skipped, true);
+});
+
+test('runOpenCodeCliQuestion routes q2 q3 q6 q9 through evidence-first synthesis', async () => {
+  const question = {
+    question_id: 'q6_launch_signal',
+    question_text: 'What products, apps, platforms, or fan experiences has Arsenal FC launched?',
+    question_type: 'launch_signal',
+    query: '"Arsenal FC" launch app platform',
+    structured_output_schema: 'launch_signal_v1',
+  };
+  const prompts = [];
+  const prefetchCalls = [];
+
+  const result = await runOpenCodeCliQuestion(question, {
+    worktreeRoot: mkdtempSync(join(tmpdir(), 'opencode-q6-evidence-first-')),
+    opencodeTimeoutMs: 300000,
+    evidencePrefetcher: async (prefetchQuestion) => {
+      prefetchCalls.push(prefetchQuestion.question_id);
+      return {
+        leads: [
+          {
+            title: 'Arsenal official app launch',
+            url: 'https://www.arsenal.com/apps',
+            snippet: 'Arsenal announced its official app launch in 2026.',
+            excerpt: 'The club launched an official app and digital fan platform in March 2026.',
+            source_type: 'official_site',
+            query_used: question.query,
+            retrieved_at: '2026-05-05T08:00:00.000Z',
+            acceptance_reason: 'dated_launch_or_platform_trigger',
+          },
+        ],
+        checked_sources: [{ url: 'https://www.arsenal.com/apps', accepted: true }],
+        retrieval_summary: 'Accepted one official launch lead.',
+        diagnostics: {
+          accepted_source_count: 1,
+          source_types: ['official_site'],
+          query_variants_used: [question.query],
+        },
+      };
+    },
+    spawnRunner: async (args) => {
+      const prompt = args.at(-1);
+      prompts.push(prompt);
+      assert.match(prompt, /Use supplied retrieval evidence/i);
+      assert.match(prompt, /Arsenal official app launch/i);
+      assert.doesNotMatch(prompt, /Your first action must be one BrightData search/i);
+      return {
+        code: 0,
+        stdout: `${JSON.stringify({
+          type: 'text',
+          part: {
+            text: JSON.stringify({
+              question: question.question_text,
+              answer: 'Arsenal launched an official app and digital fan platform in March 2026.',
+              context: 'Source-backed launch signal from Arsenal official app page.',
+              sources: ['https://www.arsenal.com/apps'],
+              confidence: 0.82,
+              validation_state: 'validated',
+              checked_sources: [{ url: 'https://www.arsenal.com/apps', accepted: true }],
+              structured_signal: {
+                trigger_type: 'app_launch',
+                trigger_date: 'March 2026',
+                source: 'https://www.arsenal.com/apps',
+              },
+              commercial_implication: 'Digital fan engagement and product delivery opportunity.',
+            }),
+          },
+        })}\n`,
+        stderr: '',
+      };
+    },
+  });
+
+  assert.deepEqual(prefetchCalls, ['q6_launch_signal']);
+  assert.equal(prompts.length, 1);
+  assert.equal(result.structuredOutput.validation_state, 'validated');
+  assert.equal(result.promptTrace.stage_count, 2);
+  assert.equal(result.promptTrace.prefetch_used, true);
+  assert.equal(result.promptTrace.model_requested, 'zai-coding-plan/glm-4.7-flash');
+  assert.equal(result.promptTrace.model_used, 'zai-coding-plan/glm-4.7-flash');
+  assert.equal(result.promptTrace.model_tier, 'prefetch');
+  assert.equal(result.promptTrace.quota_policy, 'temporary_3_day_conserve');
+  assert.equal(result.promptTrace.escalation_allowed, false);
+  assert.equal(result.promptTrace.retrieval_lead_count, 1);
+  assert.equal(result.promptTrace.accepted_source_count, 1);
+  assert.deepEqual(result.promptTrace.source_types, ['official_site']);
+});
+
+test('runOpenCodeCliQuestion falls back to provisional q6 signal when provider returns empty object after accepted prefetch leads', async () => {
+  const question = {
+    question_id: 'q6_launch_signal',
+    question_text: 'What products, apps, platforms, or fan experiences has Arsenal FC launched?',
+    question_type: 'launch_signal',
+    query: '"Arsenal FC" launch app platform',
+    structured_output_schema: 'launch_signal_v1',
+  };
+
+  const result = await runOpenCodeCliQuestion(question, {
+    worktreeRoot: mkdtempSync(join(tmpdir(), 'opencode-q6-prefetch-fallback-')),
+    opencodeTimeoutMs: 300000,
+    evidencePrefetcher: async () => ({
+      leads: [
+        {
+          title: 'Arsenal launches official app in 2026',
+          url: 'https://www.arsenal.com/apps',
+          snippet: 'Arsenal announced the official app launch in March 2026.',
+          excerpt: 'The club launched an official app and digital fan platform in March 2026.',
+          source_type: 'official_site',
+          acceptance_reason: 'dated_launch_or_platform_trigger',
+          query_used: question.query,
+          retrieved_at: '2026-05-05T08:00:00.000Z',
+        },
+      ],
+      checked_sources: [{ url: 'https://www.arsenal.com/apps', accepted: true, source_type: 'official_site' }],
+      retrieval_summary: 'Accepted one official launch lead.',
+      diagnostics: {
+        accepted_source_count: 1,
+        source_types: ['official_site'],
+        query_variants_used: [question.query],
+      },
+    }),
+    spawnRunner: async () => ({
+      code: 0,
+      stdout: '{}\n',
+      stderr: '',
+    }),
+  });
+
+  assert.equal(result.structuredOutput.validation_state, 'provisional');
+  assert.equal(result.structuredOutput.structured_signal.status, 'deterministic_prefetch_fallback');
+  assert.equal(result.structuredOutput.structured_signal.trigger_type, 'launch_signal');
+  assert.equal(result.structuredOutput.prompt_trace.provider_no_answer_reason, 'empty_object_answer');
+  assert.equal(result.promptTrace.deterministic_prefetch_fallback, true);
+  assert.equal(result.promptTrace.provider_no_answer_reason, 'empty_object_answer');
+});
+
+test('runOpenCodeCliQuestion falls back to provisional q3 buyer candidate when provider returns empty object after accepted prefetch leads', async () => {
+  const question = {
+    question_id: 'q3_leadership',
+    question_text: 'Which named people currently hold leadership or commercial roles at Exeter City?',
+    question_type: 'leadership',
+    query: '"Exeter City" Head of Commercial',
+    structured_output_schema: 'leadership_candidates_v1',
+  };
+
+  const result = await runOpenCodeCliQuestion(question, {
+    worktreeRoot: mkdtempSync(join(tmpdir(), 'opencode-q3-prefetch-fallback-')),
+    opencodeTimeoutMs: 300000,
+    evidencePrefetcher: async () => ({
+      leads: [
+        {
+          title: "Who's Who | Exeter City Football Club",
+          url: 'https://www.exetercityfc.co.uk/primary/club/whos-who-exeter-city',
+          snippet: 'Matt Kimberley, Head of Commercial, Exeter City Football Club.',
+          excerpt: 'Matt Kimberley, Head of Commercial, works across commercial partnerships and club revenue.',
+          source_type: 'official_site',
+          acceptance_reason: 'buyer_role_candidate',
+          query_used: question.query,
+          retrieved_at: '2026-05-05T08:00:00.000Z',
+        },
+      ],
+      checked_sources: [{
+        url: 'https://www.exetercityfc.co.uk/primary/club/whos-who-exeter-city',
+        accepted: true,
+        source_type: 'official_site',
+      }],
+      retrieval_summary: 'Accepted one official leadership lead.',
+      diagnostics: {
+        accepted_source_count: 1,
+        source_types: ['official_site'],
+        query_variants_used: [question.query],
+      },
+    }),
+    spawnRunner: async () => ({
+      code: 0,
+      stdout: '{}\n',
+      stderr: '',
+    }),
+  });
+
+  assert.equal(result.structuredOutput.validation_state, 'provisional');
+  assert.equal(result.structuredOutput.structured_signal.status, 'deterministic_prefetch_fallback');
+  assert.equal(result.structuredOutput.primary_owner.name, 'Matt Kimberley');
+  assert.equal(result.structuredOutput.primary_owner.title, 'Head of Commercial');
+  assert.equal(result.structuredOutput.sources[0], 'https://www.exetercityfc.co.uk/primary/club/whos-who-exeter-city');
+  assert.equal(result.promptTrace.deterministic_prefetch_fallback, true);
+  assert.equal(result.promptTrace.provider_no_answer_reason, 'empty_object_answer');
+});
+
+test('runOpenCodeCliQuestion falls back to provisional q3 buyer candidate when provider returns object answer without sources after accepted prefetch leads', async () => {
+  const question = {
+    question_id: 'q3_leadership',
+    question_text: 'Which named people currently hold leadership or commercial roles at Major League Soccer?',
+    question_type: 'leadership',
+    query: '"Major League Soccer" leadership board commercial director',
+    structured_output_schema: 'leadership_candidates_v1',
+  };
+
+  const result = await runOpenCodeCliQuestion(question, {
+    worktreeRoot: mkdtempSync(join(tmpdir(), 'opencode-q3-prefetch-object-fallback-')),
+    opencodeTimeoutMs: 300000,
+    evidencePrefetcher: async () => ({
+      leads: [
+        {
+          title: 'Executives',
+          url: 'https://www.mlssoccer.com/about/executives',
+          snippet: 'Don Garber. Commissioner, Major League Soccer CEO, Soccer United Marketing.',
+          excerpt: 'Don Garber. Commissioner, Major League Soccer CEO, Soccer United Marketing.',
+          source_type: 'official_site',
+          acceptance_reason: 'buyer_role_candidate',
+          query_used: question.query,
+          retrieved_at: '2026-05-05T08:00:00.000Z',
+        },
+      ],
+      checked_sources: [{
+        url: 'https://www.mlssoccer.com/about/executives',
+        accepted: true,
+        source_type: 'official_site',
+      }],
+      retrieval_summary: 'Accepted one official leadership lead.',
+      diagnostics: {
+        accepted_source_count: 1,
+        source_types: ['official_site'],
+        query_variants_used: [question.query],
+      },
+    }),
+    spawnRunner: async () => ({
+      code: 0,
+      stdout: JSON.stringify({
+        answer: { status: 'no_answer' },
+        context: '',
+        sources: [],
+        confidence: 0,
+      }),
+      stderr: '',
+    }),
+  });
+
+  assert.equal(result.structuredOutput.validation_state, 'provisional');
+  assert.equal(result.structuredOutput.structured_signal.status, 'deterministic_prefetch_fallback');
+  assert.equal(result.structuredOutput.primary_owner.name, 'Don Garber');
+  assert.equal(result.structuredOutput.primary_owner.title, 'Commissioner');
+  assert.equal(result.structuredOutput.sources[0], 'https://www.mlssoccer.com/about/executives');
+  assert.equal(result.promptTrace.provider_no_answer_reason, 'empty_object_answer');
+});
+
+test('runOpenCodeCliQuestion q3 fallback scans later accepted leads when top source excerpt has no names', async () => {
+  const question = {
+    question_id: 'q3_leadership',
+    question_text: 'Which named people currently hold leadership or commercial roles at Major League Soccer?',
+    question_type: 'leadership',
+    query: '"Major League Soccer" leadership board commercial director',
+    structured_output_schema: 'leadership_candidates_v1',
+  };
+
+  const result = await runOpenCodeCliQuestion(question, {
+    worktreeRoot: mkdtempSync(join(tmpdir(), 'opencode-q3-prefetch-later-lead-fallback-')),
+    opencodeTimeoutMs: 300000,
+    evidencePrefetcher: async () => ({
+      leads: [
+        {
+          title: 'Executives',
+          url: 'https://www.mlssoccer.com/about/executives',
+          snippet: 'MLS Communications Copy URL Share on Facebook Share on X.',
+          excerpt: 'MLS Communications Copy URL Share on Facebook Share on X.',
+          source_type: 'official_site',
+          acceptance_reason: 'buyer_role_candidate',
+          query_used: question.query,
+          retrieved_at: '2026-05-05T08:00:00.000Z',
+        },
+        {
+          title: 'MLS NEXT Names Stephanie Savino as General Manager',
+          url: 'https://www.linkedin.com/posts/stephaniedimari_mls-next-names-stephanie-savino-as-general-activity-7437958278942244864-qyV3',
+          snippet: "Excited to share that I've stepped into a new role at Major League Soccer as General Manager, MLS NEXT overseeing Business & Commercial.",
+          excerpt: "Stephanie Savino as General Manager, MLS NEXT overseeing Business & Commercial.",
+          source_type: 'linkedin_person_profile',
+          acceptance_reason: 'buyer_role_candidate',
+          query_used: question.query,
+          retrieved_at: '2026-05-05T08:00:00.000Z',
+        },
+      ],
+      checked_sources: [{
+        url: 'https://www.mlssoccer.com/about/executives',
+        accepted: true,
+        source_type: 'official_site',
+      }],
+      retrieval_summary: 'Accepted leadership leads.',
+      diagnostics: {
+        accepted_source_count: 2,
+        source_types: ['official_site', 'linkedin_person_profile'],
+        query_variants_used: [question.query],
+      },
+    }),
+    spawnRunner: async () => ({
+      code: 0,
+      stdout: '{}\n',
+      stderr: '',
+    }),
+  });
+
+  assert.equal(result.structuredOutput.validation_state, 'provisional');
+  assert.equal(result.structuredOutput.structured_signal.status, 'deterministic_prefetch_fallback');
+  assert.equal(result.structuredOutput.primary_owner.name, 'Stephanie Savino');
+  assert.equal(result.structuredOutput.primary_owner.title, 'General Manager');
+  assert.equal(
+    result.structuredOutput.structured_signal.evidence_url,
+    'https://www.linkedin.com/posts/stephaniedimari_mls-next-names-stephanie-savino-as-general-activity-7437958278942244864-qyV3',
+  );
+});
+
+test('runOpenCodeCliQuestion q3 fallback cleans noisy LinkedIn title suffixes', async () => {
+  const question = {
+    question_id: 'q3_leadership',
+    question_text: 'Which named people currently hold leadership or commercial roles at Major League Soccer?',
+    question_type: 'leadership',
+    query: '"Major League Soccer" digital marketing director',
+    structured_output_schema: 'leadership_candidates_v1',
+  };
+
+  const result = await runOpenCodeCliQuestion(question, {
+    worktreeRoot: mkdtempSync(join(tmpdir(), 'opencode-q3-linkedin-title-cleanup-')),
+    opencodeTimeoutMs: 300000,
+    evidencePrefetcher: async () => ({
+      leads: [
+        {
+          title: 'Claudia Iraheta - Director, Digital Marketing at Major ...',
+          url: 'https://www.linkedin.com/in/ciraheta',
+          snippet: 'Claudia Iraheta - Director, Digital Marketing at Major League Soccer.',
+          excerpt: '',
+          source_type: 'linkedin_person_profile',
+          acceptance_reason: 'buyer_role_candidate',
+          query_used: question.query,
+          retrieved_at: '2026-05-05T08:00:00.000Z',
+        },
+      ],
+      checked_sources: [{
+        url: 'https://www.linkedin.com/in/ciraheta',
+        accepted: true,
+        source_type: 'linkedin_person_profile',
+      }],
+      retrieval_summary: 'Accepted one LinkedIn leadership lead.',
+      diagnostics: {
+        accepted_source_count: 1,
+        source_types: ['linkedin_person_profile'],
+        query_variants_used: [question.query],
+      },
+    }),
+    spawnRunner: async () => ({
+      code: 0,
+      stdout: '{}\n',
+      stderr: '',
+    }),
+  });
+
+  assert.equal(result.structuredOutput.validation_state, 'provisional');
+  assert.equal(result.structuredOutput.primary_owner.name, 'Claudia Iraheta');
+  assert.equal(result.structuredOutput.primary_owner.title, 'Director, Digital Marketing');
 });
 
 test('runOpenCodeCliQuestion short-circuits q10 when retrieval has no leads', async () => {
@@ -853,11 +1629,17 @@ test('buildOpenCodeRunArgs selects the build agent so BrightData tools are enabl
   const args = buildOpenCodeRunArgs({ question_id: 'q6_launch_signal' }, prompt);
 
   assert.deepEqual(args.slice(0, 4), ['run', '--format', 'json', '--model']);
-  assert.equal(args[4], 'zai-coding-plan/glm-5.1');
+  assert.equal(args[4], 'zai-coding-plan/glm-4.7-flash');
   assert.equal(args.includes('--agent'), true);
   assert.equal(args[args.indexOf('--agent') + 1], 'build');
   assert.equal(args.includes('--model'), true);
   assert.equal(args.at(-1), prompt);
+});
+
+test('buildOpenCodeRunArgs routes synthesis questions to GLM-4.5-Air', () => {
+  const args = buildOpenCodeRunArgs({ question_id: 'q14_yp_fit' }, 'Return JSON');
+
+  assert.equal(args[args.indexOf('--model') + 1], 'zai-coding-plan/glm-4.5-air');
 });
 
 test('buildOpenCodeRunArgs enables printed INFO logs for standalone harness runs', () => {
@@ -1164,6 +1946,126 @@ test('runOpenCodeQuestionSourceBatch rejects object-valued q3 answers without so
   assert.equal(artifact.merge_patch.question_first.answers[0].structured_signal.status, 'provider_no_answer');
 });
 
+test('runOpenCodeQuestionSourceBatch rejects q3 generic foundation facts as leadership answers', async () => {
+  const outputDir = mkdtempSync(join(tmpdir(), 'opencode-q3-foundation-fact-'));
+  const sourcePath = join(outputDir, 'source.json');
+
+  writeFileSync(
+    sourcePath,
+    JSON.stringify(
+      {
+        entity_id: 'baseball-australia',
+        entity_name: 'Baseball Australia',
+        entity_type: 'FEDERATION',
+        questions: [
+          {
+            question_id: 'q3_leadership',
+            question_type: 'leadership',
+            question_text: 'Which named people currently hold leadership or commercial roles?',
+            query: '"Baseball Australia" leadership commercial director',
+            hop_budget: 1,
+            source_priority: ['official_site', 'linkedin_people_search', 'wikipedia'],
+          },
+        ],
+      },
+      null,
+      2,
+    ),
+  );
+
+  const result = await runOpenCodeQuestionSourceBatch({
+    questionSourcePath: sourcePath,
+    outputDir,
+    questionRunner: async () => ({
+      structuredOutput: {
+        answer: '2005',
+        context: 'Recovered founded year 2005 from scraped canonical sources after the OpenCode run failed to finalize structured JSON.',
+        sources: ['https://en.wikipedia.org/wiki/Baseball_Australia'],
+        confidence: 0.85,
+      },
+      promptTrace: { exit_code: 0, has_structured_output: true },
+      messageTrace: [],
+      cliResult: { code: 0, stdout: '{"answer":"2005"}', stderr: '' },
+    }),
+  });
+
+  const artifact = JSON.parse(readFileSync(result.question_first_run_path, 'utf8'));
+  const answer = artifact.answer_records[0];
+
+  assert.equal(answer.validation_state, 'failed');
+  assert.equal(answer.status, 'failed');
+  assert.equal(answer.confidence, 0);
+  assert.equal(answer.structured_signal.status, 'provider_no_answer');
+  assert.equal(answer.structured_signal.provider_no_answer_reason, 'generic_fact_without_leadership_candidate');
+  assert.doesNotMatch(JSON.stringify(answer), /Recovered founded year/i);
+});
+
+test('runOpenCodeQuestionSourceBatch promotes q3 nested people into leadership candidates', async () => {
+  const outputDir = mkdtempSync(join(tmpdir(), 'opencode-q3-nested-people-'));
+  const sourcePath = join(outputDir, 'source.json');
+
+  writeFileSync(
+    sourcePath,
+    JSON.stringify(
+      {
+        entity_id: 'exeter-city',
+        entity_name: 'Exeter City',
+        entity_type: 'CLUB',
+        questions: [
+          {
+            question_id: 'q3_leadership',
+            question_type: 'leadership',
+            question_text: 'Which named people currently hold leadership or commercial roles?',
+            query: '"Exeter City" Head of Commercial',
+            hop_budget: 1,
+            source_priority: ['official_site', 'linkedin_people_search'],
+          },
+        ],
+      },
+      null,
+      2,
+    ),
+  );
+
+  const result = await runOpenCodeQuestionSourceBatch({
+    questionSourcePath: sourcePath,
+    outputDir,
+    questionRunner: async () => ({
+      structuredOutput: {
+        answer: {
+          people: [
+            {
+              name: 'Matt Kimberley',
+              title: 'Head of Commercial',
+              function: 'commercial',
+              buyer_relevance: 'high',
+              evidence_url: 'https://www.exetercityfc.co.uk/primary/club/whos-who-exeter-city',
+              evidence_basis: "Official Exeter City FC Who's Who page",
+              confidence: 0.95,
+            },
+          ],
+        },
+        context: 'Exeter City official staff page names Matt Kimberley as Head of Commercial.',
+        sources: [{ url: 'https://www.exetercityfc.co.uk/primary/club/whos-who-exeter-city' }],
+        confidence: 0.9,
+      },
+      promptTrace: { exit_code: 0, has_structured_output: true },
+      messageTrace: [],
+      cliResult: { code: 0, stdout: '{"answer":{"people":[{"name":"Matt Kimberley"}]}}', stderr: '' },
+    }),
+  });
+
+  const artifact = JSON.parse(readFileSync(result.question_first_run_path, 'utf8'));
+  const answer = artifact.answer_records[0];
+
+  assert.equal(answer.validation_state, 'validated');
+  assert.equal(answer.primary_owner.name, 'Matt Kimberley');
+  assert.equal(answer.primary_owner.title, 'Head of Commercial');
+  assert.equal(answer.evidence_url, 'https://www.exetercityfc.co.uk/primary/club/whos-who-exeter-city');
+  assert.match(answer.answer.summary, /Matt Kimberley/);
+  assert.doesNotMatch(JSON.stringify(answer), /\\[object Object\\]/);
+});
+
 test('runOpenCodeQuestionSourceBatch does not persist object-valued q11 answers as display text', async () => {
   const outputDir = mkdtempSync(join(tmpdir(), 'opencode-q11-object-answer-'));
   const sourcePath = join(outputDir, 'source.json');
@@ -1214,6 +2116,62 @@ test('runOpenCodeQuestionSourceBatch does not persist object-valued q11 answers 
   assert.notEqual(answer.answer.summary, '[object Object]');
   assert.match(answer.answer.summary, /insufficient_signal|provider returned/i);
   assert.doesNotMatch(JSON.stringify(answer), /\\[object Object\\]/);
+});
+
+test('runOpenCodeQuestionSourceBatch rejects source-less q6 positive claims and adds readable display answer', async () => {
+  const outputDir = mkdtempSync(join(tmpdir(), 'opencode-q6-sourceless-positive-'));
+  const sourcePath = join(outputDir, 'source.json');
+
+  writeFileSync(
+    sourcePath,
+    JSON.stringify(
+      {
+        entity_id: 'arsenal-fc',
+        entity_name: 'Arsenal FC',
+        entity_type: 'CLUB',
+        questions: [
+          {
+            question_id: 'q6_launch_signal',
+            question_type: 'launch_signal',
+            question_text: 'What products, apps, platforms, or fan experiences has Arsenal FC launched?',
+            query: '"Arsenal FC" launch app platform',
+            hop_budget: 1,
+            source_priority: ['official_site', 'press_release'],
+          },
+        ],
+      },
+      null,
+      2,
+    ),
+  );
+
+  const result = await runOpenCodeQuestionSourceBatch({
+    questionSourcePath: sourcePath,
+    outputDir,
+    questionRunner: async () => ({
+      structuredOutput: {
+        answer: 'Arsenal launched a new fan engagement platform.',
+        context: 'Positive launch claim without source evidence.',
+        sources: [],
+        confidence: 0.86,
+      },
+      promptTrace: { exit_code: 0, has_structured_output: true },
+      messageTrace: [],
+      cliResult: { code: 0, stdout: '{"answer":"Arsenal launched a new fan engagement platform."}', stderr: '' },
+    }),
+  });
+
+  const artifact = JSON.parse(readFileSync(result.question_first_run_path, 'utf8'));
+  const answer = artifact.answer_records[0];
+
+  assert.equal(answer.validation_state, 'failed');
+  assert.equal(answer.confidence, 0);
+  assert.equal(answer.structured_signal.status, 'provider_no_answer');
+  assert.equal(answer.structured_signal.provider_no_answer_reason, 'source_less_positive_claim');
+  assert.equal(answer.prompt_trace.provider_no_answer_reason, 'source_less_positive_claim');
+  assert.equal(answer.display_answer.status_label, 'failed');
+  assert.match(answer.display_answer.headline, /could not be converted|without source-backed content/i);
+  assert.doesNotMatch(JSON.stringify(answer.display_answer), /\\[object Object\\]/);
 });
 
 test('runOpenCodeQuestionSourceBatch creates a missing output directory before writing tracker files', async () => {

@@ -81,7 +81,22 @@ const PRIORITY_RERUN_QUESTION_IDS = [
   'q9_news_signal',
 ]
 
-const NON_SPORT_ENTITY_TYPES = new Set(['person', 'rfp', 'non_current_entity', 'non-current entity'])
+const NON_SPORT_ENTITY_TYPES = new Set([
+  'person',
+  'event',
+  'rfp',
+  'tender',
+  'ambiguous',
+  'defunct',
+  'non_current',
+  'non_current_entity',
+  'non-current entity',
+])
+const SOURCE_BACKED_POSITIVE_QUESTION_IDS = new Set([
+  'q7_procurement_signal',
+  'q8_explicit_rfp',
+  'q10_hiring_signal',
+])
 
 function stableJson(value) {
   if (Array.isArray(value)) return `[${value.map(stableJson).join(',')}]`
@@ -181,6 +196,7 @@ function providerNoAnswerReason(record) {
   const text = toText([
     record.answer,
     record.summary,
+    record.notes,
     record.commercial_implication,
     raw.answer,
     raw.summary,
@@ -191,6 +207,53 @@ function providerNoAnswerReason(record) {
   if (/no deterministic answer was produced|question execution failed before a safe answer/i.test(text)) return 'provider_no_answer'
   if (isEmptyTypedAnswerShell(record.answer) || isEmptyTypedAnswerShell(raw)) return 'empty_typed_answer'
   return ''
+}
+
+function q3GenericFactWithoutLeadershipReason(record) {
+  const questionId = String(record?.question_id || record?.id || '').trim()
+  if (questionId !== 'q3_leadership') return ''
+  const raw = answerRaw(record)
+  const text = toText([
+    record.answer,
+    record.summary,
+    record.commercial_implication,
+    raw.answer,
+    raw.summary,
+    raw.context,
+    raw.notes,
+  ])
+  if (!text) return ''
+  const hasPersonRoleEvidence = /\b(chief commercial officer|commercial director|head of commercial|head of partnerships|partnerships director|sponsorship director|business development|marketing director|chief marketing officer|digital director|chief digital officer|technology director|chief technology officer|product director|strategy director|chief executive|ceo|coo|managing director|general manager|secretary general|chair(?:man|woman|person)?|president|director)\b/i.test(text)
+    && /\b[A-Z][a-z]+(?:[-' ][A-Z][a-z]+){1,3}\b/.test(text)
+  if (hasPersonRoleEvidence) return ''
+  if ([raw.answer, record.answer, raw.summary, record.summary, record.notes].some((value) => /^\s*\d{4}\s*$/.test(toText(value)))) {
+    return 'generic_fact_without_leadership_candidate'
+  }
+  if (/\b(recovered founded year|founded|formed|established|venue|stadium|trophy|championship|season|history|wikipedia)\b/i.test(text)) {
+    return 'generic_fact_without_leadership_candidate'
+  }
+  return ''
+}
+
+function sourceLessPositiveClaimReason(record) {
+  const questionId = String(record?.question_id || record?.id || '').trim()
+  if (!SOURCE_BACKED_POSITIVE_QUESTION_IDS.has(questionId)) return ''
+  const state = String(record?.validation_state || '').trim().toLowerCase()
+  if (!['validated', 'confirmed', 'provisional'].includes(state)) return ''
+  if (hasSourceUrl(record) || asArray(record?.checked_sources).length > 0) return ''
+  const raw = answerRaw(record)
+  const text = toText([
+    record.answer,
+    record.summary,
+    record.commercial_implication,
+    raw.answer,
+    raw.summary,
+    raw.context,
+    raw.commercial_implication,
+  ])
+  if (!hasMeaningfulCommercialText(text)) return ''
+  if (/no .*evidence|no signal|not found|unavailable|returned no|checked absence|checked .* no/i.test(text)) return ''
+  return 'source_less_positive_claim'
 }
 
 function malformedUpstreamAnswerReason(record) {
@@ -292,6 +355,7 @@ function malformedUpstreamPatch(record, normalized, currentStructuredSignal, rea
     reasoning: sanitizeObjectStringDeep(normalized.reasoning),
     validation_state: 'failed',
     confidence: 0,
+    notes: '',
     checked_sources: [checkedSource(record, reason)],
     commercial_implication: 'No commercial implication available because the provider returned a malformed answer.',
     structured_signal: {
@@ -325,6 +389,31 @@ function providerNoAnswerPatch(record, normalized, currentStructuredSignal, reas
   }
 }
 
+function q3GenericFactPatch(record, normalized, currentStructuredSignal, reasonCode) {
+  const reason = 'Provider returned a generic entity fact instead of a named current leadership or buyer-role candidate.'
+  return {
+    ...normalized,
+    answer: {
+      kind: 'list',
+      value: null,
+      summary: reason,
+      raw_structured_output: null,
+    },
+    reasoning: undefined,
+    validation_state: 'failed',
+    confidence: 0,
+    notes: '',
+    checked_sources: [checkedSource(record, reason)],
+    commercial_implication: 'No commercial implication available because q3 did not produce a named leadership or buyer-role candidate.',
+    structured_signal: {
+      ...currentStructuredSignal,
+      status: 'provider_no_answer',
+      provider_no_answer_reason: reasonCode,
+    },
+    force: true,
+  }
+}
+
 export function normalizeUpstreamAnswer(record, adjacentAnswers = {}, entityInfo = {}) {
   if (!record || typeof record !== 'object') return null
   const questionId = String(record.question_id || record.id || '').trim()
@@ -342,6 +431,16 @@ export function normalizeUpstreamAnswer(record, adjacentAnswers = {}, entityInfo
   const malformedReason = malformedUpstreamAnswerReason(record)
   if (malformedReason) {
     return malformedUpstreamPatch(record, normalized, currentStructuredSignal, malformedReason)
+  }
+
+  const q3GenericReason = q3GenericFactWithoutLeadershipReason(record)
+  if (q3GenericReason) {
+    return q3GenericFactPatch(record, normalized, currentStructuredSignal, q3GenericReason)
+  }
+
+  const sourceLessPositiveReason = sourceLessPositiveClaimReason(record)
+  if (sourceLessPositiveReason) {
+    return providerNoAnswerPatch(record, normalized, currentStructuredSignal, sourceLessPositiveReason)
   }
 
   const noAnswerReason = providerNoAnswerReason(record)
@@ -639,6 +738,7 @@ function patchAnswerArray(records, patchByQuestionId) {
       applicability: patch.applicability || record.applicability,
       structured_signal: patch.structured_signal || asRecord(patch.answer).raw_structured_output || record.structured_signal,
       commercial_implication: patch.commercial_implication || record.commercial_implication,
+      notes: Object.prototype.hasOwnProperty.call(patch, 'notes') ? patch.notes : record.notes,
       evidence_url: patch.evidence_url || record.evidence_url || '',
       primary_owner: Object.prototype.hasOwnProperty.call(patch, 'primary_owner') ? patch.primary_owner : record.primary_owner,
       reasoning: {
@@ -1061,7 +1161,9 @@ export function shouldRepairDossier(dossierData) {
   const yellowPantherFit = asRecord(discoverySummary.yellow_panther_fit || discoverySummary.yellow_panther_opportunity || dossier.yellow_panther_fit)
   const publishStatus = String(dossier.publish_status || dossier.publication_status || '').toLowerCase()
   const answers = answerRecords(dossier)
-  return answers.length >= 15
+  const hasMalformedUpstreamAnswer = answers.some((record) => normalizeUpstreamAnswer(record))
+  return hasMalformedUpstreamAnswer
+    || answers.length >= 15
     && (
       publishStatus.startsWith('published')
       || String(graphitiSalesBrief.status || '').toLowerCase() !== 'available'

@@ -9,8 +9,10 @@ const {
   hasCommercialSynthesisEligibility,
   hasQ14CommercialFitEligibility,
   perQuestionQuality,
+  questionMaturityQuality,
   qualityState,
   targetedRerunBacklog,
+  upstreamRetrievalQuality,
 } = require('./report-dossier-quality.cjs')
 
 test('qualityState demotes published dossier with missing commercial artifacts', () => {
@@ -431,4 +433,88 @@ test('targetedRerunBacklog reports upstream rerun candidates with reason codes',
   })
   assert.equal(backlog.recommendations[0].canonical_entity_id, 'major-league-cricket')
   assert.equal(backlog.recommendations[0].reason, 'upstream_failed_blocks_commercial_synthesis')
+})
+
+test('upstreamRetrievalQuality splits checked no-signal, provider no-answer, empty prefetch, and prefetch-provider failures', () => {
+  const rows = [
+    {
+      dossier_data: {
+        answers: [
+          {
+            question_id: 'q2_digital_stack',
+            validation_state: 'no_signal',
+            confidence: 0,
+            structured_signal: { status: 'source_prefetch_empty' },
+          },
+          {
+            question_id: 'q3_leadership',
+            validation_state: 'failed',
+            confidence: 0,
+            structured_signal: { status: 'provider_no_answer' },
+          },
+          {
+            question_id: 'q6_launch_signal',
+            validation_state: 'failed',
+            confidence: 0,
+            structured_signal: { status: 'source_prefetch_found_provider_failed' },
+          },
+          {
+            question_id: 'q9_news_signal',
+            validation_state: 'validated',
+            confidence: 0.74,
+            answer: 'The club announced a commercial partnership.',
+          },
+        ],
+      },
+    },
+  ]
+
+  const stats = upstreamRetrievalQuality(rows)
+
+  assert.equal(stats.q2_digital_stack.source_prefetch_empty, 1)
+  assert.equal(stats.q2_digital_stack.checked_no_signal, 1)
+  assert.equal(stats.q3_leadership.provider_no_answer, 1)
+  assert.equal(stats.q6_launch_signal.source_prefetch_found_provider_failed, 1)
+  assert.equal(stats.q9_news_signal.validated, 1)
+})
+
+test('questionMaturityQuality reports maturity groups and source-less positives', () => {
+  const rows = [
+    {
+      dossier_data: {
+        answers: [
+          { question_id: 'q2_digital_stack', validation_state: 'validated', confidence: 0.8, evidence_url: 'https://example.com/app' },
+          { question_id: 'q3_leadership', validation_state: 'provisional', confidence: 0.62, evidence_url: 'https://example.com/people' },
+          { question_id: 'q1_foundation', validation_state: 'not_applicable', confidence: 0, applicability: { status: 'not_applicable' } },
+          { question_id: 'q4_performance', validation_state: 'not_applicable', confidence: 0, applicability: { status: 'not_applicable' } },
+          {
+            question_id: 'q7_procurement_signal',
+            validation_state: 'validated',
+            confidence: 0.7,
+            answer: 'The club is buying a new ticketing platform.',
+          },
+          {
+            question_id: 'q8_explicit_rfp',
+            validation_state: 'no_signal',
+            confidence: 0,
+            checked_sources: [{ source: 'bounded_question_retrieval', rationale: 'No RFP found.' }],
+          },
+          { question_id: 'q11_decision_owner', validation_state: 'failed', confidence: 0, structured_signal: { status: 'provider_no_answer' } },
+        ],
+      },
+    },
+  ]
+
+  const stats = questionMaturityQuality(rows)
+
+  assert.equal(stats.evidence_first.total, 2)
+  assert.equal(stats.evidence_first.validated, 1)
+  assert.equal(stats.evidence_first.provisional, 1)
+  assert.equal(stats.applicability.total, 2)
+  assert.equal(stats.applicability.not_applicable, 2)
+  assert.equal(stats.checked_absence.total, 2)
+  assert.equal(stats.checked_absence.checked_no_signal, 1)
+  assert.equal(stats.checked_absence.source_less_positive, 1)
+  assert.equal(stats.deterministic_synthesis.total, 1)
+  assert.equal(stats.deterministic_synthesis.provider_no_answer, 1)
 })

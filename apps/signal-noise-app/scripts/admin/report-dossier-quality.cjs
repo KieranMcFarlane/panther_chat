@@ -148,6 +148,34 @@ const PRIORITY_RERUN_QUESTION_IDS = [
   'q6_launch_signal',
   'q9_news_signal',
 ]
+const UPSTREAM_RETRIEVAL_QUESTION_IDS = new Set([
+  'q2_digital_stack',
+  'q3_leadership',
+  'q6_launch_signal',
+  'q9_news_signal',
+])
+const QUESTION_MATURITY_GROUPS = {
+  evidence_first: new Set(['q2_digital_stack', 'q3_leadership', 'q6_launch_signal', 'q9_news_signal']),
+  applicability: new Set(['q1_foundation', 'q4_performance', 'q5_league_context']),
+  checked_absence: new Set(['q7_procurement_signal', 'q8_explicit_rfp', 'q10_hiring_signal']),
+  deterministic_synthesis: new Set([
+    'q11_decision_owner',
+    'q12_connections',
+    'q13_capability_gap',
+    'q14_yp_fit',
+    'q15_outreach_strategy',
+  ]),
+}
+const SOURCE_BACKED_POSITIVE_QUESTION_IDS = new Set([
+  'q1_foundation',
+  'q2_digital_stack',
+  'q3_leadership',
+  'q6_launch_signal',
+  'q7_procurement_signal',
+  'q8_explicit_rfp',
+  'q9_news_signal',
+  'q10_hiring_signal',
+])
 
 function isFailedUpstreamRecord(record) {
   if (!record) return false
@@ -182,6 +210,109 @@ function targetedRerunBacklog(rows) {
     by_question: countBy(recommendations, (item) => item.question_id),
     recommendations: recommendations.slice(0, 50),
   }
+}
+
+function upstreamRetrievalQuality(rows) {
+  const initialBucket = () => ({
+    total: 0,
+    validated: 0,
+    provisional: 0,
+    checked_no_signal: 0,
+    failed: 0,
+    provider_no_answer: 0,
+    source_prefetch_empty: 0,
+    source_prefetch_found_provider_failed: 0,
+  })
+  const stats = {}
+  rows.forEach((row) => {
+    answerRecords(row.dossier_data).forEach((answer) => {
+      const questionId = String(answer.question_id || answer.id || '').trim()
+      if (!UPSTREAM_RETRIEVAL_QUESTION_IDS.has(questionId)) return
+      const bucket = stats[questionId] || initialBucket()
+      const state = answerValidationState(answer)
+      const structuredSignal = asRecord(answer.structured_signal || asRecord(answer.answer).structured_signal)
+      const status = String(structuredSignal.status || '').trim().toLowerCase()
+      bucket.total += 1
+      if (['validated', 'confirmed'].includes(state)) {
+        bucket.validated += 1
+      } else if (state === 'provisional') {
+        bucket.provisional += 1
+      } else if (['no_signal', 'no signal', 'insufficient_signal', 'insufficient signal'].includes(state)) {
+        bucket.checked_no_signal += 1
+      } else if (['failed', 'blocked', 'tool_call_missing', 'unknown'].includes(state)) {
+        bucket.failed += 1
+      }
+      if (status === 'provider_no_answer') bucket.provider_no_answer += 1
+      if (status === 'source_prefetch_empty') bucket.source_prefetch_empty += 1
+      if (status === 'source_prefetch_found_provider_failed') bucket.source_prefetch_found_provider_failed += 1
+      stats[questionId] = bucket
+    })
+  })
+  return stats
+}
+
+function maturityGroupForQuestion(questionId) {
+  return Object.entries(QUESTION_MATURITY_GROUPS)
+    .find(([, questions]) => questions.has(questionId))?.[0] || ''
+}
+
+function hasAnySourceEvidence(answer) {
+  return evidenceCount([
+    answer?.evidence_url,
+    answer?.source_url,
+    answer?.sources,
+    answer?.checked_sources,
+    asRecord(answer?.answer).raw_structured_output,
+    answer?.structured_signal,
+  ]) > 0
+}
+
+function isSourceLessPositiveAnswer(answer) {
+  const questionId = String(answer?.question_id || answer?.id || '').trim()
+  if (!SOURCE_BACKED_POSITIVE_QUESTION_IDS.has(questionId)) return false
+  const state = answerValidationState(answer)
+  if (!['validated', 'confirmed', 'provisional'].includes(state)) return false
+  if (hasAnySourceEvidence(answer)) return false
+  const text = answerText(answer)
+  if (!hasMeaningfulText(text)) return false
+  return !/no .*evidence|no signal|not found|unavailable|returned no|checked absence|checked .* no/i.test(text)
+}
+
+function questionMaturityQuality(rows) {
+  const initialBucket = () => ({
+    total: 0,
+    validated: 0,
+    provisional: 0,
+    checked_no_signal: 0,
+    not_applicable: 0,
+    failed: 0,
+    malformed: 0,
+    source_less_positive: 0,
+    provider_no_answer: 0,
+  })
+  const stats = Object.fromEntries(Object.keys(QUESTION_MATURITY_GROUPS).map((group) => [group, initialBucket()]))
+  rows.forEach((row) => {
+    answerRecords(row.dossier_data).forEach((answer) => {
+      const questionId = String(answer.question_id || answer.id || '').trim()
+      const group = maturityGroupForQuestion(questionId)
+      if (!group) return
+      const bucket = stats[group]
+      const state = answerValidationState(answer)
+      const text = answerText(answer)
+      const structuredSignal = asRecord(answer.structured_signal || asRecord(answer.answer).structured_signal)
+      const status = String(structuredSignal.status || '').trim().toLowerCase()
+      bucket.total += 1
+      if (['validated', 'confirmed'].includes(state)) bucket.validated += 1
+      if (state === 'provisional') bucket.provisional += 1
+      if (['no_signal', 'no signal', 'insufficient_signal', 'insufficient signal'].includes(state)) bucket.checked_no_signal += 1
+      if (state === 'not_applicable' || String(asRecord(answer.applicability).status || '').trim().toLowerCase() === 'not_applicable') bucket.not_applicable += 1
+      if (['failed', 'blocked', 'tool_call_missing', 'unknown'].includes(state)) bucket.failed += 1
+      if (/\[object object\]|empty_provider_object|object_string|object_answer_without_sources/i.test(text)) bucket.malformed += 1
+      if (isSourceLessPositiveAnswer(answer)) bucket.source_less_positive += 1
+      if (status === 'provider_no_answer') bucket.provider_no_answer += 1
+    })
+  })
+  return stats
 }
 
 function answerRecords(dossierData) {
@@ -482,6 +613,8 @@ function summarizeDossiers(dossiers) {
     answer_coverage_buckets: countBy(enriched, (row) => bucketForAnswerCount(row.answer_count)),
     artifact_coverage: artifactCoverage(dossiers),
     per_question_quality: perQuestionQuality(dossiers),
+    question_maturity_quality: questionMaturityQuality(dossiers),
+    upstream_retrieval_quality: upstreamRetrievalQuality(dossiers),
     targeted_rerun_backlog: targetedRerunBacklog(dossiers),
     failed_provider_failures: providerFailureCount(dossiers),
     top_recent_dossiers: enriched.slice(0, 15),
@@ -516,6 +649,8 @@ async function buildReport(pool) {
     answer_coverage_buckets: dossierSummary.answer_coverage_buckets,
     artifact_coverage: dossierSummary.artifact_coverage,
     per_question_quality: dossierSummary.per_question_quality,
+    question_maturity_quality: dossierSummary.question_maturity_quality,
+    upstream_retrieval_quality: dossierSummary.upstream_retrieval_quality,
     targeted_rerun_backlog: dossierSummary.targeted_rerun_backlog,
     failed_provider_failures: dossierSummary.failed_provider_failures,
     top_recent_dossiers: dossierSummary.top_recent_dossiers,
@@ -548,9 +683,11 @@ module.exports = {
   createPgPool,
   hasMeaningfulPublicationArtifacts,
   perQuestionQuality,
+  questionMaturityQuality,
   qualityState,
   hasBuyerRouteEligibility,
   hasCommercialSynthesisEligibility,
   hasQ14CommercialFitEligibility,
   targetedRerunBacklog,
+  upstreamRetrievalQuality,
 }

@@ -17,8 +17,25 @@ const WORKTREE_ROOT = path.resolve(APP_ROOT, '..', '..');
 const QUESTION_PROGRESS_FRAMEWORK_PATH = path.join(APP_ROOT, 'backend', 'question_progress_framework.json');
 const STANDALONE_BRIGHTDATA_FALLBACK_SCRIPT = path.join(APP_ROOT, 'scripts', 'standalone_brightdata_fallback.py');
 const DEFAULT_PROVIDER_ID = 'zai-coding-plan';
-const DEFAULT_MODEL_ID = 'glm-5.1';
-const DEFAULT_MODEL = `${DEFAULT_PROVIDER_ID}/${DEFAULT_MODEL_ID}`;
+const TEMPORARY_QUOTA_POLICY = 'temporary_3_day_conserve';
+const FALLBACK_PREFETCH_MODEL_ID = 'glm-4.7-flash';
+const FALLBACK_SYNTHESIS_MODEL_ID = 'glm-4.5-air';
+const FALLBACK_ESCALATION_MODEL_ID = 'glm-5.1';
+const ZAI_MODEL_CATALOG = {
+  'glm-5.1': { id: 'GLM-5.1', name: 'GLM-5.1', context: 128000, output: 16384 },
+  'glm-5': { id: 'GLM-5', name: 'GLM-5', context: 128000, output: 16384 },
+  'glm-5-turbo': { id: 'GLM-5-Turbo', name: 'GLM-5-Turbo', context: 128000, output: 16384 },
+  'glm-4.7': { id: 'GLM-4.7', name: 'GLM-4.7', context: 128000, output: 8192 },
+  'glm-4.7-flashx': { id: 'GLM-4.7-FlashX', name: 'GLM-4.7-FlashX', context: 128000, output: 8192 },
+  'glm-4.7-flash': { id: 'GLM-4.7-Flash', name: 'GLM-4.7-Flash', context: 128000, output: 8192 },
+  'glm-4.6': { id: 'GLM-4.6', name: 'GLM-4.6', context: 128000, output: 8192 },
+  'glm-4.5': { id: 'GLM-4.5', name: 'GLM-4.5', context: 128000, output: 8192 },
+  'glm-4.5-x': { id: 'GLM-4.5-X', name: 'GLM-4.5-X', context: 128000, output: 8192 },
+  'glm-4.5-air': { id: 'GLM-4.5-Air', name: 'GLM-4.5-Air', context: 128000, output: 8192 },
+  'glm-4.5-airx': { id: 'GLM-4.5-AirX', name: 'GLM-4.5-AirX', context: 128000, output: 8192 },
+  'glm-4-32b-0414-128k': { id: 'GLM-4-32B-0414-128K', name: 'GLM-4-32B-0414-128K', context: 128000, output: 8192 },
+  'glm-4.5-flash': { id: 'GLM-4.5-Flash', name: 'GLM-4.5-Flash', context: 128000, output: 8192 },
+};
 const COMMERCIAL_SIGNAL_QUESTION_IDS = new Set([
   'q6_launch_signal',
   'q7_procurement_signal',
@@ -26,6 +43,107 @@ const COMMERCIAL_SIGNAL_QUESTION_IDS = new Set([
   'q9_news_signal',
   'q10_hiring_signal',
   'q11_decision_owner',
+]);
+const SOURCE_REQUIRED_QUESTION_IDS = new Set([
+  'q1_foundation',
+  'q2_digital_stack',
+  'q3_leadership',
+  'q6_launch_signal',
+  'q7_procurement_signal',
+  'q8_explicit_rfp',
+  'q9_news_signal',
+  'q10_hiring_signal',
+  'q11_decision_owner',
+]);
+const QUESTION_OUTPUT_CONTRACTS = {
+  q1_foundation: {
+    fields: ['entity_classification', 'canonical_name', 'entity_type', 'geography', 'official_site', 'ambiguity_notes'],
+    noSignal: 'If identity is ambiguous, classify it explicitly and include checked_sources rather than returning a generic failure.',
+    reject: 'Reject bare founded years unless canonical identity and source context are also returned.',
+  },
+  q2_digital_stack: {
+    fields: ['official_site', 'platform_hints', 'vendor_hints', 'app_hints', 'ticketing_hints', 'video_hints', 'social_hints', 'ecommerce_hints', 'digital_footprint_unknown'],
+    noSignal: 'If visible technology evidence is weak, return digital_footprint_unknown with checked_sources and rationale.',
+    reject: 'Reject generic website descriptions without platform, vendor, app, or checked-absence detail.',
+  },
+  q3_leadership: {
+    fields: ['people', 'ranked_people', 'buyer_relevant_roles', 'checked_sources'],
+    noSignal: 'If no named current buyer-role candidate is found, return validation_state no_signal with checked_sources explaining what was searched.',
+    reject: 'Reject founded years, venues, trophies, event dates, and generic history as answers.',
+  },
+  q4_performance: {
+    fields: ['performance_context', 'applicability', 'not_applicable_reason'],
+    noSignal: 'For non-sport, person, RFP, or non-current entities, return not_applicable with rationale.',
+    reject: 'Reject unsupported standings or performance claims without source context.',
+  },
+  q5_league_context: {
+    fields: ['league_context', 'peer_set', 'commercial_context', 'applicability', 'not_applicable_reason'],
+    noSignal: 'For non-sport, person, RFP, or non-current entities, return not_applicable with rationale.',
+    reject: 'Reject generic peer context without explaining why it matters commercially.',
+  },
+  q6_launch_signal: {
+    fields: ['trigger_date', 'trigger_type', 'source', 'recency', 'commercial_implication', 'checked_sources'],
+    noSignal: 'If no launch or product trigger is visible, return no_signal with checked_sources and searched-source rationale.',
+    reject: 'Reject positive launch claims without dated source evidence.',
+  },
+  q7_procurement_signal: {
+    fields: ['vendor_changes', 'platform_migrations', 'partnerships', 'org_changes', 'commercial_implication', 'checked_sources'],
+    noSignal: 'No-signal is acceptable only after checked_sources explain what was searched.',
+    reject: 'Reject positive buying or vendor-change claims without named evidence.',
+  },
+  q8_explicit_rfp: {
+    fields: ['rfp_documents', 'tender_dates', 'buyer_context', 'procurement_model', 'checked_sources'],
+    noSignal: 'If no public tender exists, return no_signal with checked_sources and procurement_model if inferable.',
+    reject: 'Reject informal partnership news as explicit RFP evidence.',
+  },
+  q9_news_signal: {
+    fields: ['news_date', 'news_type', 'source', 'recency', 'commercial_relevance', 'commercial_implication', 'checked_sources'],
+    noSignal: 'If no recent commercially relevant news is visible, return no_signal with checked_sources.',
+    reject: 'Reject old or non-commercial news unless clearly marked low relevance.',
+  },
+  q10_hiring_signal: {
+    fields: ['role_mix', 'investment_priority', 'commercial_implication', 'checked_sources'],
+    noSignal: 'If no relevant hiring is visible, return no_signal with checked_sources.',
+    reject: 'Reject generic careers pages without role evidence or checked-absence rationale.',
+  },
+  q11_decision_owner: {
+    fields: ['primary_owner', 'supporting_candidates', 'buyer_function', 'verification_needed', 'checked_sources'],
+    noSignal: 'Return insufficient_signal when evidence lacks a current named person or explicit role-owner.',
+    reject: 'Reject event-history, venue, medal table, founding date, squad/performance facts, and generic history.',
+  },
+  q12_connections: {
+    fields: ['recommended_route', 'candidate_paths', 'target_person', 'buyer_relevance', 'route_confidence', 'verification_needed'],
+    noSignal: 'If no warm path is confirmed, return cold_verification with explicit verification_needed.',
+    reject: 'Reject generic direct outreach copy when deterministic route fields are available.',
+  },
+  q13_capability_gap: {
+    fields: ['top_gap', 'gap_label', 'evidence_basis', 'commercial_relevance', 'confidence_caveat'],
+    noSignal: 'Return insufficient_signal unless normalized upstream commercial evidence supports the gap.',
+    reject: 'Reject performance-only gaps as Yellow Panther commercial gaps unless tied to digital, procurement, platform, partnership, or stakeholder evidence.',
+  },
+  q14_yp_fit: {
+    fields: ['best_service', 'service_fit', 'fit_rationale', 'buyer_context', 'evidence_basis', 'confidence_caveat'],
+    noSignal: 'Return insufficient_signal unless normalized upstream evidence supports a Yellow Panther capability recommendation.',
+    reject: 'Never require the target to mention Yellow Panther by name; reason from dossier evidence into capability fit.',
+  },
+  q15_outreach_strategy: {
+    fields: ['recommended_target', 'recommended_route', 'recommended_angle', 'first_message_strategy', 'verification_needed', 'why_now'],
+    noSignal: 'If buyer or fit is weak, produce a verification-first next step rather than empty outreach.',
+    reject: 'Reject generic direct outreach copy when q11/q12/q14 provide route or verification context.',
+  },
+};
+const EVIDENCE_PREFETCH_QUESTION_IDS = new Set([
+  'q2_digital_stack',
+  'q3_leadership',
+  'q6_launch_signal',
+  'q9_news_signal',
+]);
+const SYNTHESIS_QUESTION_IDS = new Set([
+  'q11_decision_owner',
+  'q12_connections',
+  'q13_capability_gap',
+  'q14_yp_fit',
+  'q15_outreach_strategy',
 ]);
 const VALID_EVIDENCE_GRADES = new Set(['weak', 'moderate', 'strong']);
 const VALID_PROCUREMENT_MODELS = new Set(['private_direct', 'partner_led', 'agency_led', 'unknown']);
@@ -49,6 +167,69 @@ function _captureOpenCodeExplicitEnv() {
     brightdataApiToken: process.env.BRIGHTDATA_API_TOKEN,
     brightdataToken: process.env.BRIGHTDATA_TOKEN,
     brightdataZone: process.env.BRIGHTDATA_ZONE,
+  };
+}
+
+function _normalizeZaiModelId(value, fallback = FALLBACK_PREFETCH_MODEL_ID) {
+  const raw = String(value || '').trim();
+  if (!raw) return fallback;
+  const withoutProvider = raw.includes('/') ? raw.split('/').pop() : raw;
+  const normalized = withoutProvider.toLowerCase();
+  return ZAI_MODEL_CATALOG[normalized] ? normalized : fallback;
+}
+
+function _modelRef(modelId) {
+  return `${DEFAULT_PROVIDER_ID}/${_normalizeZaiModelId(modelId)}`;
+}
+
+export function resolveQuestionModelRouting(question = {}, env = process.env) {
+  const forcedModel = String(env.QF_FORCE_MODEL || '').trim();
+  if (forcedModel) {
+    const modelId = _normalizeZaiModelId(forcedModel, FALLBACK_PREFETCH_MODEL_ID);
+    return {
+      model_id: modelId,
+      model: _modelRef(modelId),
+      model_tier: 'forced',
+      quota_policy: TEMPORARY_QUOTA_POLICY,
+      escalation_allowed: false,
+      escalation_reason: '',
+    };
+  }
+
+  const questionId = String(question?.question_id || '').trim();
+  const escalationEnabled = /^(1|true|yes)$/i.test(String(env.QF_MODEL_ESCALATION_ENABLED || 'false').trim());
+  let modelTier = 'default';
+  let modelId = _normalizeZaiModelId(env.QF_MODEL_DEFAULT, FALLBACK_PREFETCH_MODEL_ID);
+
+  if (EVIDENCE_PREFETCH_QUESTION_IDS.has(questionId)) {
+    modelTier = 'prefetch';
+    modelId = _normalizeZaiModelId(env.QF_MODEL_PREFETCH, FALLBACK_PREFETCH_MODEL_ID);
+  } else if (SYNTHESIS_QUESTION_IDS.has(questionId)) {
+    modelTier = 'synthesis';
+    modelId = _normalizeZaiModelId(env.QF_MODEL_SYNTHESIS || env.QF_MODEL_REASONING, FALLBACK_SYNTHESIS_MODEL_ID);
+  }
+
+  return {
+    model_id: modelId,
+    model: _modelRef(modelId),
+    model_tier: modelTier,
+    quota_policy: TEMPORARY_QUOTA_POLICY,
+    escalation_allowed: escalationEnabled,
+    escalation_model: _modelRef(_normalizeZaiModelId(env.QF_MODEL_ESCALATION, FALLBACK_ESCALATION_MODEL_ID)),
+    escalation_reason: escalationEnabled ? 'manual_or_future_explicit_escalation_only' : '',
+  };
+}
+
+function _modelPromptTrace(question) {
+  const routing = resolveQuestionModelRouting(question);
+  return {
+    model_requested: routing.model,
+    model_used: routing.model,
+    model_tier: routing.model_tier,
+    quota_policy: routing.quota_policy,
+    escalation_allowed: routing.escalation_allowed,
+    escalation_model: routing.escalation_model,
+    escalation_reason: routing.escalation_reason,
   };
 }
 
@@ -189,6 +370,319 @@ function _isCommercialSignalQuestion(question) {
   return COMMERCIAL_SIGNAL_QUESTION_IDS.has(String(question?.question_id || '').trim());
 }
 
+function _questionOutputContract(question) {
+  return QUESTION_OUTPUT_CONTRACTS[String(question?.question_id || '').trim()] || null;
+}
+
+function _questionOutputContractPromptLines(question) {
+  const contract = _questionOutputContract(question);
+  if (!contract) return [];
+  const fields = Array.isArray(contract.fields) ? contract.fields.filter(Boolean) : [];
+  return [
+    `Return typed fields: validation_state, confidence, checked_sources, structured_signal, display_answer${fields.length ? `, plus ${fields.join(', ')}` : ''}.`,
+    'display_answer must be a compact object: headline, bullets, evidence, commercial_implication, verification_needed, status_label.',
+    contract.noSignal ? `No-signal rule: ${contract.noSignal}` : '',
+    contract.reject ? `Reject rule: ${contract.reject}` : '',
+  ].filter(Boolean);
+}
+
+function _usesEvidenceFirstOpenCodeFlow(question) {
+  return EVIDENCE_PREFETCH_QUESTION_IDS.has(String(question?.question_id || '').trim());
+}
+
+function _normalizeUrlHost(url) {
+  try {
+    return new URL(String(url || '')).hostname.replace(/^www\./, '').toLowerCase();
+  } catch {
+    return '';
+  }
+}
+
+function _sourceTypeForLead(lead) {
+  const url = String(lead?.url || '').toLowerCase();
+  const title = String(lead?.title || '').toLowerCase();
+  const text = _leadText(lead).toLowerCase();
+  const host = _normalizeUrlHost(url);
+  if (/linkedin\.com\/in\//.test(url)) return 'linkedin_person_profile';
+  if (/linkedin\.com\/company\//.test(url)) return 'linkedin_company_profile';
+  if (/apps\.apple\.com|play\.google\.com/.test(url)) return 'app_store';
+  if (/reddit\.com|facebook\.com|instagram\.com|x\.com|twitter\.com|tiktok\.com|youtube\.com|youtu\.be/.test(host)) return 'social';
+  if (/wikipedia\.org|wikidata\.org|britannica\.com|dbpedia\.org|worldcat\.org/.test(host)) return 'generic_reference';
+  if (/\/news|\/press|press-release|media-centre|media-center/.test(url) || /\b(news|press release|announcement)\b/.test(title)) return 'press_release';
+  if (/espn|bbc|skysports|reuters|apnews|sportsbusinessjournal|sportbusiness|forbes|theguardian|cyclingnews/.test(url)) return 'news';
+  if (host && /\bofficial\b/.test(text)) return 'official_site';
+  if (host) return 'web_page';
+  return 'unknown';
+}
+
+function _leadText(lead) {
+  return [lead?.title, lead?.snippet, lead?.excerpt]
+    .map((value) => String(value || '').trim())
+    .filter(Boolean)
+    .join(' ');
+}
+
+function _hasDateHint(text) {
+  return /\b(20[2-9]\d|19[8-9]\d)\b|\b(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:t(?:ember)?)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\b/i.test(String(text || ''));
+}
+
+function _hasRecentDateHint(text, { maxAgeYears = 2 } = {}) {
+  const source = String(text || '');
+  const currentYear = Number.isFinite(new Date().getFullYear()) ? new Date().getFullYear() : 2026;
+  const years = Array.from(source.matchAll(/\b(20[0-9]\d)\b/g)).map((match) => Number(match[1])).filter(Number.isFinite);
+  if (years.length === 0) {
+    return /\b(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:t(?:ember)?)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\b/i.test(source);
+  }
+  return years.some((year) => year >= currentYear - maxAgeYears && year <= currentYear + 1);
+}
+
+function _isGenericSourceLead(lead) {
+  const url = String(lead?.url || '').toLowerCase();
+  const title = String(lead?.title || '').toLowerCase();
+  return /wikipedia\.org|wikidata\.org|britannica\.com|dbpedia\.org|worldcat\.org/.test(url)
+    || /\b(wikipedia|wikidata|encyclopaedia|encyclopedia)\b/.test(title);
+}
+
+function _isGenericHistoryText(text) {
+  return /\b(founded|history|venue|venues|trophy|trophies|medal|medals|standings|fixtures|results|wikipedia)\b/i.test(String(text || ''))
+    && !/\b(chief|ceo|coo|director|head of|manager|commercial|partnership|sponsorship|marketing|digital|technology|strategy|board|chair)\b/i.test(String(text || ''));
+}
+
+function _acceptanceReasonForQuestion(question, lead) {
+  const questionId = String(question?.question_id || '').trim();
+  const text = _leadText(lead);
+  const sourceType = lead?.source_type || _sourceTypeForLead(lead);
+  if (!String(lead?.url || '').trim()) return null;
+  if (_isGenericSourceLead(lead)) return null;
+  if (sourceType === 'social' || sourceType === 'generic_reference') return null;
+  if (questionId === 'q2_digital_stack') {
+    return /\b(app|platform|ticketing|tickets|video|streaming|social|ecommerce|shop|store|vendor|crm|cms|membership|digital)\b/i.test(text)
+      ? 'digital_footprint_hint'
+      : null;
+  }
+  if (questionId === 'q3_leadership') {
+    if (_isGenericHistoryText(text)) return null;
+    return /\b(chief|ceo|coo|director|head of|manager|commercial|partnership|sponsorship|marketing|digital|technology|strategy|board|chair|president|founder)\b/i.test(text)
+      && /[A-Z][a-z]+(?:\s+[A-Z][a-z]+)+/.test(text)
+      ? 'buyer_role_candidate'
+      : null;
+  }
+  if (questionId === 'q6_launch_signal') {
+    return /\b(launch|launched|announce|announced|unveil|unveiled|app|platform|product|fan experience|digital)\b/i.test(text)
+      && _hasDateHint(text)
+      && _hasRecentDateHint(text, { maxAgeYears: 3 })
+      ? 'dated_launch_or_platform_trigger'
+      : null;
+  }
+  if (questionId === 'q9_news_signal') {
+    return /\b(partnership|partner|commercial|strategy|strategic|investment|digital|platform|launch|expansion|announcement|announced|sponsor|sponsorship)\b/i.test(text)
+      && _hasDateHint(text)
+      && _hasRecentDateHint(text, { maxAgeYears: 2 })
+      ? 'dated_commercial_news_trigger'
+      : null;
+  }
+  return null;
+}
+
+function _normalizeSearchResults(searchResult) {
+  if (Array.isArray(searchResult)) return searchResult;
+  if (Array.isArray(searchResult?.results)) return searchResult.results;
+  if (Array.isArray(searchResult?.data)) return searchResult.data;
+  return [];
+}
+
+function _queryVariantsForPrefetch(question, maxQueries) {
+  const variants = [];
+  const add = (value) => {
+    const normalized = String(value || '').trim();
+    if (normalized && !variants.includes(normalized)) variants.push(normalized);
+  };
+  add(question?.query);
+  const strategyQueries = question?.search_strategy?.search_queries;
+  if (Array.isArray(strategyQueries)) {
+    for (const query of strategyQueries) add(query);
+  }
+  const entity = String(question?.entity_name || '').trim();
+  const entityQuery = entity ? `"${entity}"` : '';
+  const questionId = String(question?.question_id || '').trim();
+  if (entityQuery && questionId === 'q2_digital_stack') {
+    add(`${entityQuery} app platform ticketing video ecommerce official`);
+    add(`${entityQuery} digital membership official website`);
+  } else if (entityQuery && questionId === 'q3_leadership') {
+    add(`${entityQuery} leadership board commercial director`);
+    add(`${entityQuery} head of partnerships marketing digital director`);
+    add(`${entityQuery} LinkedIn commercial director partnerships`);
+  } else if (entityQuery && questionId === 'q6_launch_signal') {
+    add(`${entityQuery} launch app platform product official news`);
+    add(`${entityQuery} digital fan experience announced`);
+  } else if (entityQuery && questionId === 'q9_news_signal') {
+    add(`${entityQuery} news announcement partnership commercial 2026`);
+    add(`${entityQuery} strategic partnership digital investment`);
+  }
+  return variants.slice(0, Math.max(1, Number(maxQueries || 1)));
+}
+
+async function _defaultPrefetchSearchEngine(query, { question } = {}) {
+  const result = await runStandaloneDirectBrightDataPrefetch(question, { query });
+  return { status: 'success', results: result.results || [] };
+}
+
+async function _defaultPrefetchScrapeMarkdown(url, { question } = {}) {
+  const result = await runStandaloneDirectBrightDataPrefetch(question, { scrape_url: url });
+  return { status: result.content ? 'success' : 'empty', content: result.content || '' };
+}
+
+function _decodeHtmlEntities(value) {
+  return String(value || '')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>');
+}
+
+function _stripMarkup(value) {
+  return _decodeHtmlEntities(value)
+    .replace(/<script[\s\S]*?<\/script>/gi, ' ')
+    .replace(/<style[\s\S]*?<\/style>/gi, ' ')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function _extractQ3LeadershipExcerpt(content) {
+  const raw = _decodeHtmlEntities(content);
+  if (!raw.trim()) return '';
+  const plain = _stripMarkup(raw);
+  const directCandidates = _leadershipCandidatesFromText(plain).slice(0, 5);
+  if (directCandidates.length > 0) {
+    return directCandidates
+      .map((candidate) => `${candidate.name}. ${candidate.title}.`)
+      .join(' ');
+  }
+
+  const snippets = [];
+  const seen = new Set();
+  const titlePatterns = [
+    /\btitle="([A-Z][A-Za-zÀ-ÖØ-öø-ÿ'’-]+(?:[-'’ ][A-Z][A-Za-zÀ-ÖØ-öø-ÿ'’-]+){1,3})"/g,
+    /\baria-label="([A-Z][A-Za-zÀ-ÖØ-öø-ÿ'’-]+(?:[-'’ ][A-Z][A-Za-zÀ-ÖØ-öø-ÿ'’-]+){1,3})"/g,
+    /\bblockTitle":"([A-Z][A-Za-zÀ-ÖØ-öø-ÿ'’-]+(?:[-'’ ][A-Z][A-Za-zÀ-ÖØ-öø-ÿ'’-]+){1,3})"/g,
+  ];
+  for (const pattern of titlePatterns) {
+    for (const match of raw.matchAll(pattern)) {
+      const name = String(match[1] || '').trim();
+      const key = name.toLowerCase();
+      if (!name || seen.has(key) || /\b(major league|soccer|communications|share on|copy url)\b/i.test(name)) continue;
+      seen.add(key);
+      const before = raw.slice(Math.max(0, match.index - 1800), match.index);
+      const roleMatches = Array.from(_stripMarkup(before).matchAll(new RegExp(BUYER_TITLE_PATTERN, 'gi')));
+      const role = roleMatches.length > 0 ? roleMatches[roleMatches.length - 1][0] : 'Executive';
+      snippets.push(`${name}. ${role}.`);
+      if (snippets.length >= 6) break;
+    }
+    if (snippets.length >= 6) break;
+  }
+  return snippets.join(' ');
+}
+
+export async function prefetchQuestionEvidence(question, {
+  maxQueries = 4,
+  maxResults = 5,
+  scrapeTopN = 1,
+  now = () => new Date().toISOString(),
+  searchEngine = _defaultPrefetchSearchEngine,
+  scrapeMarkdown = _defaultPrefetchScrapeMarkdown,
+} = {}) {
+  const queryVariants = _queryVariantsForPrefetch(question, maxQueries);
+  const leads = [];
+  const checkedSources = [];
+  const rejected = [];
+  for (const query of queryVariants) {
+    let results = [];
+    try {
+      results = _normalizeSearchResults(await searchEngine(query, { question })).slice(0, maxResults);
+    } catch (error) {
+      checkedSources.push({
+        query,
+        status: 'retrieval_failed',
+        reason: error instanceof Error ? error.message : String(error),
+      });
+      continue;
+    }
+    for (const result of results) {
+      const url = String(result?.url || result?.link || '').trim();
+      if (!url || leads.some((lead) => lead.url === url) || rejected.some((lead) => lead.url === url)) continue;
+      let excerpt = String(result?.excerpt || result?.content || '').trim();
+      const questionId = String(question?.question_id || '').trim();
+      const q3NeedsLeadershipScrape = questionId === 'q3_leadership'
+        && leads.length < scrapeTopN
+        && _leadershipCandidatesFromText([
+          result?.title,
+          result?.snippet || result?.description,
+          excerpt,
+        ].filter(Boolean).join(' ')).length === 0;
+      if ((!excerpt || q3NeedsLeadershipScrape) && leads.length < scrapeTopN) {
+        try {
+          const scrape = await scrapeMarkdown(url, { question, query });
+          const scrapedContent = String(scrape?.content || scrape?.markdown || '').trim();
+          const q3Excerpt = questionId === 'q3_leadership'
+            ? _extractQ3LeadershipExcerpt(scrapedContent)
+            : '';
+          excerpt = (q3Excerpt || scrapedContent).slice(0, 1600);
+        } catch {
+          excerpt = '';
+        }
+      }
+      const candidate = {
+        title: String(result?.title || '').trim(),
+        url,
+        snippet: String(result?.snippet || result?.description || '').trim(),
+        excerpt,
+        source_type: _sourceTypeForLead({ ...result, url }),
+        query_used: query,
+        retrieved_at: now(),
+      };
+      const acceptanceReason = _acceptanceReasonForQuestion(question, candidate);
+      checkedSources.push({
+        url,
+        query,
+        source_type: candidate.source_type,
+        accepted: Boolean(acceptanceReason),
+        reason: acceptanceReason || 'not_relevant_for_question_contract',
+      });
+      if (acceptanceReason) {
+        leads.push({
+          ...candidate,
+          acceptance_reason: acceptanceReason,
+        });
+      } else {
+        rejected.push(candidate);
+      }
+    }
+  }
+  const sourceTypes = Array.from(new Set(leads.map((lead) => lead.source_type).filter(Boolean)));
+  return {
+    leads,
+    checked_sources: checkedSources,
+    retrieval_summary: leads.length > 0
+      ? `Accepted ${leads.length} ${question?.question_id || 'question'} evidence lead(s) from ${queryVariants.length} query variant(s).`
+      : `No accepted ${question?.question_id || 'question'} evidence after ${queryVariants.length} query variant(s).`,
+    diagnostics: {
+      query_variants_used: queryVariants,
+      accepted_source_count: leads.length,
+      rejected_source_count: rejected.length,
+      source_types: sourceTypes,
+    },
+  };
+}
+
+function _isDerivedSynthesisQuestion(question) {
+  const questionId = String(question?.question_id || '').trim();
+  const executionClass = String(question?.execution_class || '').trim();
+  return executionClass === 'derived_inference'
+    || ['q13_capability_gap', 'q14_yp_fit', 'q15_outreach_strategy'].includes(questionId);
+}
+
 function _getQuestionFamilyKey(question) {
   const questionId = String(question?.question_id || '').trim().toLowerCase();
   const questionType = String(question?.question_type || '').trim().toLowerCase();
@@ -327,6 +821,19 @@ function _collectUniqueSourceUrls(structuredOutput = {}) {
     if (url) urls.add(String(url).trim());
   });
   if (structuredOutput.evidence_url) urls.add(String(structuredOutput.evidence_url).trim());
+  const nestedAnswer = structuredOutput.answer && typeof structuredOutput.answer === 'object'
+    ? structuredOutput.answer
+    : {};
+  if (Array.isArray(nestedAnswer.sources)) {
+    nestedAnswer.sources.forEach((item) => {
+      const url = typeof item === 'string' ? item : item?.url;
+      if (url) urls.add(String(url).trim());
+    });
+  }
+  const nestedPeople = Array.isArray(nestedAnswer.people) ? nestedAnswer.people : [];
+  nestedPeople.forEach((person) => {
+    if (person?.evidence_url) urls.add(String(person.evidence_url).trim());
+  });
   return Array.from(urls).filter(Boolean);
 }
 
@@ -477,7 +984,28 @@ function _candidateRoleScore(candidate) {
   return 0;
 }
 
-const BUYER_TITLE_PATTERN = '(Chief Commercial Officer|Commercial Director|Head of Commercial|Head of Partnerships|Partnerships Director|Sponsorship Director|Business Development Director|Chief Marketing Officer|Marketing Director|Chief Digital Officer|Digital Director|Chief Technology Officer|Technology Director|Product Director|Strategy Director|Chief Executive Officer|Managing Director|General Manager|CEO|CCO|CMO|CDO|CTO)';
+const BUYER_TITLE_PATTERN = '(Chief Commercial Officer|Commercial Director|Head of Commercial|Head of Partnerships|Partnerships Director|Sponsorship Director|Business Development Director|Chief Marketing Officer|Marketing Director|Chief Digital Officer|Digital Director|Chief Technology Officer|Technology Director|Product Director|Strategy Director|Chief Executive Officer|Managing Director|General Manager|Director(?:, [A-Z][A-Za-z &]+)?|Commissioner|President|Executive Vice President|Vice President|CEO|CCO|CMO|CDO|CTO)';
+
+function _normalizeLeadershipPersonName(value) {
+  return _firstConciseBuyerTargetText([value])
+    .replace(/^(Names|Named)\s+/i, '')
+    .trim();
+}
+
+function _normalizeLeadershipTitle(value) {
+  let title = _firstMeaningfulCommercialText([value])
+    .replace(/\s+/g, ' ')
+    .trim();
+  if (!title) return '';
+  title = title
+    .replace(/\s+(?:at|with|for)\s+(?:Major|Minor|National|International|The)\b.*$/i, '')
+    .replace(/\s+-\s+.*$/i, '')
+    .replace(/\s+\|\s+.*$/i, '')
+    .replace(/\s+·\s+.*$/i, '')
+    .replace(/\s{2,}/g, ' ')
+    .trim();
+  return title.replace(/[,.]\s*$/g, '').trim();
+}
 
 function _leadershipCandidatesFromText(value) {
   const text = _toDisplayText(value);
@@ -485,6 +1013,8 @@ function _leadershipCandidatesFromText(value) {
   const candidates = [];
   const patterns = [
     new RegExp(`\\b([A-Z][a-z]+(?:[-' ][A-Z][a-z]+){1,3})\\s*,\\s*${BUYER_TITLE_PATTERN}\\b`, 'g'),
+    new RegExp(`\\b([A-Z][a-z]+(?:[-' ][A-Z][a-z]+){1,3})\\.\\s+${BUYER_TITLE_PATTERN}\\b`, 'g'),
+    new RegExp(`\\b([A-Z][a-z]+(?:[-' ][A-Z][a-z]+){1,3})\\s+-\\s+${BUYER_TITLE_PATTERN}\\b`, 'g'),
     new RegExp(`\\b([A-Z][a-z]+(?:[-' ][A-Z][a-z]+){1,3})\\s+(?:is|as|serves as|acts as|was named|leads[^.]{0,60}as)\\s+(?:the\\s+)?${BUYER_TITLE_PATTERN}\\b`, 'g'),
   ];
   for (const pattern of patterns) {
@@ -501,18 +1031,21 @@ function _leadershipCandidatesFromText(value) {
 
 function _normalizeLeadershipCandidate(candidate) {
   if (!candidate || typeof candidate !== 'object') return null;
-  const name = _firstConciseBuyerTargetText([
+  const name = _normalizeLeadershipPersonName(_firstConciseBuyerTargetText([
     candidate.name,
     candidate.full_name,
     candidate.person_name,
     candidate.label,
-  ]);
-  const title = _firstMeaningfulCommercialText([
+  ]));
+  const title = _normalizeLeadershipTitle(_firstMeaningfulCommercialText([
     candidate.title,
     candidate.role,
     candidate.job_title,
     candidate.position,
-  ]);
+  ]));
+  if (/\b(association|club|fc|league|soccer|football|basketball|baseball|rugby|cricket|federation|committee|council|organisation|organization)\b/i.test(name)) {
+    return null;
+  }
   if (!name || _candidateRoleScore(candidate) <= 0) return null;
   return {
     name,
@@ -523,16 +1056,66 @@ function _normalizeLeadershipCandidate(candidate) {
   };
 }
 
+function _leadershipStructuredCandidates(structuredOutput) {
+  if (!structuredOutput || typeof structuredOutput !== 'object') return [];
+  const nestedAnswer = structuredOutput.answer && typeof structuredOutput.answer === 'object'
+    ? structuredOutput.answer
+    : {};
+  return [
+    ...(Array.isArray(structuredOutput.candidates) ? structuredOutput.candidates : []),
+    ...(Array.isArray(structuredOutput.people) ? structuredOutput.people : []),
+    ...(Array.isArray(structuredOutput.leadership) ? structuredOutput.leadership : []),
+    ...(Array.isArray(structuredOutput.ranked_people) ? structuredOutput.ranked_people : []),
+    ...(Array.isArray(nestedAnswer.people) ? nestedAnswer.people : []),
+    ...(Array.isArray(nestedAnswer.leadership) ? nestedAnswer.leadership : []),
+    ...(Array.isArray(nestedAnswer.ranked_people) ? nestedAnswer.ranked_people : []),
+    structuredOutput.primary_owner && typeof structuredOutput.primary_owner === 'object' ? structuredOutput.primary_owner : null,
+    nestedAnswer.primary_owner && typeof nestedAnswer.primary_owner === 'object' ? nestedAnswer.primary_owner : null,
+  ].filter(Boolean);
+}
+
+function _promoteQ3LeadershipStructuredOutput(structuredOutput) {
+  if (!structuredOutput || typeof structuredOutput !== 'object') return structuredOutput;
+  const normalizedCandidates = _leadershipStructuredCandidates(structuredOutput)
+    .map(_normalizeLeadershipCandidate)
+    .filter(Boolean)
+    .sort((left, right) => right.score - left.score);
+  if (normalizedCandidates.length === 0) return structuredOutput;
+
+  const primaryOwner = normalizedCandidates[0];
+  const supportingCandidates = normalizedCandidates.slice(1, 6);
+  const sourceUrls = _collectUniqueSourceUrls(structuredOutput);
+  const nestedAnswer = structuredOutput.answer && typeof structuredOutput.answer === 'object'
+    ? structuredOutput.answer
+    : {};
+  const summary = structuredOutput.summary
+    || nestedAnswer.summary
+    || `${primaryOwner.name}${primaryOwner.title ? ` (${primaryOwner.title})` : ''} is the strongest current buyer-role candidate.`;
+
+  return {
+    ...structuredOutput,
+    answer: summary,
+    summary,
+    primary_owner: structuredOutput.primary_owner || primaryOwner,
+    supporting_candidates: Array.isArray(structuredOutput.supporting_candidates) && structuredOutput.supporting_candidates.length > 0
+      ? structuredOutput.supporting_candidates
+      : supportingCandidates,
+    candidates: Array.isArray(structuredOutput.candidates) && structuredOutput.candidates.length > 0
+      ? structuredOutput.candidates
+      : normalizedCandidates,
+    sources: Array.isArray(structuredOutput.sources) && structuredOutput.sources.length > 0
+      ? structuredOutput.sources
+      : sourceUrls,
+    evidence_url: structuredOutput.evidence_url || primaryOwner.evidence_url || sourceUrls[0] || '',
+  };
+}
+
 function _leadershipCandidatesFromPrior(priorById) {
   const q3 = priorById.get('q3_leadership') || {};
   if (!_validatedOrProvisional(q3)) return [];
   const raw = _getAnswerRaw(q3);
   const directCandidates = [
-    ...(Array.isArray(raw.candidates) ? raw.candidates : []),
-    ...(Array.isArray(raw.people) ? raw.people : []),
-    ...(Array.isArray(raw.leadership) ? raw.leadership : []),
-    ...(Array.isArray(raw.ranked_people) ? raw.ranked_people : []),
-    raw.primary_owner && typeof raw.primary_owner === 'object' ? raw.primary_owner : null,
+    ..._leadershipStructuredCandidates(raw),
     ..._leadershipCandidatesFromText(q3.answer),
   ].filter(Boolean);
   return directCandidates
@@ -940,6 +1523,65 @@ function _augmentCommercialStructuredOutput(question, structuredOutput, validati
   };
 }
 
+function _normalizeDisplayEvidenceItem(item) {
+  if (!item) return null;
+  if (typeof item === 'string') {
+    const url = item.trim();
+    return url ? { url, label: '' } : null;
+  }
+  if (typeof item !== 'object') return null;
+  const url = String(item.url || item.evidence_url || item.href || '').trim();
+  const label = String(item.label || item.title || item.source || item.evidence_kind || '').trim();
+  const snippet = String(item.snippet || item.summary || item.evidence_basis || '').trim();
+  if (!url && !label && !snippet) return null;
+  return {
+    ...(url ? { url } : {}),
+    ...(label ? { label } : {}),
+    ...(snippet ? { snippet } : {}),
+  };
+}
+
+function _buildDisplayAnswer(question, structuredOutput, validationState, commercialFields, evidenceUrl) {
+  const existing = structuredOutput?.display_answer && typeof structuredOutput.display_answer === 'object'
+    ? structuredOutput.display_answer
+    : {};
+  const headline = _firstMeaningfulCommercialText([
+    existing.headline,
+    structuredOutput?.summary,
+    structuredOutput?.answer,
+    structuredOutput?.context,
+  ]) || (validationState === 'failed'
+    ? 'Provider output could not be converted into a source-backed answer.'
+    : validationState === 'no_signal'
+      ? 'No source-backed signal found.'
+      : '');
+  const bullets = Array.isArray(existing.bullets)
+    ? existing.bullets.map(_toDisplayText).filter(Boolean).slice(0, 4)
+    : [structuredOutput?.notes, structuredOutput?.confidence_caveat]
+      .map(_toDisplayText)
+      .filter(Boolean)
+      .slice(0, 4);
+  const sourceEvidence = [
+    ...(Array.isArray(existing.evidence) ? existing.evidence : []),
+    ...(Array.isArray(structuredOutput?.sources) ? structuredOutput.sources : []),
+    evidenceUrl,
+  ]
+    .map(_normalizeDisplayEvidenceItem)
+    .filter(Boolean);
+  const evidence = sourceEvidence.filter((item, index, allItems) => {
+    const key = item.url || item.label || item.snippet || '';
+    return key && allItems.findIndex((other) => (other.url || other.label || other.snippet || '') === key) === index;
+  }).slice(0, 4);
+  return {
+    headline,
+    bullets,
+    evidence,
+    commercial_implication: _toDisplayText(existing.commercial_implication || commercialFields?.commercial_implication || structuredOutput?.commercial_implication),
+    verification_needed: _toDisplayText(existing.verification_needed || structuredOutput?.verification_needed || structuredOutput?.confidence_caveat),
+    status_label: _toDisplayText(existing.status_label || structuredOutput?.status || validationState || 'no_signal'),
+  };
+}
+
 function _hasPlausibleDecisionOwnerStructuredOutput(structuredOutput) {
   const primaryOwner = structuredOutput?.primary_owner && typeof structuredOutput.primary_owner === 'object'
     ? structuredOutput.primary_owner
@@ -954,6 +1596,38 @@ function _hasPlausibleDecisionOwnerStructuredOutput(structuredOutput) {
     .concat(Array.isArray(structuredOutput?.supporting_candidates) ? structuredOutput.supporting_candidates.map((item) => item?.name || item?.full_name || item?.person_name) : [])
     .concat(Array.isArray(structuredOutput?.candidates) ? structuredOutput.candidates.map((item) => item?.name || item?.full_name || item?.person_name) : []);
   return Boolean(_firstConciseBuyerTargetText(candidateNames));
+}
+
+function _hasPlausibleLeadershipStructuredOutput(structuredOutput) {
+  if (!structuredOutput || typeof structuredOutput !== 'object') return false;
+  const candidateFields = _leadershipStructuredCandidates(structuredOutput);
+  if (candidateFields.some((candidate) => Boolean(_normalizeLeadershipCandidate(candidate)))) {
+    return true;
+  }
+  return _leadershipCandidatesFromText(structuredOutput.answer).length > 0
+    || _leadershipCandidatesFromText(structuredOutput.context).length > 0
+    || _leadershipCandidatesFromText(structuredOutput.summary).length > 0;
+}
+
+function _isExplicitNoSignalOutput(structuredOutput) {
+  const haystack = [
+    structuredOutput?.validation_state,
+    structuredOutput?.status,
+    structuredOutput?.answer,
+    structuredOutput?.summary,
+    structuredOutput?.context,
+  ].map((value) => _toDisplayText(value).toLowerCase()).join(' ');
+  return /\b(no_signal|no signal|insufficient_signal|insufficient signal|no_answer|no answer)\b/.test(haystack);
+}
+
+function _hasPositiveAnswerIntent(structuredOutput) {
+  if (!structuredOutput || typeof structuredOutput !== 'object') return false;
+  if (_isExplicitNoSignalOutput(structuredOutput)) return false;
+  const confidence = Number(structuredOutput.confidence || 0);
+  return confidence > 0
+    || _isMeaningfulCommercialText(structuredOutput.answer)
+    || _isMeaningfulCommercialText(structuredOutput.summary)
+    || _collectUniqueSourceUrls(structuredOutput).length > 0;
 }
 
 function _hasStructuredAnswerContent(structuredOutput) {
@@ -997,10 +1671,145 @@ function _providerNoAnswerStructuredOutput(question, structuredOutput, reason) {
   };
 }
 
-function _sanitizeProviderStructuredOutput(question, structuredOutput) {
+function _buildDeterministicPrefetchFallback(question, prefetchEvidence, reason = 'provider_no_answer') {
+  const questionId = String(question?.question_id || '').trim();
+  if (!['q2_digital_stack', 'q3_leadership', 'q6_launch_signal', 'q9_news_signal'].includes(questionId)) return null;
+  const leads = Array.isArray(prefetchEvidence?.leads) ? prefetchEvidence.leads : [];
+  if (leads.length === 0) return null;
+  const lead = leads[0] || {};
+  const sources = leads.map((item) => String(item?.url || '').trim()).filter(Boolean);
+  if (sources.length === 0) return null;
+  const checkedSources = Array.isArray(prefetchEvidence?.checked_sources) ? prefetchEvidence.checked_sources : [];
+  const evidenceText = _leadText(lead);
+  const base = {
+    context: prefetchEvidence?.retrieval_summary || 'Deterministic preflight found source-backed evidence, but provider synthesis returned no usable typed answer.',
+    sources,
+    checked_sources: checkedSources,
+    confidence: questionId === 'q2_digital_stack' ? 0.65 : 0.7,
+    prompt_trace: {
+      provider_no_answer_reason: reason,
+      deterministic_prefetch_fallback: true,
+    },
+  };
+  if (questionId === 'q2_digital_stack') {
+    return {
+      ...base,
+      answer: `Source-backed digital footprint hints found: ${evidenceText}`,
+      summary: `Digital footprint hints found from ${lead.source_type || 'source-backed'} evidence.`,
+      validation_state: 'partial_signal',
+      structured_signal: {
+        status: 'deterministic_prefetch_fallback',
+        question_id: questionId,
+        signal_type: 'digital_footprint_hint',
+        source_type: lead.source_type || null,
+        evidence_url: lead.url || null,
+        acceptance_reason: lead.acceptance_reason || null,
+      },
+      commercial_implication: 'Potential digital/platform opportunity requires human verification from the accepted source evidence.',
+    };
+  }
+  if (questionId === 'q3_leadership') {
+    const candidate = leads
+      .flatMap((candidateLead) => {
+        const candidateTexts = [
+          candidateLead?.snippet,
+          candidateLead?.excerpt,
+          candidateLead?.title,
+          _leadText(candidateLead),
+        ];
+        return candidateTexts
+          .flatMap((value) => _leadershipCandidatesFromText(value))
+          .map((item) => _normalizeLeadershipCandidate({ ...item, evidence_url: candidateLead?.url }))
+          .filter(Boolean)
+          .map((item) => ({
+            ...item,
+            source_type: candidateLead?.source_type || null,
+            acceptance_reason: candidateLead?.acceptance_reason || null,
+            lead_url: candidateLead?.url || null,
+          }));
+      })
+      .sort((left, right) => right.score - left.score)[0];
+    if (!candidate) return null;
+    const primaryOwner = {
+      name: candidate.name,
+      title: candidate.title,
+      function: candidate.function || 'commercial',
+      evidence_url: candidate.evidence_url || candidate.lead_url || lead.url || null,
+      buyer_relevance: 'provisional_buyer_role_candidate',
+      confidence: 0.68,
+    };
+    return {
+      ...base,
+      answer: `${primaryOwner.name}${primaryOwner.title ? ` (${primaryOwner.title})` : ''} is a provisional buyer-role candidate from accepted preflight evidence.`,
+      summary: `${primaryOwner.name}${primaryOwner.title ? ` (${primaryOwner.title})` : ''} is a provisional buyer-role candidate from accepted preflight evidence.`,
+      validation_state: 'provisional',
+      primary_owner: primaryOwner,
+      candidates: [primaryOwner],
+      supporting_candidates: [],
+      structured_signal: {
+        status: 'deterministic_prefetch_fallback',
+        question_id: questionId,
+        signal_type: 'leadership_candidate',
+        source_type: candidate.source_type || lead.source_type || null,
+        evidence_url: candidate.lead_url || lead.url || null,
+        acceptance_reason: candidate.acceptance_reason || lead.acceptance_reason || null,
+      },
+      commercial_implication: 'Potential buyer route requires human verification because provider synthesis returned no usable typed answer.',
+    };
+  }
+  const signalType = questionId === 'q6_launch_signal' ? 'launch_signal' : 'news_signal';
+  return {
+    ...base,
+    answer: `Source-backed ${signalType.replace('_', ' ')} found: ${evidenceText}`,
+    summary: `${questionId === 'q6_launch_signal' ? 'Launch/platform' : 'Commercial news'} trigger found from accepted preflight evidence.`,
+    validation_state: 'provisional',
+    structured_signal: {
+      status: 'deterministic_prefetch_fallback',
+      question_id: questionId,
+      trigger_type: signalType,
+      source_type: lead.source_type || null,
+      source: lead.url || null,
+      evidence_url: lead.url || null,
+      acceptance_reason: lead.acceptance_reason || null,
+    },
+    commercial_implication: 'Potential timing/commercial trigger requires verification because provider synthesis returned no usable typed answer.',
+  };
+}
+
+function _requiresSourceBackedPositiveClaim(question) {
+  return SOURCE_REQUIRED_QUESTION_IDS.has(String(question?.question_id || '').trim());
+}
+
+function _hasSourceBackedEvidence(structuredOutput) {
+  return _collectUniqueSourceUrls(structuredOutput).length > 0;
+}
+
+function _hasCheckedNoSignalRationale(structuredOutput) {
+  if (!structuredOutput || typeof structuredOutput !== 'object') return false;
+  if (_isExplicitNoSignalOutput(structuredOutput)) return true;
+  const checkedSources = structuredOutput.checked_sources;
+  if (Array.isArray(checkedSources) && checkedSources.length > 0) return true;
+  return _isMeaningfulCommercialText(structuredOutput.checked_source_rationale)
+    || _isMeaningfulCommercialText(structuredOutput.checked_absence_rationale);
+}
+
+function _sanitizeProviderStructuredOutput(question, structuredOutput, cliResult = null) {
   if (!structuredOutput || typeof structuredOutput !== 'object') return structuredOutput;
   const questionId = String(question?.question_id || '').trim();
-  if (!['q3_leadership', 'q11_decision_owner'].includes(questionId)) return structuredOutput;
+  if (QUESTION_OUTPUT_CONTRACTS[questionId] && Object.keys(structuredOutput).length === 0) {
+    if (cliResult && Number(cliResult.code ?? 0) !== 0) return structuredOutput;
+    if (question?.empty_result_policy === 'no_signal' || ['q8_explicit_rfp', 'q10_hiring_signal'].includes(questionId)) return structuredOutput;
+    return _providerNoAnswerStructuredOutput(question, structuredOutput, 'empty_object_answer');
+  }
+  if (questionId === 'q3_leadership') {
+    structuredOutput = _promoteQ3LeadershipStructuredOutput(structuredOutput);
+  }
+  if (questionId === 'q3_leadership' && _hasPositiveAnswerIntent(structuredOutput) && !_hasPlausibleLeadershipStructuredOutput(structuredOutput)) {
+    return _providerNoAnswerStructuredOutput(question, structuredOutput, 'generic_fact_without_leadership_candidate');
+  }
+  if (_requiresSourceBackedPositiveClaim(question) && _hasPositiveAnswerIntent(structuredOutput) && !_hasSourceBackedEvidence(structuredOutput) && !_hasCheckedNoSignalRationale(structuredOutput)) {
+    return _providerNoAnswerStructuredOutput(question, structuredOutput, 'source_less_positive_claim');
+  }
   if (_isObjectStringPlaceholder(structuredOutput.answer) && !_hasStructuredAnswerContent(structuredOutput)) {
     return _providerNoAnswerStructuredOutput(question, structuredOutput, 'object_string_without_sources');
   }
@@ -1708,10 +2517,24 @@ export async function buildOpenCodeConfig({
       timeout: 15000,
     },
   };
+  const defaultModel = _modelRef(_normalizeZaiModelId(process.env.QF_MODEL_DEFAULT, FALLBACK_PREFETCH_MODEL_ID));
+  const models = Object.fromEntries(
+    Object.entries(ZAI_MODEL_CATALOG).map(([modelId, model]) => [
+      modelId,
+      {
+        id: model.id,
+        name: model.name,
+        limit: {
+          context: model.context,
+          output: model.output,
+        },
+      },
+    ]),
+  );
 
   return {
     $schema: 'https://opencode.ai/config.json',
-    model: DEFAULT_MODEL,
+    model: defaultModel,
     provider: {
       [DEFAULT_PROVIDER_ID]: {
         npm: '@ai-sdk/anthropic',
@@ -1720,16 +2543,7 @@ export async function buildOpenCodeConfig({
           baseURL: baseUrl || 'https://api.z.ai/api/anthropic/v1',
           apiKey: '{env:ZAI_API_KEY}',
         },
-        models: {
-          [DEFAULT_MODEL_ID]: {
-            id: 'GLM-5.1',
-            name: 'GLM-5.1',
-            limit: {
-              context: 128000,
-              output: 16384,
-            },
-          },
-        },
+        models,
       },
     },
     permission: {
@@ -1752,7 +2566,7 @@ export async function buildOpenCodeConfig({
         name: 'discovery',
         description: 'Bounded procurement discovery agent for Yellow Panther',
         mode: 'primary',
-        model: DEFAULT_MODEL,
+        model: defaultModel,
         steps: 4,
         prompt:
           'You are a procurement discovery agent. Use the brightdata tool to search broadly, inspect evidence carefully, and return only validated JSON.',
@@ -1777,12 +2591,25 @@ export async function buildOpenCodeConfig({
 }
 
 export function buildOpenCodeQuestionPrompt(question, { standaloneHarness = false } = {}) {
+  const isDerivedSynthesis = _isDerivedSynthesisQuestion(question);
   const sourceOrder = Array.isArray(question?.source_priority) && question.source_priority.length > 0
     ? question.source_priority
     : (Array.isArray(question?.current_source_order) && question.current_source_order.length > 0
       ? question.current_source_order
       : []);
-  const promptLines = [
+  const promptLines = isDerivedSynthesis ? [
+    'Use prior dossier evidence to answer one derived synthesis question.',
+    'Do not search the web, browse, or inspect local files.',
+    'Do not use bash, python, grep, ripgrep, or any local code-analysis workflow.',
+    `Entity type: ${question.entity_type || 'ENTITY'}`,
+    `Question type: ${question.question_type}`,
+    `Question: ${question.question_text}`,
+    ...(question?.structured_output_schema ? [`Structured output schema: ${question.structured_output_schema}`] : []),
+    'Return only JSON with these keys: question, answer, context, sources, confidence.',
+    'If normalized upstream evidence is insufficient, return insufficient_signal with confidence 0.',
+    'This is derived synthesis: reason only from normalized prior answers and evidence basis.',
+    'Do not return markdown or prose.',
+  ] : [
     'Use BrightData to answer one atomic question.',
     'Do not inspect local files, the repository, tests, or generated scripts.',
     'Do not use bash, python, grep, ripgrep, or any local code-analysis workflow.',
@@ -1798,6 +2625,10 @@ export function buildOpenCodeQuestionPrompt(question, { standaloneHarness = fals
     'If the question is compound, answer the narrowest concrete fact first.',
     'Do not return markdown or prose.',
   ];
+  const contractLines = _questionOutputContractPromptLines(question);
+  if (contractLines.length > 0) {
+    promptLines.splice(promptLines.length - 1, 0, ...contractLines);
+  }
   if (standaloneHarness) {
     promptLines.splice(
       promptLines.length - 1,
@@ -1850,6 +2681,16 @@ export function buildOpenCodeQuestionPrompt(question, { standaloneHarness = fals
       'Return a person or explicit role-owner only when the evidence names a current relevant role; otherwise return insufficient_signal.',
     );
   }
+  if (question?.question_id === 'q3_leadership') {
+    promptLines.splice(
+      promptLines.length - 1,
+      0,
+      'For q3_leadership, return a people array. Each item must include: name, title, function, buyer_relevance, evidence_url, evidence_basis, confidence.',
+      'Buyer-relevant functions are commercial, partnerships, sponsorship, marketing, digital, product, technology, strategy, CEO/COO/general manager, or explicit role-owner.',
+      'Reject founded years, venues, trophies, event dates, and generic history as answers even if a source is available.',
+      'If no named current buyer-role candidate is found, return validation_state no_signal with checked_sources explaining what was searched.',
+    );
+  }
   if (question?.empty_result_policy === 'no_signal') {
     promptLines.splice(
       promptLines.length - 1,
@@ -1857,7 +2698,9 @@ export function buildOpenCodeQuestionPrompt(question, { standaloneHarness = fals
       'If no meaningful public evidence is visible after a bounded search, treat that as no_signal rather than a failed run.',
     );
   }
-  promptLines.push('IMPORTANT: After your BrightData searches, you MUST output your final JSON as plain text in your next message. Do not make additional tool calls.');
+  promptLines.push(isDerivedSynthesis
+    ? 'IMPORTANT: Output your final JSON as plain text in your next message. Do not make tool calls.'
+    : 'IMPORTANT: After your BrightData searches, you MUST output your final JSON as plain text in your next message. Do not make additional tool calls.');
   return promptLines.join('\n');
 }
 
@@ -1920,6 +2763,52 @@ export function buildOpenCodeRetrievalPrompt(question, { standaloneHarness = fal
   return promptLines.join('\n');
 }
 
+export function buildOpenCodeEvidenceSynthesisPrompt(question, { prefetchEvidence = {}, standaloneHarness = false } = {}) {
+  const promptLines = [
+    'Use supplied retrieval evidence to answer one atomic question.',
+    'This is an evidence-first synthesis pass.',
+    'Use only the supplied retrieval evidence; do not invent facts, people, dates, sources, platforms, or commercial implications.',
+    'Do not make BrightData tool calls during synthesis.',
+    'Do not browse, search, scrape, or inspect any new source during synthesis.',
+    'Do not inspect local files, the repository, tests, or generated scripts.',
+    'Do not use bash, python, grep, ripgrep, or any local code-analysis workflow.',
+    `Question id: ${question.question_id}`,
+    `Question type: ${question.question_type}`,
+    `Question: ${question.question_text}`,
+    `Canonical query: ${question.query}`,
+    ...(question?.structured_output_schema ? [`Structured output schema: ${question.structured_output_schema}`] : []),
+    'Return only JSON with these keys: question, answer, context, sources, confidence, validation_state, checked_sources, structured_signal, display_answer.',
+    'If evidence is insufficient return checked no_signal with confidence 0 and checked_sources explaining the attempted queries/sources.',
+    'display_answer must be compact and readable: headline, bullets, evidence, commercial_implication, verification_needed, status_label.',
+    ..._questionOutputContractPromptLines(question),
+    `Supplied retrieval evidence JSON:\n${JSON.stringify(prefetchEvidence || {}, null, 2)}`,
+    'Do not return markdown or prose.',
+  ];
+  if (question?.question_id === 'q3_leadership') {
+    promptLines.splice(
+      promptLines.length - 2,
+      0,
+      'For q3, return named current people or explicit role-owner placeholders only. Reject founding dates, venues, trophies, and generic history.',
+    );
+  }
+  if (['q6_launch_signal', 'q9_news_signal'].includes(question?.question_id)) {
+    promptLines.splice(
+      promptLines.length - 2,
+      0,
+      'For q6/q9 positive signals, include date, source URL, recency, and commercial_implication. If date/source is missing, return no_signal or provisional at most.',
+    );
+  }
+  if (standaloneHarness) {
+    promptLines.splice(
+      promptLines.length - 2,
+      0,
+      'This is a bounded standalone debug harness run. Use the evidence JSON directly and finish promptly.',
+    );
+  }
+  promptLines.push('IMPORTANT: Output your final JSON as plain text in your next message. Do not make tool calls.');
+  return promptLines.join('\n');
+}
+
 export function buildOpenCodeSynthesisPrompt(question, { retrievalOutput = {}, standaloneHarness = false } = {}) {
   const promptLines = [
     'Use BrightData retrieval evidence to answer one atomic question.',
@@ -1969,12 +2858,13 @@ export function buildOpenCodeSynthesisPrompt(question, { retrievalOutput = {}, s
 }
 
 export function buildOpenCodeRunArgs(question, prompt, { standaloneHarness = false } = {}) {
+  const routing = resolveQuestionModelRouting(question);
   const args = [
     'run',
     '--format',
     'json',
     '--model',
-    DEFAULT_MODEL,
+    routing.model,
     '--agent',
     'build',
     '--title',
@@ -2084,7 +2974,10 @@ function _derivePromptTraceStatus(question, structuredOutput, cliResult, promptT
 }
 
 function _decoratePromptTrace(question, structuredOutput, cliResult, promptTrace) {
-  const base = promptTrace && typeof promptTrace === 'object' ? { ...promptTrace } : {};
+  const base = {
+    ..._modelPromptTrace(question),
+    ...(promptTrace && typeof promptTrace === 'object' ? promptTrace : {}),
+  };
   const executionClass = String(question?.execution_class || '').trim();
   const questionType = String(question?.question_type || '').trim();
   const status = _derivePromptTraceStatus(question, structuredOutput, cliResult, base);
@@ -2102,6 +2995,10 @@ function _decoratePromptTrace(question, structuredOutput, cliResult, promptTrace
   }
   if (!Number.isFinite(Number(base.exit_code)) && cliResult) {
     base.exit_code = Number(cliResult.code ?? 0);
+  }
+  const providerNoAnswerReason = structuredOutput?.structured_signal?.provider_no_answer_reason;
+  if (providerNoAnswerReason && !base.provider_no_answer_reason) {
+    base.provider_no_answer_reason = providerNoAnswerReason;
   }
   return base;
 }
@@ -2492,6 +3389,71 @@ async function runStandaloneDirectBrightDataFallback(question, failureDiagnostic
   });
 }
 
+async function runStandaloneDirectBrightDataPrefetch(question, { query = '', scrape_url = '', worktreeRoot = WORKTREE_ROOT, timeoutMs = 45000 } = {}) {
+  const resolvedEnv = _resolveOpenCodeEnv();
+  const payload = {
+    mode: 'prefetch',
+    question,
+    query,
+    scrape_url,
+  };
+  return new Promise((resolve, reject) => {
+    const child = spawn('python3', [STANDALONE_BRIGHTDATA_FALLBACK_SCRIPT], {
+      cwd: worktreeRoot || WORKTREE_ROOT,
+      env: {
+        ...process.env,
+        BRIGHTDATA_API_TOKEN: resolvedEnv.brightdataToken,
+        BRIGHTDATA_TOKEN: resolvedEnv.brightdataToken,
+        BRIGHTDATA_ZONE: resolvedEnv.brightdataZone,
+        PATH: process.env.PATH,
+      },
+      stdio: ['pipe', 'pipe', 'pipe'],
+    });
+    let stdout = '';
+    let stderr = '';
+    let settled = false;
+    const timer = setTimeout(() => {
+      if (settled) return;
+      settled = true;
+      child.kill('SIGTERM');
+      const error = new Error(`BrightData prefetch timed out after ${timeoutMs}ms`);
+      error.stdout = stdout;
+      error.stderr = stderr;
+      reject(error);
+    }, timeoutMs);
+    child.stdout.on('data', (chunk) => {
+      stdout += chunk.toString();
+    });
+    child.stderr.on('data', (chunk) => {
+      stderr += chunk.toString();
+    });
+    child.on('error', (error) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      reject(error);
+    });
+    child.on('close', (code) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      if (code !== 0) {
+        const error = new Error(`BrightData prefetch failed with exit code ${code}`);
+        error.stdout = stdout;
+        error.stderr = stderr;
+        reject(error);
+        return;
+      }
+      try {
+        resolve(JSON.parse(String(stdout || '{}')));
+      } catch (error) {
+        reject(error);
+      }
+    });
+    child.stdin.end(JSON.stringify(payload));
+  });
+}
+
 function _spawnOpencodeRun(args, { command = 'opencode', cwd, env, timeoutMs = 300000, standaloneHarness = false } = {}) {
   return new Promise((resolve, reject) => {
     const child = spawn(command, args, {
@@ -2617,6 +3579,7 @@ export async function runOpenCodeCliQuestion(
     opencodeTimeoutMs,
     standaloneHarness = false,
     spawnRunner = _spawnOpencodeRun,
+    evidencePrefetcher = prefetchQuestionEvidence,
   } = {},
 ) {
   await ensureBrightDataFastMcpService({ serviceCwd: worktreeRoot || WORKTREE_ROOT });
@@ -2642,6 +3605,180 @@ export async function runOpenCodeCliQuestion(
     },
   );
   try {
+    if (_usesEvidenceFirstOpenCodeFlow(question)) {
+      let prefetchEvidence = null;
+      try {
+        prefetchEvidence = await evidencePrefetcher(question);
+      } catch (error) {
+        prefetchEvidence = {
+          leads: [],
+          checked_sources: [{
+            status: 'retrieval_failed',
+            reason: error instanceof Error ? error.message : String(error),
+          }],
+          retrieval_summary: 'Evidence prefetch failed before provider synthesis.',
+          diagnostics: {
+            query_variants_used: [],
+            accepted_source_count: 0,
+            rejected_source_count: 0,
+            source_types: [],
+            retrieval_error: error instanceof Error ? error.message : String(error),
+          },
+        };
+      }
+      const prefetchLeads = Array.isArray(prefetchEvidence?.leads) ? prefetchEvidence.leads : [];
+      const prefetchDiagnostics = prefetchEvidence?.diagnostics && typeof prefetchEvidence.diagnostics === 'object'
+        ? prefetchEvidence.diagnostics
+        : {};
+      if (prefetchLeads.length === 0) {
+        const noSignalOutput = {
+          ..._buildStructuredNoSignalOutput(question, {
+            context: prefetchEvidence?.retrieval_summary || 'No accepted source-backed evidence was found in deterministic preflight.',
+            sources: [],
+          }),
+          checked_sources: Array.isArray(prefetchEvidence?.checked_sources) ? prefetchEvidence.checked_sources : [],
+          structured_signal: {
+            status: 'source_prefetch_empty',
+            question_id: question?.question_id || '',
+          },
+        };
+        return {
+          structuredOutput: noSignalOutput,
+          promptTrace: {
+            ..._modelPromptTrace(question),
+            exit_code: 0,
+            stdout_length: 0,
+            stderr_length: 0,
+            has_structured_output: true,
+            stage_count: 1,
+            prefetch_used: true,
+            synthesis_skipped: true,
+            retrieval_lead_count: 0,
+            accepted_source_count: Number(prefetchDiagnostics.accepted_source_count || 0),
+            source_types: Array.isArray(prefetchDiagnostics.source_types) ? prefetchDiagnostics.source_types : [],
+            query_variants_used: Array.isArray(prefetchDiagnostics.query_variants_used) ? prefetchDiagnostics.query_variants_used : [],
+          },
+          messageTrace: [],
+          cliResult: { code: 0, stdout: '', stderr: '' },
+        };
+      }
+      const synthesisPrompt = buildOpenCodeEvidenceSynthesisPrompt(question, {
+        prefetchEvidence,
+        standaloneHarness,
+      });
+      let synthesisCliResult;
+      try {
+        synthesisCliResult = await runCliPass(synthesisPrompt);
+      } catch (error) {
+        const fallbackOutput = _buildStructuredNoSignalOutput(question, {
+          context: `${prefetchEvidence?.retrieval_summary || 'Evidence prefetch found leads.'} Provider synthesis failed (${error?.name || 'Error'}).`,
+          sources: prefetchLeads.map((lead) => lead.url).filter(Boolean),
+        });
+        return {
+          structuredOutput: {
+            ...fallbackOutput,
+            checked_sources: Array.isArray(prefetchEvidence?.checked_sources) ? prefetchEvidence.checked_sources : [],
+            structured_signal: {
+              status: 'source_prefetch_found_provider_failed',
+              provider_no_answer_reason: error?.name || 'provider_synthesis_failed',
+              question_id: question?.question_id || '',
+            },
+          },
+          promptTrace: {
+            ..._modelPromptTrace(question),
+            exit_code: typeof error?.code === 'number' ? error.code : 124,
+            stdout_length: String(error?.stdout || '').length,
+            stderr_length: String(error?.stderr || '').length,
+            has_structured_output: true,
+            stage_count: 2,
+            prefetch_used: true,
+            synthesis_failed: true,
+            failure_name: error?.name || 'Error',
+            retrieval_lead_count: prefetchLeads.length,
+            accepted_source_count: Number(prefetchDiagnostics.accepted_source_count || prefetchLeads.length),
+            source_types: Array.isArray(prefetchDiagnostics.source_types) ? prefetchDiagnostics.source_types : [],
+            query_variants_used: Array.isArray(prefetchDiagnostics.query_variants_used) ? prefetchDiagnostics.query_variants_used : [],
+          },
+          messageTrace: [{
+            role: 'assistant',
+            completed: false,
+            type: 'cli-run',
+            stage: 'evidence_synthesis',
+            has_structured_output: true,
+            part_count: 1,
+          }],
+          cliResult: {
+            code: typeof error?.code === 'number' ? error.code : 124,
+            stdout: String(error?.stdout || ''),
+            stderr: String(error?.stderr || ''),
+          },
+        };
+      }
+      const structuredOutput = _extractFinalCliJson(synthesisCliResult.stdout, question);
+      const sanitizedForFallback = _sanitizeProviderStructuredOutput(question, structuredOutput, synthesisCliResult);
+      const providerNoAnswerReason = (
+        Object.keys(structuredOutput).length === 0
+          ? 'empty_object_answer'
+          : sanitizedForFallback?.structured_signal?.provider_no_answer_reason
+      );
+      const deterministicFallback = providerNoAnswerReason
+        ? _buildDeterministicPrefetchFallback(question, prefetchEvidence, providerNoAnswerReason)
+        : null;
+      if (deterministicFallback) {
+        return {
+          structuredOutput: deterministicFallback,
+          promptTrace: {
+            ..._modelPromptTrace(question),
+            exit_code: synthesisCliResult.code,
+            stdout_length: synthesisCliResult.stdout.length,
+            stderr_length: synthesisCliResult.stderr.length,
+            has_structured_output: true,
+            stage_count: 2,
+            prefetch_used: true,
+            deterministic_prefetch_fallback: true,
+            provider_no_answer_reason: providerNoAnswerReason,
+            retrieval_lead_count: prefetchLeads.length,
+            accepted_source_count: Number(prefetchDiagnostics.accepted_source_count || prefetchLeads.length),
+            source_types: Array.isArray(prefetchDiagnostics.source_types) ? prefetchDiagnostics.source_types : [],
+            query_variants_used: Array.isArray(prefetchDiagnostics.query_variants_used) ? prefetchDiagnostics.query_variants_used : [],
+          },
+          messageTrace: [{
+            role: 'assistant',
+            completed: synthesisCliResult.code === 0,
+            type: 'cli-run',
+            stage: 'evidence_synthesis',
+            has_structured_output: true,
+            part_count: 1,
+          }],
+          cliResult: synthesisCliResult,
+        };
+      }
+      return {
+        structuredOutput,
+        promptTrace: {
+          ..._modelPromptTrace(question),
+          exit_code: synthesisCliResult.code,
+          stdout_length: synthesisCliResult.stdout.length,
+          stderr_length: synthesisCliResult.stderr.length,
+          has_structured_output: Object.keys(structuredOutput).length > 0,
+          stage_count: 2,
+          prefetch_used: true,
+          retrieval_lead_count: prefetchLeads.length,
+          accepted_source_count: Number(prefetchDiagnostics.accepted_source_count || prefetchLeads.length),
+          source_types: Array.isArray(prefetchDiagnostics.source_types) ? prefetchDiagnostics.source_types : [],
+          query_variants_used: Array.isArray(prefetchDiagnostics.query_variants_used) ? prefetchDiagnostics.query_variants_used : [],
+        },
+        messageTrace: [{
+          role: 'assistant',
+          completed: synthesisCliResult.code === 0,
+          type: 'cli-run',
+          stage: 'evidence_synthesis',
+          has_structured_output: Object.keys(structuredOutput).length > 0,
+          part_count: 1,
+        }],
+        cliResult: synthesisCliResult,
+      };
+    }
     if (_usesTwoStageOpenCodeFlow(question)) {
       const retrievalPrompt = buildOpenCodeRetrievalPrompt(question, { standaloneHarness });
       let retrievalCliResult;
@@ -2667,6 +3804,7 @@ export async function runOpenCodeCliQuestion(
         return {
           structuredOutput: noSignalOutput,
           promptTrace: {
+            ..._modelPromptTrace(question),
             exit_code: retrievalCliResult.code,
             stdout_length: retrievalCliResult.stdout.length,
             stderr_length: retrievalCliResult.stderr.length,
@@ -2698,6 +3836,7 @@ export async function runOpenCodeCliQuestion(
         return {
           structuredOutput: noSignalOutput,
           promptTrace: {
+            ..._modelPromptTrace(question),
             exit_code: retrievalCliResult.code,
             stdout_length: retrievalCliResult.stdout.length,
             stderr_length: retrievalCliResult.stderr.length,
@@ -2737,6 +3876,7 @@ export async function runOpenCodeCliQuestion(
         return {
           structuredOutput: fallbackOutput,
           promptTrace: {
+            ..._modelPromptTrace(question),
             exit_code: typeof error?.code === 'number' ? error.code : 124,
             stdout_length: String(error?.stdout || '').length,
             stderr_length: String(error?.stderr || '').length,
@@ -2777,6 +3917,7 @@ export async function runOpenCodeCliQuestion(
       }
       const structuredOutput = _extractFinalCliJson(synthesisCliResult.stdout);
       const promptTrace = {
+        ..._modelPromptTrace(question),
         exit_code: synthesisCliResult.code,
         stdout_length: synthesisCliResult.stdout.length,
         stderr_length: synthesisCliResult.stderr.length,
@@ -2822,8 +3963,9 @@ export async function runOpenCodeCliQuestion(
         context: `OpenCode run failed (${error?.name || 'Error'}): no text output produced.`,
       });
       return {
-        structuredOutput: recoveredStructuredOutput,
+        structuredOutput: fallbackOutput,
         promptTrace: {
+          ..._modelPromptTrace(question),
           exit_code: 124,
           stdout_length: String(error?.stdout || '').length,
           stderr_length: String(error?.stderr || '').length,
@@ -2850,6 +3992,7 @@ export async function runOpenCodeCliQuestion(
     }
     const structuredOutput = _extractFinalCliJson(cliResult.stdout, question);
     const promptTrace = {
+      ..._modelPromptTrace(question),
       exit_code: cliResult.code,
       stdout_length: cliResult.stdout.length,
       stderr_length: cliResult.stderr.length,
@@ -2877,7 +4020,7 @@ function _buildQuestionPayload(
   sessionId,
   { promptTrace = null, messageTrace = [], executionQuery = '', cliResult = null } = {},
 ) {
-  const sanitizedStructuredOutput = _sanitizeProviderStructuredOutput(question, structuredOutput);
+  const sanitizedStructuredOutput = _sanitizeProviderStructuredOutput(question, structuredOutput, cliResult);
   const normalizedPromptTrace = _decoratePromptTrace(question, sanitizedStructuredOutput, cliResult, promptTrace);
   const initialValidationState = _classifyValidationState(question, sanitizedStructuredOutput, cliResult);
   const { structuredOutput: enhancedStructuredOutput, commercialFields, confidence } =
@@ -2903,6 +4046,7 @@ function _buildQuestionPayload(
   const evidenceUrl = finalStructuredOutput.evidence_url || sources[0] || '';
   const notes = finalStructuredOutput.notes || finalStructuredOutput.context || '';
   const inferredSignalType = finalStructuredOutput.signal_type || (question.question_type ? question.question_type.toUpperCase() : 'NO_SIGNAL');
+  const displayAnswer = _buildDisplayAnswer(question, finalStructuredOutput, validationState, commercialFields, evidenceUrl);
   return {
     question_id: question.question_id,
     question_family: question.question_family,
@@ -2935,7 +4079,7 @@ function _buildQuestionPayload(
     current_question_total: question.current_question_total,
     current_strategy_label: question.current_strategy_label,
     current_source_order: question.current_source_order,
-    model_used: DEFAULT_MODEL,
+    model_used: _modelPromptTrace(question).model_used,
     session_id: sessionId,
     agentic_plan: {
       source_priority: question.source_priority,
@@ -2954,8 +4098,12 @@ function _buildQuestionPayload(
     confidence: finalConfidence,
     validation_state: validationState,
     evidence_url: evidenceUrl,
+    display_answer: displayAnswer,
     recommended_next_query: finalStructuredOutput.recommended_next_query || '',
     notes,
+    primary_owner: finalStructuredOutput.primary_owner || null,
+    supporting_candidates: Array.isArray(finalStructuredOutput.supporting_candidates) ? finalStructuredOutput.supporting_candidates : [],
+    candidates: Array.isArray(finalStructuredOutput.candidates) ? finalStructuredOutput.candidates : [],
     evidence_grade: commercialFields.evidence_grade,
     structured_signal: commercialFields.structured_signal || finalStructuredOutput.structured_signal,
     procurement_model: commercialFields.procurement_model,
@@ -3255,7 +4403,7 @@ export async function runOpenCodePresetBatch({
           entity_id: question.entity_id,
           entity_type: question.entity_type,
           preset: question.preset,
-          model_used: DEFAULT_MODEL,
+          model_used: _modelPromptTrace(question).model_used,
           session_id: existingQuestionState?.run_id || `cli-${index + 1}`,
           agentic_plan: {
             source_priority: question.source_priority,
@@ -3430,7 +4578,7 @@ export async function runOpenCodePresetBatch({
           entity_id: question.entity_id,
           entity_type: question.entity_type,
           preset: question.preset,
-          model_used: DEFAULT_MODEL,
+          model_used: _modelPromptTrace(question).model_used,
           session_id: existingQuestionState?.run_id || `cli-${index + 1}`,
           agentic_plan: {
             source_priority: question.source_priority,
