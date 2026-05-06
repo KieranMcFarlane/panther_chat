@@ -1,4 +1,11 @@
 *
 !backend/
+!scripts/
+scripts/*
+!scripts/oracle/
+!scripts/oracle/postgres-entrypoint-with-ssl.sh
+!Dockerfile.backend
 !Dockerfile.fastmcp
+!Dockerfile.postgres-oracle
+!Dockerfile.worker
 !.dockerignore

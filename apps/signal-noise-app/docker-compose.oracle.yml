@@ -1,0 +1,149 @@
+version: "3.8"
+
+services:
+  postgres:
+    build:
+      context: .
+      dockerfile: Dockerfile.postgres-oracle
+    restart: unless-stopped
+    env_file:
+      - .env.oracle
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-signal_noise_app}
+      POSTGRES_USER: ${POSTGRES_USER:-panther_staging}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+    ports:
+      - "${POSTGRES_PUBLIC_BIND:-0.0.0.0}:5432:5432"
+    volumes:
+      - oracle_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\""]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - oracle-staging
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - oracle_redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - oracle-staging
+
+  falkordb:
+    image: falkordb/falkordb:latest
+    restart: unless-stopped
+    environment:
+      FALKORDB_PASSWORD: ${FALKORDB_PASSWORD:?FALKORDB_PASSWORD is required}
+    volumes:
+      - oracle_falkordb_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - oracle-staging
+
+  fastmcp:
+    build:
+      context: .
+      dockerfile: Dockerfile.fastmcp
+    restart: unless-stopped
+    env_file:
+      - .env.oracle
+    environment:
+      BRIGHTDATA_FASTMCP_HOST: 0.0.0.0
+      BRIGHTDATA_FASTMCP_PORT: 8014
+    depends_on:
+      redis:
+        condition: service_healthy
+    expose:
+      - "8014"
+    networks:
+      - oracle-staging
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    restart: unless-stopped
+    env_file:
+      - .env.oracle
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-panther_staging}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-signal_noise_app}?sslmode=require
+      PYTHON_PERSISTENCE_BACKEND: local_pg
+      REDIS_URL: redis://redis:6379/0
+      FALKORDB_URI: bolt://falkordb:7687
+      FALKORDB_USER: ${FALKORDB_USER:-falkordb}
+      FALKORDB_PASSWORD: ${FALKORDB_PASSWORD:?FALKORDB_PASSWORD is required}
+      FALKORDB_DATABASE: ${FALKORDB_DATABASE:-sports_intelligence}
+      BRIGHTDATA_FASTMCP_URL: http://fastmcp:8014/mcp/
+      PIPELINE_USE_BRIGHTDATA_FASTMCP: ${PIPELINE_USE_BRIGHTDATA_FASTMCP:-true}
+      PIPELINE_BRIGHTDATA_SHARED_CLIENT: ${PIPELINE_BRIGHTDATA_SHARED_CLIENT:-true}
+    ports:
+      - "${BACKEND_PUBLIC_BIND:-127.0.0.1}:8000:8000"
+    volumes:
+      - oracle_backend_logs:/app/logs
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      falkordb:
+        condition: service_healthy
+      fastmcp:
+        condition: service_started
+    networks:
+      - oracle-staging
+
+  entity-pipeline-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.worker
+    restart: unless-stopped
+    env_file:
+      - .env.oracle
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-panther_staging}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-signal_noise_app}?sslmode=require
+      PYTHON_PERSISTENCE_BACKEND: local_pg
+      FASTAPI_URL: http://backend:8000
+      PYTHON_BACKEND_URL: http://backend:8000
+      REDIS_URL: redis://redis:6379/0
+      FALKORDB_URI: bolt://falkordb:7687
+      FALKORDB_USER: ${FALKORDB_USER:-falkordb}
+      FALKORDB_PASSWORD: ${FALKORDB_PASSWORD:?FALKORDB_PASSWORD is required}
+      FALKORDB_DATABASE: ${FALKORDB_DATABASE:-sports_intelligence}
+      BRIGHTDATA_FASTMCP_URL: http://fastmcp:8014/mcp/
+      PIPELINE_USE_BRIGHTDATA_FASTMCP: ${PIPELINE_USE_BRIGHTDATA_FASTMCP:-true}
+      PIPELINE_BRIGHTDATA_SHARED_CLIENT: ${PIPELINE_BRIGHTDATA_SHARED_CLIENT:-true}
+    volumes:
+      - oracle_worker_logs:/app/logs
+      - oracle_worker_tmp:/app/tmp
+    depends_on:
+      backend:
+        condition: service_healthy
+      fastmcp:
+        condition: service_started
+    networks:
+      - oracle-staging
+
+networks:
+  oracle-staging:
+    driver: bridge
+
+volumes:
+  oracle_postgres_data:
+  oracle_redis_data:
+  oracle_falkordb_data:
+  oracle_backend_logs:
+  oracle_worker_logs:
+  oracle_worker_tmp:

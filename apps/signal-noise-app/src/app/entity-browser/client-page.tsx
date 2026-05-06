@@ -47,6 +47,7 @@ interface EntityBrowserResponse {
     sortBy: string
     sortOrder: string
   }
+  source?: string
 }
 
 interface AutocompleteEntity {
@@ -69,17 +70,29 @@ interface EntityTaxonomyResponse {
   }
 }
 
-export default function EntityBrowserClientPage() {
+type EntityBrowserClientPageProps = {
+  initialEntitiesData?: EntityBrowserResponse | null
+  initialTaxonomy?: EntityTaxonomyResponse | null
+  initialLoadError?: string | null
+}
+
+export default function EntityBrowserClientPage({
+  initialEntitiesData = null,
+  initialTaxonomy = null,
+  initialLoadError = null,
+}: EntityBrowserClientPageProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const initialPageFromUrl = Number.parseInt(searchParams.get('page') || '1', 10)
   const lastFetchedRequestKeyRef = useRef<string | null>(null)
 
-  const [data, setData] = useState<EntityBrowserResponse | null>(null)
-  const [initialLoading, setInitialLoading] = useState(true)
+  const [data, setData] = useState<EntityBrowserResponse | null>(initialEntitiesData)
+  const [initialLoading, setInitialLoading] = useState(!initialEntitiesData)
   const [gridLoading, setGridLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [dataSource, setDataSource] = useState<'cache' | 'supabase' | null>(null)
+  const [error, setError] = useState<string | null>(initialEntitiesData?.entities?.length ? null : initialLoadError)
+  const [dataSource, setDataSource] = useState<'cache' | 'supabase' | 'error_fallback' | null>(
+    (initialEntitiesData?.source as 'cache' | 'supabase' | 'error_fallback' | undefined) || null
+  )
   const [searchTerm, setSearchTerm] = useState("")
   const [appliedSearchTerm, setAppliedSearchTerm] = useState("")
   const deferredSearchTerm = useDeferredValue(searchTerm)
@@ -88,7 +101,7 @@ export default function EntityBrowserClientPage() {
   const [currentPage, setCurrentPage] = useState(initialPageFromUrl)
   const [gridWidth, setGridWidth] = useState(0)
   const gridContainerRef = useRef<HTMLDivElement | null>(null)
-  const [taxonomy, setTaxonomy] = useState<EntityTaxonomyResponse>({
+  const [taxonomy, setTaxonomy] = useState<EntityTaxonomyResponse>(initialTaxonomy || {
     sports: [],
     leagues: [],
     countries: [],

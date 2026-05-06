@@ -18,17 +18,12 @@ function isProductionLikeRuntime(): boolean {
 
 function getDatabaseUrl(): string {
   const databaseUrl = process.env.DATABASE_URL?.trim();
-  const neonDatabaseUrl = process.env.NEON_DB_URL?.trim();
 
-  if (neonDatabaseUrl && (!databaseUrl || databaseUrl === LOCAL_SOCKET_DATABASE_URL)) {
-    return neonDatabaseUrl;
-  }
   if (databaseUrl) return databaseUrl;
-  if (neonDatabaseUrl) return neonDatabaseUrl;
 
   if (isProductionLikeRuntime()) {
     throw new Error(
-      'DATABASE_URL or NEON_DB_URL is required for Vercel, preview, staging, and production Postgres connections.'
+      'DATABASE_URL is required for Vercel, preview, staging, and production Postgres connections.'
     );
   }
 
@@ -48,7 +43,6 @@ function isLocalDatabaseUrl(databaseUrl: string): boolean {
 
 function shouldUseSsl(databaseUrl: string): boolean {
   if (databaseUrl.includes('sslmode=require')) return true;
-  if (databaseUrl.includes('.neon.tech')) return true;
   return !isLocalDatabaseUrl(databaseUrl);
 }
 

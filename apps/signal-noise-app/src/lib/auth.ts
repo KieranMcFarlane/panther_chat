@@ -47,13 +47,7 @@ function normalizeBaseUrl(value?: string | null) {
 
 function getDatabaseUrl() {
   const databaseUrl = process.env.DATABASE_URL?.trim() || "";
-  const neonDatabaseUrl = process.env.NEON_DB_URL?.trim() || "";
-
-  if (neonDatabaseUrl && (!databaseUrl || databaseUrl === LOCAL_SOCKET_DATABASE_URL)) {
-    return neonDatabaseUrl;
-  }
-
-  return databaseUrl || neonDatabaseUrl;
+  return databaseUrl;
 }
 
 function getTursoDatabaseUrl() {

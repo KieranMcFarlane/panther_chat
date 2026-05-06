@@ -24,16 +24,22 @@ function redactDatabaseUrl(databaseUrl) {
   }
 }
 
+function isLocalDatabaseUrl(databaseUrl) {
+  if (databaseUrl.includes('host=/tmp')) return true
+
+  try {
+    const parsed = new URL(databaseUrl)
+    return ['localhost', '127.0.0.1', '::1'].includes(parsed.hostname)
+  } catch {
+    return false
+  }
+}
+
 async function main() {
-  const configuredDatabaseUrl = process.env.DATABASE_URL?.trim()
-  const neonDatabaseUrl = process.env.NEON_DB_URL?.trim()
-  const localSocketDatabaseUrl = 'postgresql:///signal_noise_app?host=/tmp'
-  const databaseUrl = neonDatabaseUrl && (!configuredDatabaseUrl || configuredDatabaseUrl === localSocketDatabaseUrl)
-    ? neonDatabaseUrl
-    : configuredDatabaseUrl || neonDatabaseUrl
+  const databaseUrl = process.env.DATABASE_URL?.trim()
 
   if (!databaseUrl) {
-    console.error(`[env:check:pipeline] DATABASE_URL or NEON_DB_URL is required for ${runtimeLabel()} Postgres.`)
+    console.error(`[env:check:pipeline] DATABASE_URL is required for ${runtimeLabel()} Postgres.`)
     process.exitCode = 1
     return
   }
@@ -43,7 +49,7 @@ async function main() {
     max: 1,
     connectionTimeoutMillis: 10000,
     idleTimeoutMillis: 10000,
-    ssl: databaseUrl.includes('sslmode=require') || databaseUrl.includes('.neon.tech')
+    ssl: databaseUrl.includes('sslmode=require') || !isLocalDatabaseUrl(databaseUrl)
       ? { rejectUnauthorized: false }
       : undefined,
   })

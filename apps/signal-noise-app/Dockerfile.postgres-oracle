@@ -1,0 +1,9 @@
+FROM postgres:17-alpine
+
+RUN apk add --no-cache openssl
+
+COPY scripts/oracle/postgres-entrypoint-with-ssl.sh /usr/local/bin/postgres-entrypoint-with-ssl
+RUN chmod +x /usr/local/bin/postgres-entrypoint-with-ssl
+
+ENTRYPOINT ["postgres-entrypoint-with-ssl"]
+CMD ["postgres", "-c", "ssl=on", "-c", "ssl_cert_file=/var/lib/postgresql/data/server.crt", "-c", "ssl_key_file=/var/lib/postgresql/data/server.key", "-c", "listen_addresses=*"]
