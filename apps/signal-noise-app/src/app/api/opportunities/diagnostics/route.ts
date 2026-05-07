@@ -323,6 +323,30 @@ function strategyBriefFor(row: Record<string, unknown>, rawPayload: Record<strin
   })
 }
 
+function displayTitleFor(row: Record<string, unknown>, rawPayload: Record<string, unknown>) {
+  const brief = strategyBriefFor(row, rawPayload)
+  const entity = text(row.entity_name || row.canonical_entity_name) || 'This entity'
+  const rawTitle = text(row.title)
+  const title = concise(brief.signal_title, 140)
+  if (
+    /hiring signal/i.test(title)
+    && !/\bhiring\b|vacanc|\bjob\b|\brole\b|recruitment analyst/i.test(rawTitle)
+    && /app|platform|digital|trackman|mobile|launch|streaming|fan engagement/i.test(rawTitle)
+  ) {
+    return `${entity} — digital product signal`
+  }
+  if (title && title !== 'Commercial signal') return title
+  const fallback = specificSignalTitleFor(row, rawPayload) || concise(row.title, 140) || 'Commercial signal'
+  if (
+    /hiring signal/i.test(fallback)
+    && !/\bhiring\b|vacanc|\bjob\b|\brole\b|recruitment analyst/i.test(rawTitle)
+    && /app|platform|digital|trackman|mobile|launch|streaming|fan engagement/i.test(rawTitle)
+  ) {
+    return `${entity} — digital product signal`
+  }
+  return fallback
+}
+
 function bdBriefFor(row: Record<string, unknown>, rawPayload: Record<string, unknown>) {
   const qualification = asRecord(rawPayload.commercial_qualification)
   const ypFit = asRecord(qualification.yp_fit_breakdown)
@@ -361,7 +385,8 @@ function mapReviewableDossierCandidate(row: Record<string, unknown>) {
     opportunity_id: row.opportunity_id,
     entity_name: row.entity_name || row.canonical_entity_name,
     canonical_entity_id: row.canonical_entity_id,
-    title: row.title,
+    title: displayTitleFor(row, rawPayload),
+    raw_title: row.title,
     status: row.status,
     is_active: Boolean(row.is_active),
     quality_state: rawPayload.quality_state || null,

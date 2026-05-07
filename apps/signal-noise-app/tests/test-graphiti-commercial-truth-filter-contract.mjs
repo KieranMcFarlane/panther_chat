@@ -96,6 +96,60 @@ test('commercial truth filter moves broad non-sports civic context to context on
   }
 })
 
+test('commercial truth filter treats no-sports strategy disqualifiers as civic context not watch', async () => {
+  const { classifyGraphitiCommercialState } = await import(filterPath)
+
+  const result = classifyGraphitiCommercialState(row({
+    entity: 'South Sudan',
+    title: 'South Sudan elections and humanitarian crisis',
+    text: 'South Sudan government elections, humanitarian crisis, and country-level institutional capacity gaps.',
+    fit: 90,
+    useful: 20,
+    evidence: 18,
+    strategy: {
+      summary: 'Needs enrichment: no clear Yellow Panther angle yet.',
+      angle: 'No clear Yellow Panther angle yet. Re-check the dossier evidence against Yellow Panther services before outreach.',
+      route: 'Buyer route unverified.',
+      opener: 'Do not use for outreach until a specific Yellow Panther service wedge is confirmed.',
+      recommendation: 'needs_enrichment',
+      wedge: 'no_clear_fit',
+      disqualifiers: [
+        'Entity is a sovereign nation-state, not a sports organization',
+        'No sports club, league, federation, venue, or sports tech buyer identified',
+      ],
+    },
+  }))
+
+  assert.equal(result.commercial_state, 'context_only')
+})
+
+test('commercial truth filter moves synthesized no-clear-fit profile rows to data issues', async () => {
+  const { classifyGraphitiCommercialState } = await import(filterPath)
+
+  const result = classifyGraphitiCommercialState(row({
+    entity: 'Graham Coughlan',
+    title: 'Graham Coughlan advisor profile',
+    text: 'Personal managerial profile with no club-level technology project or budget owner.',
+    fit: 60,
+    useful: 16,
+    evidence: 8,
+    strategy: {
+      summary: 'Needs enrichment: no clear Yellow Panther angle yet.',
+      angle: 'No clear Yellow Panther angle yet. Re-check the dossier evidence against Yellow Panther services before outreach.',
+      route: 'Buyer route unverified.',
+      opener: 'Do not use for outreach until a specific Yellow Panther service wedge is confirmed.',
+      recommendation: 'needs_enrichment',
+      wedge: 'no_clear_fit',
+      disqualifiers: [
+        'Signal is an individual profile, not an organisational buying signal',
+        'No evidence of digital project, budget, or procurement intent',
+      ],
+    },
+  }))
+
+  assert.equal(result.commercial_state, 'data_issue')
+})
+
 test('commercial truth filter keeps clean sports digital hypotheses in watch or verify now', async () => {
   const { classifyGraphitiCommercialState } = await import(filterPath)
 

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { materializeGraphitiOpportunities } from '@/lib/graphiti-opportunity-persistence'
 import { loadGraphitiOpportunitySourceRows } from '@/lib/graphiti-opportunity-persistence'
 import { backfillGraphitiDossierIngestions } from '@/lib/graphiti-dossier-ingestion'
+import { syncGraphitiDossierIngestionMemory } from '@/lib/graphiti-dossier-memory-bridge'
 import { synthesizeAndPersistGraphitiOpportunityStrategyBriefs } from '@/lib/graphiti-opportunity-strategy-synthesis.mjs'
 import { getSupabaseAdmin } from '@/lib/supabase-client'
 import { requireApiSession, UnauthorizedError } from '@/lib/server-auth'
@@ -86,6 +87,11 @@ export async function POST(request: NextRequest) {
       limit: effectiveLimit,
       dryRun,
     })
+    const graphitiMemorySync = await syncGraphitiDossierIngestionMemory({
+      limit: effectiveLimit,
+      dryRun,
+      concurrency: 2,
+    })
     const sourceRows = await loadGraphitiOpportunitySourceRows(effectiveLimit)
     const supabase = getSupabaseAdmin()
 
@@ -101,6 +107,7 @@ export async function POST(request: NextRequest) {
         ok: true,
         dry_run: true,
         dossier_ingestion: dossierIngestion.stats,
+        graphiti_memory_sync: graphitiMemorySync,
         dossiers_ingested_entities: dossierIngestion.stats.would_ingest,
         failed_only_opportunities_deactivated: 0,
         source_count: sourceRows.length,
@@ -141,6 +148,7 @@ export async function POST(request: NextRequest) {
       ok: true,
       dry_run: dryRun,
       dossier_ingestion: dossierIngestion.stats,
+      graphiti_memory_sync: graphitiMemorySync,
       dossiers_ingested_entities: dossierIngestion.stats.ingested,
       failed_only_opportunities_deactivated: result.stats.failed_only_dossier_opportunities_deactivated,
       source_count: sourceRows.length,

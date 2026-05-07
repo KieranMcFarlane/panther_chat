@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Calendar, ChevronDown, ChevronUp, Filter, Target, TrendingUp } from 'lucide-react';
@@ -569,7 +569,9 @@ function OpportunitiesContent() {
   const [signalTypeFilter, setSignalTypeFilter] = useState('all');
   const [openOpportunityId, setOpenOpportunityId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [commercialStateLoading, setCommercialStateLoading] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const hasLoadedInitialDataRef = useRef(false);
 
   useEffect(() => {
     setSearchQuery(focusedEntityName);
@@ -578,7 +580,11 @@ function OpportunitiesContent() {
   useEffect(() => {
     async function loadOpportunities() {
       try {
-        setLoading(true);
+        if (hasLoadedInitialDataRef.current) {
+          setCommercialStateLoading(true);
+        } else {
+          setLoading(true);
+        }
         setLoadError(null);
 
         const response = await fetch('/api/opportunities', {
@@ -653,7 +659,9 @@ function OpportunitiesContent() {
         setCommercialStateCards({ outreach_ready: [], verify_now: [], watch: [], context_only: [], data_issue: [] });
         setCommercialStatePagination({ page: 1, pageSize: 24, total: 0, totalPages: 1, hasPrevious: false, hasNext: false });
       } finally {
+        hasLoadedInitialDataRef.current = true;
         setLoading(false);
+        setCommercialStateLoading(false);
       }
     }
 
@@ -849,6 +857,9 @@ function OpportunitiesContent() {
   ];
   const commercialStateCardsByTab = commercialStateCards[selectedCommercialStateTab] || [];
   const selectedCommercialState = commercialStateTabs.find((tab) => tab.key === selectedCommercialStateTab) || commercialStateTabs[1];
+  const showingOutreachReadyTab = selectedCommercialStateTab === 'outreach_ready';
+  const showingVerifyNowTab = selectedCommercialStateTab === 'verify_now';
+  const showingMaterializedStateTab = !showingOutreachReadyTab && !showingVerifyNowTab;
   const selectCommercialStateTab = (tab: CommercialStateTab) => {
     setSelectedCommercialStateTab(tab);
     setCommercialStatePage(1);
@@ -1073,7 +1084,7 @@ function OpportunitiesContent() {
           </section>
         )}
 
-        <section className={OPPORTUNITY_SURFACE_CLASS}>
+        <section className={OPPORTUNITY_SURFACE_CLASS} aria-busy={commercialStateLoading}>
           <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
             <div>
               <div className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-300">Commercial state</div>
@@ -1087,74 +1098,383 @@ function OpportunitiesContent() {
             </Badge>
           </div>
 
-          <div className="mt-4 flex flex-wrap gap-2">
-            {commercialStateTabs.map((tab) => (
-              <button
-                key={tab.key}
-                type="button"
-                onClick={() => selectCommercialStateTab(tab.key)}
-                className={`rounded-full border px-4 py-2 text-sm transition ${
-                  selectedCommercialStateTab === tab.key
-                    ? 'border-yellow-300 bg-yellow-300/15 text-yellow-50'
-                    : 'border-slate-300/20 bg-black/20 text-slate-300 hover:border-slate-200/40'
-                }`}
-              >
-                {tab.label} ({commercialStateCounts[tab.key]})
-              </button>
-            ))}
+          <div className="mt-4 max-w-full overflow-x-auto">
+            <div
+              role="tablist"
+              aria-label="Commercial state filters"
+              className="flex w-fit max-w-full gap-1 rounded-xl border border-slate-700 bg-[#14233a] p-1"
+            >
+              {commercialStateTabs.map((tab) => (
+                <button
+                  key={tab.key}
+                  type="button"
+                  role="tab"
+                  aria-selected={selectedCommercialStateTab === tab.key}
+                  onClick={() => selectCommercialStateTab(tab.key)}
+                  className={`shrink-0 rounded-lg px-3 py-1.5 text-sm transition ${
+                    selectedCommercialStateTab === tab.key
+                      ? 'bg-slate-100 text-slate-950 shadow-sm'
+                      : 'text-slate-300 hover:bg-slate-800 hover:text-slate-50'
+                  }`}
+                >
+                  {tab.label} ({commercialStateCounts[tab.key]})
+                </button>
+              ))}
+            </div>
           </div>
+
+          {commercialStateLoading ? (
+            <div className="mt-3 inline-flex items-center gap-2 rounded-full border border-slate-600 bg-[#14233a] px-3 py-1.5 text-xs text-slate-300">
+              <span className="h-2 w-2 animate-pulse rounded-full bg-cyan-300" />
+              Updating cards
+            </div>
+          ) : null}
 
           <p className="mt-3 text-sm text-slate-300">{selectedCommercialState.description}</p>
 
-          <div className="mt-4 flex flex-wrap gap-2">
-            {[
-              { key: 'freshest' as const, label: 'Freshest' },
-              { key: 'yp_fit' as const, label: 'Highest YP fit' },
-              { key: 'evidence' as const, label: 'Most evidence' },
-            ].map((sort) => (
-              <button
-                key={sort.key}
-                type="button"
-                onClick={() => sortCommercialStateCards(sort.key)}
-                className={`rounded-full border px-3 py-1.5 text-xs transition ${
-                  commercialStateSort === sort.key
-                    ? 'border-cyan-300 bg-cyan-300/15 text-cyan-50'
-                    : 'border-slate-300/20 bg-black/20 text-slate-300 hover:border-slate-200/40'
-                }`}
-              >
-                {sort.label}
-              </button>
-            ))}
-          </div>
+          {showingOutreachReadyTab ? (
+            <div className="mt-4">
+              <div className="flex flex-col gap-2 rounded-xl border border-slate-700 bg-[#14233a] p-3 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <div className="text-sm font-semibold text-white">Strict active shortlist</div>
+                  <div className="text-xs text-slate-300">
+                    Only promoted Graphiti rows with a current trigger, clean evidence, specific YP wedge, plausible buyer route, and usable opener appear here.
+                  </div>
+                </div>
+                <Badge variant="outline" className="border-yellow-300/40 text-yellow-100">
+                  {filteredOpportunities.length} outreach-ready
+                </Badge>
+              </div>
 
-          <div className="mt-4 flex flex-col gap-2 rounded-xl border border-slate-700 bg-[#14233a] p-3 sm:flex-row sm:items-center sm:justify-between">
-            <div className="text-sm text-slate-300">
-              Page {commercialStatePage} of {commercialStatePagination.totalPages} · showing {commercialStateCardsByTab.length} of {commercialStatePagination.total} {selectedCommercialState.label.toLowerCase()} cards
-            </div>
-            <div className="flex gap-2">
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                disabled={!commercialStatePagination.hasPrevious}
-                onClick={() => setCommercialStatePage((page) => Math.max(1, page - 1))}
-              >
-                Previous
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                disabled={!commercialStatePagination.hasNext}
-                onClick={() => setCommercialStatePage((page) => page + 1)}
-              >
-                Next
-              </Button>
-            </div>
-          </div>
+              <div className="mt-4 grid grid-cols-1 gap-6 lg:grid-cols-2">
+                {filteredOpportunities.map((opportunity) => (
+                  <div
+                    key={opportunity.id}
+                    className={`${OPPORTUNITY_CARD_CLASS} min-w-0 transition-colors hover:border-slate-500`}
+                  >
+                    <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                      <div>
+                        <h3 className="break-words text-xl font-semibold leading-tight text-white">{opportunity.briefingTitle}</h3>
+                        <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-fm-medium-grey">
+                          <Badge variant="outline" className="border-emerald-300/40 text-emerald-100 text-xs">
+                            {opportunity.signalStrength} signal
+                          </Badge>
+                          <Badge variant="outline" className="border-yellow-300/40 text-yellow-100 text-xs">
+                            YP relevance {opportunity.ypRelevance}%
+                          </Badge>
+                          <Badge variant="outline" className="border-cyan-300/40 text-cyan-100 text-xs">
+                            Commercial confidence {opportunity.commercialConfidence}
+                          </Badge>
+                          <Badge variant="outline" className={`${getTemporalStatusColor(opportunity.temporalStatus)} text-xs`}>
+                            {opportunity.verificationStatus}
+                          </Badge>
+                          <Badge variant="secondary" className={`${getOpportunityKindColor(opportunity.signalCategory)} text-white text-xs`}>
+                            {opportunity.signalCategory}
+                          </Badge>
+                        </div>
+                        <div className="mt-2 text-sm text-fm-light-grey">
+                          <span className="font-medium text-fm-medium-grey">Club context:</span>{' '}
+                          {getCanonicalContext([opportunity.sport, opportunity.country, opportunity.competition, opportunity.entityRole])}
+                        </div>
+                      </div>
+                      <div className="text-xs text-fm-medium-grey">
+                        Updated: {opportunity.lastUpdated}
+                      </div>
+                    </div>
 
-          <div className="mt-4 grid gap-3 lg:grid-cols-2">
-            {commercialStateCardsByTab.map((card) => (
+                    <div className="mb-4 grid gap-3">
+                      {opportunity.decisionSummary ? (
+                        <div className={OPPORTUNITY_ACCENT_PANEL_CLASS}>
+                          <div className="text-[11px] uppercase tracking-[0.14em] text-emerald-100/80">Decision summary</div>
+                          {renderBriefText(opportunity.decisionSummary, 'mt-1 text-sm text-emerald-50')}
+                        </div>
+                      ) : null}
+                      <div className={OPPORTUNITY_PANEL_CLASS}>
+                        <div className="text-[11px] uppercase tracking-[0.14em] text-fm-medium-grey">Trigger</div>
+                        {renderBriefText(opportunity.triggerText, 'mt-1 text-sm text-white')}
+                      </div>
+                      <div className={OPPORTUNITY_PANEL_CLASS}>
+                        <div className="text-[11px] uppercase tracking-[0.14em] text-fm-medium-grey">Why it matters</div>
+                        {renderBriefText(opportunity.whyItMatters, 'mt-1 text-sm text-white')}
+                      </div>
+                      <div className={OPPORTUNITY_PANEL_CLASS}>
+                        <div className="text-[11px] uppercase tracking-[0.14em] text-fm-medium-grey">Yellow Panther angle</div>
+                        {renderBriefText(opportunity.ypFitReasoning, 'mt-1 text-sm text-white')}
+                      </div>
+                      <div className="grid gap-3 md:grid-cols-2">
+                        <div className={OPPORTUNITY_PANEL_CLASS}>
+                          <div className="text-[11px] uppercase tracking-[0.14em] text-fm-medium-grey">Suggested route</div>
+                          {renderBriefText(opportunity.routeText, 'mt-1 text-sm text-white')}
+                        </div>
+                        <div className={OPPORTUNITY_PANEL_CLASS}>
+                          <div className="text-[11px] uppercase tracking-[0.14em] text-fm-medium-grey">Check before outreach</div>
+                          {renderBriefText(opportunity.checkBeforeOutreach, 'mt-1 text-sm text-white')}
+                        </div>
+                      </div>
+                      <div className={OPPORTUNITY_ACCENT_PANEL_CLASS}>
+                        <div className="text-[11px] uppercase tracking-[0.14em] text-yellow-100/80">Next move</div>
+                        {renderBriefText(opportunity.nextMove, 'mt-1 text-sm text-yellow-50')}
+                      </div>
+                      <div className={OPPORTUNITY_PANEL_CLASS}>
+                        <div className="text-[11px] uppercase tracking-[0.14em] text-fm-medium-grey">Outreach opener</div>
+                        {renderBriefText(opportunity.outreachOpener, 'mt-1 text-sm text-white')}
+                      </div>
+                    </div>
+
+                    {openOpportunityId === opportunity.id && (
+                      <div className="mb-4 rounded-lg border border-slate-700 bg-[#101a2b] p-4">
+                        <div className="text-[11px] uppercase tracking-[0.14em] text-fm-medium-grey">Read more</div>
+                        <div className="mt-2 grid gap-3 text-sm text-white sm:grid-cols-2">
+                          <div>
+                            <div className="font-medium text-yellow-100">What to look for</div>
+                            {renderBriefText(opportunity.readMoreContext || 'Review the dossier for the supporting evidence, decision owners, and commercial signal details.', 'mt-1 text-fm-light-grey')}
+                            {opportunity.supportingSignals.length > 0 && (
+                              <ul className="mt-3 space-y-1 text-fm-light-grey">
+                                {opportunity.supportingSignals.slice(0, 4).map((signal) => (
+                                  <li key={`${opportunity.id}-${signal}`} className="flex gap-2">
+                                    <span className="mt-1 h-1.5 w-1.5 rounded-full bg-yellow-300" />
+                                    <span>{signal}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            )}
+                          </div>
+                          <div>
+                            <div className="font-medium text-yellow-100">What to do next</div>
+                            {renderBriefText(opportunity.strategyNextSteps, 'mt-1 text-fm-light-grey')}
+                            <div className="mt-3 font-medium text-yellow-100">Pattern confidence</div>
+                            {renderBriefText(opportunity.patternConfidence, 'mt-1 text-fm-light-grey')}
+                          </div>
+                        </div>
+                        {opportunity.timeline.length > 0 && (
+                          <div className={`mt-4 ${OPPORTUNITY_PANEL_CLASS}`}>
+                            <div className="font-medium text-yellow-100">Temporal timeline</div>
+                            <div className="mt-2 flex flex-wrap gap-2 text-xs text-fm-light-grey">
+                              {opportunity.timeline.slice(0, 5).map((event) => (
+                                <span key={`${opportunity.id}-${event.at}-${event.label}`} className="rounded-full border border-custom-border bg-black/20 px-2 py-1">
+                                  {event.at}: {event.label}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                        {opportunity.findings.length > 0 && (
+                          <div className={`mt-4 ${OPPORTUNITY_PANEL_CLASS}`}>
+                            <div className="font-medium text-yellow-100">Graphiti findings</div>
+                            <ul className="mt-2 space-y-2 text-sm text-fm-light-grey">
+                              {opportunity.findings.slice(0, 5).map((finding, index) => (
+                                <li key={`${opportunity.id}-finding-${index}`} className="flex gap-2">
+                                  <span className="mt-2 h-1.5 w-1.5 rounded-full bg-yellow-300" />
+                                  <span>
+                                    {finding.source_url ? (
+                                      <a href={finding.source_url} className="text-yellow-100 underline decoration-yellow-300/40 underline-offset-2">
+                                        {finding.finding}
+                                      </a>
+                                    ) : finding.finding}
+                                    {finding.observed_at ? <span className="text-fm-medium-grey"> ({finding.observed_at})</span> : null}
+                                  </span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                        {opportunity.relatedPatterns.length > 0 && (
+                          <div className={`mt-4 ${OPPORTUNITY_PANEL_CLASS}`}>
+                            <div className="font-medium text-yellow-100">Related pattern cluster</div>
+                            <div className="mt-2 flex flex-wrap gap-2">
+                              {opportunity.relatedPatterns.slice(0, 4).map((pattern, index) => (
+                                <Badge key={`${opportunity.id}-pattern-${index}`} variant="outline" className="border-custom-border text-fm-light-grey">
+                                  {pattern.entity_name}
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                    <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                      <div className="flex flex-wrap items-center gap-4 text-xs text-fm-medium-grey">
+                        {opportunity.deadline && (
+                          <div className="flex items-center gap-1">
+                            <Calendar className="h-3 w-3" />
+                            <span>Decision date: {opportunity.deadline}</span>
+                          </div>
+                        )}
+                        <div className="flex items-center gap-1">
+                          <TrendingUp className="h-3 w-3" />
+                          <span>Vector: {Math.round(opportunity.vectorSimilarity * 100)}%</span>
+                        </div>
+                      </div>
+
+                      <div className="text-xs text-fm-medium-grey">
+                        Updated: {opportunity.lastUpdated}
+                      </div>
+                    </div>
+
+                    <div className="mt-4 flex flex-col gap-2 sm:flex-row">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="flex-1"
+                        onClick={() => setOpenOpportunityId(openOpportunityId === opportunity.id ? null : opportunity.id)}
+                      >
+                        {openOpportunityId === opportunity.id ? (
+                          <ChevronUp className="mr-1 h-3 w-3" />
+                        ) : (
+                          <ChevronDown className="mr-1 h-3 w-3" />
+                        )}
+                        {openOpportunityId === opportunity.id ? 'Read less' : 'Read more'}
+                      </Button>
+                      <Button size="sm" variant="outline" className="flex-1" asChild>
+                        <a href={opportunity.sourceUrl || '/entity-browser'}>
+                          <Target className="mr-1 h-3 w-3" />
+                          Open dossier
+                        </a>
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {filteredOpportunities.length === 0 && (
+                <div className="mt-4 rounded-xl border border-slate-700 bg-[#14233a] p-4 text-sm text-slate-300">
+                  {focusedEntityId || focusedEntityName
+                    ? `No entity-linked opportunities yet. No shortlist items are linked to ${focusedEntityName || focusedEntityId} in the current canonical Graphiti feed yet.`
+                    : 'Nothing has been promoted into the shortlist yet.'}
+                </div>
+              )}
+            </div>
+          ) : null}
+
+          {showingVerifyNowTab ? (
+            <div className="mt-4">
+              <div className="flex flex-col gap-2 rounded-xl border border-slate-700 bg-[#14233a] p-3 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <div className="text-sm font-semibold text-white">Recommendations needing verification</div>
+                  <div className="text-xs text-slate-300">
+                    Strong dossier-backed recommendations that need source, trigger, or buyer verification before outreach.
+                  </div>
+                </div>
+                <Badge variant="outline" className="border-slate-500 text-slate-100">
+                  {verifyNowRecommendations.length} shown of {verifyNowCount} to verify
+                </Badge>
+              </div>
+
+              <div className="mt-4 grid gap-3 lg:grid-cols-2">
+                {verifyNowRecommendations.map((recommendation) => (
+                  <div key={recommendation.opportunity_id} className={OPPORTUNITY_CARD_CLASS}>
+                    <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                      <div>
+                        <div className="mb-2 flex flex-wrap gap-2">
+                          <Badge variant="outline" className="border-cyan-200/40 text-cyan-100">
+                            {recommendation.recommendation_tier || 'verify_now'}
+                          </Badge>
+                          <Badge variant="outline" className="border-yellow-300/40 text-yellow-100">
+                            YP fit {recommendation.yellow_panther_fit ?? 0}%
+                          </Badge>
+                        </div>
+                        <h3 className="text-sm font-semibold text-white">{conciseRecommendationTitle(recommendation)}</h3>
+                        {recommendation.title && recommendation.title !== conciseRecommendationTitle(recommendation) ? (
+                          <div className="mt-2 rounded-md border border-slate-700 bg-[#101a2b] p-3">
+                            <div className="text-[11px] uppercase tracking-[0.14em] text-slate-400">Signal detail</div>
+                            {renderBriefText(recommendation.title, 'mt-1 text-sm text-slate-100')}
+                          </div>
+                        ) : null}
+                        <div className="mt-2 flex flex-wrap gap-2 text-xs text-slate-300">
+                          <span>{recommendation.entity_name || 'Unknown entity'}</span>
+                          <span>commercial: {recommendation.commercial_status || 'unknown'}</span>
+                          <span>temporal: {recommendation.temporal_status || 'unknown'}</span>
+                        </div>
+                      </div>
+                      <Badge variant="outline" className="border-emerald-300/40 text-emerald-100">
+                        score {recommendation.promotion_score || 0}
+                      </Badge>
+                    </div>
+
+                    <div className="mt-3 rounded-md border border-slate-700 bg-[#101a2b] p-3">
+                      <div className="text-[11px] uppercase tracking-[0.14em] text-slate-400">Verification action</div>
+                      {renderBriefText(recommendation.suggested_verification_action || 'Verify source recency, buyer ownership, and whether the signal is active enough for outreach.')}
+                    </div>
+
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {(recommendation.promotion_blockers || ['Below active shortlist threshold']).slice(0, 4).map((blocker) => (
+                        <Badge key={`${recommendation.opportunity_id}-${blocker}`} variant="outline" className="border-slate-500 text-slate-100">
+                          {blocker}
+                        </Badge>
+                      ))}
+                    </div>
+
+                    <div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-300">
+                      <span>{recommendation.useful_fact_count ?? 0} useful facts · {recommendation.evidence_count ?? 0} evidence URLs</span>
+                      {recommendation.dossier_url ? (
+                        <Link href={recommendation.dossier_url} className="text-sky-100 underline decoration-sky-200/40 underline-offset-2">
+                          Open dossier
+                        </Link>
+                      ) : null}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {verifyNowRecommendations.length === 0 && (
+                <div className="mt-4 rounded-xl border border-slate-700 bg-[#14233a] p-4 text-sm text-slate-300">
+                  No recommendations currently need verification.
+                </div>
+              )}
+            </div>
+          ) : null}
+
+          {showingMaterializedStateTab ? (
+            <>
+              <div className="mt-4 flex flex-wrap gap-2">
+                {[
+                  { key: 'freshest' as const, label: 'Freshest' },
+                  { key: 'yp_fit' as const, label: 'Highest YP fit' },
+                  { key: 'evidence' as const, label: 'Most evidence' },
+                ].map((sort) => (
+                  <button
+                    key={sort.key}
+                    type="button"
+                    onClick={() => sortCommercialStateCards(sort.key)}
+                    className={`rounded-full border px-3 py-1.5 text-xs transition ${
+                      commercialStateSort === sort.key
+                        ? 'border-cyan-300 bg-cyan-300/15 text-cyan-50'
+                        : 'border-slate-300/20 bg-black/20 text-slate-300 hover:border-slate-200/40'
+                    }`}
+                  >
+                    {sort.label}
+                  </button>
+                ))}
+              </div>
+
+              <div className="mt-4 flex flex-col gap-2 rounded-xl border border-slate-700 bg-[#14233a] p-3 sm:flex-row sm:items-center sm:justify-between">
+                <div className="text-sm text-slate-300">
+                  Page {commercialStatePage} of {commercialStatePagination.totalPages} · showing {commercialStateCardsByTab.length} of {commercialStatePagination.total} {selectedCommercialState.label.toLowerCase()} cards
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    disabled={!commercialStatePagination.hasPrevious}
+                    onClick={() => setCommercialStatePage((page) => Math.max(1, page - 1))}
+                  >
+                    Previous
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    disabled={!commercialStatePagination.hasNext}
+                    onClick={() => setCommercialStatePage((page) => page + 1)}
+                  >
+                    Next
+                  </Button>
+                </div>
+              </div>
+
+              <div className="mt-4 grid gap-3 lg:grid-cols-2">
+                {commercialStateCardsByTab.map((card) => (
               <div key={`${selectedCommercialStateTab}-${card.opportunity_id}`} className={OPPORTUNITY_CARD_CLASS}>
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                   <div>
@@ -1248,309 +1568,10 @@ function OpportunitiesContent() {
               No cards are currently available for {selectedCommercialState.label}.
             </div>
           )}
+            </>
+          ) : null}
         </section>
 
-        <section className={OPPORTUNITY_SURFACE_CLASS}>
-          <div className="mb-4 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
-            <div>
-              <div className="text-xs font-semibold uppercase tracking-[0.16em] text-yellow-200">Outreach-ready</div>
-              <h2 className="mt-1 text-xl font-semibold text-white">Strict active shortlist</h2>
-              <p className="mt-1 max-w-3xl text-sm text-fm-medium-grey">
-                Only promoted Graphiti rows with a current trigger, clean evidence, specific YP wedge, plausible buyer route, and usable opener appear here.
-              </p>
-            </div>
-            <Badge variant="outline" className="border-yellow-300/40 text-yellow-100">
-              {filteredOpportunities.length} outreach-ready
-            </Badge>
-          </div>
-
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          {filteredOpportunities.map((opportunity) => (
-            <div
-              key={opportunity.id}
-                  className={`${OPPORTUNITY_CARD_CLASS} min-w-0 transition-colors hover:border-slate-500`}
-            >
-              <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                <div>
-                  <h3 className="break-words text-xl font-semibold leading-tight text-white">{opportunity.briefingTitle}</h3>
-                  <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-fm-medium-grey">
-                    <Badge variant="outline" className="border-emerald-300/40 text-emerald-100 text-xs">
-                      {opportunity.signalStrength} signal
-                    </Badge>
-                    <Badge variant="outline" className="border-yellow-300/40 text-yellow-100 text-xs">
-                      YP relevance {opportunity.ypRelevance}%
-                    </Badge>
-                    <Badge variant="outline" className="border-cyan-300/40 text-cyan-100 text-xs">
-                      Commercial confidence {opportunity.commercialConfidence}
-                    </Badge>
-                    <Badge variant="outline" className={`${getTemporalStatusColor(opportunity.temporalStatus)} text-xs`}>
-                      {opportunity.verificationStatus}
-                    </Badge>
-                    <Badge variant="secondary" className={`${getOpportunityKindColor(opportunity.signalCategory)} text-white text-xs`}>
-                      {opportunity.signalCategory}
-                    </Badge>
-                  </div>
-                  <div className="mt-2 text-sm text-fm-light-grey">
-                    <span className="font-medium text-fm-medium-grey">Club context:</span>{' '}
-                    {getCanonicalContext([opportunity.sport, opportunity.country, opportunity.competition, opportunity.entityRole])}
-                  </div>
-                </div>
-                <div className="text-xs text-fm-medium-grey">
-                  Updated: {opportunity.lastUpdated}
-                </div>
-              </div>
-
-              <div className="mb-4 grid gap-3">
-                {opportunity.decisionSummary ? (
-                    <div className={OPPORTUNITY_ACCENT_PANEL_CLASS}>
-                      <div className="text-[11px] uppercase tracking-[0.14em] text-emerald-100/80">Decision summary</div>
-                      {renderBriefText(opportunity.decisionSummary, 'mt-1 text-sm text-emerald-50')}
-                    </div>
-                  ) : null}
-                <div className={OPPORTUNITY_PANEL_CLASS}>
-                  <div className="text-[11px] uppercase tracking-[0.14em] text-fm-medium-grey">Trigger</div>
-                  {renderBriefText(opportunity.triggerText, 'mt-1 text-sm text-white')}
-                </div>
-                <div className={OPPORTUNITY_PANEL_CLASS}>
-                  <div className="text-[11px] uppercase tracking-[0.14em] text-fm-medium-grey">Why it matters</div>
-                  {renderBriefText(opportunity.whyItMatters, 'mt-1 text-sm text-white')}
-                </div>
-                <div className={OPPORTUNITY_PANEL_CLASS}>
-                  <div className="text-[11px] uppercase tracking-[0.14em] text-fm-medium-grey">Yellow Panther angle</div>
-                  {renderBriefText(opportunity.ypFitReasoning, 'mt-1 text-sm text-white')}
-                </div>
-                <div className="grid gap-3 md:grid-cols-2">
-                  <div className={OPPORTUNITY_PANEL_CLASS}>
-                    <div className="text-[11px] uppercase tracking-[0.14em] text-fm-medium-grey">Suggested route</div>
-                    {renderBriefText(opportunity.routeText, 'mt-1 text-sm text-white')}
-                  </div>
-                  <div className={OPPORTUNITY_PANEL_CLASS}>
-                    <div className="text-[11px] uppercase tracking-[0.14em] text-fm-medium-grey">Check before outreach</div>
-                    {renderBriefText(opportunity.checkBeforeOutreach, 'mt-1 text-sm text-white')}
-                  </div>
-                </div>
-                <div className={OPPORTUNITY_ACCENT_PANEL_CLASS}>
-                  <div className="text-[11px] uppercase tracking-[0.14em] text-yellow-100/80">Next move</div>
-                  {renderBriefText(opportunity.nextMove, 'mt-1 text-sm text-yellow-50')}
-                </div>
-                <div className={OPPORTUNITY_PANEL_CLASS}>
-                  <div className="text-[11px] uppercase tracking-[0.14em] text-fm-medium-grey">Outreach opener</div>
-                  {renderBriefText(opportunity.outreachOpener, 'mt-1 text-sm text-white')}
-                </div>
-              </div>
-
-              {openOpportunityId === opportunity.id && (
-                <div className="mb-4 rounded-lg border border-slate-700 bg-[#101a2b] p-4">
-                  <div className="text-[11px] uppercase tracking-[0.14em] text-fm-medium-grey">Read more</div>
-                  <div className="mt-2 grid gap-3 text-sm text-white sm:grid-cols-2">
-                    <div>
-                      <div className="font-medium text-yellow-100">What to look for</div>
-                        {renderBriefText(opportunity.readMoreContext || 'Review the dossier for the supporting evidence, decision owners, and commercial signal details.', 'mt-1 text-fm-light-grey')}
-                      {opportunity.supportingSignals.length > 0 && (
-                        <ul className="mt-3 space-y-1 text-fm-light-grey">
-                          {opportunity.supportingSignals.slice(0, 4).map((signal) => (
-                            <li key={`${opportunity.id}-${signal}`} className="flex gap-2">
-                              <span className="mt-1 h-1.5 w-1.5 rounded-full bg-yellow-300" />
-                              <span>{signal}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                    </div>
-                    <div>
-                      <div className="font-medium text-yellow-100">What to do next</div>
-                      {renderBriefText(opportunity.strategyNextSteps, 'mt-1 text-fm-light-grey')}
-                      <div className="mt-3 font-medium text-yellow-100">Pattern confidence</div>
-                      {renderBriefText(opportunity.patternConfidence, 'mt-1 text-fm-light-grey')}
-                    </div>
-                  </div>
-                  {opportunity.timeline.length > 0 && (
-                    <div className={`mt-4 ${OPPORTUNITY_PANEL_CLASS}`}>
-                      <div className="font-medium text-yellow-100">Temporal timeline</div>
-                      <div className="mt-2 flex flex-wrap gap-2 text-xs text-fm-light-grey">
-                        {opportunity.timeline.slice(0, 5).map((event) => (
-                          <span key={`${opportunity.id}-${event.at}-${event.label}`} className="rounded-full border border-custom-border bg-black/20 px-2 py-1">
-                            {event.at}: {event.label}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                  {opportunity.findings.length > 0 && (
-                    <div className={`mt-4 ${OPPORTUNITY_PANEL_CLASS}`}>
-                      <div className="font-medium text-yellow-100">Graphiti findings</div>
-                      <ul className="mt-2 space-y-2 text-sm text-fm-light-grey">
-                        {opportunity.findings.slice(0, 5).map((finding, index) => (
-                          <li key={`${opportunity.id}-finding-${index}`} className="flex gap-2">
-                            <span className="mt-2 h-1.5 w-1.5 rounded-full bg-yellow-300" />
-                            <span>
-                              {finding.source_url ? (
-                                <a href={finding.source_url} className="text-yellow-100 underline decoration-yellow-300/40 underline-offset-2">
-                                  {finding.finding}
-                                </a>
-                              ) : finding.finding}
-                              {finding.observed_at ? <span className="text-fm-medium-grey"> ({finding.observed_at})</span> : null}
-                            </span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                  {opportunity.relatedPatterns.length > 0 && (
-                    <div className={`mt-4 ${OPPORTUNITY_PANEL_CLASS}`}>
-                      <div className="font-medium text-yellow-100">Related pattern cluster</div>
-                      <div className="mt-2 flex flex-wrap gap-2">
-                        {opportunity.relatedPatterns.slice(0, 4).map((pattern, index) => (
-                          <Badge key={`${opportunity.id}-pattern-${index}`} variant="outline" className="border-custom-border text-fm-light-grey">
-                            {pattern.entity_name}
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
-              <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                <div className="flex flex-wrap items-center gap-4 text-xs text-fm-medium-grey">
-                  {opportunity.deadline && (
-                    <div className="flex items-center gap-1">
-                      <Calendar className="h-3 w-3" />
-                      <span>Decision date: {opportunity.deadline}</span>
-                    </div>
-                  )}
-                  <div className="flex items-center gap-1">
-                    <TrendingUp className="h-3 w-3" />
-                    <span>Vector: {Math.round(opportunity.vectorSimilarity * 100)}%</span>
-                  </div>
-                </div>
-
-                <div className="text-xs text-fm-medium-grey">
-                  Updated: {opportunity.lastUpdated}
-                </div>
-              </div>
-
-              <div className="mt-4 flex flex-col gap-2 sm:flex-row">
-                <Button
-                  size="sm"
-                  variant="outline"
-                  className="flex-1"
-                  onClick={() => setOpenOpportunityId(openOpportunityId === opportunity.id ? null : opportunity.id)}
-                >
-                  {openOpportunityId === opportunity.id ? (
-                    <ChevronUp className="mr-1 h-3 w-3" />
-                  ) : (
-                    <ChevronDown className="mr-1 h-3 w-3" />
-                  )}
-                  {openOpportunityId === opportunity.id ? 'Read less' : 'Read more'}
-                </Button>
-                <Button size="sm" variant="outline" className="flex-1" asChild>
-                  <a href={opportunity.sourceUrl || '/entity-browser'}>
-                    <Target className="mr-1 h-3 w-3" />
-                    Open dossier
-                  </a>
-                </Button>
-              </div>
-            </div>
-          ))}
-          </div>
-        </section>
-
-        {verifyNowRecommendations.length > 0 && (
-          <section className={OPPORTUNITY_SURFACE_CLASS}>
-            <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
-              <div>
-                <div className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-300">Verify now</div>
-                <h2 className="mt-1 text-xl font-semibold text-white">Recommendations needing verification</h2>
-                <p className="mt-1 max-w-3xl text-sm text-slate-300">
-                  Strong dossier-backed recommendations that need source, trigger, or buyer verification before outreach.
-                </p>
-              </div>
-              <Badge variant="outline" className="border-slate-500 text-slate-100">
-                {verifyNowRecommendations.length} shown of {verifyNowCount} to verify
-              </Badge>
-            </div>
-
-            <div className="mt-4 grid gap-3 lg:grid-cols-2">
-              {verifyNowRecommendations.map((recommendation) => (
-                <div key={recommendation.opportunity_id} className={OPPORTUNITY_CARD_CLASS}>
-                  <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-                    <div>
-                      <div className="mb-2 flex flex-wrap gap-2">
-                        <Badge variant="outline" className="border-cyan-200/40 text-cyan-100">
-                          {recommendation.recommendation_tier || 'verify_now'}
-                        </Badge>
-                        <Badge variant="outline" className="border-yellow-300/40 text-yellow-100">
-                          YP fit {recommendation.yellow_panther_fit ?? 0}%
-                        </Badge>
-                      </div>
-                      <h3 className="text-sm font-semibold text-white">{conciseRecommendationTitle(recommendation)}</h3>
-                      {recommendation.title && recommendation.title !== conciseRecommendationTitle(recommendation) ? (
-                        <div className="mt-2 rounded-md border border-slate-700 bg-[#101a2b] p-3">
-                          <div className="text-[11px] uppercase tracking-[0.14em] text-slate-400">Signal detail</div>
-                          {renderBriefText(recommendation.title, 'mt-1 text-sm text-slate-100')}
-                        </div>
-                      ) : null}
-                      <div className="mt-2 flex flex-wrap gap-2 text-xs text-slate-300">
-                        <span>{recommendation.entity_name || 'Unknown entity'}</span>
-                        <span>commercial: {recommendation.commercial_status || 'unknown'}</span>
-                        <span>temporal: {recommendation.temporal_status || 'unknown'}</span>
-                      </div>
-                    </div>
-                    <Badge variant="outline" className="border-emerald-300/40 text-emerald-100">
-                      score {recommendation.promotion_score || 0}
-                    </Badge>
-                  </div>
-
-                  <div className="mt-3 rounded-md border border-slate-700 bg-[#101a2b] p-3">
-                    <div className="text-[11px] uppercase tracking-[0.14em] text-slate-400">Verification action</div>
-                    {renderBriefText(recommendation.suggested_verification_action || 'Verify source recency, buyer ownership, and whether the signal is active enough for outreach.')}
-                  </div>
-
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {(recommendation.promotion_blockers || ['Below active shortlist threshold']).slice(0, 4).map((blocker) => (
-                      <Badge key={`${recommendation.opportunity_id}-${blocker}`} variant="outline" className="border-slate-500 text-slate-100">
-                        {blocker}
-                      </Badge>
-                    ))}
-                  </div>
-
-                  <div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-300">
-                    <span>{recommendation.useful_fact_count ?? 0} useful facts · {recommendation.evidence_count ?? 0} evidence URLs</span>
-                    {recommendation.dossier_url ? (
-                      <Link href={recommendation.dossier_url} className="text-sky-100 underline decoration-sky-200/40 underline-offset-2">
-                        Open dossier
-                      </Link>
-                    ) : null}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
-
-        {filteredOpportunities.length === 0 && (
-          <div className="py-12 text-center">
-            <Target className="mx-auto mb-4 h-16 w-16 text-fm-medium-grey opacity-50" />
-            <h3 className="mb-2 text-xl font-semibold text-white">
-              {focusedEntityId || focusedEntityName ? 'No entity-linked opportunities yet' : 'Nothing has been promoted into the shortlist yet'}
-            </h3>
-            <p className="mx-auto max-w-2xl text-fm-medium-grey">
-              {focusedEntityId || focusedEntityName
-                ? `No shortlist items are linked to ${focusedEntityName || focusedEntityId} in the current canonical Graphiti feed yet. Review the dossier workspace or rerun the pipeline to create the first linked opportunity.`
-                : 'Adjust the filters or revisit the dossier workspace after Graphiti materialization completes.'}
-            </p>
-            {(focusedEntityId || focusedEntityName) && (
-              <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
-                <Button asChild variant="outline" className="border-custom-border bg-custom-box text-white hover:bg-custom-bg">
-                  <Link href="/entity-browser">Open dossier workspace</Link>
-                </Button>
-                <Button asChild className="bg-yellow-500 text-black hover:bg-yellow-400">
-                  <Link href="/entity-browser">Open canonical source</Link>
-                </Button>
-              </div>
-            )}
-          </div>
-        )}
       </AppPageBody>
     </AppPageShell>
   );

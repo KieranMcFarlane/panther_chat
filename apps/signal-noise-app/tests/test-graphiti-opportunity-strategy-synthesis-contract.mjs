@@ -37,6 +37,15 @@ test('strategy synthesis module owns GLM prompt and strict brief schema', () => 
   assert.match(source, /ANTHROPIC_AUTH_TOKEN/)
   assert.match(source, /ANTHROPIC_API_KEY/)
   assert.match(source, /ANTHROPIC_BASE_URL/)
+  assert.match(source, /GRAPHITI_STRATEGY_MODEL_TIMEOUT_MS/)
+  assert.match(source, /AbortController/)
+  assert.match(source, /strategy_model_timeout/)
+  assert.match(source, /combinedCandidates/)
+  assert.match(source, /combinedCandidates\.slice\(0, limit\)/)
+  assert.match(source, /bd_strategy_status/)
+  assert.match(source, /!== 'ready'/)
+  assert.match(source, /failed_provider/)
+  assert.match(source, /bd_strategy_failed_at/)
 })
 
 test('strategy brief validation rejects repetitive generic AI cards', async () => {

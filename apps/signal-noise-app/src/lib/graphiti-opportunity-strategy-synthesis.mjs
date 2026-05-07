@@ -221,7 +221,13 @@ export function resolveGraphitiStrategyModelConfig(env = process.env) {
   const baseUrl = env.ANTHROPIC_BASE_URL || 'https://api.z.ai/api/anthropic/v1'
   const apiKey = env.ZAI_API_KEY || env.ANTHROPIC_AUTH_TOKEN || env.ANTHROPIC_API_KEY || ''
   const model = env.ANTHROPIC_DEFAULT_OPUS_MODEL || env.ANTHROPIC_DEFAULT_SONNET_MODEL || 'GLM-5.1'
-  return { baseUrl, apiKey, model }
+  const timeoutMs = Number(env.GRAPHITI_STRATEGY_MODEL_TIMEOUT_MS || 60000)
+  return {
+    baseUrl,
+    apiKey,
+    model,
+    timeoutMs: Number.isFinite(timeoutMs) && timeoutMs > 0 ? timeoutMs : 60000,
+  }
 }
 
 function messagesUrlForBaseUrl(rawBaseUrl) {
@@ -251,20 +257,33 @@ export async function callGraphitiStrategyModel(prompt, config = resolveGraphiti
   if (!config.apiKey) {
     throw new Error('missing_strategy_model_api_key')
   }
-  const response = await fetch(messagesUrlForBaseUrl(config.baseUrl), {
-    method: 'POST',
-    headers: {
-      'content-type': 'application/json',
-      'anthropic-version': '2023-06-01',
-      'x-api-key': config.apiKey,
-    },
-    body: JSON.stringify({
-      model: config.model,
-      max_tokens: 1200,
-      temperature: 0.2,
-      messages: [{ role: 'user', content: prompt }],
-    }),
-  })
+  const controller = new AbortController()
+  const timeout = setTimeout(() => controller.abort(new Error('strategy_model_timeout')), config.timeoutMs || 60000)
+  let response
+  try {
+    response = await fetch(messagesUrlForBaseUrl(config.baseUrl), {
+      method: 'POST',
+      signal: controller.signal,
+      headers: {
+        'content-type': 'application/json',
+        'anthropic-version': '2023-06-01',
+        'x-api-key': config.apiKey,
+      },
+      body: JSON.stringify({
+        model: config.model,
+        max_tokens: 1200,
+        temperature: 0.2,
+        messages: [{ role: 'user', content: prompt }],
+      }),
+    })
+  } catch (error) {
+    if (controller.signal.aborted) {
+      throw new Error('strategy_model_timeout')
+    }
+    throw error
+  } finally {
+    clearTimeout(timeout)
+  }
   const text = await response.text()
   let body = text
   try {
@@ -376,7 +395,10 @@ export function strategyBriefToCardBrief(input) {
 }
 
 export async function synthesizeGraphitiOpportunityStrategyBrief(row, yellowPantherProfile = loadYellowPantherBusinessProfile(), options = {}) {
-  const config = resolveGraphitiStrategyModelConfig(options.env || process.env)
+  const config = {
+    ...resolveGraphitiStrategyModelConfig(options.env || process.env),
+    ...(options.modelTimeoutMs ? { timeoutMs: options.modelTimeoutMs } : {}),
+  }
   const prompt = buildGraphitiOpportunityStrategyPrompt({ row, yellowPantherProfile })
   const modelOutput = options.modelOutput || await callGraphitiStrategyModel(prompt, config)
   const normalized = normalizeStrategyBriefShape(modelOutput, config.model)
@@ -416,12 +438,14 @@ export async function selectStrategySynthesisCandidates({ supabase, limit = 50 }
   if (response.error) throw new Error(`strategy_candidate_query_failed:${response.error.message}`)
   const rows = (Array.isArray(response.data) ? response.data : [])
     .filter((row) => asRecord(row.raw_payload).source === 'entity_dossiers')
+    .filter((row) => asRecord(row.raw_payload).bd_strategy_status !== 'ready')
   const active = rows.filter((row) => candidateTier(row) === 'active')
   const watch = rows
     .filter((row) => candidateTier(row) === 'watch')
     .sort((a, b) => candidateScore(b) - candidateScore(a))
     .slice(0, limit)
-  return [...active, ...watch]
+  const combinedCandidates = [...active, ...watch]
+  return combinedCandidates.slice(0, limit)
 }
 
 async function runWithConcurrency(items, concurrency, worker) {
@@ -438,13 +462,14 @@ async function runWithConcurrency(items, concurrency, worker) {
 }
 
 /**
- * @param {{ supabase: any, limit?: number, dryRun?: boolean, concurrency?: number, yellowPantherProfile?: string }} options
+ * @param {{ supabase: any, limit?: number, dryRun?: boolean, concurrency?: number, modelTimeoutMs?: number, yellowPantherProfile?: string }} options
  */
 export async function synthesizeAndPersistGraphitiOpportunityStrategyBriefs({
   supabase = null,
   limit = 50,
   dryRun = false,
   concurrency = 2,
+  modelTimeoutMs = undefined,
   yellowPantherProfile = loadYellowPantherBusinessProfile(),
 } = {}) {
   if (!supabase) throw new Error('missing_supabase_client')
@@ -465,7 +490,9 @@ export async function synthesizeAndPersistGraphitiOpportunityStrategyBriefs({
   const errors = []
   await runWithConcurrency(candidates, concurrency, async (row) => {
     try {
-      const { brief, validation } = await synthesizeGraphitiOpportunityStrategyBrief(row, yellowPantherProfile)
+      const { brief, validation } = await synthesizeGraphitiOpportunityStrategyBrief(row, yellowPantherProfile, {
+        modelTimeoutMs,
+      })
       synthesized += 1
       const rawPayload = asRecord(row.raw_payload)
       const payload = {
@@ -481,11 +508,29 @@ export async function synthesizeAndPersistGraphitiOpportunityStrategyBriefs({
       if (response.error) throw new Error(response.error.message)
       updated += 1
     } catch (error) {
+      const message = error instanceof Error ? error.message : String(error)
       failed += 1
       errors.push({
         opportunity_id: row.opportunity_id,
-        error: error instanceof Error ? error.message : String(error),
+        error: message,
       })
+      const rawPayload = asRecord(row.raw_payload)
+      const payload = {
+        ...rawPayload,
+        bd_strategy_status: 'failed_provider',
+        bd_strategy_error: message,
+        bd_strategy_failed_at: new Date().toISOString(),
+      }
+      const response = await supabase
+        .from('graphiti_materialized_opportunities')
+        .update({ raw_payload: payload, updated_at: new Date().toISOString() })
+        .eq('opportunity_id', row.opportunity_id)
+      if (response.error) {
+        errors.push({
+          opportunity_id: row.opportunity_id,
+          error: `failed_to_persist_strategy_error:${response.error.message}`,
+        })
+      }
     }
   })
 

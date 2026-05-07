@@ -50,7 +50,10 @@ function hasStrategyBrief(rawPayload) {
 }
 
 function hasSportsContext(value) {
-  return /\b(?:club|fc\b|f\.c\.|rugby|football|hockey|basketball|baseball|cricket|federation|league|team|stadium|arena|athletic|sport|sports|braves|rovers|broncos|fifa|fiba|olympic|padel|ice hockey)\b/i.test(value)
+  const clean = String(value || '')
+    .replace(/\bno sports? (?:club|organisation|organization|buyer|entity|federation|league|venue|tech|technology|mention|evidence)[^.]*\.?/gi, ' ')
+    .replace(/\bnot a sports? (?:club|organisation|organization|buyer|entity|federation|league|venue)[^.]*\.?/gi, ' ')
+  return /\b(?:club|fc\b|f\.c\.|rugby|football|hockey|basketball|baseball|cricket|federation|league|team|stadium|arena|athletic|sport|sports|braves|rovers|broncos|fifa|fiba|olympic|padel|ice hockey)\b/i.test(clean)
 }
 
 function hasGovernmentOrCivicContext(value) {
@@ -131,7 +134,9 @@ function hasDataIssue(row, rawPayload) {
 
 function isBroadCivicContext(row, rawPayload) {
   const haystack = collectText(row, rawPayload)
-  return hasGovernmentOrCivicContext(haystack) && !hasSportsContext(haystack)
+  const strategy = strategyBrief(row, rawPayload)
+  const noSportsContext = /\bno sports?\b|\bnot a sports?\b|\bno .*sports?.*(?:buyer|entity|organisation|organization|club|league|federation|venue)/i.test(haystack)
+  return hasGovernmentOrCivicContext(haystack) && (noSportsContext || !hasSportsContext(haystack) || strategy.service_wedge === 'no_clear_fit')
 }
 
 export function classifyGraphitiCommercialState(row) {

@@ -108,6 +108,44 @@ test('opportunities page keeps compact signal metadata separate from raw evidenc
   assert.doesNotMatch(source, /Signal: \{card\.bd_brief\?\.signal_title\?\.split\('—'\)\[1\]\?\.trim\(\) \|\| card\.title \|\| 'Signal'\}/)
 })
 
+test('commercial state tabs refresh in place without replacing the page loading state', async () => {
+  const source = await readFile(new URL('../src/app/opportunities/opportunities-client.tsx', import.meta.url), 'utf8')
+
+  assert.match(source, /useRef/)
+  assert.match(source, /hasLoadedInitialDataRef/)
+  assert.match(source, /commercialStateLoading/)
+  assert.match(source, /setCommercialStateLoading/)
+  assert.match(source, /aria-busy=\{commercialStateLoading\}/)
+  assert.match(source, /Updating cards/)
+  assert.doesNotMatch(source, /setLoading\(true\);\n\s*setLoadError\(null\);/)
+})
+
+test('commercial state tabs are contained inside the research feed controls', async () => {
+  const source = await readFile(new URL('../src/app/opportunities/opportunities-client.tsx', import.meta.url), 'utf8')
+
+  assert.match(source, /role="tablist"/)
+  assert.match(source, /aria-label="Commercial state filters"/)
+  assert.match(source, /role="tab"/)
+  assert.match(source, /aria-selected=\{selectedCommercialStateTab === tab\.key\}/)
+  assert.match(source, /className="[^"]*w-fit[^"]*max-w-full[^"]*rounded-xl[^"]*border border-slate-700[^"]*bg-\[#14233a\][^"]*p-1/)
+  assert.match(source, /overflow-x-auto/)
+  assert.doesNotMatch(source, /<div className="mt-4 flex flex-wrap gap-2">\s*\{\s*commercialStateTabs\.map/)
+})
+
+test('commercial state tabs own outreach-ready and verify-now panels without separate lane sections', async () => {
+  const source = await readFile(new URL('../src/app/opportunities/opportunities-client.tsx', import.meta.url), 'utf8')
+
+  assert.match(source, /showingOutreachReadyTab/)
+  assert.match(source, /showingVerifyNowTab/)
+  assert.match(source, /selectedCommercialStateTab === 'outreach_ready'/)
+  assert.match(source, /selectedCommercialStateTab === 'verify_now'/)
+  assert.match(source, /filteredOpportunities\.map/)
+  assert.match(source, /verifyNowRecommendations\.map/)
+  assert.match(source, /commercialStateCardsByTab\.map/)
+  assert.doesNotMatch(source, /text-xs font-semibold uppercase tracking-\[0\.16em\] text-yellow-200">Outreach-ready/)
+  assert.doesNotMatch(source, /text-xs font-semibold uppercase tracking-\[0\.16em\] text-slate-300">Verify now<\/div>\s*<h2 className="mt-1 text-xl font-semibold text-white">Recommendations needing verification/)
+})
+
 test('tenders page is framed as the live intake feed', async () => {
   const source = await readFile(new URL('../src/app/tenders/page.tsx', import.meta.url), 'utf8')
 

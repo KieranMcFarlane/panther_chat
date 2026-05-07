@@ -4,6 +4,7 @@ import { getSupabaseAdmin } from '@/lib/supabase-client'
 import { query as queryPostgres } from '@/lib/pg-client'
 import { getGraphitiStaleWindowHours } from '@/lib/runtime-env'
 import { materializeGraphitiOpportunity, rankGraphitiOpportunities } from '@/lib/graphiti-opportunity-materializer'
+import { enrichDossierOpportunitySourceWithGraphMemory } from '@/lib/graphiti-dossier-memory-bridge'
 import type {
   GraphitiOpportunityCard,
   GraphitiOpportunityResponse,
@@ -797,6 +798,10 @@ async function loadPersistedDossierOpportunitySources(limit: number): Promise<Gr
       answer_count: row.answer_count || sourceRow.raw_payload?.answer_count || 0,
       evidence_count: row.evidence_count || sourceRow.raw_payload?.evidence_count || 0,
       quality_metrics: row.raw_metadata?.quality_metrics || sourceRow.raw_payload?.quality_metrics || null,
+      graphiti_memory_sync_status: row.raw_metadata?.graphiti_memory_sync_status || null,
+      graphiti_episode_uuid: row.raw_metadata?.graphiti_episode_uuid || null,
+      graphiti_group_id: row.raw_metadata?.graphiti_group_id || null,
+      graphiti_memory_evidence: row.raw_metadata?.graphiti_memory_evidence || null,
       data_quality_blockers: dataQualityBlockers,
       generic_context_only: dataQualityBlockers.includes('generic_context_only'),
       force_context_only: forceContextOnly,
@@ -807,10 +812,11 @@ async function loadPersistedDossierOpportunitySources(limit: number): Promise<Gr
       reference_time: row.reference_time || sourceRow.raw_payload?.reference_time || null,
       episode_body: row.episode_body,
     }
-    const key = [sourceRow.entity_id, sourceRow.entity_name].join('|').toLowerCase()
+    const enrichedSourceRow = await enrichDossierOpportunitySourceWithGraphMemory(row, sourceRow)
+    const key = [enrichedSourceRow.entity_id, enrichedSourceRow.entity_name].join('|').toLowerCase()
     if (seen.has(key)) continue
     seen.add(key)
-    sourceRows.push(sourceRow)
+    sourceRows.push(enrichedSourceRow)
   }
 
   return dedupeDossierOpportunitySources(sourceRows)
