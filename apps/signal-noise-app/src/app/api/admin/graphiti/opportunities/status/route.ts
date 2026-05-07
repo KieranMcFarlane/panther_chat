@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 
 import { loadGraphitiOpportunitiesFromDb } from '@/lib/graphiti-opportunity-read-model'
 import { loadGraphitiDossierIngestionStats } from '@/lib/graphiti-dossier-ingestion'
+import { buildGraphitiOpportunityPipelineHealth } from '@/lib/graphiti-opportunity-pipeline-resilience'
 import { requireApiSession, UnauthorizedError } from '@/lib/server-auth'
 
 export const dynamic = 'force-dynamic'
@@ -20,6 +21,7 @@ export async function GET(request: NextRequest) {
       generated_at: result.generated_at,
       last_updated_at: result.last_updated_at,
       snapshot: result.snapshot,
+      opportunity_pipeline_health: buildGraphitiOpportunityPipelineHealth(result.warnings),
       graphiti_dossier_ingestion: dossierIngestion,
       canonical_entities_total: dossierIngestion.canonical_entities_total,
       dossiers_persisted_entities: dossierIngestion.dossiers_persisted_entities,

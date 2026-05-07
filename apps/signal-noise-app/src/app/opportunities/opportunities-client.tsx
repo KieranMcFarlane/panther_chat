@@ -211,25 +211,22 @@ function stripPlaceholderFragments(value: string): string {
     .replace(/,\s*No deterministic answer was produced for this question\.?/gi, '')
     .replace(/No deterministic answer was produced for this question\.?,?\s*/gi, '')
     .replace(/,\s*No BrightData tool or service is available in this session[^.]*\.?/gi, '')
+    .replace(/…/g, '')
+    .replace(/\.{3}/g, '')
     .replace(/\s+/g, ' ')
     .trim();
 }
 
-function conciseText(value: unknown, maxLength = 260): string {
+function conciseText(value: unknown, _maxLength?: number): string {
   const cleaned = stripPlaceholderFragments(toText(value));
   if (!cleaned || cleaned.toLowerCase() === 'n/a') return '';
-  if (cleaned.length <= maxLength) return cleaned;
-
-  const sentence = cleaned.split(/(?<=[.!?])\s+/)[0]?.trim();
-  if (sentence && sentence.length <= maxLength) return sentence;
-  return `${cleaned.slice(0, Math.max(40, maxLength - 1)).trim()}...`;
+  return cleaned;
 }
 
-function conciseBlockText(value: unknown, maxLength = 520): string {
+function conciseBlockText(value: unknown, _maxLength?: number): string {
   const cleaned = stripPlaceholderFragments(toText(value));
   if (!cleaned || cleaned.toLowerCase() === 'n/a') return '';
-  if (cleaned.length <= maxLength) return cleaned;
-  return `${cleaned.slice(0, Math.max(80, maxLength - 1)).trim()}...`;
+  return cleaned;
 }
 
 function conciseList(values: unknown[], limit = 3): string[] {
@@ -323,7 +320,7 @@ function formatVerifyBeforeAction(value: unknown): string {
 }
 
 function splitNumberedBriefText(value: unknown): { intro: string; items: string[] } | null {
-  const clean = toText(value).replace(/\s+/g, ' ').trim()
+  const clean = stripPlaceholderFragments(toText(value)).replace(/\s+/g, ' ').trim()
   if (!/\(\d+\)/.test(clean)) return null
 
   const parts = clean
@@ -340,7 +337,7 @@ function splitNumberedBriefText(value: unknown): { intro: string; items: string[
 
 function renderBriefText(value: unknown, className = 'mt-1 text-sm text-slate-100') {
   const numbered = splitNumberedBriefText(value)
-  if (!numbered) return <p className={className}>{toText(value)}</p>
+  if (!numbered) return <p className={className}>{stripPlaceholderFragments(toText(value))}</p>
 
   return (
     <div className={className}>
@@ -372,6 +369,87 @@ function formatCommercialStateSignalLabel(card: ReviewableDossierCandidate): str
   if (/academy|scouting|player|recruitment/.test(raw)) return 'Football operations'
 
   return 'Commercial signal'
+}
+
+function softenWatchAngle(value: unknown): string {
+  const text = toText(value).trim()
+  if (!text) return 'If verified, this could point to a practical Yellow Panther service wedge.'
+  return text.replace(/^Pitch\s+(.+)$/i, 'If verified, Yellow Panther could explore $1')
+}
+
+function formatCommercialStateCardCopy(card: ReviewableDossierCandidate, fallbackState: CommercialStateTab) {
+  const state = (card.commercial_state || fallbackState) as CommercialStateTab
+  const blockers = (card.promotion_blockers || card.dossier_quality_blockers || []).filter(Boolean)
+  const blockerText = blockers.length > 0 ? blockers.join(' ') : 'No specific blocker has been labelled yet.'
+  const titleText = card.title || card.bd_brief?.signal_title || card.entity_name || 'Materialized research card'
+  const evidenceSnapshot = `${card.useful_fact_count ?? 0} useful facts and ${card.evidence_count ?? 0} evidence URLs.`
+
+  const whatHappened = card.bd_brief?.what_happened || card.bd_brief?.trigger || card.bd_brief?.what_changed || titleText
+  const whyItMatters = card.bd_brief?.why_it_matters_now || card.bd_brief?.why_it_matters || 'This needs validation before it becomes an outreach-ready opportunity.'
+  const ypAngle = card.bd_brief?.yellow_panther_angle || 'Map this signal to a practical Yellow Panther use case only if the commercial trigger is verified.'
+  const verification = formatVerifyBeforeAction(card.bd_brief?.verify_before_action) || card.suggested_verification_action || 'Check recency, source quality, and buyer ownership.'
+
+  if (state === 'watch') {
+    return {
+      primaryLabel: 'Why it is interesting',
+      primaryValue: whatHappened,
+      secondaryLabel: 'Why it is not actionable yet',
+      secondaryValue: blockerText || whyItMatters,
+      angleLabel: 'Possible YP angle',
+      angleValue: softenWatchAngle(ypAngle),
+      routeLabel: 'What would promote it',
+      routeValue: 'Promote only if a fresh trigger, buyer route, and active project, procurement, hiring, or budget signal are confirmed.',
+      verifyLabel: 'Verification needed',
+      verifyValue: verification,
+      showOutreachOpener: false,
+    }
+  }
+
+  if (state === 'context_only') {
+    return {
+      primaryLabel: 'Context summary',
+      primaryValue: whatHappened,
+      secondaryLabel: 'Why useful',
+      secondaryValue: whyItMatters,
+      angleLabel: 'Why not commercial',
+      angleValue: blockerText || 'Useful background, but no current buying trigger or commercial owner is confirmed.',
+      routeLabel: 'Related entities',
+      routeValue: card.entity_name || 'Review the dossier for the correct account, buyer, and related assets.',
+      verifyLabel: 'How to use it',
+      verifyValue: 'Keep as account context until a fresh trigger, relevant sports buyer, and specific Yellow Panther wedge appear.',
+      showOutreachOpener: false,
+    }
+  }
+
+  if (state === 'data_issue') {
+    return {
+      primaryLabel: 'Issue type',
+      primaryValue: normalizeBriefVerdictLabel(card.bd_brief?.brief_verdict),
+      secondaryLabel: 'Broken field',
+      secondaryValue: blockerText,
+      angleLabel: 'Recommended fix',
+      angleValue: 'Fix the entity mapping, remove pipeline leakage or unsupported evidence, then re-run materialization before commercial review.',
+      routeLabel: 'Evidence snapshot',
+      routeValue: evidenceSnapshot,
+      verifyLabel: 'Quality blocker',
+      verifyValue: verification,
+      showOutreachOpener: false,
+    }
+  }
+
+  return {
+    primaryLabel: 'What changed',
+    primaryValue: whatHappened,
+    secondaryLabel: 'Why it matters',
+    secondaryValue: whyItMatters,
+    angleLabel: 'Yellow Panther angle',
+    angleValue: ypAngle,
+    routeLabel: 'Buyer route',
+    routeValue: card.bd_brief?.suggested_route || 'Buyer route unconfirmed; identify the right owner before outreach.',
+    verifyLabel: 'Check before outreach',
+    verifyValue: verification,
+    showOutreachOpener: true,
+  }
 }
 
 function normalizeOpportunity(opp: GraphitiOpportunityCard): OpportunityCard {
@@ -578,6 +656,8 @@ function OpportunitiesContent() {
   }, [focusedEntityName]);
 
   useEffect(() => {
+    let cancelled = false;
+
     async function loadOpportunities() {
       try {
         if (hasLoadedInitialDataRef.current) {
@@ -600,6 +680,7 @@ function OpportunitiesContent() {
           ? payload.opportunities.map(normalizeOpportunity)
           : [];
 
+        if (cancelled) return;
         setOpportunities(mapped);
 
         const diagnosticsParams = new URLSearchParams({
@@ -617,6 +698,7 @@ function OpportunitiesContent() {
         }
 
         const diagnosticsPayload = await diagnosticsResponse.json() as OpportunityDiagnosticsResponse;
+        if (cancelled) return;
         setVerifyNowRecommendations(Array.isArray(diagnosticsPayload.verify_now_recommendations)
           ? diagnosticsPayload.verify_now_recommendations
           : []);
@@ -659,6 +741,7 @@ function OpportunitiesContent() {
         setCommercialStateCards({ outreach_ready: [], verify_now: [], watch: [], context_only: [], data_issue: [] });
         setCommercialStatePagination({ page: 1, pageSize: 24, total: 0, totalPages: 1, hasPrevious: false, hasNext: false });
       } finally {
+        if (cancelled) return;
         hasLoadedInitialDataRef.current = true;
         setLoading(false);
         setCommercialStateLoading(false);
@@ -666,6 +749,9 @@ function OpportunitiesContent() {
     }
 
     void loadOpportunities();
+    return () => {
+      cancelled = true;
+    };
   }, [commercialStatePage, commercialStateSort, reviewMode, selectedCommercialStateTab]);
 
   const filteredOpportunities = useMemo(() => {
@@ -832,12 +918,12 @@ function OpportunitiesContent() {
     {
       key: 'outreach_ready',
       label: 'Outreach-ready',
-      description: 'Use now. Current trigger, credible buyer route, usable opener, and specific Yellow Panther wedge.',
+      description: 'Current, relevant opportunities with a plausible buyer route and usable outreach angle.',
     },
     {
       key: 'verify_now',
       label: 'Verify now',
-      description: 'Good commercial hypothesis, but source, buyer, or scope needs checking before outreach.',
+      description: 'Promising opportunities that need source, buyer, or budget verification before outreach.',
     },
     {
       key: 'watch',
@@ -852,7 +938,7 @@ function OpportunitiesContent() {
     {
       key: 'data_issue',
       label: 'Data issues',
-      description: 'Entity mismatch, broken extraction, missing evidence, or internal pipeline leakage.',
+      description: 'Cards blocked by entity mismatch, missing evidence, stale data, or pipeline leakage. Fix these before commercial review.',
     },
   ];
   const commercialStateCardsByTab = commercialStateCards[selectedCommercialStateTab] || [];
@@ -1132,7 +1218,7 @@ function OpportunitiesContent() {
 
           <p className="mt-3 text-sm text-slate-300">{selectedCommercialState.description}</p>
 
-          {showingOutreachReadyTab ? (
+          {showingOutreachReadyTab && !commercialStateLoading ? (
             <div className="mt-4">
               <div className="flex flex-col gap-2 rounded-xl border border-slate-700 bg-[#14233a] p-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
@@ -1346,7 +1432,7 @@ function OpportunitiesContent() {
             </div>
           ) : null}
 
-          {showingVerifyNowTab ? (
+          {showingVerifyNowTab && !commercialStateLoading ? (
             <div className="mt-4">
               <div className="flex flex-col gap-2 rounded-xl border border-slate-700 bg-[#14233a] p-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
@@ -1424,7 +1510,7 @@ function OpportunitiesContent() {
             </div>
           ) : null}
 
-          {showingMaterializedStateTab ? (
+          {showingMaterializedStateTab && !commercialStateLoading ? (
             <>
               <div className="mt-4 flex flex-wrap gap-2">
                 {[
@@ -1474,7 +1560,10 @@ function OpportunitiesContent() {
               </div>
 
               <div className="mt-4 grid gap-3 lg:grid-cols-2">
-                {commercialStateCardsByTab.map((card) => (
+                {commercialStateCardsByTab.map((card) => {
+                  const commercialCopy = formatCommercialStateCardCopy(card, selectedCommercialStateTab)
+
+                  return (
               <div key={`${selectedCommercialStateTab}-${card.opportunity_id}`} className={OPPORTUNITY_CARD_CLASS}>
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                   <div>
@@ -1515,33 +1604,35 @@ function OpportunitiesContent() {
                 ) : null}
 
                 <div className={`mt-3 ${OPPORTUNITY_PANEL_CLASS}`}>
-                  <div className="text-[11px] uppercase tracking-[0.14em] text-slate-400">What changed</div>
-                  {renderBriefText(card.bd_brief?.what_happened || card.bd_brief?.trigger || card.bd_brief?.what_changed || card.title || 'Materialized commercial signal needs review.')}
+                  <div className="text-[11px] uppercase tracking-[0.14em] text-slate-400">{commercialCopy.primaryLabel}</div>
+                  {renderBriefText(commercialCopy.primaryValue)}
                 </div>
 
                 <div className="mt-3 grid gap-3 md:grid-cols-2">
                   <div className={OPPORTUNITY_PANEL_CLASS}>
-                    <div className="text-[11px] uppercase tracking-[0.14em] text-slate-400">Why it matters</div>
-                    {renderBriefText(card.bd_brief?.why_it_matters_now || card.bd_brief?.why_it_matters || 'This needs validation before it becomes an outreach-ready opportunity.')}
+                    <div className="text-[11px] uppercase tracking-[0.14em] text-slate-400">{commercialCopy.secondaryLabel}</div>
+                    {renderBriefText(commercialCopy.secondaryValue)}
                   </div>
                   <div className={OPPORTUNITY_PANEL_CLASS}>
-                    <div className="text-[11px] uppercase tracking-[0.14em] text-slate-400">Yellow Panther angle</div>
-                    {renderBriefText(card.bd_brief?.yellow_panther_angle || 'Map this signal to a practical Yellow Panther decision-support use case.')}
+                    <div className="text-[11px] uppercase tracking-[0.14em] text-slate-400">{commercialCopy.angleLabel}</div>
+                    {renderBriefText(commercialCopy.angleValue)}
                   </div>
                   <div className={OPPORTUNITY_PANEL_CLASS}>
-                    <div className="text-[11px] uppercase tracking-[0.14em] text-slate-400">Suggested route</div>
-                    {renderBriefText(card.bd_brief?.suggested_route || 'Buyer route unconfirmed; identify the right owner before outreach.')}
+                    <div className="text-[11px] uppercase tracking-[0.14em] text-slate-400">{commercialCopy.routeLabel}</div>
+                    {renderBriefText(commercialCopy.routeValue)}
                   </div>
                   <div className={OPPORTUNITY_PANEL_CLASS}>
-                    <div className="text-[11px] uppercase tracking-[0.14em] text-slate-400">Verify before action</div>
-                    {renderBriefText(formatVerifyBeforeAction(card.bd_brief?.verify_before_action) || card.suggested_verification_action || 'Check recency, source quality, and buyer ownership.')}
+                    <div className="text-[11px] uppercase tracking-[0.14em] text-slate-400">{commercialCopy.verifyLabel}</div>
+                    {renderBriefText(commercialCopy.verifyValue)}
                   </div>
                 </div>
 
-                <div className={`mt-3 ${OPPORTUNITY_ACCENT_PANEL_CLASS}`}>
-                  <div className="text-[11px] uppercase tracking-[0.14em] text-sky-100/70">Outreach opener</div>
-                  {renderBriefText(card.bd_brief?.outreach_opener || card.bd_brief?.outreach_hypothesis || 'Use this as a soft research hypothesis only after verifying the trigger and buyer.', 'mt-1 text-sm text-sky-50')}
-                </div>
+                {commercialCopy.showOutreachOpener ? (
+                  <div className={`mt-3 ${OPPORTUNITY_ACCENT_PANEL_CLASS}`}>
+                    <div className="text-[11px] uppercase tracking-[0.14em] text-sky-100/70">Draft opener</div>
+                    {renderBriefText(card.bd_brief?.outreach_opener || card.bd_brief?.outreach_hypothesis || 'Use this as a soft research hypothesis only after verifying the trigger and buyer.', 'mt-1 text-sm text-sky-50')}
+                  </div>
+                ) : null}
 
                 <div className="mt-3 flex flex-wrap gap-2">
                   {(card.promotion_blockers || ['Labelled for review']).slice(0, 4).map((blocker) => (
@@ -1560,7 +1651,8 @@ function OpportunitiesContent() {
                   ) : null}
                 </div>
               </div>
-            ))}
+                  )
+                })}
           </div>
 
           {commercialStateCardsByTab.length === 0 && (

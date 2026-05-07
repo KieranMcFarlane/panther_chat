@@ -55,7 +55,7 @@ test('opportunities page labels non-shortlist commercial state cards as separate
   assert.match(source, /Not shortlist/)
   assert.match(source, /Commercial state/)
   assert.match(source, /Signals worth reviewing, but not yet approved for outreach/)
-  assert.match(source, /Entity mismatch, broken extraction, missing evidence, or internal pipeline leakage/)
+  assert.match(source, /Cards blocked by entity mismatch, missing evidence, stale data, or pipeline leakage/)
   assert.match(source, /Previous/)
   assert.match(source, /Next/)
   assert.match(source, /Page \{commercialStatePage\}/)
@@ -69,14 +69,30 @@ test('opportunities page labels non-shortlist commercial state cards as separate
   assert.match(source, /Commercial confidence/)
   assert.match(source, /Data quality issue/)
   assert.match(source, /Needs fresh trigger/)
-  assert.match(source, /What changed/)
-  assert.match(source, /Why it matters/)
-  assert.match(source, /Yellow Panther angle/)
-  assert.match(source, /Suggested route/)
-  assert.match(source, /Outreach opener/)
-  assert.match(source, /Verify before action/)
+  assert.match(source, /Why it is interesting/)
+  assert.match(source, /Possible YP angle/)
+  assert.match(source, /What would promote it/)
+  assert.match(source, /Context summary/)
+  assert.match(source, /Issue type/)
   assert.doesNotMatch(source, /Next check/)
   assert.match(source, /commercial_state/)
+})
+
+test('commercial state cards use state-specific research labels instead of sales labels', async () => {
+  const source = await readFile(new URL('../src/app/opportunities/opportunities-client.tsx', import.meta.url), 'utf8')
+
+  assert.match(source, /formatCommercialStateCardCopy/)
+  assert.match(source, /Why it is interesting/)
+  assert.match(source, /Why it is not actionable yet/)
+  assert.match(source, /Possible YP angle/)
+  assert.match(source, /What would promote it/)
+  assert.match(source, /Context summary/)
+  assert.match(source, /Why not commercial/)
+  assert.match(source, /Issue type/)
+  assert.match(source, /Recommended fix/)
+  assert.match(source, /showOutreachOpener/)
+  assert.match(source, /commercialCopy\.showOutreachOpener \?/)
+  assert.doesNotMatch(source, /<div className="text-\[11px\] uppercase tracking-\[0\.14em\] text-slate-400">Suggested route<\/div>/)
 })
 
 test('opportunities page uses solid consistent surfaces for readability', async () => {
@@ -100,6 +116,15 @@ test('opportunities page renders numbered evidence as bullets instead of dense i
   assert.match(source, /\\\(\\d\+\\\)/)
 })
 
+test('opportunities page renders full brief text without generated ellipses', async () => {
+  const source = await readFile(new URL('../src/app/opportunities/opportunities-client.tsx', import.meta.url), 'utf8')
+
+  assert.doesNotMatch(source, /cleaned\.slice\([^)]*\)\.trim\(\)}\.\.\./)
+  assert.doesNotMatch(source, /return `\$\{cleaned\.slice/)
+  assert.match(source, /\.replace\(\/…\/g, ''\)/)
+  assert.match(source, /\.replace\(\/\\\.\{3\}\/g, ''\)/)
+})
+
 test('opportunities page keeps compact signal metadata separate from raw evidence text', async () => {
   const source = await readFile(new URL('../src/app/opportunities/opportunities-client.tsx', import.meta.url), 'utf8')
 
@@ -113,11 +138,22 @@ test('commercial state tabs refresh in place without replacing the page loading 
 
   assert.match(source, /useRef/)
   assert.match(source, /hasLoadedInitialDataRef/)
+  assert.match(source, /let cancelled = false/)
+  assert.match(source, /if \(cancelled\) return/)
+  assert.match(source, /cancelled = true/)
   assert.match(source, /commercialStateLoading/)
   assert.match(source, /setCommercialStateLoading/)
   assert.match(source, /aria-busy=\{commercialStateLoading\}/)
   assert.match(source, /Updating cards/)
   assert.doesNotMatch(source, /setLoading\(true\);\n\s*setLoadError\(null\);/)
+})
+
+test('commercial state tabs hide stale bucket pagination while the selected tab is loading', async () => {
+  const source = await readFile(new URL('../src/app/opportunities/opportunities-client.tsx', import.meta.url), 'utf8')
+
+  assert.match(source, /showingOutreachReadyTab && !commercialStateLoading/)
+  assert.match(source, /showingVerifyNowTab && !commercialStateLoading/)
+  assert.match(source, /showingMaterializedStateTab && !commercialStateLoading/)
 })
 
 test('commercial state tabs are contained inside the research feed controls', async () => {

@@ -3,6 +3,12 @@ import { NextRequest, NextResponse } from 'next/server'
 import { requireCronSecret } from '@/lib/cron-auth'
 import { backfillGraphitiDossierIngestions } from '@/lib/graphiti-dossier-ingestion'
 import { syncGraphitiDossierIngestionMemory } from '@/lib/graphiti-dossier-memory-bridge'
+import {
+  resolveGraphitiOpportunityPipelineResilienceConfig,
+  runGraphitiOpportunityPipelineStep,
+  summarizeGraphitiOpportunityPipeline,
+  type GraphitiOpportunityPipelineStep,
+} from '@/lib/graphiti-opportunity-pipeline-resilience'
 import { materializeGraphitiOpportunities } from '@/lib/graphiti-opportunity-persistence'
 import { synthesizeAndPersistGraphitiOpportunityStrategyBriefs } from '@/lib/graphiti-opportunity-strategy-synthesis.mjs'
 import { UnauthorizedError } from '@/lib/server-auth'
@@ -18,33 +24,86 @@ const CRON_MODEL_TIMEOUT_MS = 60000
 export async function POST(request: NextRequest) {
   try {
     requireCronSecret(request)
-    const dossierIngestion = await backfillGraphitiDossierIngestions({
-      limit: CRON_DOSSIER_LIMIT,
-      dryRun: false,
-    })
-    const graphitiMemorySync = await syncGraphitiDossierIngestionMemory({
-      limit: CRON_DOSSIER_LIMIT,
-      dryRun: false,
-      concurrency: 2,
-    })
-    const result = await materializeGraphitiOpportunities(CRON_DOSSIER_LIMIT)
-    const strategySynthesis = await synthesizeAndPersistGraphitiOpportunityStrategyBriefs({
-      supabase: getSupabaseAdmin(),
-      limit: CRON_STRATEGY_LIMIT,
-      dryRun: false,
-      concurrency: 1,
-      modelTimeoutMs: CRON_MODEL_TIMEOUT_MS,
-    })
+    const resilience = resolveGraphitiOpportunityPipelineResilienceConfig()
+    const steps: GraphitiOpportunityPipelineStep[] = []
 
-    return NextResponse.json({
-      ok: true,
-      dossier_ingestion: dossierIngestion.stats,
-      graphiti_memory_sync: graphitiMemorySync,
-      stats: result.stats,
-      strategy_synthesis: strategySynthesis,
-      warnings: result.warnings,
-      last_updated_at: result.lastUpdatedAt,
-    })
+    const dossierIngestion = await runGraphitiOpportunityPipelineStep(
+      {
+        name: 'dossier_ingestion',
+        critical: true,
+        retryAttempts: 1,
+        timeoutMs: resilience.stepTimeoutMs,
+      },
+      () => backfillGraphitiDossierIngestions({
+        limit: CRON_DOSSIER_LIMIT,
+        dryRun: false,
+      }),
+    )
+    steps.push(dossierIngestion)
+
+    const graphitiMemorySync = await runGraphitiOpportunityPipelineStep(
+      {
+        name: 'graphiti_memory_sync',
+        critical: false,
+        retryAttempts: resilience.retryAttempts,
+        timeoutMs: resilience.stepTimeoutMs,
+      },
+      () => syncGraphitiDossierIngestionMemory({
+        limit: CRON_DOSSIER_LIMIT,
+        dryRun: false,
+        concurrency: 2,
+      }),
+    )
+    steps.push(graphitiMemorySync)
+
+    const result = await runGraphitiOpportunityPipelineStep(
+      {
+        name: 'opportunity_materialization',
+        critical: true,
+        retryAttempts: resilience.retryAttempts,
+        timeoutMs: resilience.stepTimeoutMs,
+      },
+      () => materializeGraphitiOpportunities(CRON_DOSSIER_LIMIT),
+    )
+    steps.push(result)
+
+    const strategySynthesis = await runGraphitiOpportunityPipelineStep(
+      {
+        name: 'strategy_synthesis',
+        critical: false,
+        retryAttempts: resilience.retryAttempts,
+        timeoutMs: resilience.stepTimeoutMs,
+      },
+      () => synthesizeAndPersistGraphitiOpportunityStrategyBriefs({
+        supabase: getSupabaseAdmin(),
+        limit: CRON_STRATEGY_LIMIT,
+        dryRun: false,
+        concurrency: 1,
+        modelTimeoutMs: CRON_MODEL_TIMEOUT_MS,
+      }),
+    )
+    steps.push(strategySynthesis)
+
+    const summary = summarizeGraphitiOpportunityPipeline(steps)
+    const materializationResult = result.ok ? result.result : null
+    const materializationWarnings = materializationResult?.warnings ?? []
+    const warnings = [...materializationWarnings, ...summary.warnings]
+
+    return NextResponse.json(
+      {
+        ok: summary.ok,
+        pipeline_status: summary.status,
+        degraded: summary.degraded,
+        pipeline_steps: steps,
+        dossier_ingestion: dossierIngestion.ok ? dossierIngestion.result?.stats : null,
+        graphiti_memory_sync: graphitiMemorySync.ok ? graphitiMemorySync.result : null,
+        stats: materializationResult?.stats ?? null,
+        strategy_synthesis: strategySynthesis.ok ? strategySynthesis.result : null,
+        warnings,
+        last_updated_at: materializationResult?.lastUpdatedAt ?? new Date().toISOString(),
+      },
+      { status: summary.ok ? 200 : 500 },
+    )
   } catch (error) {
     if (error instanceof UnauthorizedError) {
       return NextResponse.json({ error: error.message }, { status: 401 })

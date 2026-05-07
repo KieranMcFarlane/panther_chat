@@ -1,6 +1,7 @@
 import { OPERATIONAL_HEARTBEAT_STALE_SECONDS } from '@/lib/operational-heartbeat'
 import { resolveOperationalHeartbeatDetails } from '@/lib/operational-heartbeat'
 import { maybeAutoResumePausedPipeline } from '@/lib/pipeline-paused-auto-resume'
+import { maybeAutoRecoverPipelineWorker } from '@/lib/pipeline-worker-auto-recovery'
 import { query as queryPostgres } from '@/lib/pg-client'
 import { readPipelineControlState, type PipelineControlState } from '@/lib/pipeline-control-state'
 import {
@@ -948,8 +949,14 @@ export async function loadPipelineRuntimeReadSet(): Promise<PipelineRuntimeReadS
     'pausedAutoResume',
     maybeAutoResumePausedPipeline({ control: initialControl, worker: initialWorker }),
   )
-  const control = autoResumeResult.control ?? initialControl
-  const worker = autoResumeResult.worker ?? initialWorker
+  const resumedControl = autoResumeResult.control ?? initialControl
+  const resumedWorker = autoResumeResult.worker ?? initialWorker
+  const autoRecoveryResult = await timed(
+    'workerAutoRecovery',
+    maybeAutoRecoverPipelineWorker({ control: resumedControl, worker: resumedWorker }),
+  )
+  const control = autoRecoveryResult.control ?? resumedControl
+  const worker = autoRecoveryResult.worker ?? resumedWorker
   const rows = [...activeRows, ...recentRows].filter((row, index, allRows) => {
     const key = `${toText(row.batch_id)}::${toText(row.entity_id)}::${toText(row.started_at)}`
     return allRows.findIndex((candidate) => (
