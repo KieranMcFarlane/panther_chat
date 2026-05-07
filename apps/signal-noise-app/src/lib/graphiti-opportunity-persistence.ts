@@ -733,7 +733,13 @@ function buildDossierOpportunitySource(
   }
 }
 
-async function loadPersistedDossierOpportunitySources(limit: number): Promise<GraphitiOpportunitySourceRow[]> {
+async function loadPersistedDossierOpportunitySources(
+  limit: number,
+  options: { canonicalEntityId?: string | null } = {},
+): Promise<GraphitiOpportunitySourceRow[]> {
+  const canonicalEntityId = toText(options.canonicalEntityId)
+  const scopedFilter = canonicalEntityId ? 'and i.canonical_entity_id = $2' : ''
+  const params = canonicalEntityId ? [Math.max(limit * 4, 100), canonicalEntityId] : [Math.max(limit * 4, 100)]
   const response = await queryPostgres(
     `
       select distinct on (i.canonical_entity_id)
@@ -756,6 +762,7 @@ async function loadPersistedDossierOpportunitySources(limit: number): Promise<Gr
       where i.status = 'ingested'
         and d.canonical_entity_id is not null
         and d.dossier_data is not null
+        ${scopedFilter}
       order by
         i.canonical_entity_id,
         case i.quality_state when 'client_ready' then 4 when 'complete' then 3 when 'partial' then 2 when 'blocked' then 1 else 0 end desc,
@@ -764,7 +771,7 @@ async function loadPersistedDossierOpportunitySources(limit: number): Promise<Gr
         coalesce(i.source_generated_at, i.reference_time, i.updated_at) desc nulls last
       limit $1
     `,
-    [Math.max(limit * 4, 100)],
+    params,
   )
 
   const rows = Array.isArray(response.rows) ? response.rows as EntityDossierOpportunityRow[] : []
@@ -794,6 +801,7 @@ async function loadPersistedDossierOpportunitySources(limit: number): Promise<Gr
       ...(sourceRow.raw_payload || {}),
       source: 'entity_dossiers',
       source_ledger_id: row.source_ledger_id,
+      canonical_entity_id: row.canonical_entity_id || null,
       quality_state: row.quality_state || sourceRow.raw_payload?.quality_state || null,
       answer_count: row.answer_count || sourceRow.raw_payload?.answer_count || 0,
       evidence_count: row.evidence_count || sourceRow.raw_payload?.evidence_count || 0,
@@ -830,8 +838,8 @@ function isStale(lastSeenAt: string | null | undefined) {
   return Date.now() - timestamp > staleWindowMs
 }
 
-async function loadSourceOpportunities(limit: number) {
-  const persistedDossierRows = await loadPersistedDossierOpportunitySources(limit)
+async function loadSourceOpportunities(limit: number, options: { canonicalEntityId?: string | null } = {}) {
+  const persistedDossierRows = await loadPersistedDossierOpportunitySources(limit, options)
   const seen = new Set<string>()
   return persistedDossierRows.filter((row) => {
     const key = sourceSignalDedupeKey(row)
@@ -922,11 +930,18 @@ export async function loadGraphitiOpportunities(limit = 25): Promise<GraphitiOpp
   }
 }
 
-export async function materializeGraphitiOpportunities(limit = 100) {
+export async function materializeGraphitiOpportunities(options: number | {
+  limit?: number
+  canonicalEntityId?: string | null
+  deactivateUnseen?: boolean
+} = 100) {
+  const limit = typeof options === 'number' ? options : Number(options.limit || 100)
+  const canonicalEntityId = typeof options === 'number' ? '' : toText(options.canonicalEntityId)
+  const deactivateUnseen = typeof options === 'number' ? true : options.deactivateUnseen !== false
   const supabase = getSupabaseAdmin()
   const warnings: string[] = []
   const nowIso = new Date().toISOString()
-  const sourceRows = await loadSourceOpportunities(limit)
+  const sourceRows = await loadSourceOpportunities(limit, { canonicalEntityId })
   const canonicalEntities = await getCanonicalEntitiesSnapshot().catch(() => [])
   const materialized = sourceRows.map((row) => materializeGraphitiOpportunity(row, canonicalEntities))
   const uniqueByOpportunityId = new Map<string, typeof materialized[number]>()
@@ -982,27 +997,29 @@ export async function materializeGraphitiOpportunities(limit = 100) {
     }
   }
 
-  const activeResponse = await supabase
-    .from('graphiti_materialized_opportunities')
-    .select('opportunity_id')
-    .eq('is_active', true)
+  if (deactivateUnseen !== false) {
+    const activeResponse = await supabase
+      .from('graphiti_materialized_opportunities')
+      .select('opportunity_id')
+      .eq('is_active', true)
 
-  if (activeResponse.error) {
-    warnings.push(`Failed to inspect active Graphiti opportunities: ${activeResponse.error.message}`)
-  } else {
-    const activeIds = (Array.isArray(activeResponse.data) ? activeResponse.data : [])
-      .map((row: any) => String(row.opportunity_id))
-      .filter(Boolean)
-    const unseenActiveIds = activeIds.filter((opportunityId: string) => !sourceIds.includes(opportunityId))
+    if (activeResponse.error) {
+      warnings.push(`Failed to inspect active Graphiti opportunities: ${activeResponse.error.message}`)
+    } else {
+      const activeIds = (Array.isArray(activeResponse.data) ? activeResponse.data : [])
+        .map((row: any) => String(row.opportunity_id))
+        .filter(Boolean)
+      const unseenActiveIds = activeIds.filter((opportunityId: string) => !sourceIds.includes(opportunityId))
 
-    if (unseenActiveIds.length > 0) {
-      const deactivateResponse = await supabase
-        .from('graphiti_materialized_opportunities')
-        .update({ is_active: false, updated_at: nowIso })
-        .in('opportunity_id', unseenActiveIds)
+      if (unseenActiveIds.length > 0) {
+        const deactivateResponse = await supabase
+          .from('graphiti_materialized_opportunities')
+          .update({ is_active: false, updated_at: nowIso })
+          .in('opportunity_id', unseenActiveIds)
 
-      if (deactivateResponse.error) {
-        warnings.push(`Failed to deactivate unseen Graphiti opportunities: ${deactivateResponse.error.message}`)
+        if (deactivateResponse.error) {
+          warnings.push(`Failed to deactivate unseen Graphiti opportunities: ${deactivateResponse.error.message}`)
+        }
       }
     }
   }

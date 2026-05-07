@@ -449,7 +449,70 @@ export function buildGraphitiDossierEpisode(row: CanonicalDossierRow) {
   }
 }
 
-export async function loadLatestCanonicalDossiers(limit = 5000): Promise<CanonicalDossierRow[]> {
+export async function loadLatestCanonicalDossiers(options: number | {
+  limit?: number
+  canonicalEntityId?: string | null
+  dossierId?: string | null
+} = 5000): Promise<CanonicalDossierRow[]> {
+  const limit = typeof options === 'number' ? options : Number(options.limit || 5000)
+  const canonicalEntityId = typeof options === 'number' ? '' : toText(options.canonicalEntityId)
+  const dossierId = typeof options === 'number' ? '' : toText(options.dossierId)
+
+  if (dossierId) {
+    const dossierCanonicalFilter = canonicalEntityId ? 'and canonical_entity_id = $3' : ''
+    const params = canonicalEntityId
+      ? [Math.max(1, limit), dossierId, canonicalEntityId]
+      : [Math.max(1, limit), dossierId]
+    const result = await queryPostgres(
+      `
+        select
+          id,
+          entity_id,
+          canonical_entity_id,
+          entity_name,
+          entity_type,
+          created_at,
+          generated_at,
+          dossier_data
+        from entity_dossiers
+        where canonical_entity_id is not null
+          and dossier_data is not null
+          and id = $2::uuid
+          ${dossierCanonicalFilter}
+        order by created_at desc
+        limit $1
+      `,
+      params,
+    )
+
+    return result.rows as CanonicalDossierRow[]
+  }
+
+  if (canonicalEntityId) {
+    const result = await queryPostgres(
+      `
+        select distinct on (canonical_entity_id)
+          id,
+          entity_id,
+          canonical_entity_id,
+          entity_name,
+          entity_type,
+          created_at,
+          generated_at,
+          dossier_data
+        from entity_dossiers
+        where canonical_entity_id is not null
+          and dossier_data is not null
+          and canonical_entity_id = $2
+        order by canonical_entity_id, created_at desc
+        limit $1
+      `,
+      [Math.max(1, limit), canonicalEntityId],
+    )
+
+    return result.rows as CanonicalDossierRow[]
+  }
+
   const result = await queryPostgres(
     `
       select distinct on (canonical_entity_id)
@@ -467,7 +530,7 @@ export async function loadLatestCanonicalDossiers(limit = 5000): Promise<Canonic
       order by canonical_entity_id, created_at desc
       limit $1
     `,
-    [limit],
+    [Math.max(1, limit)],
   )
 
   return result.rows as CanonicalDossierRow[]
@@ -728,10 +791,19 @@ export async function loadGraphitiDossierIngestionStats() {
   }
 }
 
-export async function backfillGraphitiDossierIngestions(options: { limit?: number; dryRun?: boolean } = {}) {
+export async function backfillGraphitiDossierIngestions(options: {
+  limit?: number
+  dryRun?: boolean
+  canonicalEntityId?: string | null
+  dossierId?: string | null
+} = {}) {
   const limit = Math.max(1, Math.min(Number(options.limit || 5000), 10000))
   const dryRun = options.dryRun !== false
-  const rows = await loadLatestCanonicalDossiers(limit)
+  const rows = await loadLatestCanonicalDossiers({
+    limit,
+    canonicalEntityId: options.canonicalEntityId,
+    dossierId: options.dossierId,
+  })
   const stats = {
     latest_canonical_dossiers: rows.length,
     would_ingest: 0,

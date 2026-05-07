@@ -46,6 +46,10 @@ try:
     from backend.dossier_publication_quality import apply_publication_quality_gates
 except ImportError:
     from dossier_publication_quality import apply_publication_quality_gates
+try:
+    from backend.post_dossier_graphiti_trigger import notify_post_dossier_graphiti_opportunity_trigger
+except ImportError:
+    from post_dossier_graphiti_trigger import notify_post_dossier_graphiti_opportunity_trigger
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -1511,12 +1515,23 @@ async def generate_dossier(request: DossierRequest):
                         else:
                             update_query = update_query.eq("entity_id", request.entity_id)
                         update_query.execute()
+                        notify_post_dossier_graphiti_opportunity_trigger(
+                            canonical_entity_id=canonical_entity_id,
+                            entity_id=request.entity_id,
+                            dossier_id=existing_row.get("id") if isinstance(existing_row, dict) else None,
+                            source="pipeline_dossier_completed",
+                        )
                         logger.info("✅ Updated existing persisted dossier")
                     else:
                         logger.info("✅ Preserved higher-quality existing persisted dossier")
                 else:
                     # Insert new
                     persistence_client.table("entity_dossiers").insert(dossier_record).execute()
+                    notify_post_dossier_graphiti_opportunity_trigger(
+                        canonical_entity_id=canonical_entity_id,
+                        entity_id=request.entity_id,
+                        source="pipeline_dossier_completed",
+                    )
                     logger.info("✅ Inserted new persisted dossier")
                 await emit_dossier_substep("persist_dossier", "completed")
 

@@ -35,6 +35,10 @@ try:
     from dossier_publication_quality import apply_publication_quality_gates
 except ImportError:  # pragma: no cover - package import fallback
     from backend.dossier_publication_quality import apply_publication_quality_gates
+try:
+    from post_dossier_graphiti_trigger import notify_post_dossier_graphiti_opportunity_trigger
+except ImportError:  # pragma: no cover - package import fallback
+    from backend.post_dossier_graphiti_trigger import notify_post_dossier_graphiti_opportunity_trigger
 
 # Load environment variables from .env.local
 project_root = Path(__file__).parent.parent
@@ -685,6 +689,11 @@ class GraphitiService:
                 extra={"entity_id": entity_id, "error": str(error)},
             )
         self.supabase_client.table("entity_dossiers").upsert(record, on_conflict=conflict_key).execute()
+        notify_post_dossier_graphiti_opportunity_trigger(
+            canonical_entity_id=canonical_entity_id,
+            entity_id=entity_id,
+            source="pipeline_dossier_completed",
+        )
 
     @staticmethod
     def _question_first_checkpoint_answer_count(dossier: Any) -> int:

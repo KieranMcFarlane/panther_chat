@@ -429,7 +429,7 @@ function candidateScore(row) {
   return fit * 1000000 + evidence * 10000 + useful * 100 + Math.floor(recency / 1000000000)
 }
 
-export async function selectStrategySynthesisCandidates({ supabase, limit = 50 }) {
+export async function selectStrategySynthesisCandidates({ supabase, limit = 50, canonicalEntityId = null, sourceLedgerId = null }) {
   const response = await supabase
     .from('graphiti_materialized_opportunities')
     .select('opportunity_id,title,organization,entity_name,canonical_entity_name,summary,why_it_matters,suggested_action,why_this_is_an_opportunity,yellow_panther_fit_feedback,supporting_signals,yellow_panther_fit,status,evidence,raw_payload,is_active,detected_at,materialized_at,last_seen_at,updated_at')
@@ -438,6 +438,12 @@ export async function selectStrategySynthesisCandidates({ supabase, limit = 50 }
   if (response.error) throw new Error(`strategy_candidate_query_failed:${response.error.message}`)
   const rows = (Array.isArray(response.data) ? response.data : [])
     .filter((row) => asRecord(row.raw_payload).source === 'entity_dossiers')
+    .filter((row) => {
+      const rawPayload = asRecord(row.raw_payload)
+      if (canonicalEntityId && rawPayload.canonical_entity_id !== canonicalEntityId) return false
+      if (sourceLedgerId && rawPayload.source_ledger_id !== sourceLedgerId) return false
+      return true
+    })
     .filter((row) => asRecord(row.raw_payload).bd_strategy_status !== 'ready')
   const active = rows.filter((row) => candidateTier(row) === 'active')
   const watch = rows
@@ -462,7 +468,7 @@ async function runWithConcurrency(items, concurrency, worker) {
 }
 
 /**
- * @param {{ supabase: any, limit?: number, dryRun?: boolean, concurrency?: number, modelTimeoutMs?: number, yellowPantherProfile?: string }} options
+ * @param {{ supabase: any, limit?: number, dryRun?: boolean, concurrency?: number, modelTimeoutMs?: number, yellowPantherProfile?: string, canonicalEntityId?: string | null, sourceLedgerId?: string | null }} options
  */
 export async function synthesizeAndPersistGraphitiOpportunityStrategyBriefs({
   supabase = null,
@@ -471,9 +477,11 @@ export async function synthesizeAndPersistGraphitiOpportunityStrategyBriefs({
   concurrency = 2,
   modelTimeoutMs = undefined,
   yellowPantherProfile = loadYellowPantherBusinessProfile(),
+  canonicalEntityId = null,
+  sourceLedgerId = null,
 } = {}) {
   if (!supabase) throw new Error('missing_supabase_client')
-  const candidates = await selectStrategySynthesisCandidates({ supabase, limit })
+  const candidates = await selectStrategySynthesisCandidates({ supabase, limit, canonicalEntityId, sourceLedgerId })
   if (dryRun) {
     return {
       candidate_count: candidates.length,

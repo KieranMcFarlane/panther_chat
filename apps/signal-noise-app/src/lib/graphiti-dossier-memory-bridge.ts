@@ -84,7 +84,22 @@ export function resolveGraphitiMemoryBridgeConfig(env = process.env): GraphitiMe
   }
 }
 
-export async function loadGraphitiDossierMemoryCandidates(limit = 250): Promise<GraphitiDossierMemoryCandidate[]> {
+export async function loadGraphitiDossierMemoryCandidates(options: number | {
+  limit?: number
+  canonicalEntityId?: string | null
+  sourceLedgerId?: string | null
+} = 250): Promise<GraphitiDossierMemoryCandidate[]> {
+  const limit = typeof options === 'number' ? options : Number(options.limit || 250)
+  const canonicalEntityId = typeof options === 'number' ? '' : toText(options.canonicalEntityId)
+  const sourceLedgerId = typeof options === 'number' ? '' : toText(options.sourceLedgerId)
+  const scopedFilter = sourceLedgerId
+    ? 'and i.id = $2::uuid'
+    : canonicalEntityId
+      ? 'and i.canonical_entity_id = $2'
+      : ''
+  const params = scopedFilter
+    ? [Math.max(1, limit), sourceLedgerId || canonicalEntityId]
+    : [Math.max(1, limit)]
   const result = await queryPostgres(
     `
       select
@@ -122,6 +137,7 @@ export async function loadGraphitiDossierMemoryCandidates(limit = 250): Promise<
       where i.status = 'ingested'
         and i.episode_body is not null
         and coalesce(i.raw_metadata->>'graphiti_memory_sync_status', '') <> 'synced'
+        ${scopedFilter}
       order by
         case i.quality_state when 'client_ready' then 4 when 'complete' then 3 when 'partial' then 2 when 'blocked' then 1 else 0 end desc,
         coalesce(i.evidence_count, 0) desc,
@@ -129,7 +145,7 @@ export async function loadGraphitiDossierMemoryCandidates(limit = 250): Promise<
         coalesce(i.source_generated_at, i.reference_time, i.updated_at) desc nulls last
       limit $1
     `,
-    [Math.max(1, limit)],
+    params,
   )
 
   return (result.rows || []).map((row: Record<string, unknown>) => ({
@@ -335,12 +351,18 @@ export async function syncGraphitiDossierIngestionMemory(options: {
   dryRun?: boolean
   concurrency?: number
   config?: GraphitiMemoryBridgeConfig
+  canonicalEntityId?: string | null
+  sourceLedgerId?: string | null
 } = {}) {
   const limit = Number.isFinite(Number(options.limit)) ? Number(options.limit) : 250
   const dryRun = options.dryRun === true
   const concurrency = Number.isFinite(Number(options.concurrency)) ? Number(options.concurrency) : 2
   const config = options.config || resolveGraphitiMemoryBridgeConfig()
-  const candidates = await loadGraphitiDossierMemoryCandidates(limit)
+  const candidates = await loadGraphitiDossierMemoryCandidates({
+    limit,
+    canonicalEntityId: options.canonicalEntityId,
+    sourceLedgerId: options.sourceLedgerId,
+  })
 
   if (dryRun || !config.enabled) {
     return {

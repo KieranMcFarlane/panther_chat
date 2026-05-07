@@ -49,6 +49,10 @@ try:
     from backend.dossier_publication_quality import apply_publication_quality_gates
 except ImportError:
     from dossier_publication_quality import apply_publication_quality_gates
+try:
+    from backend.post_dossier_graphiti_trigger import notify_post_dossier_graphiti_opportunity_trigger
+except ImportError:
+    from post_dossier_graphiti_trigger import notify_post_dossier_graphiti_opportunity_trigger
 
 logger = logging.getLogger(__name__)
 DEFAULT_OPENCODE_MODEL = "zai-coding-plan/glm-5.1"
@@ -478,6 +482,15 @@ class PipelineOrchestrator:
             record_type=record_type,
             record_id=record_id or entity_id,
             payload=payload,
+        )
+        notify_post_dossier_graphiti_opportunity_trigger(
+            canonical_entity_id=(
+                str((request_metadata or {}).get("canonical_entity_id") or "").strip()
+                or str(dossier.get("canonical_entity_id") or "").strip()
+                or entity_id
+            ),
+            entity_id=entity_id,
+            source="pipeline_dossier_completed",
         )
 
     def _build_canonical_publication_dossier(
