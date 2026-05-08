@@ -20,8 +20,8 @@ The dossier generation system has been successfully integrated with FalkorDB. Al
 
 **Current .env Configuration**:
 ```bash
-FALKORDB_URI=rediss://r-6jissuruar.instance-vnsu2asxb.hc-srom4rolb.eu-west-1.aws.f2e0a955bb84.cloud:50743
-FALKORDB_PASSWORD=N!HH@CBC9QDesFdS
+FALKORDB_URI=rediss://<falkordb-cloud-host>:<port>
+FALKORDB_PASSWORD=<falkordb-password>
 FALKORDB_USER=falkordb
 FALKORDB_DATABASE=sports_intelligence
 ```
@@ -61,7 +61,7 @@ FALKORDB_DATABASE=sports_intelligence
 
 **Error**:
 ```
-Error 8 connecting to r-6jissuruar.instance-vnsu2asxb.hc-srom4rolb.eu-west-1.aws.f2e0a955bb84.cloud:50743
+Error 8 connecting to <falkordb-cloud-host>:50743
 nodename nor servname provided, or not known
 ```
 
@@ -163,7 +163,7 @@ Revenue Band: N/A
 If the cloud instance should be accessible:
 1. Verify the hostname is correct
 2. Check if instance is still running
-3. Test DNS resolution: `nslookup r-6jissuruar.instance-vnsu2asxb.hc-srom4rolb.eu-west-1.aws.f2e0a955bb84.cloud`
+3. Test DNS resolution: `nslookup <falkordb-cloud-host>`
 4. Check firewall rules
 5. Verify SSL/TLS certificates
 

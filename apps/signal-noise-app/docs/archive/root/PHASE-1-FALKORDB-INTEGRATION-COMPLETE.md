@@ -119,10 +119,10 @@ If your office/home network blocks the connection, try from a different network.
 **Option 3: Verify FalkorDB Access**
 ```bash
 # Test basic connectivity
-nc -zv r-6jissuruar.instance-vnsu2asxb.hc-srom4rolb.eu-west-1.aws.f2e0a955bb84.cloud 50743
+nc -zv <falkordb-cloud-host> 50743
 
 # Or using telnet
-telnet r-6jissuruar.instance-vnsu2asxb.hc-srom4rolb.eu-west-1.aws.f2e0a955bb84.cloud 50743
+telnet <falkordb-cloud-host> 50743
 ```
 
 ---

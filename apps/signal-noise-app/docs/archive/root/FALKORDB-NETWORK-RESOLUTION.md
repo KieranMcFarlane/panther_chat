@@ -11,7 +11,7 @@
 ### Cloud Instance Unavailable
 The FalkorDB cloud instance hostname is not resolving:
 ```
-r-6jissuruar.instance-vnsu2asxb.hc-srom4rolb.eu-west-1.aws.f2e0a955bb84.cloud:50743
+<falkordb-cloud-host>:50743
 ❌ DNS resolution failed: nodename nor servname provided, or not known
 ```
 

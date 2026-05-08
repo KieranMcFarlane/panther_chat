@@ -1,6 +1,7 @@
 import crypto from 'node:crypto'
 import { query as queryPostgres } from '@/lib/pg-client'
 import type { GraphitiOpportunitySourceRow } from '@/lib/graphiti-opportunity-contract'
+import { loadGraphitiRuntimeHealth } from '@/lib/graphiti-runtime-health.mjs'
 
 type JsonRecord = Record<string, unknown>
 
@@ -372,6 +373,23 @@ export async function syncGraphitiDossierIngestionMemory(options: {
       dry_run: dryRun,
       skipped: !config.enabled,
       warnings: config.enabled ? [] : ['Graphiti memory sync skipped: no GRAPHITI_MEMORY_INGEST_URL or GRAPHITI_MCP_URL configured'],
+    }
+  }
+
+  const runtimeHealth = await loadGraphitiRuntimeHealth()
+  if (!runtimeHealth.falkordb_graph_available || !runtimeHealth.graphiti_mcp_available) {
+    return {
+      status: 'degraded',
+      reason: runtimeHealth.graphiti_degraded_reason || 'graphiti_mcp_unavailable',
+      candidate_count: candidates.length,
+      synced_count: 0,
+      failed_count: 0,
+      dry_run: false,
+      skipped: true,
+      graphiti_runtime_health: runtimeHealth,
+      warnings: [
+        `graphiti_memory_sync.status = "degraded": ${runtimeHealth.graphiti_degraded_reason || 'falkordb_graph_unavailable'}`,
+      ],
     }
   }
 

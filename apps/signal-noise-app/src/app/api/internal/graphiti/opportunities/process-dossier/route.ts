@@ -11,6 +11,7 @@ import {
 } from '@/lib/graphiti-opportunity-pipeline-resilience'
 import { materializeGraphitiOpportunities } from '@/lib/graphiti-opportunity-persistence'
 import { synthesizeAndPersistGraphitiOpportunityStrategyBriefs } from '@/lib/graphiti-opportunity-strategy-synthesis.mjs'
+import { loadGraphitiRuntimeHealth } from '@/lib/graphiti-runtime-health.mjs'
 import { UnauthorizedError } from '@/lib/server-auth'
 import { getSupabaseAdmin } from '@/lib/supabase-client'
 
@@ -47,6 +48,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    const graphitiRuntimeHealth = await loadGraphitiRuntimeHealth()
     const resilience = resolveGraphitiOpportunityPipelineResilienceConfig()
     const steps: GraphitiOpportunityPipelineStep[] = []
 
@@ -118,7 +120,8 @@ export async function POST(request: NextRequest) {
     const summary = summarizeGraphitiOpportunityPipeline(steps)
     const materializationResult = result.ok ? result.result : null
     const materializationWarnings = materializationResult?.warnings ?? []
-    const warnings = [...materializationWarnings, ...summary.warnings]
+    const graphitiMemoryWarnings = graphitiMemorySync.ok ? graphitiMemorySync.result?.warnings ?? [] : []
+    const warnings = [...materializationWarnings, ...graphitiMemoryWarnings, ...summary.warnings]
 
     return NextResponse.json(
       {
@@ -131,6 +134,12 @@ export async function POST(request: NextRequest) {
         pipeline_steps: steps,
         dossier_ingestion: dossierIngestion.ok ? dossierIngestion.result?.stats : null,
         graphiti_memory_sync: graphitiMemorySync.ok ? graphitiMemorySync.result : null,
+        graphiti_runtime_health: graphitiRuntimeHealth,
+        falkordb_graph_available: graphitiRuntimeHealth.falkordb_graph_available,
+        graphiti_mcp_available: graphitiRuntimeHealth.graphiti_mcp_available,
+        graphiti_runtime_mode: graphitiRuntimeHealth.graphiti_runtime_mode,
+        graphiti_degraded_reason: graphitiRuntimeHealth.graphiti_degraded_reason,
+        next_recovery_action: graphitiRuntimeHealth.next_recovery_action,
         stats: materializationResult?.stats ?? null,
         strategy_synthesis: strategySynthesis.ok ? strategySynthesis.result : null,
         warnings,

@@ -14,7 +14,7 @@
 - ✅ SSL authentication working
 - ✅ User/pass authentication successful
 - ✅ Database: `sports_intelligence`
-- ✅ Host: `r-6jissuruar.instance-vnsu2asxb.hc-srom4rolb.eu-west-1.aws.f2e0a955bb84.cloud:50743`
+- ✅ Host: `<falkordb-cloud-host>:50743`
 
 **2. MCP Tool Invocation**
 - ✅ `mcp__graphiti__search_nodes` called correctly

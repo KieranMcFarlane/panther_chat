@@ -5,9 +5,9 @@
       "args": ["backend/graphiti_mcp_server_official/src/graphiti_mcp_server.py"],
       "env": {
         "DATABASE_PROVIDER": "falkordb",
-        "FALKORDB_URI": "rediss://r-6jissuruar.instance-vnsu2asxb.hc-srom4rolb.eu-west-1.aws.f2e0a955bb84.cloud:50743",
+        "FALKORDB_URI": "rediss://<falkordb-cloud-host>:<port>",
         "FALKORDB_USER": "falkordb",
-        "FALKORDB_PASSWORD": "N!HH@CBC9QDesFdS",
+        "FALKORDB_PASSWORD": "<falkordb-password>",
         "FALKORDB_DATABASE": "sports_intelligence",
         "MODEL_NAME": "gpt-4o-mini",
         "EMBEDDING_MODEL": "text-embedding-3-small",

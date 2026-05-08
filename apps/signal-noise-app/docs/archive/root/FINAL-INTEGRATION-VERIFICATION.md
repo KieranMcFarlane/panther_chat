@@ -37,7 +37,7 @@ The FalkorDB integration for the Entity Dossier Generator is **complete and prod
 ```
 ✅ .env loading from project root
 ✅ FALKORDB_URI correctly parsed
-✅ Connection attempt to: r-6jissuruar.instance-vnsu2asxb.hc-srom4rolb.eu-west-1.aws.f2e0a955bb84.cloud:50743
+✅ Connection attempt to: <falkordb-cloud-host>:50743
 ✅ Credentials loaded correctly
 ```
 
@@ -45,8 +45,8 @@ The FalkorDB integration for the Entity Dossier Generator is **complete and prod
 
 **Log Output**:
 ```
-🔗 Connecting to FalkorDB at r-6jissuruar.instance-vnsu2asxb.hc-srom4rolb.eu-west-1.aws.f2e0a955bb84.cloud:50743...
-❌ FalkorDB connection failed: Error 8 connecting to r-6jissuruar.instance-vnsu2asxb.hc-srom4rolb.eu-west-1.aws.f2e0a955bb84.cloud:50743. nodename nor servname provided, or not known.
+🔗 Connecting to FalkorDB at <falkordb-cloud-host>:50743...
+❌ FalkorDB connection failed: Error 8 connecting to <falkordb-cloud-host>:50743. nodename nor servname provided, or not known.
 ✅ Collected data from 0 sources
 ⚠️ Using placeholder data (FalkorDB unavailable)
 ```
@@ -191,7 +191,7 @@ The FalkorDB integration for the Entity Dossier Generator is **complete and prod
 
 ### Error
 ```
-Error 8 connecting to r-6jissuruar.instance-vnsu2asxb.hc-srom4rolb.eu-west-1.aws.f2e0a955bb84.cloud:50743
+Error 8 connecting to <falkordb-cloud-host>:50743
 nodename nor servname provided, or not known
 ```
 

@@ -5,7 +5,7 @@
 ## Issue: FalkorDB Cloud Connection Timeout
 
 The production bootstrap script is hanging when trying to connect to FalkorDB:
-- URI: `rediss://r-6jissuruar.instance-vnsu2asxb.hc-srom4rolb.eu-west-1.aws.f2e0a955bb84.cloud:50743`
+- URI: `rediss://<falkordb-cloud-host>:<port>`
 - Status: Connection timeout/hanging
 
 ## Root Cause

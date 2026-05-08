@@ -14,7 +14,7 @@
 - **Configuration:** `mcp-config.json` → stdio transport
 - **Database:** FalkorDB Production Cloud
 - **Connection:** Successfully authenticated and tested
-- **Host:** `r-6jissuruar.instance-vnsu2asxb.hc-srom4rolb.eu-west-1.aws.f2e0a955bb84.cloud:50743`
+- **Host:** `<falkordb-cloud-host>:50743`
 - **Database:** `sports_intelligence`
 - **Data:** 3,400+ sports entities from production
 

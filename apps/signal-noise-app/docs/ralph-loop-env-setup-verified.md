@@ -26,9 +26,9 @@ NEO4J_USERNAME=neo4j
 NEO4J_PASSWORD=llNASCzMWGT-nTt-JkD9Qk_4W6PpJrv39X0PuYAIKV0
 
 # FalkorDB (alternative graph database)
-FALKORDB_URI=rediss://r-6jissuruar.instance-vnsu2asxb.hc-srom4rolb.eu-west-1.aws.f2e0a955bb84.cloud:50743
+FALKORDB_URI=rediss://<falkordb-cloud-host>:<port>
 FALKORDB_USER=falkordb
-FALKORDB_PASSWORD=N!HH@CBC9QDesFdS
+FALKORDB_PASSWORD=<falkordb-password>
 FALKORDB_DATABASE=sports_intelligence
 ```
 

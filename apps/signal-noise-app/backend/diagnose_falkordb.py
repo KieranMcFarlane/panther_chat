@@ -17,7 +17,7 @@ def test_dns_resolution():
     """Test if DNS can resolve the FalkorDB host"""
     print("\n=== Test 1: DNS Resolution ===\n")
 
-    host = "r-6jissuruar.instance-vnsu2asxb.hc-srom4rolb.eu-west-1.aws.f2e0a955bb84.cloud"
+    host = "<falkordb-cloud-host>"
 
     print(f"Resolving: {host}")
 
@@ -40,7 +40,7 @@ def test_tcp_connection():
     """Test if TCP connection to port 50743 works"""
     print("\n=== Test 2: TCP Connection ===\n")
 
-    host = "r-6jissuruar.instance-vnsu2asxb.hc-srom4rolb.eu-west-1.aws.f2e0a955bb84.cloud"
+    host = "<falkordb-cloud-host>"
     port = 50743
 
     print(f"Connecting to: {host}:{port}")
@@ -97,9 +97,9 @@ def test_environment_variables():
     import os
 
     # Set test variables
-    os.environ["FALKORDB_URI"] = "rediss://r-6jissuruar.instance-vnsu2asxb.hc-srom4rolb.eu-west-1.aws.f2e0a955bb84.cloud:50743"
+    os.environ["FALKORDB_URI"] = "rediss://<falkordb-cloud-host>:<port>"
     os.environ["FALKORDB_USER"] = "falkordb"
-    os.environ["FALKORDB_PASSWORD"] = "N!HH@CBC9QDesFdS"
+    os.environ["FALKORDB_PASSWORD"] = "<falkordb-password>"
     os.environ["FALKORDB_DATABASE"] = "sports_intelligence"
 
     print("Environment variables set:")

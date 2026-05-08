@@ -74,13 +74,13 @@ The official Graphiti MCP server (`backend/graphiti_mcp_server_official/`) requi
 1. Check if VPN is required to access the cloud instance
 2. Test connectivity:
    ```bash
-   nc -zv r-6jissuruar.instance-vnsu2asxb.hc-srom4rolb.eu-west-1.aws.f2e0a955bb84.cloud 50743
+   nc -zv <falkordb-cloud-host> 50743
    ```
 3. If blocked, configure VPN or firewall rules
 4. Update `.env` to use cloud URI:
    ```bash
-   FALKORDB_URI=rediss://r-6jissuruar.instance-vnsu2asxb.hc-srom4rolb.eu-west-1.aws.f2e0a955bb84.cloud:50743
-   FALKORDB_PASSWORD=N!HH@CBC9QDesFdS
+   FALKORDB_URI=rediss://<falkordb-cloud-host>:<port>
+   FALKORDB_PASSWORD=<falkordb-password>
    ```
 5. Start Graphiti MCP server:
    ```bash

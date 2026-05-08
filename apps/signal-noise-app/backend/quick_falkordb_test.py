@@ -13,9 +13,9 @@ import redis
 import socket
 
 # Connection details from .env
-host = "r-6jissuruar.instance-vnsu2asxb.hc-srom4rolb.eu-west-1.aws.f2e0a955bb84.cloud"
+host = "<falkordb-cloud-host>"
 port = 50743
-password = "N!HH@CBC9QDesFdS"
+password = "<falkordb-password>"
 
 print(f"Testing connection to {host}:{port}...")
 

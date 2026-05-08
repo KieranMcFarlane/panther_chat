@@ -188,7 +188,7 @@ ANTHROPIC_AUTH_TOKEN=your-zai-auth-token-here
 # =============================================================================
 # FALKORDB (Graph Database)
 # =============================================================================
-FALKORDB_URI=rediss://r-6jissuruar.instance-vnsu2asxb.hc-srom4rolb.eu-west-1.aws.f2e0a955bb84.cloud:50743
+FALKORDB_URI=rediss://<falkordb-cloud-host>:<port>
 FALKORDB_PASSWORD=your-falkordb-password-here
 FALKORDB_USER=falkordb
 FALKORDB_DATABASE=sports_intelligence

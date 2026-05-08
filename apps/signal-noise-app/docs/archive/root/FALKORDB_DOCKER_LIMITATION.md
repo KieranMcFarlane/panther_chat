@@ -38,8 +38,8 @@ errMsg: Invalid input 'A': expected ...
 
 **Connection:**
 ```
-URI: rediss://r-6jissuruar.instance-vnsu2asxb.hc-srom4rolb.eu-west-1.aws.f2e0a955bb84.cloud:50743
-Password: N!HH@CBC9QDesFdS
+URI: rediss://<falkordb-cloud-host>:<port>
+Password: <falkordb-password>
 ```
 
 **Error:**
@@ -109,14 +109,14 @@ The graph module **is loaded inside the container** and works for internal opera
 
 **Current status:**
 ```
-URI: rediss://r-6jissuruar.instance-vnsu2asxb.hc-srom4rolb.eu-west-1.aws.f2e0a955bb84.cloud:50743
+URI: rediss://<falkordb-cloud-host>:<port>
 Error: Authentication failed
 ```
 
 **What's needed:**
 1. Test VPN/firewall access:
    ```bash
-   nc -zv r-6jissuruar.instance-vnsu2asxb.hc-srom4rolb.eu-west-1.aws.f2e0a955bb84.cloud 50743
+   nc -zv <falkordb-cloud-host> 50743
    ```
 
 2. Verify credentials are correct
@@ -223,7 +223,7 @@ CopilotKit: Integrated with 6 new tools
 1. **Test Connectivity:**
    ```bash
    # Check if VPN/firewall allows access
-   nc -zv r-6jissuruar.instance-vnsu2asxb.hc-srom4rolb.eu-west-1.aws.f2e0a955bb84.cloud 50743
+   nc -zv <falkordb-cloud-host> 50743
    ```
 
 2. **Verify Credentials:**

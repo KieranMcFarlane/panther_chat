@@ -4,6 +4,7 @@ set -euo pipefail
 backend_pid=""
 frontend_pid=""
 graphiti_mcp_pid=""
+graphiti_mcp_enabled="0"
 worker_pid=""
 worker_supervisor_pid=""
 recovery_supervisor_pid=""
@@ -18,9 +19,12 @@ backend_pid_file="tmp/dev-full-backend.pid"
 frontend_pid_file="tmp/dev-full-frontend.pid"
 graphiti_mcp_pid_file="tmp/graphiti-mcp.pid"
 graphiti_mcp_log_file="tmp/graphiti-mcp.log"
+graphiti_runtime_state_file="${GRAPHITI_RUNTIME_STATE_PATH:-tmp/graphiti-runtime-state.json}"
 
 export SIGNAL_NOISE_BACKEND_PORT="${SIGNAL_NOISE_BACKEND_PORT:-8002}"
 export GRAPHITI_MCP_PORT="${GRAPHITI_MCP_PORT:-8000}"
+export GRAPHITI_REQUIRED="${GRAPHITI_REQUIRED:-0}"
+export GRAPHITI_RUNTIME_STATE_PATH="${GRAPHITI_RUNTIME_STATE_PATH:-${graphiti_runtime_state_file}}"
 export GRAPHITI_MCP_URL="${GRAPHITI_MCP_URL:-http://127.0.0.1:${GRAPHITI_MCP_PORT}/mcp/}"
 export FALKORDB_URI="${FALKORDB_URI:-redis://localhost:6379}"
 export FALKORDB_USER="${FALKORDB_USER:-}"
@@ -235,27 +239,61 @@ wait_for_graphiti_mcp() {
   return 1
 }
 
+write_graphiti_runtime_state() {
+  local mode="$1"
+  local reason="$2"
+  local reason_json="null"
+  if [[ -n "${reason}" ]]; then
+    reason_json="\"${reason}\""
+  fi
+  mkdir -p "$(dirname "${graphiti_runtime_state_file}")"
+  cat > "${graphiti_runtime_state_file}" <<EOF
+{
+  "graphiti_runtime_mode": "${mode}",
+  "graphiti_degraded_reason": ${reason_json},
+  "falkordb_graph_available": $([[ "${mode}" == "ready" ]] && echo true || echo false),
+  "graphiti_mcp_available": $([[ "${mode}" == "ready" ]] && echo true || echo false),
+  "updated_at": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")",
+  "next_recovery_action": "$([[ "${mode}" == "ready" ]] && echo "No action required." || echo "Point FALKORDB_URI at a real FalkorDB graph endpoint, then restart dev-full so Graphiti MCP can start.")"
+}
+EOF
+}
+
 check_falkordb_graph() {
   local graph_probe_output=""
+  local redis_cli_args=("-u" "${FALKORDB_URI}")
 
   if ! command -v redis-cli >/dev/null 2>&1; then
     echo "FalkorDB graph preflight failed: redis-cli executable not found on PATH." >&2
     return 1
   fi
 
-  graph_probe_output="$(redis-cli -u "${FALKORDB_URI}" GRAPH.QUERY "${FALKORDB_DATABASE}" "RETURN 1" 2>&1 || true)"
+  if [[ -n "${FALKORDB_PASSWORD}" && "${FALKORDB_URI}" != *"@"* ]]; then
+    redis_cli_args+=("--user" "${FALKORDB_USER:-default}" "--pass" "${FALKORDB_PASSWORD}")
+  fi
+
+  graph_probe_output="$(redis-cli "${redis_cli_args[@]}" GRAPH.QUERY "${FALKORDB_DATABASE}" "RETURN 1" 2>&1 || true)"
   if [[ "${graph_probe_output}" == *"ERR unknown command 'GRAPH.QUERY'"* ]] || [[ "${graph_probe_output}" == *"unknown command 'GRAPH.QUERY'"* ]]; then
     echo "FalkorDB graph module is not available at ${FALKORDB_URI}; Graphiti MCP requires FalkorDB, but this endpoint did not accept GRAPH.QUERY." >&2
     echo "${graph_probe_output}" >&2
+    write_graphiti_runtime_state "degraded" "falkordb_graph_unavailable"
+    if [[ "${GRAPHITI_REQUIRED}" == "1" ]]; then
+      return 1
+    fi
     return 1
   fi
 
   if [[ "${graph_probe_output}" == ERR* ]] || [[ "${graph_probe_output}" == *"NOAUTH"* ]] || [[ "${graph_probe_output}" == *"Authentication"* ]]; then
     echo "FalkorDB graph preflight failed for ${FALKORDB_URI}." >&2
     echo "${graph_probe_output}" >&2
+    write_graphiti_runtime_state "degraded" "falkordb_probe_failed"
+    if [[ "${GRAPHITI_REQUIRED}" == "1" ]]; then
+      return 1
+    fi
     return 1
   fi
 
+  write_graphiti_runtime_state "ready" ""
   return 0
 }
 
@@ -462,7 +500,7 @@ ensure_worker_supervisor_running() {
 start_recovery_supervisor() {
   (
     while true; do
-      if ! wait_for_graphiti_mcp >/dev/null 2>&1; then
+      if [[ "${graphiti_mcp_enabled}" == "1" ]] && ! wait_for_graphiti_mcp >/dev/null 2>&1; then
         echo "recovery supervisor: Graphiti MCP unhealthy; restarting Graphiti MCP" >&2
         restart_graphiti_mcp
       fi
@@ -484,8 +522,16 @@ start_recovery_supervisor() {
   ) &
   recovery_supervisor_pid=$!
 }
-check_falkordb_graph
-start_graphiti_mcp
+if check_falkordb_graph; then
+  graphiti_mcp_enabled="1"
+  start_graphiti_mcp
+else
+  graphiti_mcp_enabled="0"
+  if [[ "${GRAPHITI_REQUIRED}" == "1" ]]; then
+    exit 1
+  fi
+  echo "Graphiti MCP skipped; continuing in graphiti_runtime_mode=degraded." >&2
+fi
 start_backend
 ensure_worker_supervisor_running
 start_frontend

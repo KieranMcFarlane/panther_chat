@@ -272,8 +272,8 @@ FALKORDB_PASSWORD=
 FALKORDB_DATABASE=sports_intelligence
 
 # Production FalkorDB (Cloud)
-# FALKORDB_URI=rediss://r-6jissuruar.instance-vnsu2asxb.hc-srom4rolb.eu-west-1.aws.f2e0a955bb84.cloud:50743
-# FALKORDB_PASSWORD=N!HH@CBC9QDesFdS
+# FALKORDB_URI=rediss://<falkordb-cloud-host>:<port>
+# FALKORDB_PASSWORD=<falkordb-password>
 ```
 
 #### 2. **Graphiti MCP Configuration** (`graphiti_mcp_server_official/config/config.yaml`)
@@ -331,7 +331,7 @@ database:
 2. Test connectivity:
    ```bash
    # Test if port 50743 is reachable
-   nc -zv r-6jissuruar.instance-vnsu2asxb.hc-srom4rolb.eu-west-1.aws.f2e0a955bb84.cloud 50743
+   nc -zv <falkordb-cloud-host> 50743
    ```
 3. If blocked, configure VPN or firewall rules
 4. Update `.env` to use cloud URI (already configured)

@@ -30,9 +30,9 @@ async def test_with_falkordb_fallback():
 
     # Set environment variables
     import os
-    os.environ["FALKORDB_URI"] = "rediss://r-6jissuruar.instance-vnsu2asxb.hc-srom4rolb.eu-west-1.aws.f2e0a955bb84.cloud:50743"
+    os.environ["FALKORDB_URI"] = "rediss://<falkordb-cloud-host>:<port>"
     os.environ["FALKORDB_USER"] = "falkordb"
-    os.environ["FALKORDB_PASSWORD"] = "N!HH@CBC9QDesFdS"
+    os.environ["FALKORDB_PASSWORD"] = "<falkordb-password>"
     os.environ["FALKORDB_DATABASE"] = "sports_intelligence"
 
     # Try to initialize with FalkorDB

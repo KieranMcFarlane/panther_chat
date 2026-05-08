@@ -7,7 +7,7 @@ services:
     ports:
       - "7687:7687"  # BOLT protocol
     environment:
-      - FALKORDB_PASSWORD=${FALKORDB_PASSWORD:-falkordb123}
+      - FALKORDB_PASSWORD=${FALKORDB_PASSWORD:-}
     volumes:
       - falkordb_data:/data
     restart: unless-stopped
@@ -48,7 +48,7 @@ services:
       - ANTHROPIC_BASE_URL=${ANTHROPIC_BASE_URL}
       - ANTHROPIC_AUTH_TOKEN=${ANTHROPIC_AUTH_TOKEN}
       - FALKORDB_URI=bolt://falkordb:7687
-      - FALKORDB_PASSWORD=${FALKORDB_PASSWORD:-falkordb123}
+      - FALKORDB_PASSWORD=${FALKORDB_PASSWORD:-}
       - REDIS_URL=redis://redis:6379
       - RALPH_LOOP_MIN_EVIDENCE=3
       - RALPH_LOOP_MIN_CONFIDENCE=0.7
@@ -82,7 +82,7 @@ services:
       - ANTHROPIC_BASE_URL=${ANTHROPIC_BASE_URL}
       - ANTHROPIC_AUTH_TOKEN=${ANTHROPIC_AUTH_TOKEN}
       - FALKORDB_URI=bolt://falkordb:7687
-      - FALKORDB_PASSWORD=${FALKORDB_PASSWORD:-falkordb123}
+      - FALKORDB_PASSWORD=${FALKORDB_PASSWORD:-}
       - REDIS_URL=redis://redis:6379
       - WORKER_MODE=cron
       - CRON_SCHEDULE=0 0 * * *  # Daily at midnight

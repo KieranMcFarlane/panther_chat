@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { loadGraphitiOpportunitiesFromDb } from '@/lib/graphiti-opportunity-read-model'
 import { loadGraphitiDossierIngestionStats } from '@/lib/graphiti-dossier-ingestion'
 import { buildGraphitiOpportunityPipelineHealth } from '@/lib/graphiti-opportunity-pipeline-resilience'
+import { loadGraphitiRuntimeHealth } from '@/lib/graphiti-runtime-health.mjs'
 import { requireApiSession, UnauthorizedError } from '@/lib/server-auth'
 
 export const dynamic = 'force-dynamic'
@@ -13,6 +14,7 @@ export async function GET(request: NextRequest) {
     await requireApiSession(request)
     const result = await loadGraphitiOpportunitiesFromDb(25)
     const dossierIngestion = await loadGraphitiDossierIngestionStats()
+    const graphitiRuntimeHealth = await loadGraphitiRuntimeHealth()
 
     return NextResponse.json({
       ok: true,
@@ -22,6 +24,12 @@ export async function GET(request: NextRequest) {
       last_updated_at: result.last_updated_at,
       snapshot: result.snapshot,
       opportunity_pipeline_health: buildGraphitiOpportunityPipelineHealth(result.warnings),
+      graphiti_runtime_health: graphitiRuntimeHealth,
+      falkordb_graph_available: graphitiRuntimeHealth.falkordb_graph_available,
+      graphiti_mcp_available: graphitiRuntimeHealth.graphiti_mcp_available,
+      graphiti_runtime_mode: graphitiRuntimeHealth.graphiti_runtime_mode,
+      graphiti_degraded_reason: graphitiRuntimeHealth.graphiti_degraded_reason,
+      next_recovery_action: graphitiRuntimeHealth.next_recovery_action,
       graphiti_dossier_ingestion: dossierIngestion,
       canonical_entities_total: dossierIngestion.canonical_entities_total,
       dossiers_persisted_entities: dossierIngestion.dossiers_persisted_entities,

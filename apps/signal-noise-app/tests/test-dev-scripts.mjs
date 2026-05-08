@@ -84,15 +84,23 @@ test('full dev launcher starts and supervises Graphiti MCP on the FalkorDB graph
   assert.match(devFullScriptSource, /backend\/graphiti_mcp_server_official/)
   assert.match(devFullScriptSource, /uv run python main\.py --transport http --host 0\.0\.0\.0 --port "\$\{GRAPHITI_MCP_PORT\}" --database-provider falkordb/)
   assert.match(devFullScriptSource, /curl -sf "http:\/\/127\.0\.0\.1:\$\{GRAPHITI_MCP_PORT\}\/health"/)
-  assert.match(devFullScriptSource, /start_graphiti_mcp\nstart_backend/)
+  assert.match(devFullScriptSource, /if check_falkordb_graph; then[\s\S]*start_graphiti_mcp[\s\S]*fi/)
 })
 
-test('full dev launcher fails fast when the FalkorDB graph module is unavailable', () => {
+test('full dev launcher starts in graph-degraded mode unless Graphiti is required', () => {
   assert.match(devFullScriptSource, /check_falkordb_graph\(\)/)
-  assert.match(devFullScriptSource, /redis-cli -u "\$\{FALKORDB_URI\}" GRAPH\.QUERY "\$\{FALKORDB_DATABASE\}" "RETURN 1"/)
+  assert.match(devFullScriptSource, /GRAPHITI_REQUIRED="\$\{GRAPHITI_REQUIRED:-0\}"/)
+  assert.match(devFullScriptSource, /graphiti_runtime_state_file="\$\{GRAPHITI_RUNTIME_STATE_PATH:-tmp\/graphiti-runtime-state\.json\}"/)
+  assert.match(devFullScriptSource, /redis_cli_args=\("-u" "\$\{FALKORDB_URI\}"\)/)
+  assert.match(devFullScriptSource, /redis_cli_args\+=\("--user" "\$\{FALKORDB_USER:-default\}" "--pass" "\$\{FALKORDB_PASSWORD\}"\)/)
+  assert.match(devFullScriptSource, /redis-cli "\$\{redis_cli_args\[@\]\}" GRAPH\.QUERY "\$\{FALKORDB_DATABASE\}" "RETURN 1"/)
   assert.match(devFullScriptSource, /ERR unknown command 'GRAPH\.QUERY'/)
   assert.match(devFullScriptSource, /FalkorDB graph module is not available/)
-  assert.match(devFullScriptSource, /check_falkordb_graph\nstart_graphiti_mcp/)
+  assert.match(devFullScriptSource, /GRAPHITI_REQUIRED[^\n]*==[^\n]*"1"[\s\S]*return 1/)
+  assert.match(devFullScriptSource, /write_graphiti_runtime_state/)
+  assert.match(devFullScriptSource, /graphiti_runtime_mode.*degraded/)
+  assert.match(devFullScriptSource, /if check_falkordb_graph; then[\s\S]*start_graphiti_mcp[\s\S]*fi/)
+  assert.match(devFullScriptSource, /start_backend\nensure_worker_supervisor_running/)
 })
 
 test('entity pipeline worker fallback points at the Python backend port, not Graphiti MCP', () => {
