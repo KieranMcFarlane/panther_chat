@@ -61,10 +61,15 @@ test('backend dossier persistence notifies post-dossier Graphiti trigger without
   const graphitiServiceSource = readFileSync(backendGraphitiServicePath, 'utf8')
   const notifierSource = readFileSync(notifierPath, 'utf8')
 
-  for (const source of [mainSource, orchestratorSource, graphitiServiceSource]) {
+  for (const source of [mainSource, graphitiServiceSource]) {
     assert.match(source, /notify_post_dossier_graphiti_opportunity_trigger/)
     assert.match(source, /pipeline_dossier_completed/)
   }
+  assert.doesNotMatch(
+    orchestratorSource,
+    /_persist_question_first_dossier_snapshot[\s\S]*notify_post_dossier_graphiti_opportunity_trigger/,
+  )
+  assert.match(graphitiServiceSource, /if envelope\.get\("phase"\) == "dashboard_scoring":/)
 
   assert.match(notifierSource, /INTERNAL_APP_URL/)
   assert.match(notifierSource, /NEXT_PUBLIC_APP_URL/)

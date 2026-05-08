@@ -483,15 +483,6 @@ class PipelineOrchestrator:
             record_id=record_id or entity_id,
             payload=payload,
         )
-        notify_post_dossier_graphiti_opportunity_trigger(
-            canonical_entity_id=(
-                str((request_metadata or {}).get("canonical_entity_id") or "").strip()
-                or str(dossier.get("canonical_entity_id") or "").strip()
-                or entity_id
-            ),
-            entity_id=entity_id,
-            source="pipeline_dossier_completed",
-        )
 
     def _build_canonical_publication_dossier(
         self,

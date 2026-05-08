@@ -587,10 +587,11 @@ class GraphitiService:
             },
         }
         self.supabase_client.table("temporal_episodes").insert(payload).execute()
-        await self._upsert_entity_dossier_from_pipeline_payload(
-            entity_id=entity_id,
-            run_payload=full_payload,
-        )
+        if envelope.get("phase") == "dashboard_scoring":
+            await self._upsert_entity_dossier_from_pipeline_payload(
+                entity_id=entity_id,
+                run_payload=full_payload,
+            )
         return {"status": "inserted", "idempotency_key": idempotency_key, "backend": "supabase"}
 
     async def _upsert_entity_dossier_from_pipeline_payload(

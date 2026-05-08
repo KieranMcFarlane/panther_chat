@@ -168,6 +168,84 @@ async def test_persist_pipeline_record_supabase_is_idempotent():
 
 
 @pytest.mark.asyncio
+async def test_persist_pipeline_record_supabase_does_not_upsert_entity_dossier_for_question_first_snapshot(monkeypatch):
+    svc = GraphitiService.__new__(GraphitiService)
+    svc.use_supabase = True
+    svc.supabase_client = _FakeSupabase()
+    upsert_calls = []
+
+    async def fake_upsert(*args, **kwargs):
+        upsert_calls.append((args, kwargs))
+
+    monkeypatch.setattr(
+        GraphitiService,
+        "_upsert_entity_dossier_from_pipeline_payload",
+        fake_upsert,
+    )
+
+    await GraphitiService.persist_pipeline_record_supabase(
+        svc,
+        {
+            "idempotency_key": "early-dossier",
+            "entity_id": "orlen",
+            "run_id": "run-early",
+            "phase": "question_first_enrichment",
+            "record_type": "question_first_dossier",
+            "record_id": "orlen",
+            "payload": {
+                "entity_name": "Orlen Wisła Płock",
+                "entity_type": "CLUB",
+                "dossier": {
+                    "entity_id": "orlen",
+                    "question_first_checkpoint": {"questions_answered": 3},
+                },
+            },
+        },
+    )
+
+    assert upsert_calls == []
+
+
+@pytest.mark.asyncio
+async def test_persist_pipeline_record_supabase_upserts_entity_dossier_for_dashboard_publication(monkeypatch):
+    svc = GraphitiService.__new__(GraphitiService)
+    svc.use_supabase = True
+    svc.supabase_client = _FakeSupabase()
+    upsert_calls = []
+
+    async def fake_upsert(*args, **kwargs):
+        upsert_calls.append((args, kwargs))
+
+    monkeypatch.setattr(
+        GraphitiService,
+        "_upsert_entity_dossier_from_pipeline_payload",
+        fake_upsert,
+    )
+
+    await GraphitiService.persist_pipeline_record_supabase(
+        svc,
+        {
+            "idempotency_key": "final-dossier",
+            "entity_id": "orlen",
+            "run_id": "run-final",
+            "phase": "dashboard_scoring",
+            "record_type": "pipeline_run",
+            "record_id": "orlen",
+            "payload": {
+                "entity_name": "Orlen Wisła Płock",
+                "entity_type": "CLUB",
+                "dossier": {
+                    "entity_id": "orlen",
+                    "question_first_checkpoint": {"questions_answered": 15},
+                },
+            },
+        },
+    )
+
+    assert len(upsert_calls) == 1
+
+
+@pytest.mark.asyncio
 async def test_entity_dossier_upsert_does_not_regress_question_first_checkpoint():
     existing = {
         "entity_id": "jason",
