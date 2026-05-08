@@ -3,6 +3,7 @@ set -euo pipefail
 
 backend_pid=""
 frontend_pid=""
+graphiti_mcp_pid=""
 worker_pid=""
 worker_supervisor_pid=""
 recovery_supervisor_pid=""
@@ -15,9 +16,13 @@ worker_state_file="tmp/entity-pipeline-worker-state.json"
 worker_log_file="tmp/entity-pipeline-worker.log"
 backend_pid_file="tmp/dev-full-backend.pid"
 frontend_pid_file="tmp/dev-full-frontend.pid"
+graphiti_mcp_pid_file="tmp/graphiti-mcp.pid"
+graphiti_mcp_log_file="tmp/graphiti-mcp.log"
 
 export SIGNAL_NOISE_BACKEND_PORT="${SIGNAL_NOISE_BACKEND_PORT:-8002}"
 export GRAPHITI_MCP_PORT="${GRAPHITI_MCP_PORT:-8000}"
+export GRAPHITI_MCP_URL="${GRAPHITI_MCP_URL:-http://127.0.0.1:${GRAPHITI_MCP_PORT}/mcp/}"
+export FALKORDB_URI="${FALKORDB_URI:-redis://localhost:6379}"
 export BACKEND_PORT="${BACKEND_PORT:-${SIGNAL_NOISE_BACKEND_PORT}}"
 export FASTAPI_URL="${FASTAPI_URL:-http://127.0.0.1:${SIGNAL_NOISE_BACKEND_PORT}}"
 export PYTHON_BACKEND_URL="${PYTHON_BACKEND_URL:-http://127.0.0.1:${SIGNAL_NOISE_BACKEND_PORT}}"
@@ -156,6 +161,18 @@ cleanup() {
       wait "${saved_backend_pid}" 2>/dev/null || true
     fi
   fi
+
+  if [[ -n "${graphiti_mcp_pid}" ]] && kill -0 "${graphiti_mcp_pid}" 2>/dev/null; then
+    kill "${graphiti_mcp_pid}" 2>/dev/null || true
+    wait "${graphiti_mcp_pid}" 2>/dev/null || true
+  elif [[ -f "${graphiti_mcp_pid_file}" ]]; then
+    local saved_graphiti_mcp_pid
+    saved_graphiti_mcp_pid="$(cat "${graphiti_mcp_pid_file}" 2>/dev/null || true)"
+    if [[ -n "${saved_graphiti_mcp_pid}" ]] && kill -0 "${saved_graphiti_mcp_pid}" 2>/dev/null; then
+      kill "${saved_graphiti_mcp_pid}" 2>/dev/null || true
+      wait "${saved_graphiti_mcp_pid}" 2>/dev/null || true
+    fi
+  fi
 }
 
 trap cleanup EXIT INT TERM
@@ -201,9 +218,57 @@ PY
   return 1
 }
 
+wait_for_graphiti_mcp() {
+  for _ in $(seq 1 60); do
+    if curl -sf "http://127.0.0.1:${GRAPHITI_MCP_PORT}/health" >/dev/null; then
+      return 0
+    fi
+
+    sleep 1
+  done
+
+  echo "Graphiti MCP failed to become ready on ${GRAPHITI_MCP_URL}" >&2
+  lsof -nP -iTCP:"${GRAPHITI_MCP_PORT}" -sTCP:LISTEN >&2 || true
+  return 1
+}
+
 prewarm_entity_snapshot() {
   curl -sf 'http://127.0.0.1:3005/api/entities?page=1&limit=10&entityType=all&sortBy=name&sortOrder=asc' >/dev/null
   curl -sf 'http://127.0.0.1:3005/api/entities/summary' >/dev/null
+}
+
+start_graphiti_mcp() {
+  mkdir -p tmp
+  if wait_for_graphiti_mcp >/dev/null 2>&1; then
+    return 0
+  fi
+
+  : > "${graphiti_mcp_log_file}"
+  if ! command -v uv >/dev/null 2>&1; then
+    echo "Graphiti MCP restart failed: uv executable not found on PATH" >&2
+    rm -f "${graphiti_mcp_pid_file}"
+    return 1
+  fi
+
+  (
+    cd backend/graphiti_mcp_server_official
+    uv run python main.py --transport http --host 0.0.0.0 --port "${GRAPHITI_MCP_PORT}" --database-provider falkordb
+  ) > "${graphiti_mcp_log_file}" 2>&1 &
+  graphiti_mcp_pid=$!
+  echo "${graphiti_mcp_pid}" > "${graphiti_mcp_pid_file}"
+  if ! wait_for_graphiti_mcp; then
+    echo "Graphiti MCP restart failed: health checks failed" >&2
+    rm -f "${graphiti_mcp_pid_file}"
+    return 1
+  fi
+}
+
+restart_graphiti_mcp() {
+  if [[ -n "${graphiti_mcp_pid}" ]] && kill -0 "${graphiti_mcp_pid}" 2>/dev/null; then
+    kill "${graphiti_mcp_pid}" 2>/dev/null || true
+    wait "${graphiti_mcp_pid}" 2>/dev/null || true
+  fi
+  start_graphiti_mcp
 }
 
 start_backend() {
@@ -370,6 +435,11 @@ ensure_worker_supervisor_running() {
 start_recovery_supervisor() {
   (
     while true; do
+      if ! wait_for_graphiti_mcp >/dev/null 2>&1; then
+        echo "recovery supervisor: Graphiti MCP unhealthy; restarting Graphiti MCP" >&2
+        restart_graphiti_mcp
+      fi
+
       if ! wait_for_backend >/dev/null 2>&1; then
         echo "recovery supervisor: backend unhealthy; restarting backend and worker supervisor" >&2
         restart_backend
@@ -387,6 +457,7 @@ start_recovery_supervisor() {
   ) &
   recovery_supervisor_pid=$!
 }
+start_graphiti_mcp
 start_backend
 ensure_worker_supervisor_running
 start_frontend

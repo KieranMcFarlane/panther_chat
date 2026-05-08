@@ -68,6 +68,22 @@ test('full dev launcher keeps the Python backend off the Graphiti MCP port', () 
   assert.doesNotMatch(devFullScriptSource, /Backend failed to become ready on port 8000/)
 })
 
+test('full dev launcher starts and supervises Graphiti MCP on the FalkorDB graph port', () => {
+  assert.match(devFullScriptSource, /graphiti_mcp_pid=/)
+  assert.match(devFullScriptSource, /graphiti_mcp_pid_file="tmp\/graphiti-mcp\.pid"/)
+  assert.match(devFullScriptSource, /GRAPHITI_MCP_URL="\$\{GRAPHITI_MCP_URL:-http:\/\/127\.0\.0\.1:\$\{GRAPHITI_MCP_PORT\}\/mcp\/\}"/)
+  assert.match(devFullScriptSource, /FALKORDB_URI="\$\{FALKORDB_URI:-redis:\/\/localhost:6379\}"/)
+  assert.match(devFullScriptSource, /wait_for_graphiti_mcp\(\)/)
+  assert.match(devFullScriptSource, /start_graphiti_mcp\(\)/)
+  assert.match(devFullScriptSource, /restart_graphiti_mcp\(\)/)
+  assert.match(devFullScriptSource, /if wait_for_graphiti_mcp >\/dev\/null 2>&1; then[\s\S]*return 0[\s\S]*fi/)
+  assert.match(devFullScriptSource, /recovery supervisor: Graphiti MCP unhealthy; restarting Graphiti MCP/)
+  assert.match(devFullScriptSource, /backend\/graphiti_mcp_server_official/)
+  assert.match(devFullScriptSource, /uv run python main\.py --transport http --host 0\.0\.0\.0 --port "\$\{GRAPHITI_MCP_PORT\}" --database-provider falkordb/)
+  assert.match(devFullScriptSource, /curl -sf "http:\/\/127\.0\.0\.1:\$\{GRAPHITI_MCP_PORT\}\/health"/)
+  assert.match(devFullScriptSource, /start_graphiti_mcp\nstart_backend/)
+})
+
 test('entity pipeline worker fallback points at the Python backend port, not Graphiti MCP', () => {
   assert.match(entityPipelineWorkerSource, /or "http:\/\/127\.0\.0\.1:8002"/)
   assert.doesNotMatch(entityPipelineWorkerSource, /or "http:\/\/127\.0\.0\.1:8000"/)
