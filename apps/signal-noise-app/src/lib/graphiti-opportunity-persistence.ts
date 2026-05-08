@@ -5,6 +5,12 @@ import { query as queryPostgres } from '@/lib/pg-client'
 import { getGraphitiStaleWindowHours } from '@/lib/runtime-env'
 import { materializeGraphitiOpportunity, rankGraphitiOpportunities } from '@/lib/graphiti-opportunity-materializer'
 import { enrichDossierOpportunitySourceWithGraphMemory } from '@/lib/graphiti-dossier-memory-bridge'
+import {
+  GRAPHITI_OPPORTUNITY_PROCESSED_VERSION,
+  GRAPHITI_OPPORTUNITY_QUALITY_EPOCH,
+  isTrustedGraphitiQualityEpochPayload,
+  stampTrustedGraphitiQualityEpoch,
+} from '@/lib/graphiti-opportunity-quality-epoch'
 import type {
   GraphitiOpportunityCard,
   GraphitiOpportunityResponse,
@@ -590,7 +596,7 @@ function toPersistedOpportunityRow(
     last_seen_at: nowIso,
     state_hash: persisted.state_hash,
     is_active: persisted.is_active,
-    raw_payload: persisted.raw_payload || {},
+    raw_payload: stampTrustedGraphitiQualityEpoch(persisted.raw_payload || {}, nowIso),
     updated_at: nowIso,
   } as PersistedGraphitiOpportunityRow & { updated_at: string }
 }
@@ -739,7 +745,16 @@ async function loadPersistedDossierOpportunitySources(
 ): Promise<GraphitiOpportunitySourceRow[]> {
   const canonicalEntityId = toText(options.canonicalEntityId)
   const scopedFilter = canonicalEntityId ? 'and i.canonical_entity_id = $2' : ''
-  const params = canonicalEntityId ? [Math.max(limit * 4, 100), canonicalEntityId] : [Math.max(limit * 4, 100)]
+  const trustedEpochFilter = canonicalEntityId
+    ? `and i.raw_metadata->>'quality_epoch' = $3
+        and i.raw_metadata->>'processed_with_version' = $4
+        and coalesce(i.raw_metadata->>'legacy_untrusted', 'false') <> 'true'`
+    : `and i.raw_metadata->>'quality_epoch' = $2
+        and i.raw_metadata->>'processed_with_version' = $3
+        and coalesce(i.raw_metadata->>'legacy_untrusted', 'false') <> 'true'`
+  const params = canonicalEntityId
+    ? [Math.max(limit * 4, 100), canonicalEntityId, GRAPHITI_OPPORTUNITY_QUALITY_EPOCH, GRAPHITI_OPPORTUNITY_PROCESSED_VERSION]
+    : [Math.max(limit * 4, 100), GRAPHITI_OPPORTUNITY_QUALITY_EPOCH, GRAPHITI_OPPORTUNITY_PROCESSED_VERSION]
   const response = await queryPostgres(
     `
       select distinct on (i.canonical_entity_id)
@@ -763,6 +778,7 @@ async function loadPersistedDossierOpportunitySources(
         and d.canonical_entity_id is not null
         and d.dossier_data is not null
         ${scopedFilter}
+        ${trustedEpochFilter}
       order by
         i.canonical_entity_id,
         case i.quality_state when 'client_ready' then 4 when 'complete' then 3 when 'partial' then 2 when 'blocked' then 1 else 0 end desc,
@@ -780,6 +796,7 @@ async function loadPersistedDossierOpportunitySources(
 
   for (const row of rows) {
     if (!row.dossier_data || typeof row.dossier_data !== 'object') continue
+    if (!isTrustedGraphitiQualityEpochPayload(row.raw_metadata)) continue
 
     const fallbackEntityId = String(row.canonical_entity_id || row.entity_id || '').trim()
     const normalized = normalizeQuestionFirstDossier(row.dossier_data, fallbackEntityId || String(row.entity_id || ''))

@@ -65,7 +65,7 @@ test('opportunities read model recomputes temporal reasoning instead of trusting
 
 test('opportunity materialization does not rematerialize legacy, mock, demo, or parent insight sources', () => {
   assert.match(persistenceSource, /isLegacyOrDemoPersistedOpportunity/)
-  assert.match(persistenceSource, /const persistedDossierRows = await loadPersistedDossierOpportunitySources\(limit\)/)
+  assert.match(persistenceSource, /const persistedDossierRows = await loadPersistedDossierOpportunitySources\(limit,\s*options\)/)
   assert.match(persistenceSource, /return persistedDossierRows\.filter/)
   assert.doesNotMatch(persistenceSource, /from\('graphiti_materialized_insights'\)/)
   assert.doesNotMatch(persistenceSource, /isOpportunityCandidateSource/)

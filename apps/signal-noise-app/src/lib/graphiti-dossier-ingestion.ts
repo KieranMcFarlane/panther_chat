@@ -1,6 +1,10 @@
 import crypto from 'node:crypto'
 import { query as queryPostgres } from '@/lib/pg-client'
 import { getNormalizedUniverseCount } from '@/lib/normalized-universe-count'
+import {
+  GRAPHITI_OPPORTUNITY_QUALITY_CUTOFF_AT,
+  stampTrustedGraphitiQualityEpoch,
+} from '@/lib/graphiti-opportunity-quality-epoch'
 
 type JsonRecord = Record<string, unknown>
 
@@ -453,16 +457,21 @@ export async function loadLatestCanonicalDossiers(options: number | {
   limit?: number
   canonicalEntityId?: string | null
   dossierId?: string | null
+  includeLegacyBeforeEpoch?: boolean
 } = 5000): Promise<CanonicalDossierRow[]> {
   const limit = typeof options === 'number' ? options : Number(options.limit || 5000)
   const canonicalEntityId = typeof options === 'number' ? '' : toText(options.canonicalEntityId)
   const dossierId = typeof options === 'number' ? '' : toText(options.dossierId)
+  const includeLegacyBeforeEpoch = typeof options === 'number' ? false : options.includeLegacyBeforeEpoch === true
 
   if (dossierId) {
     const dossierCanonicalFilter = canonicalEntityId ? 'and canonical_entity_id = $3' : ''
+    const epochFilter = includeLegacyBeforeEpoch
+      ? ''
+      : `and coalesce(generated_at, created_at) >= $${canonicalEntityId ? 4 : 3}::timestamptz`
     const params = canonicalEntityId
-      ? [Math.max(1, limit), dossierId, canonicalEntityId]
-      : [Math.max(1, limit), dossierId]
+      ? [Math.max(1, limit), dossierId, canonicalEntityId, GRAPHITI_OPPORTUNITY_QUALITY_CUTOFF_AT]
+      : [Math.max(1, limit), dossierId, GRAPHITI_OPPORTUNITY_QUALITY_CUTOFF_AT]
     const result = await queryPostgres(
       `
         select
@@ -479,6 +488,7 @@ export async function loadLatestCanonicalDossiers(options: number | {
           and dossier_data is not null
           and id = $2::uuid
           ${dossierCanonicalFilter}
+          ${epochFilter}
         order by created_at desc
         limit $1
       `,
@@ -504,10 +514,13 @@ export async function loadLatestCanonicalDossiers(options: number | {
         where canonical_entity_id is not null
           and dossier_data is not null
           and canonical_entity_id = $2
+          ${includeLegacyBeforeEpoch ? '' : 'and coalesce(generated_at, created_at) >= $3::timestamptz'}
         order by canonical_entity_id, created_at desc
         limit $1
       `,
-      [Math.max(1, limit), canonicalEntityId],
+      includeLegacyBeforeEpoch
+        ? [Math.max(1, limit), canonicalEntityId]
+        : [Math.max(1, limit), canonicalEntityId, GRAPHITI_OPPORTUNITY_QUALITY_CUTOFF_AT],
     )
 
     return result.rows as CanonicalDossierRow[]
@@ -527,10 +540,13 @@ export async function loadLatestCanonicalDossiers(options: number | {
       from entity_dossiers
       where canonical_entity_id is not null
         and dossier_data is not null
+        ${includeLegacyBeforeEpoch ? '' : 'and coalesce(generated_at, created_at) >= $2::timestamptz'}
       order by canonical_entity_id, created_at desc
       limit $1
     `,
-    [Math.max(1, limit)],
+    includeLegacyBeforeEpoch
+      ? [Math.max(1, limit)]
+      : [Math.max(1, limit), GRAPHITI_OPPORTUNITY_QUALITY_CUTOFF_AT],
   )
 
   return result.rows as CanonicalDossierRow[]
@@ -559,7 +575,7 @@ export async function upsertDossierIngestionLedger(row: CanonicalDossierRow, dry
     source_description: episode.source_description,
     reference_time: episode.reference_time,
     episode_body: episode.episode_body,
-    raw_metadata: {
+    raw_metadata: stampTrustedGraphitiQualityEpoch({
       failed_only: episode.failed_only,
       has_informative_content: episode.has_informative_content,
       failure_reason: episode.failure_reason,
@@ -576,7 +592,7 @@ export async function upsertDossierIngestionLedger(row: CanonicalDossierRow, dry
       wrong_entity_blocked: episode.quality_metrics.wrong_entity_fact_count,
       tool_failure_blocked: episode.quality_metrics.tool_failure_fact_count,
       generic_context_only: episode.quality_metrics.generic_context_fact_count > 0 && episode.quality_metrics.useful_fact_count === 0,
-    },
+    }),
   }
 
   if (dryRun) return { action: 'dry_run' as const, payload }

@@ -4,6 +4,12 @@ import { getPool } from '@/lib/pg-client'
 import { buildGraphitiOpportunityBriefing } from '@/lib/graphiti-opportunity-briefing'
 import { strategyBriefToCardBrief } from '@/lib/graphiti-opportunity-strategy-synthesis.mjs'
 import { classifyGraphitiCommercialState } from '@/lib/graphiti-commercial-truth-filter.mjs'
+import { scoreLegacyOpportunityRecovery } from '@/lib/graphiti-legacy-opportunity-recovery'
+import {
+  GRAPHITI_OPPORTUNITY_QUALITY_CUTOFF_AT,
+  isLegacyUntrustedGraphitiPayload,
+  isTrustedGraphitiQualityEpochPayload,
+} from '@/lib/graphiti-opportunity-quality-epoch'
 import { requireApiSession, UnauthorizedError } from '@/lib/server-auth'
 
 export const dynamic = 'force-dynamic'
@@ -16,11 +22,11 @@ function text(value: unknown): string {
   return value === null || value === undefined ? '' : String(value).trim()
 }
 
-type CommercialState = 'outreach_ready' | 'verify_now' | 'watch' | 'context_only' | 'data_issue'
+type CommercialState = 'outreach_ready' | 'verify_now' | 'watch' | 'context_only' | 'data_issue' | 'legacy_untrusted'
 type CommercialSort = 'freshest' | 'yp_fit' | 'evidence'
 
 function normalizeCommercialState(value: string | null): CommercialState {
-  if (value === 'outreach_ready' || value === 'verify_now' || value === 'context_only' || value === 'data_issue') return value
+  if (value === 'outreach_ready' || value === 'verify_now' || value === 'context_only' || value === 'data_issue' || value === 'legacy_untrusted') return value
   if (value === 'active') return 'outreach_ready'
   return 'watch'
 }
@@ -424,6 +430,19 @@ function mapCommercialStateCard(row: Record<string, unknown>) {
   }
 }
 
+function mapLegacyRecoveryCard(row: Record<string, unknown>) {
+  const recovery = scoreLegacyOpportunityRecovery(row)
+  return {
+    ...mapCommercialStateCard(row),
+    commercial_state: 'legacy_untrusted',
+    recommendation_tier: recovery.legacy_recovery_tier,
+    legacy_recovery_tier: recovery.legacy_recovery_tier,
+    legacy_recovery_score: recovery.legacy_recovery_score,
+    legacy_recovery_blockers: recovery.legacy_recovery_blockers,
+    recommended_recovery_action: recovery.recommended_recovery_action,
+  }
+}
+
 function mapVerifyNowRecommendation(row: Record<string, unknown>) {
   const candidate = mapReviewableDossierCandidate(row)
   const rawPayload = asRecord(row.raw_payload)
@@ -637,7 +656,6 @@ async function loadDiagnostics(options: { commercialState: CommercialState; comm
       left join graphiti_dossier_ingestions i
         on i.id::text = m.raw_payload->>'source_ledger_id'
       where m.raw_payload->>'source' = 'entity_dossiers'
-        and lower(coalesce(m.title, '') || ' ' || coalesce(m.summary, '') || ' ' || coalesce(m.read_more_context, '')) not like '%question execution failed before a safe answer could be produced%'
       order by
         ${commercialSortOrderSql(options.commercialSort)}
         coalesce(m.updated_at, m.materialized_at) desc nulls last
@@ -648,6 +666,7 @@ async function loadDiagnostics(options: { commercialState: CommercialState; comm
     watch: 0,
     context_only: 0,
     data_issue: 0,
+    legacy_untrusted: 0,
   }
   const commercialStateCards = {
     outreach_ready: [] as ReturnType<typeof mapCommercialStateCard>[],
@@ -655,13 +674,26 @@ async function loadDiagnostics(options: { commercialState: CommercialState; comm
     watch: [] as ReturnType<typeof mapCommercialStateCard>[],
     context_only: [] as ReturnType<typeof mapCommercialStateCard>[],
     data_issue: [] as ReturnType<typeof mapCommercialStateCard>[],
+    legacy_untrusted: [] as ReturnType<typeof mapCommercialStateCard>[],
   }
-  for (const row of commercialStateRowsResult.rows) {
+  const commercialStateRows = commercialStateRowsResult.rows
+  const trustedCommercialStateRows = commercialStateRows.filter((row) => isTrustedGraphitiQualityEpochPayload(asRecord(row.raw_payload)))
+  const legacyCommercialStateRows = commercialStateRows.filter((row) => isLegacyUntrustedGraphitiPayload(asRecord(row.raw_payload)))
+  const legacyRecoveryCandidates = legacyCommercialStateRows
+    .map(mapLegacyRecoveryCard)
+    .sort((a, b) => b.legacy_recovery_score - a.legacy_recovery_score)
+  commercialStateCounts.legacy_untrusted = legacyCommercialStateRows.length
+
+  for (const row of options.commercialState === 'legacy_untrusted' ? legacyCommercialStateRows : trustedCommercialStateRows) {
     const card = mapCommercialStateCard(row)
-    const key = text(card.commercial_state) as keyof typeof commercialStateCards
+    const key = options.commercialState === 'legacy_untrusted'
+      ? 'legacy_untrusted'
+      : text(card.commercial_state) as keyof typeof commercialStateCards
     if (key in commercialStateCards) {
       commercialStateCounts[key] += 1
-      commercialStateCards[key].push(card)
+      commercialStateCards[key].push(options.commercialState === 'legacy_untrusted'
+        ? mapLegacyRecoveryCard(row)
+        : card)
     }
   }
   const selectedCommercialTotal = commercialStateCounts[options.commercialState]
@@ -671,6 +703,7 @@ async function loadDiagnostics(options: { commercialState: CommercialState; comm
     watch: [] as ReturnType<typeof mapCommercialStateCard>[],
     context_only: [] as ReturnType<typeof mapCommercialStateCard>[],
     data_issue: [] as ReturnType<typeof mapCommercialStateCard>[],
+    legacy_untrusted: [] as ReturnType<typeof mapCommercialStateCard>[],
   }
   pagedCommercialStateCards[options.commercialState] = commercialStateCards[options.commercialState]
     .slice(commercialStartRank, commercialEndRank)
@@ -678,6 +711,11 @@ async function loadDiagnostics(options: { commercialState: CommercialState; comm
   return {
     generated_at: new Date().toISOString(),
     source: 'graphiti_dossier_ingestions',
+    quality_epoch_cutoff_at: GRAPHITI_OPPORTUNITY_QUALITY_CUTOFF_AT,
+    trusted_epoch_count: trustedCommercialStateRows.length,
+    legacy_untrusted_count: legacyCommercialStateRows.length,
+    recoverable_legacy_count: legacyRecoveryCandidates.filter((card) => card.legacy_recovery_tier === 'recoverable_legacy').length,
+    legacy_recovery_candidates: legacyRecoveryCandidates.slice(0, 24),
     active_shortlist_count: commercialStateCounts.outreach_ready,
     watch_item_count: Number(countsResult.rows[0]?.watch_item_count || 0),
     reviewable_dossier_candidate_count: Number(countsResult.rows[0]?.reviewable_dossier_candidate_count || 0),
@@ -739,6 +777,11 @@ export async function GET(request: NextRequest) {
       {
         generated_at: new Date().toISOString(),
         source: 'graphiti_dossier_ingestions',
+        quality_epoch_cutoff_at: GRAPHITI_OPPORTUNITY_QUALITY_CUTOFF_AT,
+        trusted_epoch_count: 0,
+        legacy_untrusted_count: 0,
+        recoverable_legacy_count: 0,
+        legacy_recovery_candidates: [],
         active_shortlist_count: 0,
         watch_item_count: 0,
         context_only_count: 0,
@@ -761,6 +804,7 @@ export async function GET(request: NextRequest) {
           watch: 0,
           context_only: 0,
           data_issue: 0,
+          legacy_untrusted: 0,
         },
         commercial_state_cards: {
           outreach_ready: [],
@@ -768,6 +812,7 @@ export async function GET(request: NextRequest) {
           watch: [],
           context_only: [],
           data_issue: [],
+          legacy_untrusted: [],
         },
         commercial_state_pagination: {
           state: 'watch',

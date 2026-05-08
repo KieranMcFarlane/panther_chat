@@ -8,6 +8,7 @@ import { rankGraphitiOpportunities } from '@/lib/graphiti-opportunity-materializ
 import { buildGraphitiOpportunityReasoning } from '@/lib/graphiti-opportunity-reasoning.mjs'
 import { strategyBriefToCardBrief } from '@/lib/graphiti-opportunity-strategy-synthesis.mjs'
 import { classifyGraphitiCommercialState, isOutreachReadyGraphitiRow } from '@/lib/graphiti-commercial-truth-filter.mjs'
+import { isTrustedGraphitiQualityEpochPayload } from '@/lib/graphiti-opportunity-quality-epoch'
 
 const PERSISTED_COLUMNS = [
   'opportunity_id',
@@ -157,6 +158,11 @@ function isCurrentDossierShortlistOpportunityRow(row: PersistedGraphitiOpportuni
   if ((commercialStatus === 'active' || commercialStatus === 'accelerating') && buyingTriggers.length === 0) return false
 
   return isOutreachReadyGraphitiRow(row)
+}
+
+function isTrustedGraphitiOpportunityRow(row: PersistedGraphitiOpportunityRow) {
+  const rawPayload = asRecord(row.raw_payload)
+  return isTrustedGraphitiQualityEpochPayload(rawPayload) && rawPayload.legacy_untrusted !== true
 }
 
 function firstSentence(value: string) {
@@ -566,6 +572,7 @@ export async function loadGraphitiOpportunitiesFromDb(limit = 25): Promise<Graph
   const rows = Array.isArray(response.data) ? (response.data as PersistedGraphitiOpportunityRow[]) : []
   const activeRows = rows.filter((row) => (
     row.is_active === true
+    && isTrustedGraphitiOpportunityRow(row)
     && !isLegacyOrDemoOriginOpportunityRow(row)
     && !isFailedOnlyOpportunityRow(row)
     && isCurrentDossierShortlistOpportunityRow(row)

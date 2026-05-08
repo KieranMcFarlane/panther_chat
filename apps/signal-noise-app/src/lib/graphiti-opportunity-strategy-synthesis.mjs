@@ -1,6 +1,10 @@
 import { readFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import {
+  isTrustedGraphitiQualityEpochPayload,
+  stampTrustedGraphitiQualityEpoch,
+} from './graphiti-opportunity-quality-epoch.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const APP_ROOT = resolve(__dirname, '..', '..')
@@ -438,6 +442,7 @@ export async function selectStrategySynthesisCandidates({ supabase, limit = 50, 
   if (response.error) throw new Error(`strategy_candidate_query_failed:${response.error.message}`)
   const rows = (Array.isArray(response.data) ? response.data : [])
     .filter((row) => asRecord(row.raw_payload).source === 'entity_dossiers')
+    .filter((row) => isTrustedGraphitiQualityEpochPayload(row.raw_payload))
     .filter((row) => {
       const rawPayload = asRecord(row.raw_payload)
       if (canonicalEntityId && rawPayload.canonical_entity_id !== canonicalEntityId) return false
@@ -503,12 +508,13 @@ export async function synthesizeAndPersistGraphitiOpportunityStrategyBriefs({
       })
       synthesized += 1
       const rawPayload = asRecord(row.raw_payload)
-      const payload = {
+      // Applies quality_epoch / processed_with_version so synthesized rows enter the trusted feed.
+      const payload = stampTrustedGraphitiQualityEpoch({
         ...rawPayload,
         bd_strategy_brief: brief,
         bd_strategy_status: validation.valid ? 'ready' : 'failed_quality_gate',
         bd_strategy_error: validation.valid ? null : validation.reason,
-      }
+      })
       const response = await supabase
         .from('graphiti_materialized_opportunities')
         .update({ raw_payload: payload, updated_at: new Date().toISOString() })
@@ -523,12 +529,13 @@ export async function synthesizeAndPersistGraphitiOpportunityStrategyBriefs({
         error: message,
       })
       const rawPayload = asRecord(row.raw_payload)
-      const payload = {
+      // Applies quality_epoch / processed_with_version even when synthesis degrades.
+      const payload = stampTrustedGraphitiQualityEpoch({
         ...rawPayload,
         bd_strategy_status: 'failed_provider',
         bd_strategy_error: message,
         bd_strategy_failed_at: new Date().toISOString(),
-      }
+      })
       const response = await supabase
         .from('graphiti_materialized_opportunities')
         .update({ raw_payload: payload, updated_at: new Date().toISOString() })

@@ -27,7 +27,7 @@ type OpportunityPatternReasoning = NonNullable<GraphitiOpportunityCard['pattern_
 type OpportunityFinding = NonNullable<GraphitiOpportunityCard['findings']>[number];
 type OpportunityTimelineEvent = NonNullable<GraphitiOpportunityCard['timeline']>[number];
 type OpportunityRelatedPattern = NonNullable<GraphitiOpportunityCard['related_patterns']>[number];
-type CommercialStateTab = 'outreach_ready' | 'verify_now' | 'watch' | 'context_only' | 'data_issue';
+type CommercialStateTab = 'outreach_ready' | 'verify_now' | 'watch' | 'context_only' | 'data_issue' | 'legacy_untrusted';
 type CommercialSort = 'freshest' | 'yp_fit' | 'evidence';
 
 const OPPORTUNITY_SURFACE_CLASS = 'rounded-2xl border border-slate-700 bg-[#101a2b] p-5 shadow-[0_18px_48px_-28px_rgba(0,0,0,0.8)]';
@@ -116,6 +116,10 @@ interface ReviewableDossierCandidate {
   commercial_confidence?: string;
   commercial_confidence_score?: number;
   commercial_truth_reasons?: string[];
+  legacy_recovery_tier?: string;
+  legacy_recovery_score?: number;
+  legacy_recovery_blockers?: string[];
+  recommended_recovery_action?: string;
   useful_fact_count?: number;
   raw_answer_count?: number;
   evidence_count?: number;
@@ -151,7 +155,19 @@ function normalizeBriefVerdictLabel(value?: string) {
   return 'Research lead'
 }
 
+function formatLegacyRecoveryLabel(value?: string) {
+  if (value === 'recoverable_legacy') return 'Recoverable'
+  if (value === 'legacy_context_only') return 'Legacy context'
+  if (value === 'legacy_data_issue') return 'Legacy data issue'
+  return 'Legacy review'
+}
+
 interface OpportunityDiagnosticsResponse {
+  quality_epoch_cutoff_at?: string;
+  trusted_epoch_count?: number;
+  legacy_untrusted_count?: number;
+  recoverable_legacy_count?: number;
+  legacy_recovery_candidates?: ReviewableDossierCandidate[];
   active_shortlist_count?: number;
   watch_item_count?: number;
   verify_now_count?: number;
@@ -611,12 +627,15 @@ function OpportunitiesContent() {
   const [reviewCandidateCount, setReviewCandidateCount] = useState(0);
   const [verifyNowRecommendations, setVerifyNowRecommendations] = useState<ReviewableDossierCandidate[]>([]);
   const [verifyNowCount, setVerifyNowCount] = useState(0);
+  const [legacyRecoveryCandidates, setLegacyRecoveryCandidates] = useState<ReviewableDossierCandidate[]>([]);
+  const [recoverableLegacyCount, setRecoverableLegacyCount] = useState(0);
   const [commercialStateCounts, setCommercialStateCounts] = useState<Record<CommercialStateTab, number>>({
     outreach_ready: 0,
     verify_now: 0,
     watch: 0,
     context_only: 0,
     data_issue: 0,
+    legacy_untrusted: 0,
   });
   const [commercialStateCards, setCommercialStateCards] = useState<Record<CommercialStateTab, ReviewableDossierCandidate[]>>({
     outreach_ready: [],
@@ -624,7 +643,11 @@ function OpportunitiesContent() {
     watch: [],
     context_only: [],
     data_issue: [],
+    legacy_untrusted: [],
   });
+  const [trustedEpochCount, setTrustedEpochCount] = useState(0);
+  const [legacyUntrustedCount, setLegacyUntrustedCount] = useState(0);
+  const [qualityEpochCutoffAt, setQualityEpochCutoffAt] = useState('2026-05-08T13:26:48.989Z');
   const [selectedCommercialStateTab, setSelectedCommercialStateTab] = useState<CommercialStateTab>('watch');
   const [commercialStatePage, setCommercialStatePage] = useState(1);
   const [commercialStateSort, setCommercialStateSort] = useState<CommercialSort>('freshest');
@@ -703,12 +726,20 @@ function OpportunitiesContent() {
           ? diagnosticsPayload.verify_now_recommendations
           : []);
         setVerifyNowCount(Number(diagnosticsPayload.verify_now_count || 0));
+        setLegacyRecoveryCandidates(Array.isArray(diagnosticsPayload.legacy_recovery_candidates)
+          ? diagnosticsPayload.legacy_recovery_candidates
+          : []);
+        setRecoverableLegacyCount(Number(diagnosticsPayload.recoverable_legacy_count || 0));
+        setTrustedEpochCount(Number(diagnosticsPayload.trusted_epoch_count || 0));
+        setLegacyUntrustedCount(Number(diagnosticsPayload.legacy_untrusted_count || 0));
+        setQualityEpochCutoffAt(diagnosticsPayload.quality_epoch_cutoff_at || '2026-05-08T13:26:48.989Z');
         setCommercialStateCounts({
           outreach_ready: Number(diagnosticsPayload.commercial_state_counts?.outreach_ready || 0),
           verify_now: Number(diagnosticsPayload.commercial_state_counts?.verify_now || 0),
           watch: Number(diagnosticsPayload.commercial_state_counts?.watch || 0),
           context_only: Number(diagnosticsPayload.commercial_state_counts?.context_only || 0),
           data_issue: Number(diagnosticsPayload.commercial_state_counts?.data_issue || 0),
+          legacy_untrusted: Number(diagnosticsPayload.legacy_untrusted_count || diagnosticsPayload.commercial_state_counts?.legacy_untrusted || 0),
         });
         setCommercialStateCards({
           outreach_ready: Array.isArray(diagnosticsPayload.commercial_state_cards?.outreach_ready) ? diagnosticsPayload.commercial_state_cards.outreach_ready : [],
@@ -716,6 +747,7 @@ function OpportunitiesContent() {
           watch: Array.isArray(diagnosticsPayload.commercial_state_cards?.watch) ? diagnosticsPayload.commercial_state_cards.watch : [],
           context_only: Array.isArray(diagnosticsPayload.commercial_state_cards?.context_only) ? diagnosticsPayload.commercial_state_cards.context_only : [],
           data_issue: Array.isArray(diagnosticsPayload.commercial_state_cards?.data_issue) ? diagnosticsPayload.commercial_state_cards.data_issue : [],
+          legacy_untrusted: Array.isArray(diagnosticsPayload.commercial_state_cards?.legacy_untrusted) ? diagnosticsPayload.commercial_state_cards.legacy_untrusted : [],
         });
         setCommercialStatePagination({
           page: Number(diagnosticsPayload.commercial_state_pagination?.page || commercialStatePage),
@@ -940,7 +972,13 @@ function OpportunitiesContent() {
       label: 'Data issues',
       description: 'Cards blocked by entity mismatch, missing evidence, stale data, or pipeline leakage. Fix these before commercial review.',
     },
+    ...(reviewMode ? [{
+      key: 'legacy_untrusted' as CommercialStateTab,
+      label: 'Legacy recovery',
+      description: 'Pre-epoch rows stay hidden from the trusted feed. Review Recoverable, Legacy context, and Legacy data issue rows here only.',
+    }] : []),
   ];
+  const reviewModeLegacyState = reviewMode ? 'legacy_untrusted' : null;
   const commercialStateCardsByTab = commercialStateCards[selectedCommercialStateTab] || [];
   const selectedCommercialState = commercialStateTabs.find((tab) => tab.key === selectedCommercialStateTab) || commercialStateTabs[1];
   const showingOutreachReadyTab = selectedCommercialStateTab === 'outreach_ready';
@@ -1178,6 +1216,14 @@ function OpportunitiesContent() {
               <p className="mt-1 max-w-3xl text-sm text-slate-300">
                 Signals worth reviewing, but not yet approved for outreach. Only cards with a current trigger, relevant sports buyer, and plausible YP route are promoted to the active shortlist.
               </p>
+              <p className="mt-2 max-w-3xl text-xs text-slate-400">
+                Trusted feed since 8 May 2026, 13:26:48 UTC. Legacy rows are hidden from the main feed and available in diagnostics only.
+              </p>
+              {reviewMode ? (
+                <p className="mt-1 text-xs text-slate-500">
+                  Trusted epoch rows: {trustedEpochCount} · Legacy hidden rows: {legacyUntrustedCount} · Recoverable legacy: {recoverableLegacyCount} · Legacy recovery candidates: {legacyRecoveryCandidates.length} · Cutoff: {qualityEpochCutoffAt} · Review state: {reviewModeLegacyState}
+                </p>
+              ) : null}
             </div>
             <Badge variant="outline" className="border-slate-300/40 text-slate-100">
               {commercialStateCounts.outreach_ready} ready · {commercialStateCounts.verify_now} verify · {commercialStateCounts.watch} watch · {commercialStateCounts.context_only} context · {commercialStateCounts.data_issue} issues
@@ -1577,6 +1623,11 @@ function OpportunitiesContent() {
                       <Badge variant="outline" className="border-amber-300/30 text-amber-100">
                         {normalizeBriefVerdictLabel(card.bd_brief?.brief_verdict)}
                       </Badge>
+                      {selectedCommercialStateTab === 'legacy_untrusted' ? (
+                        <Badge variant="outline" className="border-emerald-300/40 text-emerald-100">
+                          {formatLegacyRecoveryLabel(card.legacy_recovery_tier)}
+                        </Badge>
+                      ) : null}
                     </div>
                     <h3 className="text-sm font-semibold text-white">{card.bd_brief?.signal_title || card.title || card.entity_name || 'Untitled commercial-state card'}</h3>
                     <div className="mt-1 flex flex-wrap gap-2 text-xs text-slate-300">
@@ -1640,7 +1691,19 @@ function OpportunitiesContent() {
                       {blocker}
                     </Badge>
                   ))}
+                  {selectedCommercialStateTab === 'legacy_untrusted' ? (card.legacy_recovery_blockers || []).slice(0, 3).map((blocker) => (
+                    <Badge key={`${card.opportunity_id}-legacy-${blocker}`} variant="outline" className="border-rose-300/30 text-rose-100">
+                      {blocker}
+                    </Badge>
+                  )) : null}
                 </div>
+
+                {selectedCommercialStateTab === 'legacy_untrusted' ? (
+                  <div className="mt-3 rounded-md border border-emerald-300/20 bg-emerald-950/20 p-3 text-xs text-emerald-50">
+                    <div className="font-semibold">{formatLegacyRecoveryLabel(card.legacy_recovery_tier)} · recovery score {card.legacy_recovery_score ?? 0}</div>
+                    <div className="mt-1 text-emerald-100/80">{card.recommended_recovery_action || 'Review before attempting selective recovery.'}</div>
+                  </div>
+                ) : null}
 
                 <div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-400">
                   <span>{card.useful_fact_count ?? 0} useful facts · {card.evidence_count ?? 0} evidence URLs · commercial confidence {card.commercial_confidence || 'Low'}</span>
