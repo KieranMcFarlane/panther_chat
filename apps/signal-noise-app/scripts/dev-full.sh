@@ -23,6 +23,9 @@ export SIGNAL_NOISE_BACKEND_PORT="${SIGNAL_NOISE_BACKEND_PORT:-8002}"
 export GRAPHITI_MCP_PORT="${GRAPHITI_MCP_PORT:-8000}"
 export GRAPHITI_MCP_URL="${GRAPHITI_MCP_URL:-http://127.0.0.1:${GRAPHITI_MCP_PORT}/mcp/}"
 export FALKORDB_URI="${FALKORDB_URI:-redis://localhost:6379}"
+export FALKORDB_USER="${FALKORDB_USER:-}"
+export FALKORDB_PASSWORD="${FALKORDB_PASSWORD:-}"
+export FALKORDB_DATABASE="${FALKORDB_DATABASE:-sports_intelligence}"
 export BACKEND_PORT="${BACKEND_PORT:-${SIGNAL_NOISE_BACKEND_PORT}}"
 export FASTAPI_URL="${FASTAPI_URL:-http://127.0.0.1:${SIGNAL_NOISE_BACKEND_PORT}}"
 export PYTHON_BACKEND_URL="${PYTHON_BACKEND_URL:-http://127.0.0.1:${SIGNAL_NOISE_BACKEND_PORT}}"
@@ -230,6 +233,30 @@ wait_for_graphiti_mcp() {
   echo "Graphiti MCP failed to become ready on ${GRAPHITI_MCP_URL}" >&2
   lsof -nP -iTCP:"${GRAPHITI_MCP_PORT}" -sTCP:LISTEN >&2 || true
   return 1
+}
+
+check_falkordb_graph() {
+  local graph_probe_output=""
+
+  if ! command -v redis-cli >/dev/null 2>&1; then
+    echo "FalkorDB graph preflight failed: redis-cli executable not found on PATH." >&2
+    return 1
+  fi
+
+  graph_probe_output="$(redis-cli -u "${FALKORDB_URI}" GRAPH.QUERY "${FALKORDB_DATABASE}" "RETURN 1" 2>&1 || true)"
+  if [[ "${graph_probe_output}" == *"ERR unknown command 'GRAPH.QUERY'"* ]] || [[ "${graph_probe_output}" == *"unknown command 'GRAPH.QUERY'"* ]]; then
+    echo "FalkorDB graph module is not available at ${FALKORDB_URI}; Graphiti MCP requires FalkorDB, but this endpoint did not accept GRAPH.QUERY." >&2
+    echo "${graph_probe_output}" >&2
+    return 1
+  fi
+
+  if [[ "${graph_probe_output}" == ERR* ]] || [[ "${graph_probe_output}" == *"NOAUTH"* ]] || [[ "${graph_probe_output}" == *"Authentication"* ]]; then
+    echo "FalkorDB graph preflight failed for ${FALKORDB_URI}." >&2
+    echo "${graph_probe_output}" >&2
+    return 1
+  fi
+
+  return 0
 }
 
 prewarm_entity_snapshot() {
@@ -457,6 +484,7 @@ start_recovery_supervisor() {
   ) &
   recovery_supervisor_pid=$!
 }
+check_falkordb_graph
 start_graphiti_mcp
 start_backend
 ensure_worker_supervisor_running

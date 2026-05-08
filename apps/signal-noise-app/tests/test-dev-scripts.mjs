@@ -73,6 +73,9 @@ test('full dev launcher starts and supervises Graphiti MCP on the FalkorDB graph
   assert.match(devFullScriptSource, /graphiti_mcp_pid_file="tmp\/graphiti-mcp\.pid"/)
   assert.match(devFullScriptSource, /GRAPHITI_MCP_URL="\$\{GRAPHITI_MCP_URL:-http:\/\/127\.0\.0\.1:\$\{GRAPHITI_MCP_PORT\}\/mcp\/\}"/)
   assert.match(devFullScriptSource, /FALKORDB_URI="\$\{FALKORDB_URI:-redis:\/\/localhost:6379\}"/)
+  assert.match(devFullScriptSource, /FALKORDB_USER="\$\{FALKORDB_USER:-\}"/)
+  assert.match(devFullScriptSource, /FALKORDB_PASSWORD="\$\{FALKORDB_PASSWORD:-\}"/)
+  assert.match(devFullScriptSource, /FALKORDB_DATABASE="\$\{FALKORDB_DATABASE:-sports_intelligence\}"/)
   assert.match(devFullScriptSource, /wait_for_graphiti_mcp\(\)/)
   assert.match(devFullScriptSource, /start_graphiti_mcp\(\)/)
   assert.match(devFullScriptSource, /restart_graphiti_mcp\(\)/)
@@ -82,6 +85,14 @@ test('full dev launcher starts and supervises Graphiti MCP on the FalkorDB graph
   assert.match(devFullScriptSource, /uv run python main\.py --transport http --host 0\.0\.0\.0 --port "\$\{GRAPHITI_MCP_PORT\}" --database-provider falkordb/)
   assert.match(devFullScriptSource, /curl -sf "http:\/\/127\.0\.0\.1:\$\{GRAPHITI_MCP_PORT\}\/health"/)
   assert.match(devFullScriptSource, /start_graphiti_mcp\nstart_backend/)
+})
+
+test('full dev launcher fails fast when the FalkorDB graph module is unavailable', () => {
+  assert.match(devFullScriptSource, /check_falkordb_graph\(\)/)
+  assert.match(devFullScriptSource, /redis-cli -u "\$\{FALKORDB_URI\}" GRAPH\.QUERY "\$\{FALKORDB_DATABASE\}" "RETURN 1"/)
+  assert.match(devFullScriptSource, /ERR unknown command 'GRAPH\.QUERY'/)
+  assert.match(devFullScriptSource, /FalkorDB graph module is not available/)
+  assert.match(devFullScriptSource, /check_falkordb_graph\nstart_graphiti_mcp/)
 })
 
 test('entity pipeline worker fallback points at the Python backend port, not Graphiti MCP', () => {
