@@ -16,8 +16,11 @@ worker_log_file="tmp/entity-pipeline-worker.log"
 backend_pid_file="tmp/dev-full-backend.pid"
 frontend_pid_file="tmp/dev-full-frontend.pid"
 
-export FASTAPI_URL="${FASTAPI_URL:-http://127.0.0.1:8000}"
-export PYTHON_BACKEND_URL="${PYTHON_BACKEND_URL:-http://127.0.0.1:8000}"
+export SIGNAL_NOISE_BACKEND_PORT="${SIGNAL_NOISE_BACKEND_PORT:-8002}"
+export GRAPHITI_MCP_PORT="${GRAPHITI_MCP_PORT:-8000}"
+export BACKEND_PORT="${BACKEND_PORT:-${SIGNAL_NOISE_BACKEND_PORT}}"
+export FASTAPI_URL="${FASTAPI_URL:-http://127.0.0.1:${SIGNAL_NOISE_BACKEND_PORT}}"
+export PYTHON_BACKEND_URL="${PYTHON_BACKEND_URL:-http://127.0.0.1:${SIGNAL_NOISE_BACKEND_PORT}}"
 export BRIGHTDATA_FASTMCP_HOST="${BRIGHTDATA_FASTMCP_HOST:-127.0.0.1}"
 export BRIGHTDATA_FASTMCP_PORT=8014
 export BRIGHTDATA_FASTMCP_URL="${BRIGHTDATA_FASTMCP_URL:-http://127.0.0.1:8014/mcp/}"
@@ -174,14 +177,15 @@ wait_for_backend() {
   for _ in $(seq 1 60); do
     if "${PYTHON_BIN:-python3}" - <<'PY' >/dev/null 2>&1; then
 import json
+import os
 import sys
 from urllib.request import urlopen
 
-with urlopen("http://127.0.0.1:8000/health", timeout=2) as response:
+with urlopen(os.environ["FASTAPI_URL"] + "/health", timeout=2) as response:
     payload = json.loads(response.read().decode("utf-8"))
 if payload.get("status") != "healthy" or payload.get("version") != "2.0.0":
     raise SystemExit(1)
-with urlopen("http://127.0.0.1:8000/openapi.json", timeout=2) as response:
+with urlopen(os.environ["FASTAPI_URL"] + "/openapi.json", timeout=2) as response:
     openapi = json.loads(response.read().decode("utf-8"))
 if "/api/pipeline/run-entity" not in (openapi.get("paths") or {}):
     raise SystemExit(1)
@@ -192,8 +196,8 @@ PY
     sleep 1
   done
 
-  echo "Backend failed to become ready on port 8000" >&2
-  lsof -nP -iTCP:8000 -sTCP:LISTEN >&2 || true
+  echo "Backend failed to become ready on ${FASTAPI_URL}" >&2
+  lsof -nP -iTCP:"${SIGNAL_NOISE_BACKEND_PORT}" -sTCP:LISTEN >&2 || true
   return 1
 }
 

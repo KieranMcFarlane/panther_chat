@@ -69,7 +69,7 @@ def resolve_fastapi_url(
     fastapi_url: Optional[str],
     python_backend_url: Optional[str],
 ) -> str:
-    url = fastapi_url or python_backend_url or "http://127.0.0.1:8000"
+    url = fastapi_url or python_backend_url or "http://127.0.0.1:8002"
     return url.replace("http://localhost:", "http://127.0.0.1:")
 
 

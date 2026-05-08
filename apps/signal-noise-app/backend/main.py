@@ -2044,15 +2044,16 @@ async def general_exception_handler(request: Request, exc: Exception):
 
 if __name__ == "__main__":
     import uvicorn
+    backend_port = int(os.getenv("BACKEND_PORT", os.getenv("PORT", "8000")))
     logger.info("Starting Signal Noise App Backend...")
-    logger.info("🚀 Server will be available at: http://localhost:8000")
-    logger.info("📚 API docs will be at: http://localhost:8000/docs")
-    logger.info("🔍 Health check at: http://localhost:8000/health")
+    logger.info("🚀 Server will be available at: http://localhost:%s", backend_port)
+    logger.info("📚 API docs will be at: http://localhost:%s/docs", backend_port)
+    logger.info("🔍 Health check at: http://localhost:%s/health", backend_port)
 
     uvicorn.run(
         "main:app",
         host="0.0.0.0",
-        port=8000,
+        port=backend_port,
         reload=False,
         log_level="info"
     )

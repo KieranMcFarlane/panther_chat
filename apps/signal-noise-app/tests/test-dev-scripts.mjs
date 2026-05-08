@@ -10,6 +10,10 @@ const devFullScriptSource = readFileSync(
   new URL('../scripts/dev-full.sh', import.meta.url),
   'utf8'
 )
+const entityPipelineWorkerSource = readFileSync(
+  new URL('../backend/entity_pipeline_worker.py', import.meta.url),
+  'utf8'
+)
 
 test('package exposes a backend dev launcher with Claude disabled for local development', () => {
   const pkg = JSON.parse(packageSource)
@@ -51,6 +55,22 @@ test('full dev launcher verifies the Python backend API, not only a generic heal
 test('full dev launcher keeps BrightData FastMCP off the Python backend port', () => {
   assert.match(devFullScriptSource, /BRIGHTDATA_FASTMCP_PORT=8014/)
   assert.doesNotMatch(devFullScriptSource, /BRIGHTDATA_FASTMCP_PORT=8000/)
+})
+
+test('full dev launcher keeps the Python backend off the Graphiti MCP port', () => {
+  assert.match(devFullScriptSource, /SIGNAL_NOISE_BACKEND_PORT="\$\{SIGNAL_NOISE_BACKEND_PORT:-8002\}"/)
+  assert.match(devFullScriptSource, /GRAPHITI_MCP_PORT="\$\{GRAPHITI_MCP_PORT:-8000\}"/)
+  assert.match(devFullScriptSource, /FASTAPI_URL="\$\{FASTAPI_URL:-http:\/\/127\.0\.0\.1:\$\{SIGNAL_NOISE_BACKEND_PORT\}\}"/)
+  assert.match(devFullScriptSource, /PYTHON_BACKEND_URL="\$\{PYTHON_BACKEND_URL:-http:\/\/127\.0\.0\.1:\$\{SIGNAL_NOISE_BACKEND_PORT\}\}"/)
+  assert.match(devFullScriptSource, /BACKEND_PORT="\$\{BACKEND_PORT:-\$\{SIGNAL_NOISE_BACKEND_PORT\}\}"/)
+  assert.match(devFullScriptSource, /with urlopen\(os\.environ\["FASTAPI_URL"\] \+ "\/health", timeout=2\)/)
+  assert.doesNotMatch(devFullScriptSource, /http:\/\/127\.0\.0\.1:8000\/health/)
+  assert.doesNotMatch(devFullScriptSource, /Backend failed to become ready on port 8000/)
+})
+
+test('entity pipeline worker fallback points at the Python backend port, not Graphiti MCP', () => {
+  assert.match(entityPipelineWorkerSource, /or "http:\/\/127\.0\.0\.1:8002"/)
+  assert.doesNotMatch(entityPipelineWorkerSource, /or "http:\/\/127\.0\.0\.1:8000"/)
 })
 
 test('full dev launcher supervises the worker and restarts it after crashes', () => {
