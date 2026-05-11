@@ -59,6 +59,26 @@ for env_file in env_files:
 
 logger = logging.getLogger(__name__)
 
+
+def _is_local_redis_falkordb_uri(uri: Optional[str]) -> bool:
+    if not uri:
+        return False
+    parsed = urllib.parse.urlparse(uri)
+    return parsed.scheme in {"redis", "rediss"} and (parsed.hostname or "").lower() in {
+        "localhost",
+        "127.0.0.1",
+        "::1",
+    }
+
+
+def _local_falkordb_auth_enabled() -> bool:
+    return str(os.getenv("FALKORDB_LOCAL_AUTH") or "").strip().lower() in {
+        "1",
+        "true",
+        "yes",
+        "on",
+    }
+
 try:
     from official_site_resolver import choose_canonical_official_site, rank_official_site_candidates
 except ImportError:  # pragma: no cover - package import path fallback
@@ -963,6 +983,9 @@ class DossierDataCollector:
 
             # Connect
             # IMPORTANT: FalkorDB Cloud uses redis:// NOT rediss:// (no SSL/TLS)
+            if _is_local_redis_falkordb_uri(uri) and not _local_falkordb_auth_enabled():
+                username = None
+                password = None
             self.falkordb_client = FalkorDB(
                 host=host,
                 port=port,

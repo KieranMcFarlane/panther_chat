@@ -492,148 +492,155 @@ async function loadDiagnostics(options: { commercialState: CommercialState; comm
   const commercialOffset = (options.commercialPage - 1) * options.commercialPageSize
   const commercialStartRank = commercialOffset
   const commercialEndRank = commercialOffset + options.commercialPageSize
-  const countsResult = await pool.query(`
-    select
-      count(*) filter (
-        where is_active = true
-          and raw_payload->>'source' = 'entity_dossiers'
-          and raw_payload->>'shortlist_opportunity' = 'true'
-      )::int as active_shortlist_count,
-      count(*) filter (
-        where raw_payload->>'source' = 'entity_dossiers'
-          and raw_payload->>'watch_item' = 'true'
-      )::int as watch_item_count,
-      count(*) filter (
-        where m.raw_payload->>'source' = 'entity_dossiers'
-          and i.status = 'ingested'
-          and i.quality_state in ('complete', 'partial', 'client_ready')
-          and coalesce(m.raw_payload->>'shortlist_opportunity', 'false') <> 'true'
-      )::int as reviewable_dossier_candidate_count,
-      count(*) filter (
-        where m.raw_payload->>'source' = 'entity_dossiers'
-          and i.status = 'ingested'
-          and i.quality_state in ('complete', 'partial', 'client_ready')
-          and coalesce(i.answer_count, 0) >= 5
-          and coalesce(i.evidence_count, 0) >= 3
-          and coalesce(m.yellow_panther_fit, 0) >= 60
-          and coalesce(m.raw_payload->>'shortlist_opportunity', 'false') <> 'true'
-          and coalesce(m.raw_payload->'commercial_qualification'->>'status', '') <> 'context_only'
-          and coalesce(m.raw_payload->'commercial_qualification'->>'status', '') <> 'failed'
-          and lower(coalesce(m.title, '') || ' ' || coalesce(m.summary, '') || ' ' || coalesce(m.read_more_context, '')) not like '%question execution failed before a safe answer could be produced%'
-      )::int as verify_now_count,
-      count(*) filter (
-        where m.raw_payload->>'source' = 'entity_dossiers'
-          and m.raw_payload->'commercial_qualification'->>'status' = 'context_only'
-      )::int as context_only_count,
-      count(*) filter (
-        where m.raw_payload->>'source' = 'entity_dossiers'
-          and (
-            m.raw_payload->'commercial_qualification'->>'status' = 'failed'
-            or lower(coalesce(m.title, '') || ' ' || coalesce(m.summary, '') || ' ' || coalesce(m.read_more_context, '')) like '%question execution failed before a safe answer could be produced%'
-          )
-      )::int as failed_only_count
-    from graphiti_materialized_opportunities m
-    left join graphiti_dossier_ingestions i
-      on i.id::text = m.raw_payload->>'source_ledger_id'
-  `)
-  const ingestionResult = await pool.query(`
-    select
-      count(distinct canonical_entity_id)::int as ingested_dossier_entities,
-      count(*) filter (where status = 'ingested')::int as ingested_rows,
-      count(*) filter (where status = 'skipped_empty')::int as skipped_empty_rows,
-      count(*) filter (where status = 'failed')::int as failed_rows,
-      count(distinct canonical_entity_id) filter (where status = 'ingested' and quality_state = 'complete' and coalesce(evidence_count, 0) = 0)::int as sparse_complete_entities,
-      count(distinct canonical_entity_id) filter (where status = 'ingested' and quality_state = 'partial' and coalesce(evidence_count, 0) = 0)::int as sparse_partial_entities,
-      count(distinct canonical_entity_id) filter (where status = 'ingested' and coalesce(evidence_count, 0) = 0)::int as zero_evidence_entities,
-      count(distinct canonical_entity_id) filter (where status = 'ingested' and (coalesce(answer_count, 0) >= 2 or coalesce(evidence_count, 0) >= 1))::int as useful_dossier_entities,
-      count(distinct canonical_entity_id) filter (where status = 'ingested' and (coalesce(answer_count, 0) < 5 or coalesce(evidence_count, 0) < 3))::int as enrichment_required_entities,
-      count(distinct canonical_entity_id) filter (where status = 'ingested' and coalesce(answer_count, 0) >= 5 and coalesce(evidence_count, 0) >= 3)::int as materializable_dossier_candidates,
-      count(*) filter (where coalesce((raw_metadata->>'wrong_entity_blocked')::int, 0) > 0)::int as wrong_entity_blocked,
-      count(*) filter (where coalesce((raw_metadata->>'tool_failure_blocked')::int, 0) > 0)::int as tool_failure_blocked,
-      count(*) filter (where raw_metadata->>'generic_context_only' = 'true')::int as generic_context_only
-    from graphiti_dossier_ingestions
-  `)
-  const reviewableResult = await pool.query(`
-    select
-      m.opportunity_id,
-      m.entity_id,
-      m.entity_name,
-      m.canonical_entity_id,
-      m.canonical_entity_name,
-      m.title,
-      m.status,
-      m.is_active,
-      m.yellow_panther_fit,
-      m.materialized_at,
-      m.updated_at,
-      m.raw_payload || jsonb_build_object(
-        'quality_state', i.quality_state,
-        'answer_count', i.answer_count,
-        'evidence_count', i.evidence_count,
-        'quality_metrics', coalesce(i.raw_metadata->'quality_metrics', '{}'::jsonb)
-      ) as raw_payload
-    from graphiti_materialized_opportunities m
-    join graphiti_dossier_ingestions i
-      on i.id::text = m.raw_payload->>'source_ledger_id'
-      and i.status = 'ingested'
-    where m.raw_payload->>'source' = 'entity_dossiers'
-      and (
-        m.raw_payload->>'watch_item' = 'true'
-        or m.raw_payload->'commercial_qualification'->>'status' in ('watch', 'context_only', 'no_buying_trigger')
-      )
-    order by
-      coalesce(m.yellow_panther_fit, 0) desc,
-      coalesce(m.updated_at, m.materialized_at) desc nulls last
-    limit 20
-  `)
-  const reviewableDossierResult = await pool.query(`
-    select
-      m.opportunity_id,
-      m.entity_id,
-      m.entity_name,
-      m.canonical_entity_id,
-      m.canonical_entity_name,
-      m.title,
-      m.status,
-      m.is_active,
-      m.yellow_panther_fit,
-      m.materialized_at,
-      m.updated_at,
-      m.raw_payload || jsonb_build_object(
-        'quality_state', i.quality_state,
-        'answer_count', i.answer_count,
-        'evidence_count', i.evidence_count,
-        'quality_metrics', coalesce(i.raw_metadata->'quality_metrics', '{}'::jsonb)
-      ) as raw_payload
-    from graphiti_materialized_opportunities m
-    join graphiti_dossier_ingestions i
-      on i.id::text = m.raw_payload->>'source_ledger_id'
-      and i.status = 'ingested'
-    where m.raw_payload->>'source' = 'entity_dossiers'
-      and i.quality_state in ('complete', 'partial', 'client_ready')
-      and coalesce(m.raw_payload->>'shortlist_opportunity', 'false') <> 'true'
-    order by
-      case m.raw_payload->'temporal_reasoning'->>'status'
-        when 'accelerating' then 5
-        when 'active' then 4
-        when 'emerging' then 3
-        when 'unknown' then 2
-        when 'stale' then 1
-        else 0
-      end desc,
-      case m.raw_payload->'commercial_qualification'->>'status'
-        when 'accelerating' then 5
-        when 'active' then 4
-        when 'watch' then 3
-        when 'no_buying_trigger' then 2
-        when 'context_only' then 1
-        else 0
-      end desc,
-      coalesce(m.yellow_panther_fit, 0) desc,
-      coalesce(m.updated_at, m.materialized_at) desc nulls last
-    limit 40
-  `)
-  const commercialStateRowsResult = await pool.query(`
+  const [
+    countsResult,
+    ingestionResult,
+    reviewableResult,
+    reviewableDossierResult,
+    commercialStateRowsResult,
+  ] = await Promise.all([
+    pool.query(`
+      select
+        count(*) filter (
+          where is_active = true
+            and raw_payload->>'source' = 'entity_dossiers'
+            and raw_payload->>'shortlist_opportunity' = 'true'
+        )::int as active_shortlist_count,
+        count(*) filter (
+          where raw_payload->>'source' = 'entity_dossiers'
+            and raw_payload->>'watch_item' = 'true'
+        )::int as watch_item_count,
+        count(*) filter (
+          where m.raw_payload->>'source' = 'entity_dossiers'
+            and i.status = 'ingested'
+            and i.quality_state in ('complete', 'partial', 'client_ready')
+            and coalesce(m.raw_payload->>'shortlist_opportunity', 'false') <> 'true'
+        )::int as reviewable_dossier_candidate_count,
+        count(*) filter (
+          where m.raw_payload->>'source' = 'entity_dossiers'
+            and i.status = 'ingested'
+            and i.quality_state in ('complete', 'partial', 'client_ready')
+            and coalesce(i.answer_count, 0) >= 5
+            and coalesce(i.evidence_count, 0) >= 3
+            and coalesce(m.yellow_panther_fit, 0) >= 60
+            and coalesce(m.raw_payload->>'shortlist_opportunity', 'false') <> 'true'
+            and coalesce(m.raw_payload->'commercial_qualification'->>'status', '') <> 'context_only'
+            and coalesce(m.raw_payload->'commercial_qualification'->>'status', '') <> 'failed'
+            and lower(coalesce(m.title, '') || ' ' || coalesce(m.summary, '') || ' ' || coalesce(m.read_more_context, '')) not like '%question execution failed before a safe answer could be produced%'
+        )::int as verify_now_count,
+        count(*) filter (
+          where m.raw_payload->>'source' = 'entity_dossiers'
+            and m.raw_payload->'commercial_qualification'->>'status' = 'context_only'
+        )::int as context_only_count,
+        count(*) filter (
+          where m.raw_payload->>'source' = 'entity_dossiers'
+            and (
+              m.raw_payload->'commercial_qualification'->>'status' = 'failed'
+              or lower(coalesce(m.title, '') || ' ' || coalesce(m.summary, '') || ' ' || coalesce(m.read_more_context, '')) like '%question execution failed before a safe answer could be produced%'
+            )
+        )::int as failed_only_count
+      from graphiti_materialized_opportunities m
+      left join graphiti_dossier_ingestions i
+        on i.id::text = m.raw_payload->>'source_ledger_id'
+    `),
+    pool.query(`
+      select
+        count(distinct canonical_entity_id)::int as ingested_dossier_entities,
+        count(*) filter (where status = 'ingested')::int as ingested_rows,
+        count(*) filter (where status = 'skipped_empty')::int as skipped_empty_rows,
+        count(*) filter (where status = 'failed')::int as failed_rows,
+        count(distinct canonical_entity_id) filter (where status = 'ingested' and quality_state = 'complete' and coalesce(evidence_count, 0) = 0)::int as sparse_complete_entities,
+        count(distinct canonical_entity_id) filter (where status = 'ingested' and quality_state = 'partial' and coalesce(evidence_count, 0) = 0)::int as sparse_partial_entities,
+        count(distinct canonical_entity_id) filter (where status = 'ingested' and coalesce(evidence_count, 0) = 0)::int as zero_evidence_entities,
+        count(distinct canonical_entity_id) filter (where status = 'ingested' and (coalesce(answer_count, 0) >= 2 or coalesce(evidence_count, 0) >= 1))::int as useful_dossier_entities,
+        count(distinct canonical_entity_id) filter (where status = 'ingested' and (coalesce(answer_count, 0) < 5 or coalesce(evidence_count, 0) < 3))::int as enrichment_required_entities,
+        count(distinct canonical_entity_id) filter (where status = 'ingested' and coalesce(answer_count, 0) >= 5 and coalesce(evidence_count, 0) >= 3)::int as materializable_dossier_candidates,
+        count(*) filter (where coalesce((raw_metadata->>'wrong_entity_blocked')::int, 0) > 0)::int as wrong_entity_blocked,
+        count(*) filter (where coalesce((raw_metadata->>'tool_failure_blocked')::int, 0) > 0)::int as tool_failure_blocked,
+        count(*) filter (where raw_metadata->>'generic_context_only' = 'true')::int as generic_context_only
+      from graphiti_dossier_ingestions
+    `),
+    pool.query(`
+      select
+        m.opportunity_id,
+        m.entity_id,
+        m.entity_name,
+        m.canonical_entity_id,
+        m.canonical_entity_name,
+        m.title,
+        m.status,
+        m.is_active,
+        m.yellow_panther_fit,
+        m.materialized_at,
+        m.updated_at,
+        m.raw_payload || jsonb_build_object(
+          'quality_state', i.quality_state,
+          'answer_count', i.answer_count,
+          'evidence_count', i.evidence_count,
+          'quality_metrics', coalesce(i.raw_metadata->'quality_metrics', '{}'::jsonb)
+        ) as raw_payload
+      from graphiti_materialized_opportunities m
+      join graphiti_dossier_ingestions i
+        on i.id::text = m.raw_payload->>'source_ledger_id'
+        and i.status = 'ingested'
+      where m.raw_payload->>'source' = 'entity_dossiers'
+        and (
+          m.raw_payload->>'watch_item' = 'true'
+          or m.raw_payload->'commercial_qualification'->>'status' in ('watch', 'context_only', 'no_buying_trigger')
+        )
+      order by
+        coalesce(m.yellow_panther_fit, 0) desc,
+        coalesce(m.updated_at, m.materialized_at) desc nulls last
+      limit 20
+    `),
+    pool.query(`
+      select
+        m.opportunity_id,
+        m.entity_id,
+        m.entity_name,
+        m.canonical_entity_id,
+        m.canonical_entity_name,
+        m.title,
+        m.status,
+        m.is_active,
+        m.yellow_panther_fit,
+        m.materialized_at,
+        m.updated_at,
+        m.raw_payload || jsonb_build_object(
+          'quality_state', i.quality_state,
+          'answer_count', i.answer_count,
+          'evidence_count', i.evidence_count,
+          'quality_metrics', coalesce(i.raw_metadata->'quality_metrics', '{}'::jsonb)
+        ) as raw_payload
+      from graphiti_materialized_opportunities m
+      join graphiti_dossier_ingestions i
+        on i.id::text = m.raw_payload->>'source_ledger_id'
+        and i.status = 'ingested'
+      where m.raw_payload->>'source' = 'entity_dossiers'
+        and i.quality_state in ('complete', 'partial', 'client_ready')
+        and coalesce(m.raw_payload->>'shortlist_opportunity', 'false') <> 'true'
+      order by
+        case m.raw_payload->'temporal_reasoning'->>'status'
+          when 'accelerating' then 5
+          when 'active' then 4
+          when 'emerging' then 3
+          when 'unknown' then 2
+          when 'stale' then 1
+          else 0
+        end desc,
+        case m.raw_payload->'commercial_qualification'->>'status'
+          when 'accelerating' then 5
+          when 'active' then 4
+          when 'watch' then 3
+          when 'no_buying_trigger' then 2
+          when 'context_only' then 1
+          else 0
+        end desc,
+        coalesce(m.yellow_panther_fit, 0) desc,
+        coalesce(m.updated_at, m.materialized_at) desc nulls last
+      limit 40
+    `),
+    pool.query(`
       select
         m.opportunity_id,
         m.entity_id,
@@ -659,7 +666,8 @@ async function loadDiagnostics(options: { commercialState: CommercialState; comm
       order by
         ${commercialSortOrderSql(options.commercialSort)}
         coalesce(m.updated_at, m.materialized_at) desc nulls last
-  `)
+    `),
+  ])
   const commercialStateCounts = {
     outreach_ready: 0,
     verify_now: 0,
@@ -680,9 +688,15 @@ async function loadDiagnostics(options: { commercialState: CommercialState; comm
   const trustedCommercialStateRows = commercialStateRows.filter((row) => isTrustedGraphitiQualityEpochPayload(asRecord(row.raw_payload)))
   const legacyCommercialStateRows = commercialStateRows.filter((row) => isLegacyUntrustedGraphitiPayload(asRecord(row.raw_payload)))
   const legacyUntrustedCount = legacyCommercialStateRows.length
-  const legacyRecoveryCandidates = legacyCommercialStateRows
-    .map(mapLegacyRecoveryCard)
-    .sort((a, b) => b.legacy_recovery_score - a.legacy_recovery_score)
+  const legacyRecoveryScores = options.commercialState === 'legacy_untrusted'
+    ? legacyCommercialStateRows
+      .map((row) => ({ row, recovery: scoreLegacyOpportunityRecovery(row) }))
+      .sort((a, b) => b.recovery.legacy_recovery_score - a.recovery.legacy_recovery_score)
+    : []
+  const legacyRecoveryCandidates = options.commercialState === 'legacy_untrusted' ? legacyRecoveryScores
+    .slice(0, 24)
+    .map(({ row }) => mapLegacyRecoveryCard(row))
+    : []
 
   for (const row of options.commercialState === 'legacy_untrusted' ? legacyCommercialStateRows : trustedCommercialStateRows) {
     const card = mapCommercialStateCard(row)
@@ -717,8 +731,8 @@ async function loadDiagnostics(options: { commercialState: CommercialState; comm
     quality_epoch_cutoff_at: GRAPHITI_OPPORTUNITY_QUALITY_CUTOFF_AT,
     trusted_epoch_count: trustedCommercialStateRows.length,
     legacy_untrusted_count: legacyUntrustedCount,
-    recoverable_legacy_count: legacyRecoveryCandidates.filter((card) => card.legacy_recovery_tier === 'recoverable_legacy').length,
-    legacy_recovery_candidates: legacyRecoveryCandidates.slice(0, 24),
+    recoverable_legacy_count: legacyRecoveryScores.filter(({ recovery }) => recovery.legacy_recovery_tier === 'recoverable_legacy').length,
+    legacy_recovery_candidates: legacyRecoveryCandidates,
     active_shortlist_count: commercialStateCounts.outreach_ready,
     watch_item_count: Number(countsResult.rows[0]?.watch_item_count || 0),
     reviewable_dossier_candidate_count: Number(countsResult.rows[0]?.reviewable_dossier_candidate_count || 0),

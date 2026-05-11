@@ -234,6 +234,26 @@ class GraphitiService:
 
         return uri
 
+    @staticmethod
+    def _is_local_redis_falkordb_uri(uri: Optional[str]) -> bool:
+        if not uri:
+            return False
+        parsed = urllib.parse.urlparse(uri)
+        return parsed.scheme in {"redis", "rediss"} and (parsed.hostname or "").lower() in {
+            "localhost",
+            "127.0.0.1",
+            "::1",
+        }
+
+    @staticmethod
+    def _local_falkordb_auth_enabled() -> bool:
+        return str(os.getenv("FALKORDB_LOCAL_AUTH") or "").strip().lower() in {
+            "1",
+            "true",
+            "yes",
+            "on",
+        }
+
     async def initialize(self) -> bool:
         """
         Initialize the service and build indices/constraints
@@ -771,11 +791,16 @@ class GraphitiService:
         )
         host = parsed.hostname or "localhost"
         port = parsed.port or 6379
+        username = self.falkordb_user
+        password = self.falkordb_password
+        if self._is_local_redis_falkordb_uri(self.falkordb_uri) and not self._local_falkordb_auth_enabled():
+            username = None
+            password = None
         client = FalkorDB(
             host=host,
             port=port,
-            username=self.falkordb_user,
-            password=self.falkordb_password,
+            username=username,
+            password=password,
             ssl=False,
         )
         graph = client.select_graph(self.graph_name)

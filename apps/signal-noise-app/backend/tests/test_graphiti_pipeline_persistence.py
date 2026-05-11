@@ -4,6 +4,7 @@ Tests for Graphiti dual-write persistence adapter methods.
 """
 
 import sys
+import types
 from pathlib import Path
 
 import pytest
@@ -390,6 +391,55 @@ async def test_persist_pipeline_record_falkordb_uses_merge_with_driver():
     result = await GraphitiService.persist_pipeline_record_falkordb(svc, payload)
     assert result["status"] == "merged"
     assert len(svc.driver.calls) == 1
+
+
+@pytest.mark.asyncio
+async def test_persist_pipeline_record_falkordb_omits_stale_auth_for_local_redis(monkeypatch):
+    calls = []
+
+    class _FakeGraph:
+        def query(self, query, params):
+            calls.append(("query", query, params))
+
+    class _FakeFalkorDB:
+        def __init__(self, **kwargs):
+            calls.append(("client", kwargs))
+
+        def select_graph(self, graph_name):
+            calls.append(("graph", graph_name))
+            return _FakeGraph()
+
+    monkeypatch.setitem(
+        sys.modules,
+        "falkordb",
+        types.SimpleNamespace(FalkorDB=_FakeFalkorDB),
+    )
+
+    svc = GraphitiService.__new__(GraphitiService)
+    svc.driver = None
+    svc.graph_name = "sports_intelligence"
+    svc.falkordb_uri = "redis://localhost:6379"
+    svc.falkordb_user = "stale-cloud-user"
+    svc.falkordb_password = "stale-cloud-password"
+
+    payload = {
+        "idempotency_key": "k-local",
+        "entity_id": "local-club",
+        "run_id": "run-local",
+        "phase": "dashboard_scoring",
+        "record_type": "pipeline_run",
+        "record_id": "local-club",
+        "payload": {"z": 3},
+    }
+
+    result = await GraphitiService.persist_pipeline_record_falkordb(svc, payload)
+
+    assert result["status"] == "merged"
+    client_call = calls[0][1]
+    assert client_call["host"] == "localhost"
+    assert client_call["port"] == 6379
+    assert client_call["username"] is None
+    assert client_call["password"] is None
 
 
 @pytest.mark.asyncio
