@@ -1,0 +1,21 @@
+services:
+  falkordb:
+    image: falkordb/falkordb:latest
+    container_name: signal-noise-graphiti-falkordb
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+      - "${FALKORDB_BROWSER_PORT:-3006}:3000"
+    environment:
+      BROWSER: "${FALKORDB_BROWSER_ENABLED:-1}"
+    volumes:
+      - graphiti_falkordb_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "GRAPH.QUERY", "sports_intelligence", "RETURN 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+
+volumes:
+  graphiti_falkordb_data:

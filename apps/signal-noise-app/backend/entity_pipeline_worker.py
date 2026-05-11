@@ -1,5 +1,6 @@
 import json
 import os
+import ssl
 import socket
 import threading
 import time
@@ -13,6 +14,10 @@ from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
 from dotenv import load_dotenv
+try:
+    import certifi
+except ImportError:  # pragma: no cover - certifi is installed in normal runtime
+    certifi = None
 try:
     from supabase import create_client
 except ImportError:  # pragma: no cover - allows unit tests without supabase package
@@ -100,6 +105,13 @@ ACTIVE_WORKER_STATE_FIELDS = (
     "current_activity_at",
 )
 ACTIVE_PIPELINE_RUNTIME_STATE_FIELDS = ACTIVE_WORKER_STATE_FIELDS + ("cursor_source",)
+SUPERVISED_DRAIN_CONTROL_FIELDS = (
+    "supervised_drain_enabled",
+    "supervised_drain_allowed_batch_ids",
+    "supervised_drain_disable_manifest_auto_advance",
+    "supervised_drain_pause_when_exhausted",
+    "supervised_drain_reason",
+)
 PIPELINE_CONTROL_STATE_TABLE = "pipeline_control_state"
 PIPELINE_CONTROL_STATE_ROW_ID = "pipeline"
 PIPELINE_RECOVERY_STATE_VALUES = {
@@ -146,6 +158,11 @@ def _default_pipeline_control_state() -> Dict[str, Any]:
         "last_self_heal_action": None,
         "last_self_heal_reason": None,
         "last_self_heal_at": None,
+        "supervised_drain_enabled": False,
+        "supervised_drain_allowed_batch_ids": [],
+        "supervised_drain_disable_manifest_auto_advance": False,
+        "supervised_drain_pause_when_exhausted": False,
+        "supervised_drain_reason": None,
     }
 
 
@@ -240,7 +257,11 @@ def _is_legacy_manual_pause_state(payload: Dict[str, Any]) -> bool:
     )
 
 
-def _normalize_pipeline_control_state_payload(payload: Optional[Dict[str, Any]]) -> Dict[str, Any]:
+def _normalize_pipeline_control_state_payload(
+    payload: Optional[Dict[str, Any]],
+    *,
+    source: str = "store",
+) -> Dict[str, Any]:
     normalized = _default_pipeline_control_state()
     if not isinstance(payload, dict):
         return normalized
@@ -290,12 +311,36 @@ def _normalize_pipeline_control_state_payload(payload: Optional[Dict[str, Any]])
             "last_self_heal_action": str(payload.get("last_self_heal_action") or "").strip() or None,
             "last_self_heal_reason": str(payload.get("last_self_heal_reason") or "").strip() or None,
             "last_self_heal_at": str(payload.get("last_self_heal_at") or "").strip() or None,
+            "supervised_drain_enabled": payload.get("supervised_drain_enabled") is True,
+            "supervised_drain_allowed_batch_ids": [
+                str(batch_id).strip()
+                for batch_id in (
+                    payload.get("supervised_drain_allowed_batch_ids")
+                    if isinstance(payload.get("supervised_drain_allowed_batch_ids"), list)
+                    else []
+                )
+                if str(batch_id).strip()
+            ],
+            "supervised_drain_disable_manifest_auto_advance": payload.get("supervised_drain_disable_manifest_auto_advance") is True,
+            "supervised_drain_pause_when_exhausted": payload.get("supervised_drain_pause_when_exhausted") is True,
+            "supervised_drain_reason": str(payload.get("supervised_drain_reason") or "").strip() or None,
         }
     )
     if normalized["state"] not in PIPELINE_RECOVERY_STATE_VALUES:
         normalized["state"] = "healthy"
     if normalized["health_class"] not in PIPELINE_RECOVERY_STATE_VALUES:
         normalized["health_class"] = "healthy"
+    if source == "file":
+        if normalized["stop_reason"] in {"orchestrator_unhealthy", "backend_route_missing", "worker_heartbeat_stale"}:
+            preserved_updated_at = normalized.get("updated_at")
+            normalized = _default_pipeline_control_state()
+            normalized["updated_at"] = preserved_updated_at
+            return normalized
+        if normalized["observed_state"] == "starting":
+            normalized["observed_state"] = "running"
+        if normalized["transition_state"] == "starting":
+            normalized["transition_state"] = "running"
+        normalized = _clear_pipeline_runtime_state_fields(normalized)
     return normalized
 
 
@@ -372,7 +417,8 @@ def read_pipeline_control_state() -> Dict[str, Any]:
     file_payload = _read_pipeline_control_state_from_file()
     payload = _choose_newest_pipeline_control_state(store_payload, file_payload)
     if payload is not None:
-        return _normalize_pipeline_control_state_payload(payload)
+        source = "store" if payload is store_payload and store_payload is not None else "file"
+        return _normalize_pipeline_control_state_payload(payload, source=source)
     return _default_pipeline_control_state()
 
 
@@ -425,6 +471,19 @@ def write_pipeline_control_state(payload: Dict[str, Any]) -> Dict[str, Any]:
         "last_self_heal_action": str(merged_payload.get("last_self_heal_action") or "").strip() or None,
         "last_self_heal_reason": str(merged_payload.get("last_self_heal_reason") or "").strip() or None,
         "last_self_heal_at": str(merged_payload.get("last_self_heal_at") or "").strip() or None,
+        "supervised_drain_enabled": merged_payload.get("supervised_drain_enabled") is True,
+        "supervised_drain_allowed_batch_ids": [
+            str(batch_id).strip()
+            for batch_id in (
+                merged_payload.get("supervised_drain_allowed_batch_ids")
+                if isinstance(merged_payload.get("supervised_drain_allowed_batch_ids"), list)
+                else []
+            )
+            if str(batch_id).strip()
+        ],
+        "supervised_drain_disable_manifest_auto_advance": merged_payload.get("supervised_drain_disable_manifest_auto_advance") is True,
+        "supervised_drain_pause_when_exhausted": merged_payload.get("supervised_drain_pause_when_exhausted") is True,
+        "supervised_drain_reason": str(merged_payload.get("supervised_drain_reason") or "").strip() or None,
     }
     try:
         _write_pipeline_control_state_to_store(next_state)
@@ -502,6 +561,70 @@ def _clear_pipeline_runtime_state_fields(payload: Optional[Dict[str, Any]]) -> D
     for key in ACTIVE_PIPELINE_RUNTIME_STATE_FIELDS:
         next_payload[key] = None
     return next_payload
+
+
+def _supervised_drain_allowed_batch_ids(control_state: Optional[Dict[str, Any]]) -> set[str]:
+    payload = control_state if isinstance(control_state, dict) else {}
+    values = payload.get("supervised_drain_allowed_batch_ids")
+    if not isinstance(values, list):
+        return set()
+    return {str(value).strip() for value in values if str(value).strip()}
+
+
+def _is_supervised_drain_enabled(control_state: Optional[Dict[str, Any]]) -> bool:
+    payload = control_state if isinstance(control_state, dict) else {}
+    return payload.get("supervised_drain_enabled") is True
+
+
+def _is_supervised_drain_batch_allowed(batch: Optional[Dict[str, Any]], control_state: Optional[Dict[str, Any]]) -> bool:
+    if not _is_supervised_drain_enabled(control_state):
+        return True
+    batch_id = str((batch or {}).get("id") or (batch or {}).get("batch_id") or "").strip()
+    return bool(batch_id) and batch_id in _supervised_drain_allowed_batch_ids(control_state)
+
+
+def _supervised_drain_disables_manifest_auto_advance(control_state: Optional[Dict[str, Any]]) -> bool:
+    payload = control_state if isinstance(control_state, dict) else {}
+    return (
+        payload.get("supervised_drain_enabled") is True
+        and payload.get("supervised_drain_disable_manifest_auto_advance") is True
+    )
+
+
+def build_supervised_drain_exhausted_control_state(
+    control_state: Optional[Dict[str, Any]],
+    *,
+    now_iso: str,
+) -> Dict[str, Any]:
+    current = _clear_pipeline_runtime_state_fields(dict(control_state or {}))
+    current.update(
+        {
+            "is_paused": True,
+            "pause_reason": "supervised_drain_exhausted",
+            "stop_reason": None,
+            "stop_details": {
+                "reason": "supervised_drain_exhausted",
+                "supervised_drain_reason": str((control_state or {}).get("supervised_drain_reason") or "").strip() or None,
+            },
+            "desired_state": "paused",
+            "requested_state": "paused",
+            "observed_state": "paused",
+            "transition_state": "paused",
+            "updated_at": now_iso,
+            "supervised_drain_enabled": False,
+            "supervised_drain_disable_manifest_auto_advance": True,
+            "supervised_drain_pause_when_exhausted": True,
+        }
+    )
+    return _mark_recovery_state(
+        current,
+        state="healthy",
+        health_class="healthy",
+        recovery_source="supervised_drain",
+        last_self_heal_action="supervised_drain_exhausted",
+        last_self_heal_reason="supervised drain allowlist exhausted",
+        last_self_heal_at=now_iso,
+    )
 
 
 def build_post_batch_idle_control_state(
@@ -606,7 +729,13 @@ def _should_auto_resume_from_pause(control_state: Dict[str, Any]) -> bool:
 
 def normalize_pipeline_control_state_for_worker_start(now_iso: Optional[str] = None) -> Dict[str, Any]:
     control_state = read_pipeline_control_state()
-    if control_state.get("is_paused") is True and not _should_auto_resume_from_pause(control_state):
+    if (
+        control_state.get("is_paused") is True
+        and (
+            not _should_auto_resume_from_pause(control_state)
+            or str(control_state.get("stop_reason") or "").strip().lower() == "provider_infrastructure_failure"
+        )
+    ):
         return write_pipeline_control_state(
             _mark_recovery_state({
                 **control_state,
@@ -879,6 +1008,12 @@ def _resolve_anthropic_compatible_api_key(base_url: str) -> Optional[str]:
 def _anthropic_messages_url(base_url: str) -> str:
     normalized = str(base_url or "").rstrip("/")
     return f"{normalized}/messages" if normalized.endswith("/v1") else f"{normalized}/v1/messages"
+
+
+def _provider_preflight_ssl_context() -> ssl.SSLContext:
+    if certifi is not None:
+        return ssl.create_default_context(cafile=certifi.where())
+    return ssl.create_default_context()
 
 
 def build_run_provider_infrastructure_failure_metadata(
@@ -1503,7 +1638,7 @@ class EntityPipelineWorker:
             method="POST",
         )
         try:
-            with urlopen(request, timeout=10) as response:
+            with urlopen(request, timeout=10, context=_provider_preflight_ssl_context()) as response:
                 return (200 <= int(getattr(response, "status", 0) or 0) < 300), ""
         except HTTPError as error:
             try:
@@ -1908,6 +2043,40 @@ class EntityPipelineWorker:
         )
         self.reconcile_stale_pipeline_state()
         self.recover_stale_batches()
+        if _is_supervised_drain_enabled(control_state):
+            claimed = self._claim_supervised_drain_allowed_batch(control_state)
+            if claimed:
+                self._persist_pipeline_cursor_state(
+                    claimed,
+                    cursor_source="supervised_drain_claim",
+                    control_state=control_state,
+                )
+                log_worker_transition(
+                    "batch_claimed",
+                    worker_id=getattr(self, "worker_id", "worker-test"),
+                    batch_id=claimed.get("id"),
+                    entity_id=claimed.get("entity_id"),
+                    entity_name=claimed.get("entity_name"),
+                    phase=claimed.get("phase"),
+                    status=str(claimed.get("status") or "running").strip().lower() or "running",
+                    cursor_source="supervised_drain_claim",
+                    message="claimed supervised drain allowlisted entity batch",
+                )
+                return claimed
+            exhausted_state = write_pipeline_control_state(
+                build_supervised_drain_exhausted_control_state(
+                    control_state,
+                    now_iso=self._now_iso(),
+                )
+            )
+            log_worker_transition(
+                "claim_supervised_drain_exhausted",
+                worker_id=getattr(self, "worker_id", "worker-test"),
+                status="paused",
+                message="supervised drain allowlist exhausted",
+                supervised_drain_allowed_batch_ids=exhausted_state.get("supervised_drain_allowed_batch_ids"),
+            )
+            return None
         response = self.supabase.rpc(
             "claim_next_entity_import_batch",
             {
@@ -1918,6 +2087,25 @@ class EntityPipelineWorker:
         batches = response.data or []
         if batches:
             claimed = batches[0]
+            if not _is_supervised_drain_batch_allowed(claimed, control_state):
+                self._release_supervised_drain_claim(claimed, control_state=control_state)
+                exhausted_state = write_pipeline_control_state(
+                    build_supervised_drain_exhausted_control_state(
+                        control_state,
+                        now_iso=self._now_iso(),
+                    )
+                )
+                log_worker_transition(
+                    "claim_supervised_drain_unallowed_batch_released",
+                    worker_id=getattr(self, "worker_id", "worker-test"),
+                    batch_id=claimed.get("id"),
+                    entity_id=claimed.get("entity_id"),
+                    entity_name=claimed.get("entity_name"),
+                    status="paused",
+                    message="claimed batch was outside supervised drain allowlist",
+                    supervised_drain_allowed_batch_ids=exhausted_state.get("supervised_drain_allowed_batch_ids"),
+                )
+                return None
             self._persist_pipeline_cursor_state(
                 claimed,
                 cursor_source="queued_claim",
@@ -1935,6 +2123,22 @@ class EntityPipelineWorker:
                 message="claimed queued entity batch",
             )
             return claimed
+
+        if _is_supervised_drain_enabled(control_state):
+            exhausted_state = write_pipeline_control_state(
+                build_supervised_drain_exhausted_control_state(
+                    control_state,
+                    now_iso=self._now_iso(),
+                )
+            )
+            log_worker_transition(
+                "claim_supervised_drain_exhausted",
+                worker_id=getattr(self, "worker_id", "worker-test"),
+                status="paused",
+                message="supervised drain allowlist exhausted",
+                supervised_drain_allowed_batch_ids=exhausted_state.get("supervised_drain_allowed_batch_ids"),
+            )
+            return None
 
         if self._should_stop_after_scoped_batch(control_state):
             log_worker_transition(
@@ -2043,6 +2247,116 @@ class EntityPipelineWorker:
             message="no claimable batch available",
         )
         return None
+
+    def _claim_supervised_drain_allowed_batch(self, control_state: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
+        values = (control_state or {}).get("supervised_drain_allowed_batch_ids")
+        allowed_batch_ids = [str(value).strip() for value in values if str(value).strip()] if isinstance(values, list) else []
+        if not allowed_batch_ids:
+            return None
+        now_iso = self._now_iso()
+        lease_seconds = getattr(self, "lease_seconds", LEASE_SECONDS)
+        worker_id = getattr(self, "worker_id", "worker-test")
+        for batch_id in allowed_batch_ids:
+            batch = self._get_batch_record(batch_id)
+            if str(batch.get("status") or "").strip().lower() != "queued":
+                continue
+            runs = [
+                run
+                for run in self.get_batch_runs(batch_id)
+                if str(run.get("status") or "").strip().lower() in {"queued", "retrying", "claiming"}
+            ]
+            if not runs:
+                continue
+            run = runs[0]
+            batch_metadata = batch.get("metadata") if isinstance(batch.get("metadata"), dict) else {}
+            run_metadata = run.get("metadata") if isinstance(run.get("metadata"), dict) else {}
+            claimed_metadata = build_batch_heartbeat_metadata(
+                {
+                    **batch_metadata,
+                    "worker_id": worker_id,
+                    "claimed_at": now_iso,
+                    "supervised_drain_claimed": True,
+                },
+                now_iso=now_iso,
+                lease_seconds=lease_seconds,
+            )
+            claimed_run_metadata = build_batch_heartbeat_metadata(
+                {
+                    **run_metadata,
+                    "worker_id": worker_id,
+                    "claimed_at": now_iso,
+                    "supervised_drain_claimed": True,
+                },
+                now_iso=now_iso,
+                lease_seconds=lease_seconds,
+            )
+            self._safe_execute(
+                lambda batch_id=batch_id, metadata=claimed_metadata: self.supabase.table("entity_import_batches")
+                .update({"status": "running", "started_at": now_iso, "completed_at": None, "metadata": metadata})
+                .eq("id", batch_id)
+                .eq("status", "queued")
+                .execute(),
+                context=f"claim supervised drain batch {batch_id}",
+            )
+            entity_id = str(run.get("entity_id") or batch_metadata.get("entity_id") or "").strip()
+            if entity_id:
+                self._safe_execute(
+                    lambda batch_id=batch_id, entity_id=entity_id, metadata=claimed_run_metadata: self.supabase.table("entity_pipeline_runs")
+                    .update({"status": "running", "started_at": now_iso, "completed_at": None, "metadata": metadata})
+                    .eq("batch_id", batch_id)
+                    .eq("entity_id", entity_id)
+                    .execute(),
+                    context=f"claim supervised drain run {batch_id}/{entity_id}",
+                )
+            return {
+                **batch,
+                "id": batch_id,
+                "status": "running",
+                "entity_id": entity_id or batch.get("entity_id"),
+                "canonical_entity_id": run.get("canonical_entity_id") or batch.get("canonical_entity_id") or batch_metadata.get("canonical_entity_id") or entity_id,
+                "entity_name": run.get("entity_name") or batch.get("entity_name") or batch_metadata.get("entity_name"),
+                "phase": run.get("phase") or batch.get("phase") or "dossier_generation",
+                "metadata": claimed_metadata,
+            }
+        return None
+
+    def _release_supervised_drain_claim(
+        self,
+        claimed: Dict[str, Any],
+        *,
+        control_state: Optional[Dict[str, Any]] = None,
+    ) -> None:
+        batch_id = str((claimed or {}).get("id") or "").strip()
+        if not batch_id:
+            return
+        now_iso = self._now_iso()
+        metadata = claimed.get("metadata") if isinstance(claimed.get("metadata"), dict) else {}
+        release_metadata = {
+            **metadata,
+            "supervised_drain_released_at": now_iso,
+            "supervised_drain_release_reason": "batch_not_in_allowlist",
+            "supervised_drain_allowed_batch_ids": sorted(_supervised_drain_allowed_batch_ids(control_state)),
+        }
+        self._safe_execute(
+            lambda: self.supabase.table("entity_import_batches").update(
+                {
+                    "status": "queued",
+                    "completed_at": None,
+                    "metadata": release_metadata,
+                }
+            ).eq("id", batch_id).execute(),
+            context=f"release supervised drain unallowed batch {batch_id}",
+        )
+        self._safe_execute(
+            lambda: self.supabase.table("entity_pipeline_runs").update(
+                {
+                    "status": "queued",
+                    "completed_at": None,
+                    "metadata": release_metadata,
+                }
+            ).eq("batch_id", batch_id).execute(),
+            context=f"release supervised drain unallowed run {batch_id}",
+        )
 
     def _should_stop_after_scoped_batch(self, control_state: Dict[str, Any]) -> bool:
         batch_id = str((control_state or {}).get("current_batch_id") or "").strip()
@@ -2691,6 +3005,17 @@ class EntityPipelineWorker:
     ) -> Optional[Dict[str, Any]]:
         control_state = read_pipeline_control_state()
         if control_state.get("requested_state") == "paused" or control_state.get("observed_state") == "paused":
+            return None
+        if _supervised_drain_disables_manifest_auto_advance(control_state):
+            log_worker_transition(
+                "manifest_auto_advance_suppressed_supervised_drain",
+                worker_id=getattr(self, "worker_id", "worker-test"),
+                batch_id=batch_id,
+                entity_id=source_run.get("entity_id"),
+                entity_name=source_run.get("entity_name"),
+                status="idle",
+                message="supervised drain disabled manifest auto-advance",
+            )
             return None
         if should_skip_manifest_auto_advance_for_batch_metadata(batch_metadata):
             return None

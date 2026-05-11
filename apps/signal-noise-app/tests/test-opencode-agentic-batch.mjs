@@ -41,7 +41,7 @@ const CANONICAL_PARITY_SMOKE_SOURCE = join(
   'canonical_two_question_parity_smoke.json',
 );
 
-test('buildOpenCodeConfig wires Z.AI coding plan quota-conserving models and BrightData MCP for OpenCode', async () => {
+test('buildOpenCodeConfig wires Z.AI coding plan GLM-5.1 and BrightData MCP for OpenCode', async () => {
   const previousZaiApiKey = process.env.ZAI_API_KEY;
   const previousBrightDataToken = process.env.BRIGHTDATA_API_TOKEN;
   const previousDefaultModel = process.env.QF_MODEL_DEFAULT;
@@ -53,7 +53,7 @@ test('buildOpenCodeConfig wires Z.AI coding plan quota-conserving models and Bri
   });
 
   assert.equal(config.$schema, 'https://opencode.ai/config.json');
-  assert.equal(config.model, 'zai-coding-plan/glm-4.7-flash');
+  assert.equal(config.model, 'zai-coding-plan/glm-5.1');
   assert.equal(config.provider['zai-coding-plan'].npm, '@ai-sdk/anthropic');
   assert.equal(config.provider['zai-coding-plan'].name, 'Z.AI Coding Plan');
   assert.equal(config.provider['zai-coding-plan'].options.baseURL, 'https://api.z.ai/api/anthropic/v1');
@@ -69,7 +69,7 @@ test('buildOpenCodeConfig wires Z.AI coding plan quota-conserving models and Bri
   assert.equal(config.mcp.brightData.url, 'http://127.0.0.1:8014/mcp/');
   assert.equal(config.mcp.brightData.timeout, 15000);
   assert.equal(config.agent.discovery.steps, 4);
-  assert.equal(config.agent.discovery.model, 'zai-coding-plan/glm-4.7-flash');
+  assert.equal(config.agent.discovery.model, 'zai-coding-plan/glm-5.1');
   assert.deepEqual(config.tools, { 'brightData*': false, 'brightdata*': false });
   assert.deepEqual(config.agent.build.tools, { 'brightData*': true, 'brightdata*': true });
   assert.deepEqual(config.agent.discovery.tools, { 'brightData*': true, 'brightdata*': true });
@@ -90,24 +90,24 @@ test('buildOpenCodeConfig wires Z.AI coding plan quota-conserving models and Bri
   }
 });
 
-test('resolveQuestionModelRouting uses temporary quota-conserving defaults by question family', () => {
+test('resolveQuestionModelRouting defaults all dossier question families to GLM-5.1', () => {
   const env = {};
 
   assert.deepEqual(
     resolveQuestionModelRouting({ question_id: 'q3_leadership' }, env),
     {
-      model_id: 'glm-4.7-flash',
-      model: 'zai-coding-plan/glm-4.7-flash',
+      model_id: 'glm-5.1',
+      model: 'zai-coding-plan/glm-5.1',
       model_tier: 'prefetch',
-      quota_policy: 'temporary_3_day_conserve',
+      quota_policy: 'glm_5_1_default',
       escalation_allowed: false,
       escalation_model: 'zai-coding-plan/glm-5.1',
       escalation_reason: '',
     },
   );
-  assert.equal(resolveQuestionModelRouting({ question_id: 'q14_yp_fit' }, env).model, 'zai-coding-plan/glm-4.5-air');
+  assert.equal(resolveQuestionModelRouting({ question_id: 'q14_yp_fit' }, env).model, 'zai-coding-plan/glm-5.1');
   assert.equal(resolveQuestionModelRouting({ question_id: 'q14_yp_fit' }, env).model_tier, 'synthesis');
-  assert.equal(resolveQuestionModelRouting({ question_id: 'q1_foundation' }, env).model, 'zai-coding-plan/glm-4.7-flash');
+  assert.equal(resolveQuestionModelRouting({ question_id: 'q1_foundation' }, env).model, 'zai-coding-plan/glm-5.1');
   assert.equal(resolveQuestionModelRouting({ question_id: 'q1_foundation' }, env).model_tier, 'default');
 });
 
@@ -168,7 +168,7 @@ test('prepareOpenCodeRunWorkspace materializes repo-local OpenCode MCP config', 
     const config = JSON.parse(readFileSync(configPath, 'utf8'));
 
     assert.notEqual(prepared.cwd, workspaceRoot);
-  assert.equal(config.model, 'zai-coding-plan/glm-4.7-flash');
+  assert.equal(config.model, 'zai-coding-plan/glm-5.1');
     assert.equal(config.provider['zai-coding-plan'].options.baseURL, 'https://api.z.ai/api/anthropic/v1');
     assert.equal(config.provider['zai-coding-plan'].options.apiKey, '{env:ZAI_API_KEY}');
     assert.ok(config.mcp.brightData);
@@ -928,10 +928,10 @@ test('runOpenCodeCliQuestion routes q2 q3 q6 q9 through evidence-first synthesis
   assert.equal(result.structuredOutput.validation_state, 'validated');
   assert.equal(result.promptTrace.stage_count, 2);
   assert.equal(result.promptTrace.prefetch_used, true);
-  assert.equal(result.promptTrace.model_requested, 'zai-coding-plan/glm-4.7-flash');
-  assert.equal(result.promptTrace.model_used, 'zai-coding-plan/glm-4.7-flash');
+  assert.equal(result.promptTrace.model_requested, 'zai-coding-plan/glm-5.1');
+  assert.equal(result.promptTrace.model_used, 'zai-coding-plan/glm-5.1');
   assert.equal(result.promptTrace.model_tier, 'prefetch');
-  assert.equal(result.promptTrace.quota_policy, 'temporary_3_day_conserve');
+  assert.equal(result.promptTrace.quota_policy, 'glm_5_1_default');
   assert.equal(result.promptTrace.escalation_allowed, false);
   assert.equal(result.promptTrace.retrieval_lead_count, 1);
   assert.equal(result.promptTrace.accepted_source_count, 1);
@@ -1629,17 +1629,17 @@ test('buildOpenCodeRunArgs selects the build agent so BrightData tools are enabl
   const args = buildOpenCodeRunArgs({ question_id: 'q6_launch_signal' }, prompt);
 
   assert.deepEqual(args.slice(0, 4), ['run', '--format', 'json', '--model']);
-  assert.equal(args[4], 'zai-coding-plan/glm-4.7-flash');
+  assert.equal(args[4], 'zai-coding-plan/glm-5.1');
   assert.equal(args.includes('--agent'), true);
   assert.equal(args[args.indexOf('--agent') + 1], 'build');
   assert.equal(args.includes('--model'), true);
   assert.equal(args.at(-1), prompt);
 });
 
-test('buildOpenCodeRunArgs routes synthesis questions to GLM-4.5-Air', () => {
+test('buildOpenCodeRunArgs routes synthesis questions to GLM-5.1 by default', () => {
   const args = buildOpenCodeRunArgs({ question_id: 'q14_yp_fit' }, 'Return JSON');
 
-  assert.equal(args[args.indexOf('--model') + 1], 'zai-coding-plan/glm-4.5-air');
+  assert.equal(args[args.indexOf('--model') + 1], 'zai-coding-plan/glm-5.1');
 });
 
 test('buildOpenCodeRunArgs enables printed INFO logs for standalone harness runs', () => {

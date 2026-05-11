@@ -41,6 +41,11 @@ export type PipelineControlState = {
   last_self_heal_action?: string | null
   last_self_heal_reason?: string | null
   last_self_heal_at?: string | null
+  supervised_drain_enabled?: boolean
+  supervised_drain_allowed_batch_ids?: string[]
+  supervised_drain_disable_manifest_auto_advance?: boolean
+  supervised_drain_pause_when_exhausted?: boolean
+  supervised_drain_reason?: string | null
 }
 
 const DEFAULT_CONTROL_STATE: PipelineControlState = {
@@ -70,6 +75,11 @@ const DEFAULT_CONTROL_STATE: PipelineControlState = {
   last_self_heal_action: null,
   last_self_heal_reason: null,
   last_self_heal_at: null,
+  supervised_drain_enabled: false,
+  supervised_drain_allowed_batch_ids: [],
+  supervised_drain_disable_manifest_auto_advance: false,
+  supervised_drain_pause_when_exhausted: false,
+  supervised_drain_reason: null,
 }
 
 const PIPELINE_CONTROL_STATE_TABLE = 'pipeline_control_state'
@@ -200,6 +210,15 @@ function normalizePipelineControlState(parsed: Partial<PipelineControlState>): P
     last_self_heal_at: typeof parsed.last_self_heal_at === 'string' && parsed.last_self_heal_at.trim().length > 0
       ? parsed.last_self_heal_at.trim()
       : null,
+    supervised_drain_enabled: parsed.supervised_drain_enabled === true,
+    supervised_drain_allowed_batch_ids: Array.isArray(parsed.supervised_drain_allowed_batch_ids)
+      ? parsed.supervised_drain_allowed_batch_ids.map((value) => String(value).trim()).filter(Boolean)
+      : [],
+    supervised_drain_disable_manifest_auto_advance: parsed.supervised_drain_disable_manifest_auto_advance === true,
+    supervised_drain_pause_when_exhausted: parsed.supervised_drain_pause_when_exhausted === true,
+    supervised_drain_reason: typeof parsed.supervised_drain_reason === 'string' && parsed.supervised_drain_reason.trim().length > 0
+      ? parsed.supervised_drain_reason.trim()
+      : null,
   }
 }
 
@@ -301,6 +320,11 @@ export async function writePipelineControlState(input: {
   last_self_heal_action?: string | null
   last_self_heal_reason?: string | null
   last_self_heal_at?: string | null
+  supervised_drain_enabled?: boolean
+  supervised_drain_allowed_batch_ids?: string[]
+  supervised_drain_disable_manifest_auto_advance?: boolean
+  supervised_drain_pause_when_exhausted?: boolean
+  supervised_drain_reason?: string | null
 }): Promise<PipelineControlState> {
   const requestedState = input.requested_state
     ?? (input.is_paused ? 'paused' : 'running')
@@ -350,6 +374,13 @@ export async function writePipelineControlState(input: {
     last_self_heal_action: input.last_self_heal_action ?? null,
     last_self_heal_reason: input.last_self_heal_reason ?? null,
     last_self_heal_at: input.last_self_heal_at ?? null,
+    supervised_drain_enabled: input.supervised_drain_enabled === true,
+    supervised_drain_allowed_batch_ids: Array.isArray(input.supervised_drain_allowed_batch_ids)
+      ? input.supervised_drain_allowed_batch_ids.map((value) => String(value).trim()).filter(Boolean)
+      : [],
+    supervised_drain_disable_manifest_auto_advance: input.supervised_drain_disable_manifest_auto_advance === true,
+    supervised_drain_pause_when_exhausted: input.supervised_drain_pause_when_exhausted === true,
+    supervised_drain_reason: input.supervised_drain_reason ?? null,
   }
 
   await Promise.all([

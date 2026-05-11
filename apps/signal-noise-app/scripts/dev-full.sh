@@ -5,11 +5,53 @@ backend_pid=""
 frontend_pid=""
 graphiti_mcp_pid=""
 graphiti_mcp_enabled="0"
+frontend_health_failures=0
+frontend_health_failure_threshold="${FRONTEND_HEALTH_FAILURE_THRESHOLD:-3}"
 worker_pid=""
 worker_supervisor_pid=""
 recovery_supervisor_pid=""
 NPM_BIN=""
 NODE_BIN=""
+
+load_local_env() {
+  for env_file in ".env" ".env.local"; do
+    if [[ -f "${env_file}" ]]; then
+      local parsed_env_file
+      parsed_env_file="$(mktemp)"
+      "${PYTHON_BIN:-python3}" - "${env_file}" > "${parsed_env_file}" <<'PY'
+import re
+import sys
+
+env_path = sys.argv[1]
+key_pattern = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
+
+with open(env_path, "r", encoding="utf-8") as handle:
+    for raw_line in handle:
+        line = raw_line.strip()
+        if not line or line.startswith("#"):
+            continue
+        if line.startswith("export "):
+            line = line[len("export "):].lstrip()
+        if "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        key = key.strip()
+        if not key_pattern.match(key):
+            continue
+        value = value.strip()
+        if len(value) >= 2 and value[0] == value[-1] and value[0] in {"'", '"'}:
+            value = value[1:-1]
+        sys.stdout.write(f"{key}={value}\n")
+PY
+      while IFS= read -r assignment; do
+        export "${assignment}"
+      done < "${parsed_env_file}"
+      rm -f "${parsed_env_file}"
+    fi
+  done
+}
+
+load_local_env
 
 worker_pid_file="tmp/entity-pipeline-worker.pid"
 worker_supervisor_pid_file="tmp/entity-pipeline-worker-supervisor.pid"
@@ -20,6 +62,7 @@ frontend_pid_file="tmp/dev-full-frontend.pid"
 graphiti_mcp_pid_file="tmp/graphiti-mcp.pid"
 graphiti_mcp_log_file="tmp/graphiti-mcp.log"
 graphiti_runtime_state_file="${GRAPHITI_RUNTIME_STATE_PATH:-tmp/graphiti-runtime-state.json}"
+graphiti_compose_file="docker-compose.graphiti.yml"
 
 export SIGNAL_NOISE_BACKEND_PORT="${SIGNAL_NOISE_BACKEND_PORT:-8002}"
 export GRAPHITI_MCP_PORT="${GRAPHITI_MCP_PORT:-8000}"
@@ -31,6 +74,12 @@ export FALKORDB_USER="${FALKORDB_USER:-}"
 export FALKORDB_PASSWORD="${FALKORDB_PASSWORD:-}"
 export FALKORDB_DATABASE="${FALKORDB_DATABASE:-sports_intelligence}"
 export BACKEND_PORT="${BACKEND_PORT:-${SIGNAL_NOISE_BACKEND_PORT}}"
+if [[ "${FASTAPI_URL:-}" == "http://127.0.0.1:${GRAPHITI_MCP_PORT}" || "${FASTAPI_URL:-}" == "http://localhost:${GRAPHITI_MCP_PORT}" ]]; then
+  unset FASTAPI_URL
+fi
+if [[ "${PYTHON_BACKEND_URL:-}" == "http://127.0.0.1:${GRAPHITI_MCP_PORT}" || "${PYTHON_BACKEND_URL:-}" == "http://localhost:${GRAPHITI_MCP_PORT}" ]]; then
+  unset PYTHON_BACKEND_URL
+fi
 export FASTAPI_URL="${FASTAPI_URL:-http://127.0.0.1:${SIGNAL_NOISE_BACKEND_PORT}}"
 export PYTHON_BACKEND_URL="${PYTHON_BACKEND_URL:-http://127.0.0.1:${SIGNAL_NOISE_BACKEND_PORT}}"
 export BRIGHTDATA_FASTMCP_HOST="${BRIGHTDATA_FASTMCP_HOST:-127.0.0.1}"
@@ -186,7 +235,7 @@ trap cleanup EXIT INT TERM
 
 wait_for_frontend() {
   for _ in $(seq 1 60); do
-    if curl -sf http://127.0.0.1:3005/api/health >/dev/null; then
+    if curl -sf --max-time 2 http://127.0.0.1:3005/api/health >/dev/null; then
       return 0
     fi
 
@@ -195,6 +244,10 @@ wait_for_frontend() {
 
   echo "Frontend failed to become ready on port 3005" >&2
   return 1
+}
+
+frontend_health_check() {
+  curl -sf --max-time 5 http://127.0.0.1:3005/api/health >/dev/null 2>&1
 }
 
 wait_for_backend() {
@@ -226,8 +279,8 @@ PY
 }
 
 wait_for_graphiti_mcp() {
-  for _ in $(seq 1 60); do
-    if curl -sf "http://127.0.0.1:${GRAPHITI_MCP_PORT}/health" >/dev/null; then
+  for _ in $(seq 1 10); do
+    if curl -sf --max-time 2 "http://127.0.0.1:${GRAPHITI_MCP_PORT}/health" >/dev/null; then
       return 0
     fi
 
@@ -254,7 +307,7 @@ write_graphiti_runtime_state() {
   "falkordb_graph_available": $([[ "${mode}" == "ready" ]] && echo true || echo false),
   "graphiti_mcp_available": $([[ "${mode}" == "ready" ]] && echo true || echo false),
   "updated_at": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")",
-  "next_recovery_action": "$([[ "${mode}" == "ready" ]] && echo "No action required." || echo "Point FALKORDB_URI at a real FalkorDB graph endpoint, then restart dev-full so Graphiti MCP can start.")"
+  "next_recovery_action": "$([[ "${mode}" == "ready" ]] && echo "No action required." || echo "Start local Docker FalkorDB with npm run graphiti:falkordb:up, then restart dev-full so Graphiti MCP can start.")"
 }
 EOF
 }
@@ -293,8 +346,33 @@ check_falkordb_graph() {
     return 1
   fi
 
-  write_graphiti_runtime_state "ready" ""
+  write_graphiti_runtime_state "degraded" "graphiti_mcp_unavailable"
   return 0
+}
+
+start_local_falkordb() {
+  if [[ "${FALKORDB_URI}" != "redis://localhost:6379" && "${FALKORDB_URI}" != "redis://127.0.0.1:6379" ]]; then
+    echo "Docker FalkorDB bootstrap skipped because FALKORDB_URI is not local: ${FALKORDB_URI}" >&2
+    return 1
+  fi
+
+  if [[ ! -f "${graphiti_compose_file}" ]]; then
+    echo "Docker FalkorDB bootstrap failed: ${graphiti_compose_file} is missing." >&2
+    return 1
+  fi
+
+  if ! command -v docker >/dev/null 2>&1; then
+    echo "Docker FalkorDB bootstrap failed: docker executable not found on PATH." >&2
+    return 1
+  fi
+
+  if ! docker info >/dev/null 2>&1; then
+    echo "Docker FalkorDB bootstrap failed: Docker is not running." >&2
+    return 1
+  fi
+
+  echo "Starting local Docker FalkorDB for Graphiti..."
+  docker compose -f "${graphiti_compose_file}" up -d falkordb
 }
 
 prewarm_entity_snapshot() {
@@ -316,6 +394,18 @@ start_graphiti_mcp() {
   fi
 
   (
+    graphiti_anthropic_base_url="${GRAPHITI_ANTHROPIC_BASE_URL:-${ANTHROPIC_BASE_URL:-${ANTHROPIC_API_URL:-}}}"
+    graphiti_anthropic_api_url="${GRAPHITI_ANTHROPIC_API_URL:-${ANTHROPIC_API_URL:-${ANTHROPIC_BASE_URL:-}}}"
+    graphiti_anthropic_api_key="${GRAPHITI_ANTHROPIC_API_KEY:-${ZAI_API_KEY:-${ANTHROPIC_API_KEY:-${ANTHROPIC_AUTH_TOKEN:-}}}}"
+    graphiti_anthropic_base_url="${graphiti_anthropic_base_url%/v1}"
+    graphiti_anthropic_api_url="${graphiti_anthropic_api_url%/v1}"
+    export ANTHROPIC_BASE_URL="${graphiti_anthropic_base_url}"
+    export ANTHROPIC_API_URL="${graphiti_anthropic_api_url}"
+    export ANTHROPIC_API_KEY="${graphiti_anthropic_api_key}"
+    export ANTHROPIC_AUTH_TOKEN="${graphiti_anthropic_api_key}"
+    export LLM__PROVIDER="${GRAPHITI_LLM_PROVIDER:-${LLM__PROVIDER:-anthropic}}"
+    export LLM__MODEL="${GRAPHITI_LLM_MODEL:-${LLM__MODEL:-GLM-5.1}}"
+    export SEMAPHORE_LIMIT="${GRAPHITI_SEMAPHORE_LIMIT:-${SEMAPHORE_LIMIT:-1}}"
     cd backend/graphiti_mcp_server_official
     uv run python main.py --transport http --host 0.0.0.0 --port "${GRAPHITI_MCP_PORT}" --database-provider falkordb
   ) > "${graphiti_mcp_log_file}" 2>&1 &
@@ -326,6 +416,7 @@ start_graphiti_mcp() {
     rm -f "${graphiti_mcp_pid_file}"
     return 1
   fi
+  write_graphiti_runtime_state "ready" ""
 }
 
 restart_graphiti_mcp() {
@@ -363,6 +454,10 @@ restart_backend() {
 
 start_frontend() {
   mkdir -p tmp
+  if frontend_health_check; then
+    return 0
+  fi
+
   if ! [[ -x "${NPM_BIN}" ]]; then
     echo "frontend restart failed: npm executable not found at ${NPM_BIN}" >&2
     rm -f "${frontend_pid_file}"
@@ -511,9 +606,19 @@ start_recovery_supervisor() {
         ensure_worker_supervisor_running
       fi
 
-      if ! curl -sf http://127.0.0.1:3005/api/health >/dev/null 2>&1; then
-        echo "recovery supervisor: frontend unhealthy; restarting frontend" >&2
-        restart_frontend
+      if frontend_health_check; then
+        if (( frontend_health_failures > 0 )); then
+          echo "recovery supervisor: frontend health recovered after ${frontend_health_failures} failed check(s)" >&2
+        fi
+        frontend_health_failures=0
+      else
+        frontend_health_failures=$((frontend_health_failures + 1))
+        echo "recovery supervisor: frontend health check failed (${frontend_health_failures}/${frontend_health_failure_threshold})" >&2
+        if (( frontend_health_failures >= frontend_health_failure_threshold )); then
+          echo "recovery supervisor: frontend unhealthy; restarting frontend" >&2
+          frontend_health_failures=0
+          restart_frontend
+        fi
       fi
 
       ensure_worker_supervisor_running
@@ -522,15 +627,28 @@ start_recovery_supervisor() {
   ) &
   recovery_supervisor_pid=$!
 }
+if ! check_falkordb_graph; then
+  if start_local_falkordb && check_falkordb_graph; then
+    echo "Local Docker FalkorDB is ready for Graphiti."
+  else
+    graphiti_mcp_enabled="0"
+    if [[ "${GRAPHITI_REQUIRED}" == "1" ]]; then
+      exit 1
+    fi
+    echo "Docker FalkorDB unavailable; continuing in graphiti_runtime_mode=degraded." >&2
+  fi
+fi
+
 if check_falkordb_graph; then
   graphiti_mcp_enabled="1"
-  start_graphiti_mcp
-else
-  graphiti_mcp_enabled="0"
-  if [[ "${GRAPHITI_REQUIRED}" == "1" ]]; then
-    exit 1
+  if ! start_graphiti_mcp; then
+    graphiti_mcp_enabled="0"
+    write_graphiti_runtime_state "degraded" "graphiti_mcp_unavailable"
+    if [[ "${GRAPHITI_REQUIRED}" == "1" ]]; then
+      exit 1
+    fi
+    echo "Graphiti MCP failed to start; continuing in graphiti_runtime_mode=degraded." >&2
   fi
-  echo "Graphiti MCP skipped; continuing in graphiti_runtime_mode=degraded." >&2
 fi
 start_backend
 ensure_worker_supervisor_running

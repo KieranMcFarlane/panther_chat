@@ -61,11 +61,11 @@ pip install -r requirements.txt
 ### 2. Start Infrastructure
 
 ```bash
-# Start Redis (required for Celery)
-docker-compose up -d redis
+# Start local FalkorDB for Graphiti memory
+npm run graphiti:falkordb:up
 
-# Optional: Start FalkorDB / Graphiti graph service
-docker-compose up -d falkordb
+# Check Graphiti/FalkorDB runtime health
+npm run graphiti:runtime:check
 ```
 
 ### 3. Configure Environment
@@ -75,9 +75,19 @@ Create a `.env` file in the root directory:
 ```bash
 # Graphiti / FalkorDB Configuration
 FALKORDB_URI=redis://localhost:6379
-FALKORDB_USER=falkordb
-FALKORDB_PASSWORD=your_falkordb_password
+FALKORDB_USER=
+FALKORDB_PASSWORD=
 FALKORDB_DATABASE=sports_intelligence
+GRAPHITI_MCP_URL=http://localhost:8000/mcp/
+GRAPHITI_REQUIRED=0
+GRAPHITI_SEMAPHORE_LIMIT=1
+GRAPHITI_MEMORY_SYNC_TIMEOUT_MS=120000
+GRAPHITI_DOSSIER_MEMORY_SYNC_CONCURRENCY=1
+GRAPHITI_MEMORY_PAYLOAD_MODE=minimal_text
+GRAPHITI_MEMORY_SYNC_BATCH_SIZE=1
+GRAPHITI_MEMORY_SYNC_QUEUE_DELAY_MS=60000
+GRAPHITI_MEMORY_SYNC_RETRY_ATTEMPTS=3
+GRAPHITI_MEMORY_SYNC_RETRY_BASE_DELAY_MS=10000
 
 # MCP Server URLs (optional - will use mock data if not set)
 BRIGHTDATA_MCP_URL=http://localhost:3001
@@ -194,9 +204,16 @@ Health check endpoint.
 | Variable | Description | Default |
 |----------|-------------|---------|
 | `FALKORDB_URI` | FalkorDB connection URI | `redis://localhost:6379` |
-| `FALKORDB_USER` | FalkorDB username | `falkordb` |
-| `FALKORDB_PASSWORD` | FalkorDB password | `your_falkordb_password` |
+| `FALKORDB_USER` | FalkorDB username | empty for local Docker |
+| `FALKORDB_PASSWORD` | FalkorDB password | empty for local Docker |
 | `FALKORDB_DATABASE` | FalkorDB database name | `sports_intelligence` |
+| `GRAPHITI_SEMAPHORE_LIMIT` | Graphiti MCP internal episode extraction concurrency. Keep `1` locally for Z.ai stability. | `1` |
+| `GRAPHITI_DOSSIER_MEMORY_SYNC_CONCURRENCY` | Graphiti dossier memory queue concurrency | `1` |
+| `GRAPHITI_MEMORY_PAYLOAD_MODE` | Payload mode for Graphiti dossier memory sync. Use `minimal_text` locally; `compact_json` is available for debugging. | `minimal_text` |
+| `GRAPHITI_MEMORY_SYNC_BATCH_SIZE` | Maximum dossier memories queued per sync run | `1` |
+| `GRAPHITI_MEMORY_SYNC_QUEUE_DELAY_MS` | Delay after each queued memory to avoid GLM bursts | `60000` |
+| `GRAPHITI_MEMORY_SYNC_RETRY_ATTEMPTS` | Retries for synchronous transient Graphiti/Z.ai 429s | `3` |
+| `GRAPHITI_MEMORY_SYNC_RETRY_BASE_DELAY_MS` | Linear retry backoff base delay | `10000` |
 | `CELERY_BROKER_URL` | Redis broker URL | `redis://localhost:6379/0` |
 | `CELERY_RESULT_BACKEND` | Redis result backend | `redis://localhost:6379/0` |
 

@@ -592,6 +592,30 @@ def test_repair_batches_do_not_manifest_auto_advance():
     assert should_skip_manifest_auto_advance_for_batch_metadata({"queue_mode": "durable_worker"}) is False
 
 
+def test_queue_manifest_auto_advance_suppressed_by_supervised_drain_control(monkeypatch):
+    worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
+    worker._find_next_manifest_entity = lambda **_kwargs: (_ for _ in ()).throw(
+        AssertionError("supervised drain must suppress manifest lookup before selecting next entity")
+    )
+    monkeypatch.setattr(
+        "entity_pipeline_worker.read_pipeline_control_state",
+        lambda: {
+            "requested_state": "running",
+            "observed_state": "running",
+            "supervised_drain_enabled": True,
+            "supervised_drain_disable_manifest_auto_advance": True,
+        },
+    )
+
+    queued = worker._queue_manifest_auto_advance(
+        batch_id="batch-1",
+        source_run={"entity_id": "entity-1", "metadata": {}},
+        batch_metadata={"source": "manifest_auto_advance"},
+    )
+
+    assert queued is None
+
+
 def test_read_pipeline_control_state_exposes_cursor_fields(tmp_path, monkeypatch):
     control_path = tmp_path / "pipeline-control-state.json"
     control_path.write_text(
@@ -1366,6 +1390,45 @@ def test_call_pipeline_forwards_run_and_repair_metadata(monkeypatch):
     assert '"repair_source_run_id": "run-base-1"' in body
 
 
+def test_provider_preflight_uses_certifi_ssl_context(monkeypatch):
+    worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
+    captured = {}
+    fake_context = object()
+
+    class _Response:
+        status = 200
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+    def fake_urlopen(request, timeout=None, context=None):
+        captured["url"] = request.full_url
+        captured["timeout"] = timeout
+        captured["context"] = context
+        captured["headers"] = dict(request.header_items())
+        captured["body"] = request.data.decode("utf-8")
+        return _Response()
+
+    monkeypatch.setenv("ANTHROPIC_BASE_URL", "https://api.z.ai/api/anthropic/v1")
+    monkeypatch.setenv("ZAI_API_KEY", "zai-test-key")
+    monkeypatch.setenv("ANTHROPIC_DEFAULT_SONNET_MODEL", "GLM-5.1")
+    monkeypatch.setattr("entity_pipeline_worker._provider_preflight_ssl_context", lambda: fake_context)
+    monkeypatch.setattr("entity_pipeline_worker.urlopen", fake_urlopen)
+
+    ok, reason = worker._provider_preflight()
+
+    assert ok is True
+    assert reason == ""
+    assert captured["url"] == "https://api.z.ai/api/anthropic/v1/messages"
+    assert captured["timeout"] == 10
+    assert captured["context"] is fake_context
+    assert captured["headers"]["X-api-key"] == "zai-test-key"
+    assert '"model": "GLM-5.1"' in captured["body"]
+
+
 def test_merge_pipeline_run_metadata_preserves_phase_details_and_adds_scores():
     merged = merge_pipeline_run_metadata(
         {"phase_details": {"status": "running", "iteration": 2}},
@@ -1990,6 +2053,137 @@ def test_claim_next_batch_stops_after_scoped_pilot_batch_without_resume_claim(mo
     claimed = worker.claim_next_batch()
 
     assert claimed is None
+
+
+def test_claim_next_batch_processes_allowed_supervised_drain_batch(monkeypatch):
+    worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
+    worker.reconcile_stale_pipeline_state = lambda: None
+    worker.recover_stale_batches = lambda: None
+    worker.worker_id = "worker-1"
+    worker.lease_seconds = 60
+    worker._backend_preflight = lambda: (True, None)
+    worker._now_iso = lambda: "2026-05-07T17:30:00+01:00"
+    writes = []
+
+    class FakeSupabase:
+        def rpc(self, name, params):
+            raise AssertionError("supervised drain must not use generic claim RPC")
+
+    worker.supabase = FakeSupabase()
+    worker._claim_supervised_drain_allowed_batch = lambda control_state: {
+        "id": "batch-allowed",
+        "entity_id": "entity-allowed",
+        "canonical_entity_id": "entity-allowed",
+        "entity_name": "Allowed Entity",
+        "phase": "dossier_generation",
+        "status": "running",
+        "metadata": {},
+    }
+    monkeypatch.setattr(
+        "entity_pipeline_worker.read_pipeline_control_state",
+        lambda: {
+            "is_paused": False,
+            "requested_state": "running",
+            "observed_state": "running",
+            "transition_state": "running",
+            "desired_state": "running",
+            "supervised_drain_enabled": True,
+            "supervised_drain_allowed_batch_ids": ["batch-allowed"],
+            "supervised_drain_disable_manifest_auto_advance": True,
+            "supervised_drain_pause_when_exhausted": True,
+        },
+    )
+    monkeypatch.setattr("entity_pipeline_worker.write_pipeline_control_state", lambda payload: writes.append(payload) or payload)
+
+    claimed = worker.claim_next_batch()
+
+    assert claimed["id"] == "batch-allowed"
+    assert writes[-1]["current_batch_id"] == "batch-allowed"
+
+
+def test_claim_next_batch_pauses_supervised_drain_without_generic_rpc_when_allowlist_empty(monkeypatch):
+    worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
+    worker.reconcile_stale_pipeline_state = lambda: None
+    worker.recover_stale_batches = lambda: None
+    worker.worker_id = "worker-1"
+    worker.lease_seconds = 60
+    worker._backend_preflight = lambda: (True, None)
+    worker._now_iso = lambda: "2026-05-07T17:30:00+01:00"
+    writes = []
+
+    class FakeSupabase:
+        def rpc(self, name, params):
+            raise AssertionError("supervised drain must not use generic claim RPC")
+
+    worker.supabase = FakeSupabase()
+    worker._claim_supervised_drain_allowed_batch = lambda control_state: None
+    worker._select_next_entity_cursor_candidate = lambda **_kwargs: (_ for _ in ()).throw(
+        AssertionError("supervised drain must not fall through to cursor or manifest selection")
+    )
+    monkeypatch.setattr(
+        "entity_pipeline_worker.read_pipeline_control_state",
+        lambda: {
+            "is_paused": False,
+            "requested_state": "running",
+            "observed_state": "running",
+            "transition_state": "running",
+            "desired_state": "running",
+            "supervised_drain_enabled": True,
+            "supervised_drain_allowed_batch_ids": ["batch-allowed"],
+            "supervised_drain_disable_manifest_auto_advance": True,
+            "supervised_drain_pause_when_exhausted": True,
+        },
+    )
+    monkeypatch.setattr("entity_pipeline_worker.write_pipeline_control_state", lambda payload: writes.append(payload) or payload)
+
+    claimed = worker.claim_next_batch()
+
+    assert claimed is None
+    assert writes[-1]["is_paused"] is True
+    assert writes[-1]["pause_reason"] == "supervised_drain_exhausted"
+
+
+def test_claim_next_batch_pauses_supervised_drain_without_manifest_fallback_when_queue_empty(monkeypatch):
+    worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
+    worker.reconcile_stale_pipeline_state = lambda: None
+    worker.recover_stale_batches = lambda: None
+    worker.worker_id = "worker-1"
+    worker.lease_seconds = 60
+    worker._backend_preflight = lambda: (True, None)
+    worker._now_iso = lambda: "2026-05-07T17:30:00+01:00"
+    writes = []
+
+    class FakeSupabase:
+        def rpc(self, name, params):
+            raise AssertionError("supervised drain must not use generic claim RPC")
+
+    worker.supabase = FakeSupabase()
+    worker._claim_supervised_drain_allowed_batch = lambda control_state: None
+    worker._select_next_entity_cursor_candidate = lambda **_kwargs: (_ for _ in ()).throw(
+        AssertionError("supervised drain exhaustion must not fall through to manifest fallback")
+    )
+    monkeypatch.setattr(
+        "entity_pipeline_worker.read_pipeline_control_state",
+        lambda: {
+            "is_paused": False,
+            "requested_state": "running",
+            "observed_state": "running",
+            "transition_state": "running",
+            "desired_state": "running",
+            "supervised_drain_enabled": True,
+            "supervised_drain_allowed_batch_ids": ["batch-allowed"],
+            "supervised_drain_disable_manifest_auto_advance": True,
+            "supervised_drain_pause_when_exhausted": True,
+        },
+    )
+    monkeypatch.setattr("entity_pipeline_worker.write_pipeline_control_state", lambda payload: writes.append(payload) or payload)
+
+    claimed = worker.claim_next_batch()
+
+    assert claimed is None
+    assert writes[-1]["is_paused"] is True
+    assert writes[-1]["pause_reason"] == "supervised_drain_exhausted"
+    assert writes[-1]["supervised_drain_enabled"] is False
 
 
 def test_claim_next_batch_does_not_manifest_fallback_after_paused_checkpoint_auto_resume(monkeypatch):

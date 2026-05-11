@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import 'dotenv/config'
 import { loadGraphitiRuntimeHealth } from '../src/lib/graphiti-runtime-health.mjs'
 
 const health = await loadGraphitiRuntimeHealth()

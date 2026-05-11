@@ -17,9 +17,9 @@ const WORKTREE_ROOT = path.resolve(APP_ROOT, '..', '..');
 const QUESTION_PROGRESS_FRAMEWORK_PATH = path.join(APP_ROOT, 'backend', 'question_progress_framework.json');
 const STANDALONE_BRIGHTDATA_FALLBACK_SCRIPT = path.join(APP_ROOT, 'scripts', 'standalone_brightdata_fallback.py');
 const DEFAULT_PROVIDER_ID = 'zai-coding-plan';
-const TEMPORARY_QUOTA_POLICY = 'temporary_3_day_conserve';
-const FALLBACK_PREFETCH_MODEL_ID = 'glm-4.7-flash';
-const FALLBACK_SYNTHESIS_MODEL_ID = 'glm-4.5-air';
+const TEMPORARY_QUOTA_POLICY = 'glm_5_1_default';
+const FALLBACK_PREFETCH_MODEL_ID = 'glm-5.1';
+const FALLBACK_SYNTHESIS_MODEL_ID = 'glm-5.1';
 const FALLBACK_ESCALATION_MODEL_ID = 'glm-5.1';
 const ZAI_MODEL_CATALOG = {
   'glm-5.1': { id: 'GLM-5.1', name: 'GLM-5.1', context: 128000, output: 16384 },

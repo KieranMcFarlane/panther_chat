@@ -78,7 +78,30 @@ test('graphiti runtime health redacts credentials and exposes recovery guidance'
     graphitiMcpAvailable: false,
     env: { FALKORDB_URI: 'redis://localhost:6379' },
   })
-  assert.match(health.next_recovery_action, /real FalkorDB graph endpoint/)
+  assert.match(health.next_recovery_action, /local Docker FalkorDB/)
+})
+
+test('graphiti runtime health distinguishes local FalkorDB readiness from MCP readiness', async () => {
+  const { buildGraphitiRuntimeHealth } = await import(runtimeHealthPath)
+
+  const graphOnly = buildGraphitiRuntimeHealth({
+    graphProbeStatus: 'available',
+    graphitiMcpAvailable: false,
+    env: { GRAPHITI_REQUIRED: '0', FALKORDB_URI: 'redis://localhost:6379' },
+  })
+  assert.equal(graphOnly.falkordb_graph_available, true)
+  assert.equal(graphOnly.graphiti_mcp_available, false)
+  assert.equal(graphOnly.graphiti_runtime_mode, 'degraded')
+  assert.equal(graphOnly.graphiti_degraded_reason, 'graphiti_mcp_unavailable')
+  assert.match(graphOnly.next_recovery_action, /Start Graphiti MCP/)
+
+  const ready = buildGraphitiRuntimeHealth({
+    graphProbeStatus: 'available',
+    graphitiMcpAvailable: true,
+    env: { GRAPHITI_REQUIRED: '0', FALKORDB_URI: 'redis://localhost:6379' },
+  })
+  assert.equal(ready.graphiti_runtime_mode, 'ready')
+  assert.equal(ready.next_recovery_action, 'No action required.')
 })
 
 test('graphiti runtime check script and consumers use the shared helper', () => {
@@ -90,6 +113,7 @@ test('graphiti runtime check script and consumers use the shared helper', () => 
   const statusSource = readFileSync(statusRoutePath, 'utf8')
 
   assert.match(scriptSource, /loadGraphitiRuntimeHealth/)
+  assert.match(scriptSource, /dotenv\/config/)
   assert.match(scriptSource, /GRAPHITI_REQUIRED/)
   assert.match(scriptSource, /process\.exit\(health\.blocking \? 1 : 0\)/)
 

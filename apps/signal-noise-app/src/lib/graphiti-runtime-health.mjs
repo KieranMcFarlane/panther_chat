@@ -8,6 +8,17 @@ const DEFAULT_FALKORDB_DATABASE = 'sports_intelligence'
 const DEFAULT_GRAPHITI_MCP_URL = 'http://127.0.0.1:8000/mcp/'
 const DEFAULT_TIMEOUT_MS = 2500
 
+function recoveryActionFor(reason) {
+  if (!reason) return 'No action required.'
+  if (reason === 'graphiti_mcp_unavailable') {
+    return 'Start Graphiti MCP with dev-full after FalkorDB is healthy.'
+  }
+  if (reason === 'falkordb_graph_unavailable' || reason === 'falkordb_connection_failed') {
+    return 'Start local Docker FalkorDB with npm run graphiti:falkordb:up, then restart dev-full so Graphiti MCP can start.'
+  }
+  return 'Check local Docker FalkorDB and Graphiti MCP runtime health, then restart dev-full.'
+}
+
 function text(value) {
   return value === null || value === undefined ? '' : String(value).trim()
 }
@@ -94,9 +105,7 @@ export function buildGraphitiRuntimeHealth({
     graphiti_degraded_reason: degradedReason,
     graphiti_required: required,
     blocking,
-    next_recovery_action: degradedReason
-      ? 'Point FALKORDB_URI at a real FalkorDB graph endpoint, then restart dev-full so Graphiti MCP can start.'
-      : 'No action required.',
+    next_recovery_action: recoveryActionFor(degradedReason),
     graph_probe_status: graphProbeStatus,
     graph_probe_output: text(graphProbeOutput).slice(0, 500) || null,
     redacted_config: redactGraphitiRuntimeConfig(env),

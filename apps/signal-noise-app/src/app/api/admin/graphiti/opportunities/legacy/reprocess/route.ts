@@ -112,62 +112,95 @@ export async function POST(request: NextRequest) {
         ...recovery,
       }
 
-      if (recovery.legacy_recovery_tier !== 'recoverable_legacy') {
-        results.push({ ...baseResult, status: 'skipped_not_recoverable' })
-        continue
-      }
+      try {
+        if (recovery.legacy_recovery_tier !== 'recoverable_legacy') {
+          results.push({ ...baseResult, status: 'skipped_not_recoverable' })
+          continue
+        }
 
-      if (dryRun) {
-        results.push({ ...baseResult, status: 'dry_run_recoverable', expected_restamp: true })
-        continue
-      }
+        if (dryRun) {
+          results.push({ ...baseResult, status: 'dry_run_recoverable', expected_restamp: true })
+          continue
+        }
 
-      const synthesized = await synthesizeGraphitiOpportunityStrategyBrief(row, yellowPantherProfile, {
-        modelTimeoutMs: 45_000,
-      })
-      const validation = validateStrategyBrief(synthesized.brief)
+        let synthesized
+        try {
+          synthesized = await synthesizeGraphitiOpportunityStrategyBrief(row, yellowPantherProfile, {
+            modelTimeoutMs: 45_000,
+          })
+        } catch (strategyError) {
+          const rawPayload = asRecord(row.raw_payload)
+          const message = strategyError instanceof Error ? strategyError.message : 'failed_strategy_synthesis'
+          await pool.query(`
+            update graphiti_materialized_opportunities
+            set raw_payload = $2::jsonb,
+                updated_at = now()
+            where opportunity_id = $1
+          `, [
+            row.opportunity_id,
+            JSON.stringify({
+              ...rawPayload,
+              bd_strategy_status: 'failed_strategy_synthesis',
+              bd_strategy_error: message,
+              legacy_recovery_status: 'failed_strategy_synthesis',
+              legacy_recovery_score: recovery.legacy_recovery_score,
+              legacy_recovery_blockers: recovery.legacy_recovery_blockers,
+            }),
+          ])
+          results.push({ ...baseResult, status: 'failed_strategy_synthesis', errors: [message] })
+          continue
+        }
+        const validation = validateStrategyBrief(synthesized.brief)
 
-      if (!synthesized.validation.valid || !validation.valid) {
-        const rawPayload = asRecord(row.raw_payload)
+        if (!synthesized.validation.valid || !validation.valid) {
+          const rawPayload = asRecord(row.raw_payload)
+          await pool.query(`
+            update graphiti_materialized_opportunities
+            set raw_payload = $2::jsonb,
+                updated_at = now()
+            where opportunity_id = $1
+          `, [
+            row.opportunity_id,
+            JSON.stringify({
+              ...rawPayload,
+              bd_strategy_status: 'failed_quality_gate',
+              bd_strategy_error: [...synthesized.validation.reasons, ...validation.reasons].join('; ') || 'failed_strategy_synthesis',
+              legacy_recovery_status: 'failed_strategy_synthesis',
+              legacy_recovery_score: recovery.legacy_recovery_score,
+              legacy_recovery_blockers: recovery.legacy_recovery_blockers,
+            }),
+          ])
+          results.push({ ...baseResult, status: 'failed_quality_gate', errors: [...synthesized.validation.reasons, ...validation.reasons] })
+          continue
+        }
+
+        const trustedPayload = stampTrustedGraphitiQualityEpoch({
+          ...asRecord(row.raw_payload),
+          bd_strategy_brief: synthesized.brief,
+          bd_strategy_status: 'ready',
+          bd_strategy_error: null,
+          legacy_recovery_status: 'recovered',
+          legacy_recovered_at: new Date().toISOString(),
+          legacy_recovery_score: recovery.legacy_recovery_score,
+          legacy_recovery_blockers: recovery.legacy_recovery_blockers,
+          legacy_untrusted: false,
+        })
+
         await pool.query(`
           update graphiti_materialized_opportunities
           set raw_payload = $2::jsonb,
               updated_at = now()
           where opportunity_id = $1
-        `, [
-          row.opportunity_id,
-          JSON.stringify({
-            ...rawPayload,
-            bd_strategy_status: 'failed_quality_gate',
-            bd_strategy_error: [...synthesized.validation.reasons, ...validation.reasons].join('; ') || 'failed_strategy_synthesis',
-            legacy_recovery_status: 'failed_strategy_synthesis',
-            legacy_recovery_score: recovery.legacy_recovery_score,
-            legacy_recovery_blockers: recovery.legacy_recovery_blockers,
-          }),
-        ])
-        results.push({ ...baseResult, status: 'failed_quality_gate', errors: [...synthesized.validation.reasons, ...validation.reasons] })
+        `, [row.opportunity_id, JSON.stringify(trustedPayload)])
+        results.push({ ...baseResult, status: 'recovered' })
+      } catch (rowError) {
+        results.push({
+          ...baseResult,
+          status: 'failed_unexpected',
+          errors: [rowError instanceof Error ? rowError.message : 'legacy_reprocess_row_failed'],
+        })
         continue
       }
-
-      const trustedPayload = stampTrustedGraphitiQualityEpoch({
-        ...asRecord(row.raw_payload),
-        bd_strategy_brief: synthesized.brief,
-        bd_strategy_status: 'ready',
-        bd_strategy_error: null,
-        legacy_recovery_status: 'recovered',
-        legacy_recovered_at: new Date().toISOString(),
-        legacy_recovery_score: recovery.legacy_recovery_score,
-        legacy_recovery_blockers: recovery.legacy_recovery_blockers,
-        legacy_untrusted: false,
-      })
-
-      await pool.query(`
-        update graphiti_materialized_opportunities
-        set raw_payload = $2::jsonb,
-            updated_at = now()
-        where opportunity_id = $1
-      `, [row.opportunity_id, JSON.stringify(trustedPayload)])
-      results.push({ ...baseResult, status: 'recovered' })
     }
 
     return NextResponse.json({

@@ -75,11 +75,11 @@ test('opportunities UI communicates the trusted epoch and hides legacy from main
   const source = readFileSync(uiPath, 'utf8')
 
   assert.match(source, /Trusted feed since 8 May 2026, 13:26:48 UTC/)
-  assert.match(source, /Legacy rows are hidden from the main feed and available in diagnostics only\./)
+  assert.match(source, /Legacy rows are shown as labelled untrusted cards and are not counted as trusted opportunities\./)
   assert.match(source, /legacy_untrusted_count/)
   assert.match(source, /trusted_epoch_count/)
   assert.match(source, /quality_epoch_cutoff_at/)
-  assert.match(source, /reviewMode \? .*legacy_untrusted/s)
+  assert.match(source, /Legacy recovery/)
 })
 
 test('admin label script supports dry-run and apply quality epoch labelling without deleting rows', () => {

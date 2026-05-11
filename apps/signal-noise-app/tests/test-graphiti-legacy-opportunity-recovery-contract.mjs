@@ -32,6 +32,7 @@ test('diagnostics exposes recoverable legacy candidates without mixing them into
   assert.match(source, /legacy_recovery_blockers/)
   assert.match(source, /recommended_recovery_action/)
   assert.match(source, /commercialStateCounts\.legacy_untrusted/)
+  assert.doesNotMatch(source, /commercialStateCounts\.legacy_untrusted\s*=\s*legacyCommercialStateRows\.length/)
   assert.match(source, /trustedCommercialStateRows/)
   assert.doesNotMatch(source, /commercialStateCounts\.watch\s*\+=\s*legacyRecovery/)
 })
@@ -52,10 +53,13 @@ test('admin legacy recovery endpoint is dry-run by default and selected-only', (
   assert.match(source, /stampTrustedGraphitiQualityEpoch/)
   assert.match(source, /legacy_untrusted:\s*false/)
   assert.match(source, /failed_strategy_synthesis|failed_quality_gate/)
+  assert.match(source, /catch \(strategyError\)/)
+  assert.match(source, /failed_unexpected/)
+  assert.match(source, /continue/)
   assert.doesNotMatch(source, /update graphiti_materialized_opportunities[\s\S]*where\s+raw_payload->>'legacy_untrusted'\s*=\s*'true'[\s\S]*without selection/i)
 })
 
-test('review UI shows legacy recovery separately and keeps default page trusted-only', () => {
+test('default UI shows legacy recovery cards honestly without counting them as trusted opportunities', () => {
   const source = readFileSync(uiPath, 'utf8')
 
   assert.match(source, /Legacy recovery/)
@@ -64,6 +68,7 @@ test('review UI shows legacy recovery separately and keeps default page trusted-
   assert.match(source, /Recoverable/)
   assert.match(source, /Legacy context/)
   assert.match(source, /Legacy data issue/)
-  assert.match(source, /reviewMode \? .*legacy_untrusted/s)
-  assert.doesNotMatch(source, /commercialStateTabs:.*legacy_untrusted(?![\s\S]*reviewMode)/)
+  assert.match(source, /legacy_untrusted/)
+  assert.match(source, /not counted as trusted opportunities|untrusted legacy cards/i)
+  assert.doesNotMatch(source, /\.\.\.\(reviewMode \? \[\{\s*key: 'legacy_untrusted'/s)
 })

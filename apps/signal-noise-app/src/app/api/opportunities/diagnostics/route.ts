@@ -679,10 +679,10 @@ async function loadDiagnostics(options: { commercialState: CommercialState; comm
   const commercialStateRows = commercialStateRowsResult.rows
   const trustedCommercialStateRows = commercialStateRows.filter((row) => isTrustedGraphitiQualityEpochPayload(asRecord(row.raw_payload)))
   const legacyCommercialStateRows = commercialStateRows.filter((row) => isLegacyUntrustedGraphitiPayload(asRecord(row.raw_payload)))
+  const legacyUntrustedCount = legacyCommercialStateRows.length
   const legacyRecoveryCandidates = legacyCommercialStateRows
     .map(mapLegacyRecoveryCard)
     .sort((a, b) => b.legacy_recovery_score - a.legacy_recovery_score)
-  commercialStateCounts.legacy_untrusted = legacyCommercialStateRows.length
 
   for (const row of options.commercialState === 'legacy_untrusted' ? legacyCommercialStateRows : trustedCommercialStateRows) {
     const card = mapCommercialStateCard(row)
@@ -695,6 +695,9 @@ async function loadDiagnostics(options: { commercialState: CommercialState; comm
         ? mapLegacyRecoveryCard(row)
         : card)
     }
+  }
+  if (options.commercialState !== 'legacy_untrusted') {
+    commercialStateCounts.legacy_untrusted = legacyUntrustedCount
   }
   const selectedCommercialTotal = commercialStateCounts[options.commercialState]
   const pagedCommercialStateCards = {
@@ -713,7 +716,7 @@ async function loadDiagnostics(options: { commercialState: CommercialState; comm
     source: 'graphiti_dossier_ingestions',
     quality_epoch_cutoff_at: GRAPHITI_OPPORTUNITY_QUALITY_CUTOFF_AT,
     trusted_epoch_count: trustedCommercialStateRows.length,
-    legacy_untrusted_count: legacyCommercialStateRows.length,
+    legacy_untrusted_count: legacyUntrustedCount,
     recoverable_legacy_count: legacyRecoveryCandidates.filter((card) => card.legacy_recovery_tier === 'recoverable_legacy').length,
     legacy_recovery_candidates: legacyRecoveryCandidates.slice(0, 24),
     active_shortlist_count: commercialStateCounts.outreach_ready,

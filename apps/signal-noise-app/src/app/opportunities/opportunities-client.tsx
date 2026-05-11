@@ -648,7 +648,7 @@ function OpportunitiesContent() {
   const [trustedEpochCount, setTrustedEpochCount] = useState(0);
   const [legacyUntrustedCount, setLegacyUntrustedCount] = useState(0);
   const [qualityEpochCutoffAt, setQualityEpochCutoffAt] = useState('2026-05-08T13:26:48.989Z');
-  const [selectedCommercialStateTab, setSelectedCommercialStateTab] = useState<CommercialStateTab>('watch');
+  const [selectedCommercialStateTab, setSelectedCommercialStateTab] = useState<CommercialStateTab>('legacy_untrusted');
   const [commercialStatePage, setCommercialStatePage] = useState(1);
   const [commercialStateSort, setCommercialStateSort] = useState<CommercialSort>('freshest');
   const [commercialStatePagination, setCommercialStatePagination] = useState({
@@ -972,13 +972,13 @@ function OpportunitiesContent() {
       label: 'Data issues',
       description: 'Cards blocked by entity mismatch, missing evidence, stale data, or pipeline leakage. Fix these before commercial review.',
     },
-    ...(reviewMode ? [{
+    {
       key: 'legacy_untrusted' as CommercialStateTab,
       label: 'Legacy recovery',
-      description: 'Pre-epoch rows stay hidden from the trusted feed. Review Recoverable, Legacy context, and Legacy data issue rows here only.',
-    }] : []),
+      description: 'Pre-epoch rows shown honestly as untrusted legacy cards. They are visible for review, but not counted as trusted opportunities until selectively reprocessed.',
+    },
   ];
-  const reviewModeLegacyState = reviewMode ? 'legacy_untrusted' : null;
+  const reviewModeLegacyState = 'legacy_untrusted';
   const commercialStateCardsByTab = commercialStateCards[selectedCommercialStateTab] || [];
   const selectedCommercialState = commercialStateTabs.find((tab) => tab.key === selectedCommercialStateTab) || commercialStateTabs[1];
   const showingOutreachReadyTab = selectedCommercialStateTab === 'outreach_ready';
@@ -1217,7 +1217,7 @@ function OpportunitiesContent() {
                 Signals worth reviewing, but not yet approved for outreach. Only cards with a current trigger, relevant sports buyer, and plausible YP route are promoted to the active shortlist.
               </p>
               <p className="mt-2 max-w-3xl text-xs text-slate-400">
-                Trusted feed since 8 May 2026, 13:26:48 UTC. Legacy rows are hidden from the main feed and available in diagnostics only.
+                Trusted feed since 8 May 2026, 13:26:48 UTC. Legacy rows are shown as labelled untrusted cards and are not counted as trusted opportunities.
               </p>
               {reviewMode ? (
                 <p className="mt-1 text-xs text-slate-500">

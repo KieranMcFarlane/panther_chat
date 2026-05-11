@@ -24,7 +24,7 @@ export type GraphitiDossierMemoryCandidate = {
 export type GraphitiDossierMemoryPayload = {
   name: string
   episode_body: string
-  source: 'json'
+  source: 'text'
   source_description: 'entity_dossiers'
   group_id: string
   uuid: string
@@ -36,13 +36,26 @@ type GraphitiMemoryBridgeConfig = {
   mcpUrl: string
   groupId: string
   timeoutMs: number
+  concurrency: number
+  batchSize: number
+  queueDelayMs: number
+  retryAttempts: number
+  retryBaseDelayMs: number
+  payloadMode: 'minimal_text' | 'compact_json'
 }
 
 const MCP_PROTOCOL_VERSION = '2025-03-26'
 const MCP_ACCEPT_HEADER = 'application/json, text/event-stream'
+const MAX_GRAPHITI_FACTS = 3
+const MAX_GRAPHITI_EVIDENCE_URLS = 3
+const MAX_GRAPHITI_FACT_TEXT = 220
 
 function asRecord(value: unknown): JsonRecord {
   return value && typeof value === 'object' && !Array.isArray(value) ? value as JsonRecord : {}
+}
+
+function asArray(value: unknown): unknown[] {
+  return Array.isArray(value) ? value : []
 }
 
 function toText(value: unknown): string {
@@ -52,6 +65,31 @@ function toText(value: unknown): string {
 function toInt(value: unknown, fallback = 0): number {
   const numeric = Number(value)
   return Number.isFinite(numeric) ? numeric : fallback
+}
+
+function positiveInt(value: unknown, fallback: number): number {
+  const numeric = toInt(value, fallback)
+  return numeric > 0 ? numeric : fallback
+}
+
+function truncateText(value: unknown, maxLength = MAX_GRAPHITI_FACT_TEXT): string {
+  const text = toText(value).replace(/\s+/g, ' ')
+  return text.length > maxLength ? `${text.slice(0, maxLength).trim()}...` : text
+}
+
+function isUsefulGraphitiFact(value: unknown): boolean {
+  const fact = asRecord(value)
+  const status = toText(fact.status).toLowerCase()
+  const summary = truncateText(fact.summary)
+  if (!summary) return false
+  if (status === 'failed' || status === 'checked_no_signal' || status === 'skipped') return false
+  if (summary.toLowerCase().includes('provider returned an object answer')) return false
+  return true
+}
+
+async function sleep(ms: number) {
+  if (ms <= 0) return
+  await new Promise((resolve) => setTimeout(resolve, ms))
 }
 
 export function deterministicGraphitiEpisodeUuid(value: string): string {
@@ -81,7 +119,13 @@ export function resolveGraphitiMemoryBridgeConfig(env = process.env): GraphitiMe
     directIngestUrl,
     mcpUrl,
     groupId: toText(env.GRAPHITI_DOSSIER_GROUP_ID || env.GRAPHITI_GROUP_ID) || 'entity_dossiers',
-    timeoutMs: toInt(env.GRAPHITI_MEMORY_SYNC_TIMEOUT_MS, 30_000),
+    timeoutMs: positiveInt(env.GRAPHITI_MEMORY_SYNC_TIMEOUT_MS, 120_000),
+    concurrency: positiveInt(env.GRAPHITI_DOSSIER_MEMORY_SYNC_CONCURRENCY, 1),
+    batchSize: positiveInt(env.GRAPHITI_MEMORY_SYNC_BATCH_SIZE, 1),
+    queueDelayMs: positiveInt(env.GRAPHITI_MEMORY_SYNC_QUEUE_DELAY_MS, 60_000),
+    retryAttempts: positiveInt(env.GRAPHITI_MEMORY_SYNC_RETRY_ATTEMPTS, 3),
+    retryBaseDelayMs: positiveInt(env.GRAPHITI_MEMORY_SYNC_RETRY_BASE_DELAY_MS, 10_000),
+    payloadMode: toText(env.GRAPHITI_MEMORY_PAYLOAD_MODE).toLowerCase() === 'compact_json' ? 'compact_json' : 'minimal_text',
   }
 }
 
@@ -137,7 +181,7 @@ export async function loadGraphitiDossierMemoryCandidates(options: number | {
         on c.id::text = i.canonical_entity_id
       where i.status = 'ingested'
         and i.episode_body is not null
-        and coalesce(i.raw_metadata->>'graphiti_memory_sync_status', '') <> 'synced'
+        and coalesce(i.raw_metadata->>'graphiti_memory_sync_status', '') not in ('synced', 'queued')
         ${scopedFilter}
       order by
         case i.quality_state when 'client_ready' then 4 when 'complete' then 3 when 'partial' then 2 when 'blocked' then 1 else 0 end desc,
@@ -169,29 +213,106 @@ export async function loadGraphitiDossierMemoryCandidates(options: number | {
 export function buildGraphitiDossierMemoryPayload(
   row: GraphitiDossierMemoryCandidate,
   groupId = 'entity_dossiers',
+  payloadMode: GraphitiMemoryBridgeConfig['payloadMode'] = 'minimal_text',
 ): GraphitiDossierMemoryPayload {
-  const episode = {
+  const episode = buildCompactGraphitiDossierEpisode(row)
+
+  return {
+    name: `Entity dossier: ${row.entity_name} (${row.content_hash.slice(0, 10)})`,
+    episode_body: payloadMode === 'compact_json'
+      ? `Entity dossier memory payload for ${row.entity_name}:\n${JSON.stringify(episode)}`
+      : buildMinimalGraphitiDossierMemoryText(row, episode),
+    // Graphiti MCP streamable HTTP currently parses source='json' episode_body before validation.
+    source: 'text',
+    source_description: 'entity_dossiers',
+    group_id: groupId,
+    uuid: deterministicGraphitiEpisodeUuid(`${row.source_ledger_id}:${row.content_hash}`),
+  }
+}
+
+export function buildMinimalGraphitiDossierMemoryText(
+  row: GraphitiDossierMemoryCandidate,
+  compactEpisode = buildCompactGraphitiDossierEpisode(row),
+): string {
+  const canonicalEntity = asRecord(compactEpisode.canonical_entity)
+  const dossierQuality = asRecord(compactEpisode.dossier_quality)
+  const graphitiSalesBrief = asRecord(compactEpisode.graphiti_sales_brief)
+  const promotedSummary = asRecord(compactEpisode.promoted_summary)
+  const selectedFacts = asArray(compactEpisode.question_facts).map(asRecord)
+  const evidenceUrls = asArray(compactEpisode.evidence_urls).map(toText).filter(Boolean)
+  const entityName = toText(canonicalEntity.name || row.entity_name)
+  const entityType = toText(canonicalEntity.entity_type || row.entity_type) || 'unknown entity type'
+  const sport = toText(canonicalEntity.sport) || 'unknown sport'
+  const league = toText(canonicalEntity.league) || 'unknown league'
+  const country = toText(canonicalEntity.country) || 'unknown country'
+  const briefTitle = truncateText(graphitiSalesBrief.title || promotedSummary.title || '', 120)
+  const commercialSignal = truncateText(graphitiSalesBrief.commercial_signal || promotedSummary.summary || '', 280)
+  const factLines = selectedFacts
+    .map((fact, index) => `${index + 1}. ${truncateText(fact.summary, MAX_GRAPHITI_FACT_TEXT)}`)
+    .filter(Boolean)
+  const evidenceLines = evidenceUrls.map((url, index) => `${index + 1}. ${url}`)
+
+  return [
+    `Compact entity dossier memory: ${entityName}`,
+    `Source: entity_dossiers ledger ${row.source_ledger_id}`,
+    `Canonical entity: ${entityName}; type: ${entityType}; sport: ${sport}; league: ${league}; country: ${country}.`,
+    `Dossier quality: ${toText(dossierQuality.quality_state) || row.quality_state}; useful facts: ${row.answer_count}; evidence URLs: ${row.evidence_count}; reference time: ${row.reference_time || 'unknown'}.`,
+    briefTitle ? `Signal title: ${briefTitle}` : '',
+    commercialSignal ? `Commercial signal: ${commercialSignal}` : '',
+    `Facts:${selectedFacts.length ? `\n${factLines.join('\n')}` : ' none selected for graph memory.'}`,
+    `Evidence URLs:${evidenceLines.length ? `\n${evidenceLines.join('\n')}` : ' none selected for graph memory.'}`,
+    'Use this memory only as supporting dossier context for later opportunity reasoning.',
+  ].filter(Boolean).join('\n')
+}
+
+export function buildCompactGraphitiDossierEpisode(row: GraphitiDossierMemoryCandidate): JsonRecord {
+  const body = asRecord(row.episode_body)
+  const dossier = asRecord(body.dossier)
+  const entity = asRecord(body.entity)
+  const selectedFacts = asArray(body.question_facts)
+    .filter(isUsefulGraphitiFact)
+    .slice(0, MAX_GRAPHITI_FACTS)
+    .map((value) => {
+      const fact = asRecord(value)
+      return {
+        question_id: toText(fact.question_id),
+        question_type: toText(fact.question_type),
+        status: toText(fact.status),
+        confidence: toInt(fact.confidence),
+        summary: truncateText(fact.summary),
+        evidence_urls: asArray(fact.evidence_urls)
+          .map(toText)
+          .filter(Boolean)
+          .slice(0, 3),
+      }
+    })
+  const evidenceUrls = asArray(body.evidence_urls)
+    .map(toText)
+    .filter(Boolean)
+    .slice(0, MAX_GRAPHITI_EVIDENCE_URLS)
+
+  return {
     source: 'entity_dossiers',
     source_ledger_id: row.source_ledger_id,
     content_hash: row.content_hash,
     canonical_entity_id: row.canonical_entity_id,
     canonical_entity: row.canonical_entity,
+    entity: {
+      entity_id: toText(entity.entity_id || row.canonical_entity_id),
+      entity_name: toText(entity.entity_name || row.entity_name),
+      entity_type: toText(entity.entity_type || row.entity_type),
+    },
     dossier_quality: {
-      quality_state: row.quality_state,
+      quality_state: toText(dossier.quality_state) || row.quality_state,
       useful_fact_count: row.answer_count,
       evidence_count: row.evidence_count,
-      reference_time: row.reference_time,
+      raw_answer_count: toInt(dossier.raw_answer_count),
+      reference_time: row.reference_time || toText(body.reference_time),
     },
-    episode_body: row.episode_body,
-  }
-
-  return {
-    name: `Entity dossier: ${row.entity_name} (${row.content_hash.slice(0, 10)})`,
-    episode_body: JSON.stringify(episode),
-    source: 'json',
-    source_description: 'entity_dossiers',
-    group_id: groupId,
-    uuid: deterministicGraphitiEpisodeUuid(`${row.source_ledger_id}:${row.content_hash}`),
+    graphiti_sales_brief: asRecord(body.graphiti_sales_brief),
+    promoted_summary: asRecord(body.promoted_summary),
+    question_facts: selectedFacts,
+    evidence_urls: evidenceUrls,
   }
 }
 
@@ -259,12 +380,49 @@ async function postGraphitiJson(url: string, body: unknown, timeoutMs: number, o
   }
 }
 
-async function postJson(url: string, body: unknown, timeoutMs: number): Promise<unknown> {
-  return (await postGraphitiJson(url, body, timeoutMs)).payload
+function isTransientGraphitiRateLimit(error: unknown): boolean {
+  const message = error instanceof Error ? error.message : String(error)
+  return message.includes('429')
+    && (
+      message.includes("code':'1305")
+      || message.includes('"code":"1305"')
+      || message.includes("code': '1305")
+      || message.includes('"code": "1305"')
+      || message.includes('temporarily overloaded')
+      || message.includes('Rate limit exceeded')
+    )
+}
+
+async function postGraphitiJsonWithRetry(
+  url: string,
+  body: unknown,
+  config: GraphitiMemoryBridgeConfig,
+  options: { sessionId?: string } = {},
+): Promise<{ payload: unknown; sessionId: string }> {
+  let attempt = 0
+  let lastError: unknown
+  while (attempt < config.retryAttempts) {
+    try {
+      return await postGraphitiJson(url, body, config.timeoutMs, options)
+    } catch (error) {
+      lastError = error
+      attempt += 1
+      if (!isTransientGraphitiRateLimit(error) || attempt >= config.retryAttempts) {
+        throw error
+      }
+      await sleep(config.retryBaseDelayMs * attempt)
+    }
+  }
+
+  throw lastError
+}
+
+async function postJson(url: string, body: unknown, config: GraphitiMemoryBridgeConfig): Promise<unknown> {
+  return (await postGraphitiJsonWithRetry(url, body, config)).payload
 }
 
 async function initializeGraphitiMcpSession(config: GraphitiMemoryBridgeConfig): Promise<string> {
-  const initialized = await postGraphitiJson(config.mcpUrl, {
+  const initialized = await postGraphitiJsonWithRetry(config.mcpUrl, {
     jsonrpc: '2.0',
     id: `initialize:${Date.now()}`,
     method: 'initialize',
@@ -276,17 +434,17 @@ async function initializeGraphitiMcpSession(config: GraphitiMemoryBridgeConfig):
         version: '0.1.0',
       },
     },
-  }, config.timeoutMs)
+  }, config)
 
   if (!initialized.sessionId) {
     throw new Error('Graphiti MCP initialize did not return an mcp-session-id')
   }
 
-  await postGraphitiJson(config.mcpUrl, {
+  await postGraphitiJsonWithRetry(config.mcpUrl, {
     jsonrpc: '2.0',
     method: 'notifications/initialized',
     params: {},
-  }, config.timeoutMs, { sessionId: initialized.sessionId })
+  }, config, { sessionId: initialized.sessionId })
 
   return initialized.sessionId
 }
@@ -298,7 +456,7 @@ async function callGraphitiMcpTool(
   args: JsonRecord,
 ): Promise<unknown> {
   const sessionId = await initializeGraphitiMcpSession(config)
-  return (await postGraphitiJson(config.mcpUrl, {
+  const response = (await postGraphitiJsonWithRetry(config.mcpUrl, {
     jsonrpc: '2.0',
     id,
     method: 'tools/call',
@@ -306,19 +464,40 @@ async function callGraphitiMcpTool(
       name,
       arguments: args,
     },
-  }, config.timeoutMs, { sessionId })).payload
+  }, config, { sessionId })).payload
+  assertGraphitiMcpToolSuccess(name, response)
+  return response
+}
+
+function assertGraphitiMcpToolSuccess(name: string, response: unknown) {
+  const payload = asRecord(response)
+  const result = asRecord(payload.result)
+  if (result.isError !== true) return
+
+  const content = Array.isArray(result.content) ? result.content : []
+  const message = content
+    .map((item) => toText(asRecord(item).text))
+    .filter(Boolean)
+    .join(' ')
+    || JSON.stringify(response).slice(0, 500)
+  throw new Error(`Graphiti MCP tool ${name} failed: ${message.slice(0, 500)}`)
+}
+
+function toGraphitiMcpAddMemoryArgs(payload: GraphitiDossierMemoryPayload): JsonRecord {
+  const { uuid: _graphitiEpisodeUuid, ...mcpArgs } = payload
+  return mcpArgs
 }
 
 async function callGraphitiAddMemory(payload: GraphitiDossierMemoryPayload, config: GraphitiMemoryBridgeConfig): Promise<unknown> {
   if (config.directIngestUrl) {
-    return postJson(config.directIngestUrl, payload, config.timeoutMs)
+    return postJson(config.directIngestUrl, payload, config)
   }
 
   if (!config.mcpUrl) {
     throw new Error('Graphiti memory sync is enabled but GRAPHITI_MEMORY_INGEST_URL or GRAPHITI_MCP_URL is not configured')
   }
 
-  return callGraphitiMcpTool(config, payload.uuid, 'add_memory', payload as unknown as JsonRecord)
+  return callGraphitiMcpTool(config, payload.uuid, 'add_memory', toGraphitiMcpAddMemoryArgs(payload))
 }
 
 async function markGraphitiMemorySync(row: GraphitiDossierMemoryCandidate, patch: JsonRecord) {
@@ -357,10 +536,11 @@ export async function syncGraphitiDossierIngestionMemory(options: {
 } = {}) {
   const limit = Number.isFinite(Number(options.limit)) ? Number(options.limit) : 250
   const dryRun = options.dryRun === true
-  const concurrency = Number.isFinite(Number(options.concurrency)) ? Number(options.concurrency) : 2
   const config = options.config || resolveGraphitiMemoryBridgeConfig()
+  const requestedConcurrency = Number.isFinite(Number(options.concurrency)) ? Number(options.concurrency) : config.concurrency
+  const concurrency = Math.max(1, Math.min(requestedConcurrency, config.concurrency))
   const candidates = await loadGraphitiDossierMemoryCandidates({
-    limit,
+    limit: Math.min(limit, config.batchSize),
     canonicalEntityId: options.canonicalEntityId,
     sourceLedgerId: options.sourceLedgerId,
   })
@@ -394,21 +574,23 @@ export async function syncGraphitiDossierIngestionMemory(options: {
   }
 
   let synced = 0
+  let queued = 0
   let failed = 0
   const errors: Array<{ source_ledger_id: string; error: string }> = []
 
   await runWithConcurrency(candidates, concurrency, async (row) => {
-    const payload = buildGraphitiDossierMemoryPayload(row, config.groupId)
+    const payload = buildGraphitiDossierMemoryPayload(row, config.groupId, config.payloadMode)
     try {
       const response = await callGraphitiAddMemory(payload, config)
       await markGraphitiMemorySync(row, {
-        graphiti_memory_sync_status: 'synced',
-        graphiti_memory_synced_at: new Date().toISOString(),
+        graphiti_memory_sync_status: 'queued',
+        graphiti_memory_queued_at: new Date().toISOString(),
         graphiti_episode_uuid: payload.uuid,
         graphiti_group_id: payload.group_id,
         graphiti_memory_response: response,
       })
-      synced += 1
+      queued += 1
+      await sleep(config.queueDelayMs)
     } catch (error) {
       failed += 1
       const message = error instanceof Error ? error.message : String(error)
@@ -426,6 +608,7 @@ export async function syncGraphitiDossierIngestionMemory(options: {
   return {
     candidate_count: candidates.length,
     synced_count: synced,
+    queued_count: queued,
     failed_count: failed,
     dry_run: false,
     skipped: false,
