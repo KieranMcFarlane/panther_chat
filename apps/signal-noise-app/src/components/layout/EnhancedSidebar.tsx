@@ -45,7 +45,7 @@ const navItems = [
   { icon: Home, label: 'Home', href: '/' },
   { icon: Search, label: 'Search', href: '/search' },
   { icon: Search, label: 'Entities', href: '/entity-browser' },
-  { icon: FileText, label: 'Tenders', href: '/tenders' },
+  { icon: FileText, label: 'RFPs', href: '/rfps' },
   { icon: Upload, label: 'CSV Import', href: '/entity-import' },
   { icon: Mail, label: 'Mailbox', href: '/mailbox' },
   { 

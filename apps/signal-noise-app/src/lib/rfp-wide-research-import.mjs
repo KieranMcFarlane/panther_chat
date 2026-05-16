@@ -30,7 +30,7 @@ export function buildMergedWideResearchImport({ rawBatch, existingMergedBatch = 
   mergedBatch.prompt = buildWideRfpResearchPrompt({
     seedQuery: importedBatch.seed_query || mergedBatch.seed_query || getDefaultWideRfpSeedQuery(importedBatch.focus_area),
     currentRfpPage: '/rfps',
-    currentIntakePage: '/tenders',
+    currentIntakePage: '/rfps',
     targetYear: importedBatch.target_year || mergedBatch.target_year,
     excludeTitles: mergedBatch.excluded_names,
   })
@@ -69,7 +69,7 @@ export function normalizeImportedWideResearchBatch(rawBatch) {
     prompt: buildWideRfpResearchPrompt({
       seedQuery: seedQuery || getDefaultWideRfpSeedQuery(),
       currentRfpPage: metadata.normalized_rfp_page || '/rfps',
-      currentIntakePage: metadata.intake_page || '/tenders',
+      currentIntakePage: metadata.intake_page || '/rfps',
       targetYear,
       excludeTitles,
     }),

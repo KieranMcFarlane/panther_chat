@@ -62,7 +62,7 @@ export function CollapsibleMetrics() {
       title: 'RFPs',
       value: metrics.rfps.total.toString(),
       subtitle: metrics.rfps.pipeline_value_formatted,
-      link: '/tenders',
+      link: '/rfps',
       color: 'text-green-400',
       bgColor: 'bg-green-500/20'
     },
@@ -160,4 +160,3 @@ export function CollapsibleMetrics() {
     </Collapsible>
   )
 }
-

@@ -15,7 +15,7 @@ export function HeroSection() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
     if (searchQuery.trim()) {
-      router.push(`/tenders?search=${encodeURIComponent(searchQuery.trim())}`)
+      router.push(`/rfps?search=${encodeURIComponent(searchQuery.trim())}`)
     }
   }
 
@@ -33,7 +33,7 @@ export function HeroSection() {
 
       {/* Primary CTAs */}
       <div className="flex flex-wrap justify-center gap-4 mb-8">
-        <Link href="/tenders">
+        <Link href="/rfps">
           <Button 
             size="lg" 
             className="bg-yellow-500 text-black hover:bg-yellow-400 font-semibold px-8 py-6 text-lg"
@@ -89,4 +89,3 @@ export function HeroSection() {
     </div>
   )
 }
-

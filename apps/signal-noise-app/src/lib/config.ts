@@ -59,7 +59,7 @@ export const config = {
   navigation: {
     home: '/',
     sports: '/sports',
-    tenders: '/tenders',
+    tenders: '/rfps',
     contacts: '/contacts',
     graph: '/graph',
     terminal: '/terminal',
@@ -106,7 +106,6 @@ export function getPriorityLevel(score: number): 'high' | 'medium' | 'low' {
 export function isValidEntityType(type: string): type is EntityType {
   return Object.values(config.entityTypes).includes(type as EntityType);
 }
-
 
 
 

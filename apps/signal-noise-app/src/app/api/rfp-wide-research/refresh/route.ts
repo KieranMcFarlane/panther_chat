@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 import { requireApiSession, UnauthorizedError } from '@/lib/server-auth'
-import { loadLatestWideRfpResearchBatch } from '@/lib/rfp-wide-research-store'
+import { loadLatestWideRfpResearchBatch, loadWideRfpDeltaMemoryPack } from '@/lib/rfp-wide-research-store'
 import { getDefaultWideRfpSeedQuery } from '@/lib/rfp-wide-research.mjs'
 
 export const dynamic = 'force-dynamic'
@@ -9,7 +9,16 @@ export const runtime = 'nodejs'
 
 async function refreshWideResearch(request: NextRequest) {
   await requireApiSession(request)
-  const body = await request.json().catch(() => ({} as { targetYear?: number | string | null; prompt?: string | null; excludeTitles?: string[] }))
+  const body = await request.json().catch(() => ({} as {
+    targetYear?: number | string | null
+    prompt?: string | null
+    excludeTitles?: string[]
+    excludeNames?: string[]
+    researchMode?: 'live' | 'backtest'
+    researchDepth?: 'safe' | 'standard' | 'deep'
+    hardExcludedCanonicalEntityIds?: string[]
+    maxKnownUrls?: number | string | null
+  }))
 
   const latest = await loadLatestWideRfpResearchBatch({})
   if (!latest?.batch?.prompt) {
@@ -28,6 +37,12 @@ async function refreshWideResearch(request: NextRequest) {
         : collectOpportunityTitles(latest.batch),
   )
   const targetYear = normalizeTargetYear(body?.targetYear ?? latest.batch.target_year ?? new Date().getFullYear())
+  const researchMode = body?.researchMode === 'backtest' ? 'backtest' : 'live'
+  const researchDepth = normalizeResearchDepth(body?.researchDepth)
+  const deltaMemory = await loadWideRfpDeltaMemoryPack({
+    maxKnownUrls: normalizePositiveInt(body?.maxKnownUrls, 75),
+    hardExcludedCanonicalEntityIds: body?.hardExcludedCanonicalEntityIds || [],
+  })
 
   const response = await fetch(new URL('/api/rfp-wide-research', request.url), {
     method: 'POST',
@@ -35,12 +50,16 @@ async function refreshWideResearch(request: NextRequest) {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      prompt: body?.prompt || latest.batch.prompt,
       focusArea: latest.batch.focus_area,
       seedQuery: latest.batch.seed_query || getDefaultWideRfpSeedQuery(latest.batch.focus_area),
       currentRfpPage: '/rfps',
-      currentIntakePage: '/tenders',
+      currentIntakePage: '/rfps',
       targetYear,
+      researchMode,
+      researchDepth,
+      deltaMemory,
+      hardExcludedCanonicalEntityIds: body?.hardExcludedCanonicalEntityIds || [],
+      maxKnownUrls: body?.maxKnownUrls,
       excludeNames: excludeTitles,
       excludeTitles,
     }),
@@ -119,6 +138,17 @@ function normalizeTargetYear(value: unknown): number | null {
   if (!text) return null
   const parsed = Number.parseInt(text, 10)
   if (!Number.isInteger(parsed) || parsed < 1900 || parsed > 2100) return null
+  return parsed
+}
+
+function normalizeResearchDepth(value: unknown): 'safe' | 'standard' | 'deep' {
+  const text = toText(value).toLowerCase()
+  return text === 'standard' || text === 'deep' ? text : 'safe'
+}
+
+function normalizePositiveInt(value: unknown, fallback: number): number {
+  const parsed = Number.parseInt(toText(value), 10)
+  if (!Number.isInteger(parsed) || parsed <= 0) return fallback
   return parsed
 }
 

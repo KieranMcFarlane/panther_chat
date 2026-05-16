@@ -15,7 +15,7 @@ export function QuickActions() {
       icon: Search,
       label: 'Search',
       description: 'Find anything',
-      href: '/tenders',
+      href: '/rfps',
       color: 'text-blue-400',
       bgColor: 'bg-blue-500/20'
     },
@@ -23,7 +23,7 @@ export function QuickActions() {
       icon: Bell,
       label: 'New Alerts',
       description: 'RFPs matching your criteria',
-      href: '/tenders?filter=new',
+      href: '/rfps?filter=new',
       badge: 3,
       color: 'text-green-400',
       bgColor: 'bg-green-500/20'
@@ -86,7 +86,6 @@ export function QuickActions() {
     </Card>
   )
 }
-
 
 
 

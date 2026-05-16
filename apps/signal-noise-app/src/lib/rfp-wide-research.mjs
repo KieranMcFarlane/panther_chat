@@ -3,18 +3,22 @@ import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 
 export {
+  buildWideRfpDeltaMemoryPack,
   DEFAULT_WIDE_RFP_FOCUS_AREA,
+  DEFAULT_WIDE_RFP_RESEARCH_MODE,
   buildWideRfpResearchPrompt,
   getDefaultWideRfpSeedQuery,
   getWideRfpLaneLabel,
   inferFocusAreaFromPrompt,
   inferTargetYearFromPrompt,
   normalizeFocusArea,
+  normalizeResearchMode,
   normalizeTargetYear,
   normalizeWideRfpExclusionNames,
 } from './rfp-wide-research-prompt.mjs'
 
 import {
+  buildWideRfpDeltaMemoryPack,
   DEFAULT_WIDE_RFP_FOCUS_AREA,
   buildWideRfpResearchPrompt,
   getDefaultWideRfpSeedQuery,
@@ -35,6 +39,7 @@ export function normalizeWideRfpResearchBatch(input) {
   const seedQuery = toText(input?.seedQuery) || toText(input?.seed_query) || getDefaultWideRfpSeedQuery(focusArea)
   const targetYear = normalizeTargetYear(input?.targetYear || input?.target_year || inferTargetYearFromPrompt(prompt))
   const excludedNames = normalizeWideRfpExclusionNames(input?.excludeNames || input?.excluded_names)
+  const promptExecutionMetadata = normalizePromptExecutionMetadata(input?.prompt_execution_metadata)
   const opportunities = (input?.opportunities || []).map((opportunity, index) => normalizeOpportunity(opportunity, index))
   const entityActions = (input?.entity_actions || []).map((action) => ({
     ...action,
@@ -54,6 +59,7 @@ export function normalizeWideRfpResearchBatch(input) {
     seed_query: seedQuery,
     target_year: targetYear,
     excluded_names: excludedNames,
+    prompt_execution_metadata: promptExecutionMetadata,
     opportunities,
     entity_actions: entityActions,
     summary: {
@@ -299,7 +305,22 @@ function normalizeNumber(value, fallback) {
 }
 
 function normalizeFitScore(value, fallback) {
+  if (typeof value === 'string') {
+    const label = value.trim().toLowerCase().replace(/[\s-]+/g, '_')
+    const labelScores = {
+      very_high: 95,
+      high: 85,
+      medium_high: 75,
+      medium: 60,
+      medium_low: 45,
+      low: 30,
+      very_low: 15,
+    }
+    if (Object.hasOwn(labelScores, label)) return labelScores[label]
+  }
+
   const score = normalizeNumber(value, fallback)
+  if (score > 0 && score <= 1) return Math.round(score * 100)
   if (score > 100) return 100
   if (score < 0) return 0
   return Math.round(score)
@@ -334,4 +355,14 @@ function normalizeOpportunity(opportunity, index) {
       normalized: true,
     },
   }
+}
+
+function normalizePromptExecutionMetadata(value) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return {}
+
+  return Object.fromEntries(
+    Object.entries(value)
+      .map(([key, entry]) => [toText(key), entry])
+      .filter(([key]) => Boolean(key)),
+  )
 }

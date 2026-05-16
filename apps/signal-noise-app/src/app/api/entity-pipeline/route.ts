@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
           statusUrl: `/api/entity-import/${activeRun.batch.id}`,
           runDetailUrl: `/entity-import/${activeRun.batch.id}/${row.entity_id}`,
           dossierUrl: getEntityBrowserDossierHref(row.entity_id, '1') || '/entity-browser',
-          rfpUrl: '/tenders',
+          rfpUrl: '/rfps',
           message: 'Entity pipeline already queued or running',
         },
         { status: 202 },
@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
         statusUrl: `/api/entity-import/${batch.id}`,
         runDetailUrl: `/entity-import/${batch.id}/${row.entity_id}`,
         dossierUrl: getEntityBrowserDossierHref(row.entity_id, '1') || '/entity-browser',
-        rfpUrl: '/tenders',
+        rfpUrl: '/rfps',
       },
       { status: 202 },
     )

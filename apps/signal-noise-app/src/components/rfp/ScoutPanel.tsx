@@ -83,7 +83,7 @@ export function ScoutPanel({
             Run scout
           </Button>
           <Button variant="outline" asChild className="border-blue-200 text-blue-700 hover:bg-blue-50">
-            <Link href="/tenders">Open live feed</Link>
+            <Link href="/rfps">Open RFPs</Link>
           </Button>
         </div>
       </CardContent>

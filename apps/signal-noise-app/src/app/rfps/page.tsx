@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { getEntityBrowserDossierHref } from '@/lib/entity-routing'
-import { loadLatestWideRfpResearchBatch } from '@/lib/rfp-wide-research-store'
+import { loadLatestWideRfpResearchBatch, loadWideRfpResearchOpportunities } from '@/lib/rfp-wide-research-store'
 
 export const dynamic = 'force-dynamic'
 
@@ -58,6 +58,17 @@ type WideResearchBatch = {
   }
 }
 
+type SearchParams = Record<string, string | string[] | undefined>
+
+function getFirst(value: string | string[] | undefined): string | undefined {
+  return Array.isArray(value) ? value[0] : value
+}
+
+function normalizePage(value: string | undefined): number {
+  const parsed = Number.parseInt(value || '1', 10)
+  return Number.isInteger(parsed) && parsed > 0 ? parsed : 1
+}
+
 function formatDeadline(value: string | null): string {
   if (!value) return 'No deadline listed'
   const parsed = Date.parse(value)
@@ -102,12 +113,18 @@ function collectAlreadyFoundTitles(opportunities: WideResearchOpportunity[]): st
   return names
 }
 
-export default async function RfpsPage() {
-  const latest = await loadLatestWideRfpResearchBatch({})
+export default async function RfpsPage({ searchParams = {} }: { searchParams?: SearchParams }) {
+  const currentPage = normalizePage(getFirst(searchParams.page))
+  const [latest, allResearch, allResearchForExclusions] = await Promise.all([
+    loadLatestWideRfpResearchBatch({}),
+    loadWideRfpResearchOpportunities({ page: currentPage, pageSize: 24 }),
+    loadWideRfpResearchOpportunities({ page: 1, pageSize: 250 }),
+  ])
   const wideResearchBatch = (latest?.batch || null) as WideResearchBatch | null
-  const wideResearchOpportunities = wideResearchBatch?.opportunities || []
-  const alreadyFoundTitles = collectAlreadyFoundTitles(wideResearchOpportunities)
+  const wideResearchOpportunities = allResearch.opportunities as WideResearchOpportunity[]
+  const alreadyFoundTitles = collectAlreadyFoundTitles(allResearchForExclusions.opportunities as WideResearchOpportunity[])
   const latestWideResearchGeneratedAt = wideResearchBatch?.generated_at || null
+  const pagination = allResearch.pagination
 
   return (
     <AppPageShell className="opacity-100">
@@ -128,7 +145,7 @@ export default async function RfpsPage() {
                 {wideResearchBatch ? `Run ${wideResearchBatch.run_id}` : 'No merged Manus batch yet'}
               </div>
               <p className="text-sm text-muted-foreground">
-                Manus wide research JSON is merged into one batch so the page reflects the original broad sweep rather than a split source list.
+                Manus wide research JSON is recovered across previous runs, deduplicated, and paginated from the canonical RFP research store.
               </p>
             </CardHeader>
             <CardContent className="space-y-3">
@@ -136,6 +153,7 @@ export default async function RfpsPage() {
                 {wideResearchBatch ? (
                   <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
                     <Badge variant="outline">Target year: {wideResearchBatch.target_year || 'any'}</Badge>
+                    <Badge variant="outline">{pagination.total} recovered opportunities</Badge>
                     <span>
                       Last merged run:{' '}
                       <span className="font-medium text-foreground">{formatRunTimestamp(latestWideResearchGeneratedAt)}</span>
@@ -154,22 +172,22 @@ export default async function RfpsPage() {
                 {wideResearchBatch?.seed_query || 'Awaiting first Manus batch'}
               </div>
               <div className="rounded-xl border border-dashed border-border/70 bg-background/40 px-3 py-2 text-xs text-muted-foreground">
-                Manus wide research JSON is preserved in the merged batch so the page stays aligned to the original batch contents.
+                Showing page {pagination.page} of {pagination.totalPages}; duplicate source URLs and titles are collapsed to the latest recovered record.
               </div>
             </CardContent>
           </Card>
         </section>
 
-        {wideResearchBatch ? (
+        {wideResearchOpportunities.length ? (
           <section className="space-y-3">
             <div className="flex items-center justify-between gap-3">
               <div>
-                <h2 className="text-lg font-semibold text-foreground">Merged Manus wide research output</h2>
+                <h2 className="text-lg font-semibold text-foreground">Recovered Manus RFP opportunities</h2>
                 <p className="text-sm text-muted-foreground">
-                  This is the merged batch normalized into the same operator-friendly fields used by the RFP surface.
+                  All recovered Manus opportunity JSON is deduplicated and shown across pages, not just the latest run.
                 </p>
               </div>
-              <Badge variant="outline">canonical-first</Badge>
+              <Badge variant="outline">{pagination.total} total</Badge>
             </div>
             <div className="grid gap-4 xl:grid-cols-2">
               {wideResearchOpportunities.map((rfp) => (
@@ -232,6 +250,24 @@ export default async function RfpsPage() {
                   </CardContent>
                 </Card>
               ))}
+            </div>
+            <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border/70 bg-card px-4 py-3">
+              <div className="text-sm text-muted-foreground">
+                Page <span className="font-medium text-foreground">{pagination.page}</span> of{' '}
+                <span className="font-medium text-foreground">{pagination.totalPages}</span>
+              </div>
+              <div className="flex gap-2">
+                <Button asChild variant="outline" size="sm" disabled={!pagination.hasPrev}>
+                  <Link href={`/rfps?page=${Math.max(1, pagination.page - 1)}`} aria-disabled={!pagination.hasPrev}>
+                    Previous
+                  </Link>
+                </Button>
+                <Button asChild variant="outline" size="sm" disabled={!pagination.hasNext}>
+                  <Link href={`/rfps?page=${pagination.page + 1}`} aria-disabled={!pagination.hasNext}>
+                    Next
+                  </Link>
+                </Button>
+              </div>
             </div>
           </section>
         ) : (

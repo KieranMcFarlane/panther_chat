@@ -182,14 +182,13 @@ test('commercial state tabs own outreach-ready and verify-now panels without sep
   assert.doesNotMatch(source, /text-xs font-semibold uppercase tracking-\[0\.16em\] text-slate-300">Verify now<\/div>\s*<h2 className="mt-1 text-xl font-semibold text-white">Recommendations needing verification/)
 })
 
-test('tenders page is framed as the live intake feed', async () => {
-  const source = await readFile(new URL('../src/app/tenders/page.tsx', import.meta.url), 'utf8')
+test('rfps page is the canonical RFP research surface', async () => {
+  const source = await readFile(new URL('../src/app/rfps/page.tsx', import.meta.url), 'utf8')
 
-  assert.match(source, /Tenders Page/)
-  assert.match(source, /Internal raw intake feed from our unified RFP analysis system/)
-  assert.match(source, /No production-backed opportunities are available right now/)
-  assert.match(source, /searchTerm|filterStatus|showDetectedOnly/)
-  assert.match(source, /No production-backed opportunities are available right now/)
-  assert.doesNotMatch(source, /Fetching real tender data with verified source links/)
+  assert.match(source, /Canonical RFPs/)
+  assert.match(source, /Merged Manus wide research batch/)
+  assert.match(source, /wide_rfp_research_batches/)
+  assert.match(source, /WideResearchRefreshButton/)
+  assert.doesNotMatch(source, /Internal raw intake feed from our unified RFP analysis system/)
   assert.doesNotMatch(source, /Yellow Panther Digital-First Opportunities/)
 })

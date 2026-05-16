@@ -2,7 +2,7 @@
  * 🎯 RFP Storage Service - Hybrid Supabase + Neo4j Storage
  * 
  * This service provides intelligent RFP storage across multiple systems:
- * - Supabase: Primary storage for UI cards and real-time display in /tenders
+ * - Supabase: Primary storage for UI cards and real-time display in /rfps
  * - Neo4j: Relationship mapping and knowledge graph integration
  * - MCP Integration: Both storage systems accessible via MCP tools
  */
@@ -131,7 +131,7 @@ export class RFPStorageService {
       const result: StoredRFP = {
         supabaseId: supabaseResult.id,
         neo4jId: neo4jResult?.rfpId,
-        filePath: `/tenders#${supabaseResult.id}`,
+        filePath: `/rfps#${supabaseResult.id}`,
         cardData
       };
 
@@ -505,7 +505,7 @@ export class RFPStorageService {
   }
 
   /**
-   * Get RFPs for display in /tenders - UNIFIED TABLE METHOD
+   * Get RFPs for display in /rfps - UNIFIED TABLE METHOD
    */
   async getRFPs(options: {
     limit?: number;
