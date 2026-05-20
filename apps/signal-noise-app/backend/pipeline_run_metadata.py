@@ -6,6 +6,7 @@ Shared helpers for shaping pipeline run metadata.
 from __future__ import annotations
 
 from copy import deepcopy
+from datetime import datetime, timezone
 from importlib import import_module
 from typing import Any, Dict, Optional
 
@@ -211,6 +212,27 @@ def merge_pipeline_phase_metadata(
         metadata["degraded_mode"] = bool(phase_payload.get("degraded_mode"))
     if phase_payload.get("persistence_status") is not None:
         metadata["persistence"] = phase_payload.get("persistence_status")
+    now_iso = datetime.now(timezone.utc).isoformat()
+    metadata["last_phase_update_at"] = now_iso
+    metadata["current_phase"] = phase_name
+    for field in (
+        "current_substep",
+        "current_substep_label",
+        "current_substep_progress",
+        "current_execution_state",
+        "current_question_id",
+        "current_question_text",
+        "current_question_index",
+        "current_question_total",
+        "questions_answered",
+        "questions_total",
+        "next_question_id",
+        "next_question_text",
+    ):
+        if phase_payload.get(field) is not None:
+            metadata[field] = phase_payload.get(field)
+    if isinstance(phase_payload.get("question_first_checkpoint"), dict):
+        metadata["question_first_checkpoint"] = phase_payload.get("question_first_checkpoint")
     for field in (
         "phase0_mode",
         "question_first_backend",

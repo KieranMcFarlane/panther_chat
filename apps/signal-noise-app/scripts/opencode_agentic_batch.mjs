@@ -16,11 +16,14 @@ const APP_ROOT = path.resolve(MODULE_DIR, '..');
 const WORKTREE_ROOT = path.resolve(APP_ROOT, '..', '..');
 const QUESTION_PROGRESS_FRAMEWORK_PATH = path.join(APP_ROOT, 'backend', 'question_progress_framework.json');
 const STANDALONE_BRIGHTDATA_FALLBACK_SCRIPT = path.join(APP_ROOT, 'scripts', 'standalone_brightdata_fallback.py');
+const APP_VENV_PYTHON = path.join(APP_ROOT, '.venv', 'bin', 'python');
 const DEFAULT_PROVIDER_ID = 'zai-coding-plan';
-const TEMPORARY_QUOTA_POLICY = 'glm_5_1_default';
-const FALLBACK_PREFETCH_MODEL_ID = 'glm-5.1';
-const FALLBACK_SYNTHESIS_MODEL_ID = 'glm-5.1';
-const FALLBACK_ESCALATION_MODEL_ID = 'glm-5.1';
+const OPENAI_PROVIDER_ID = 'openai';
+const TEMPORARY_QUOTA_POLICY = 'temporary_3_day_conserve';
+const FALLBACK_PREFETCH_MODEL_ID = 'glm-4.7-flash';
+const FALLBACK_SYNTHESIS_MODEL_ID = 'glm-4.5-flash';
+const FALLBACK_ESCALATION_MODEL_ID = 'glm-4.5-flash';
+const FALLBACK_OPENAI_MODEL_ID = 'gpt-4.1-mini';
 const ZAI_MODEL_CATALOG = {
   'glm-5.1': { id: 'GLM-5.1', name: 'GLM-5.1', context: 128000, output: 16384 },
   'glm-5': { id: 'GLM-5', name: 'GLM-5', context: 128000, output: 16384 },
@@ -35,6 +38,11 @@ const ZAI_MODEL_CATALOG = {
   'glm-4.5-airx': { id: 'GLM-4.5-AirX', name: 'GLM-4.5-AirX', context: 128000, output: 8192 },
   'glm-4-32b-0414-128k': { id: 'GLM-4-32B-0414-128K', name: 'GLM-4-32B-0414-128K', context: 128000, output: 8192 },
   'glm-4.5-flash': { id: 'GLM-4.5-Flash', name: 'GLM-4.5-Flash', context: 128000, output: 8192 },
+};
+const OPENAI_MODEL_CATALOG = {
+  'gpt-4.1-mini': { id: 'gpt-4.1-mini', name: 'GPT-4.1 mini', context: 1047576, output: 32768 },
+  'gpt-4.1': { id: 'gpt-4.1', name: 'GPT-4.1', context: 1047576, output: 32768 },
+  'gpt-4o-mini': { id: 'gpt-4o-mini', name: 'GPT-4o mini', context: 128000, output: 16384 },
 };
 const COMMERCIAL_SIGNAL_QUESTION_IDS = new Set([
   'q6_launch_signal',
@@ -156,7 +164,7 @@ function _loadEnv(override = true) {
     path.join(APP_ROOT, '.env'),
     path.join(APP_ROOT, 'backend', '.env'),
   ]) {
-    dotenv.config({ path: envPath, override });
+    dotenv.config({ path: envPath, override, quiet: true });
   }
 }
 
@@ -164,31 +172,87 @@ function _captureOpenCodeExplicitEnv() {
   return {
     baseUrl: process.env.ZAI_BASE_URL,
     zaiApiKey: process.env.ZAI_API_KEY,
+    openaiBaseUrl: process.env.OPENAI_BASE_URL,
+    openaiApiKey: process.env.OPENAI_API_KEY,
+    questionProvider: process.env.QF_OPENCODE_PROVIDER || process.env.QF_MODEL_PROVIDER,
     brightdataApiToken: process.env.BRIGHTDATA_API_TOKEN,
     brightdataToken: process.env.BRIGHTDATA_TOKEN,
     brightdataZone: process.env.BRIGHTDATA_ZONE,
   };
 }
 
-function _normalizeZaiModelId(value, fallback = FALLBACK_PREFETCH_MODEL_ID) {
+function _resolvePythonBin() {
+  return String(process.env.PYTHON_BIN || '').trim() || APP_VENV_PYTHON;
+}
+
+function _normalizeQuestionProvider(env = process.env) {
+  const raw = String(env.QF_OPENCODE_PROVIDER || env.QF_MODEL_PROVIDER || '').trim().toLowerCase();
+  return raw === OPENAI_PROVIDER_ID ? OPENAI_PROVIDER_ID : DEFAULT_PROVIDER_ID;
+}
+
+function _providerProfile(env = process.env) {
+  const providerId = _normalizeQuestionProvider(env);
+  if (providerId === OPENAI_PROVIDER_ID) {
+    return {
+      id: OPENAI_PROVIDER_ID,
+      name: 'OpenAI',
+      npm: '@ai-sdk/openai',
+      defaultModel: FALLBACK_OPENAI_MODEL_ID,
+      synthesisModel: FALLBACK_OPENAI_MODEL_ID,
+      escalationModel: FALLBACK_OPENAI_MODEL_ID,
+      catalog: OPENAI_MODEL_CATALOG,
+      baseURL: String(env.OPENAI_BASE_URL || 'https://api.openai.com/v1').trim().replace(/\/+$/g, ''),
+      apiKeyPlaceholder: '{env:OPENAI_API_KEY}',
+      apiKey: env.OPENAI_API_KEY || '',
+    };
+  }
+  return {
+    id: DEFAULT_PROVIDER_ID,
+    name: 'Z.AI Coding Plan',
+    npm: '@ai-sdk/openai-compatible',
+    defaultModel: FALLBACK_PREFETCH_MODEL_ID,
+    synthesisModel: FALLBACK_SYNTHESIS_MODEL_ID,
+    escalationModel: FALLBACK_ESCALATION_MODEL_ID,
+    catalog: ZAI_MODEL_CATALOG,
+    baseURL: _normalizeZaiOpenAiBaseUrl(env.ZAI_BASE_URL || env.ANTHROPIC_BASE_URL || env.ANTHROPIC_API_URL),
+    apiKeyPlaceholder: '{env:ZAI_API_KEY}',
+    apiKey: env.ZAI_API_KEY || '',
+  };
+}
+
+function _normalizeModelId(value, fallback, catalog) {
   const raw = String(value || '').trim();
   if (!raw) return fallback;
   const withoutProvider = raw.includes('/') ? raw.split('/').pop() : raw;
   const normalized = withoutProvider.toLowerCase();
-  return ZAI_MODEL_CATALOG[normalized] ? normalized : fallback;
+  return catalog[normalized] ? normalized : fallback;
 }
 
-function _modelRef(modelId) {
-  return `${DEFAULT_PROVIDER_ID}/${_normalizeZaiModelId(modelId)}`;
+function _normalizeZaiModelId(value, fallback = FALLBACK_PREFETCH_MODEL_ID) {
+  return _normalizeModelId(value, fallback, ZAI_MODEL_CATALOG);
+}
+
+function _modelRef(modelId, env = process.env) {
+  const profile = _providerProfile(env);
+  return `${profile.id}/${_normalizeModelId(modelId, profile.defaultModel, profile.catalog)}`;
+}
+
+function _normalizeZaiOpenAiBaseUrl(value) {
+  const raw = String(value || '').trim().replace(/\/+$/g, '');
+  if (!raw || /\/api\/anthropic(?:\/v1)?$/i.test(raw)) {
+    return 'https://api.z.ai/api/coding/paas/v4';
+  }
+  return raw.replace(/\/chat\/completions$/i, '');
 }
 
 export function resolveQuestionModelRouting(question = {}, env = process.env) {
+  const profile = _providerProfile(env);
   const forcedModel = String(env.QF_FORCE_MODEL || '').trim();
   if (forcedModel) {
-    const modelId = _normalizeZaiModelId(forcedModel, FALLBACK_PREFETCH_MODEL_ID);
+    const modelId = _normalizeModelId(forcedModel, profile.defaultModel, profile.catalog);
     return {
       model_id: modelId,
-      model: _modelRef(modelId),
+      model: _modelRef(modelId, env),
       model_tier: 'forced',
       quota_policy: TEMPORARY_QUOTA_POLICY,
       escalation_allowed: false,
@@ -199,23 +263,23 @@ export function resolveQuestionModelRouting(question = {}, env = process.env) {
   const questionId = String(question?.question_id || '').trim();
   const escalationEnabled = /^(1|true|yes)$/i.test(String(env.QF_MODEL_ESCALATION_ENABLED || 'false').trim());
   let modelTier = 'default';
-  let modelId = _normalizeZaiModelId(env.QF_MODEL_DEFAULT, FALLBACK_PREFETCH_MODEL_ID);
+  let modelId = _normalizeModelId(env.QF_MODEL_DEFAULT, profile.defaultModel, profile.catalog);
 
   if (EVIDENCE_PREFETCH_QUESTION_IDS.has(questionId)) {
     modelTier = 'prefetch';
-    modelId = _normalizeZaiModelId(env.QF_MODEL_PREFETCH, FALLBACK_PREFETCH_MODEL_ID);
+    modelId = _normalizeModelId(env.QF_MODEL_PREFETCH, profile.defaultModel, profile.catalog);
   } else if (SYNTHESIS_QUESTION_IDS.has(questionId)) {
     modelTier = 'synthesis';
-    modelId = _normalizeZaiModelId(env.QF_MODEL_SYNTHESIS || env.QF_MODEL_REASONING, FALLBACK_SYNTHESIS_MODEL_ID);
+    modelId = _normalizeModelId(env.QF_MODEL_SYNTHESIS || env.QF_MODEL_REASONING, profile.synthesisModel, profile.catalog);
   }
 
   return {
     model_id: modelId,
-    model: _modelRef(modelId),
+    model: _modelRef(modelId, env),
     model_tier: modelTier,
     quota_policy: TEMPORARY_QUOTA_POLICY,
     escalation_allowed: escalationEnabled,
-    escalation_model: _modelRef(_normalizeZaiModelId(env.QF_MODEL_ESCALATION, FALLBACK_ESCALATION_MODEL_ID)),
+    escalation_model: _modelRef(_normalizeModelId(env.QF_MODEL_ESCALATION, profile.escalationModel, profile.catalog), env),
     escalation_reason: escalationEnabled ? 'manual_or_future_explicit_escalation_only' : '',
   };
 }
@@ -236,9 +300,24 @@ function _modelPromptTrace(question) {
 function _resolveOpenCodeEnv(explicit) {
   _loadEnv(true);
   const env = explicit || _captureOpenCodeExplicitEnv();
+  const profile = _providerProfile({
+    ...process.env,
+    QF_OPENCODE_PROVIDER: env.questionProvider || process.env.QF_OPENCODE_PROVIDER,
+    QF_MODEL_PROVIDER: env.questionProvider || process.env.QF_MODEL_PROVIDER,
+    ZAI_BASE_URL: env.baseUrl || process.env.ZAI_BASE_URL,
+    ZAI_API_KEY: env.zaiApiKey || process.env.ZAI_API_KEY,
+    OPENAI_BASE_URL: env.openaiBaseUrl || process.env.OPENAI_BASE_URL,
+    OPENAI_API_KEY: env.openaiApiKey || process.env.OPENAI_API_KEY,
+    ANTHROPIC_BASE_URL: process.env.ANTHROPIC_BASE_URL,
+    ANTHROPIC_API_URL: process.env.ANTHROPIC_API_URL,
+  });
   return {
-    baseUrl: env.baseUrl || process.env.ZAI_BASE_URL || 'https://api.z.ai/api/anthropic/v1',
-    apiKey: env.zaiApiKey || process.env.ZAI_API_KEY || '',
+    providerId: profile.id,
+    baseUrl: _normalizeZaiOpenAiBaseUrl(env.baseUrl || process.env.ZAI_BASE_URL || process.env.ANTHROPIC_BASE_URL || process.env.ANTHROPIC_API_URL),
+    openaiBaseUrl: String(env.openaiBaseUrl || process.env.OPENAI_BASE_URL || 'https://api.openai.com/v1').trim().replace(/\/+$/g, ''),
+    zaiApiKey: env.zaiApiKey || process.env.ZAI_API_KEY || '',
+    openaiApiKey: env.openaiApiKey || process.env.OPENAI_API_KEY || '',
+    apiKey: profile.apiKey || '',
     brightdataToken:
       env.brightdataApiToken || env.brightdataToken || process.env.BRIGHTDATA_API_TOKEN || process.env.BRIGHTDATA_TOKEN || '',
     brightdataZone: env.brightdataZone || process.env.BRIGHTDATA_ZONE || '',
@@ -2509,6 +2588,15 @@ export async function buildOpenCodeConfig({
   baseUrl,
 } = {}) {
   const resolvedEnv = _resolveOpenCodeEnv();
+  const providerEnv = {
+    ...process.env,
+    QF_OPENCODE_PROVIDER: resolvedEnv.providerId,
+    ZAI_BASE_URL: baseUrl || resolvedEnv.baseUrl,
+    ZAI_API_KEY: resolvedEnv.zaiApiKey,
+    OPENAI_BASE_URL: resolvedEnv.openaiBaseUrl,
+    OPENAI_API_KEY: resolvedEnv.openaiApiKey,
+  };
+  const profile = _providerProfile(providerEnv);
   const mcpConfig = {
     brightData: {
       type: 'remote',
@@ -2517,9 +2605,12 @@ export async function buildOpenCodeConfig({
       timeout: 15000,
     },
   };
-  const defaultModel = _modelRef(_normalizeZaiModelId(process.env.QF_MODEL_DEFAULT, FALLBACK_PREFETCH_MODEL_ID));
+  const defaultModel = _modelRef(
+    _normalizeModelId(process.env.QF_MODEL_DEFAULT, profile.defaultModel, profile.catalog),
+    providerEnv,
+  );
   const models = Object.fromEntries(
-    Object.entries(ZAI_MODEL_CATALOG).map(([modelId, model]) => [
+    Object.entries(profile.catalog).map(([modelId, model]) => [
       modelId,
       {
         id: model.id,
@@ -2536,12 +2627,12 @@ export async function buildOpenCodeConfig({
     $schema: 'https://opencode.ai/config.json',
     model: defaultModel,
     provider: {
-      [DEFAULT_PROVIDER_ID]: {
-        npm: '@ai-sdk/anthropic',
-        name: 'Z.AI Coding Plan',
+      [profile.id]: {
+        npm: profile.npm,
+        name: profile.name,
         options: {
-          baseURL: baseUrl || 'https://api.z.ai/api/anthropic/v1',
-          apiKey: '{env:ZAI_API_KEY}',
+          baseURL: profile.baseURL,
+          apiKey: profile.apiKeyPlaceholder,
         },
         models,
       },
@@ -2892,11 +2983,12 @@ export async function prepareOpenCodeRunWorkspace({ worktreeRoot = WORKTREE_ROOT
   const existingConfigPath = path.join(worktreeRoot, 'opencode.json');
   const existingConfig = await fs.readFile(existingConfigPath, 'utf8').catch(() => null);
   const existingParsed = existingConfig ? JSON.parse(existingConfig) : null;
+  const providerId = Object.keys(config.provider || {})[0];
   const configsMatch = existingParsed
     && existingParsed.model === config.model
-    && existingParsed.provider?.[DEFAULT_PROVIDER_ID]?.npm === config.provider?.[DEFAULT_PROVIDER_ID]?.npm
-    && existingParsed.provider?.[DEFAULT_PROVIDER_ID]?.options?.baseURL === config.provider?.[DEFAULT_PROVIDER_ID]?.options?.baseURL
-    && existingParsed.provider?.[DEFAULT_PROVIDER_ID]?.options?.apiKey === config.provider?.[DEFAULT_PROVIDER_ID]?.options?.apiKey
+    && existingParsed.provider?.[providerId]?.npm === config.provider?.[providerId]?.npm
+    && existingParsed.provider?.[providerId]?.options?.baseURL === config.provider?.[providerId]?.options?.baseURL
+    && existingParsed.provider?.[providerId]?.options?.apiKey === config.provider?.[providerId]?.options?.apiKey
     && existingParsed.mcp?.brightData?.url === config.mcp?.brightData?.url
     && existingParsed.mcp?.brightData?.timeout === config.mcp?.brightData?.timeout;
   if (configsMatch) {
@@ -2942,6 +3034,9 @@ export function buildOpenCodeQuestionSchema() {
 }
 
 function _classifyValidationState(question, structuredOutput, cliResult) {
+  if (_isProviderInfrastructureFailure(structuredOutput, cliResult)) {
+    return 'failed';
+  }
   if (!structuredOutput || typeof structuredOutput !== 'object') {
     return cliResult && Number(cliResult.code ?? 0) !== 0 ? 'tool_call_missing' : 'no_signal';
   }
@@ -2960,6 +3055,35 @@ function _classifyValidationState(question, structuredOutput, cliResult) {
     return 'validated';
   }
   return 'provisional';
+}
+
+function _failureClassFromStructuredOutput(structuredOutput, cliResult) {
+  const validationState = String(structuredOutput?.validation_state || '').trim().toLowerCase();
+  if (['validated', 'confirmed', 'provisional', 'inferred', 'partially_validated', 'deterministic_detected'].includes(validationState)) {
+    return '';
+  }
+  const trace = structuredOutput?.prompt_trace && typeof structuredOutput.prompt_trace === 'object'
+    ? structuredOutput.prompt_trace
+    : {};
+  const signal = structuredOutput?.structured_signal && typeof structuredOutput.structured_signal === 'object'
+    ? structuredOutput.structured_signal
+    : {};
+  const failureName = String(trace.failure_name || structuredOutput?.failure_name || '').trim().toLowerCase();
+  const status = String(signal.status || structuredOutput?.status || '').trim().toLowerCase();
+  const context = String(structuredOutput?.context || structuredOutput?.notes || '').trim().toLowerCase();
+  const exitCode = Number(cliResult?.code ?? trace.exit_code ?? 0);
+
+  if (failureName.includes('opencodetimeouterror') || context.includes('opencode run failed') || context.includes('no text output produced')) {
+    return 'opencode_timeout';
+  }
+  if (status === 'source_prefetch_failed' || context.includes('brightdata prefetch failed')) {
+    return 'brightdata_prefetch_failed';
+  }
+  return '';
+}
+
+function _isProviderInfrastructureFailure(structuredOutput, cliResult) {
+  return Boolean(_failureClassFromStructuredOutput(structuredOutput, cliResult));
 }
 
 function _derivePromptTraceStatus(question, structuredOutput, cliResult, promptTrace) {
@@ -3044,6 +3168,23 @@ function _buildStructuredNoSignalOutput(question, { context = '', sources = [] }
     sources: Array.isArray(sources) ? sources.filter(Boolean) : [],
     confidence: 0,
     validation_state: 'no_signal',
+  };
+}
+
+function _buildStructuredFailureOutput(question, { context = '', sources = [], failureClass = 'provider_no_output', checkedSources = [] } = {}) {
+  return {
+    question: question?.question_text || question?.question || '',
+    answer: '',
+    context: context || 'Provider infrastructure failed before a source-backed answer could be produced.',
+    sources: Array.isArray(sources) ? sources.filter(Boolean) : [],
+    confidence: 0,
+    validation_state: 'failed',
+    checked_sources: Array.isArray(checkedSources) ? checkedSources : [],
+    structured_signal: {
+      status: failureClass,
+      failure_class: failureClass,
+      question_id: question?.question_id || '',
+    },
   };
 }
 
@@ -3317,7 +3458,7 @@ async function runStandaloneDirectBrightDataFallback(question, failureDiagnostic
     failure_diagnostics: failureDiagnostics,
   };
   return new Promise((resolve, reject) => {
-    const child = spawn('python3', [STANDALONE_BRIGHTDATA_FALLBACK_SCRIPT], {
+    const child = spawn(_resolvePythonBin(), [STANDALONE_BRIGHTDATA_FALLBACK_SCRIPT], {
       cwd: worktreeRoot || WORKTREE_ROOT,
       env: {
         ...process.env,
@@ -3398,7 +3539,7 @@ async function runStandaloneDirectBrightDataPrefetch(question, { query = '', scr
     scrape_url,
   };
   return new Promise((resolve, reject) => {
-    const child = spawn('python3', [STANDALONE_BRIGHTDATA_FALLBACK_SCRIPT], {
+    const child = spawn(_resolvePythonBin(), [STANDALONE_BRIGHTDATA_FALLBACK_SCRIPT], {
       cwd: worktreeRoot || WORKTREE_ROOT,
       env: {
         ...process.env,
@@ -3467,11 +3608,39 @@ function _spawnOpencodeRun(args, { command = 'opencode', cwd, env, timeoutMs = 3
     let settled = false;
     let pendingRejectError = null;
     let forceKillTimer = null;
+    const terminateChildGroup = (signal = 'SIGTERM') => {
+      try {
+        process.kill(-child.pid, signal);
+      } catch {
+        try {
+          child.kill(signal);
+        } catch {
+          // Ignore cleanup failures; the child may already be gone.
+        }
+      }
+    };
+    const parentSignalHandlers = new Map();
+    const cleanupParentSignalHandlers = () => {
+      for (const [signal, handler] of parentSignalHandlers.entries()) {
+        process.off(signal, handler);
+      }
+      parentSignalHandlers.clear();
+    };
+    for (const signal of ['SIGTERM', 'SIGINT', 'SIGHUP']) {
+      const handler = () => {
+        terminateChildGroup('SIGTERM');
+        setTimeout(() => terminateChildGroup('SIGKILL'), 1500).unref?.();
+        process.exit(signal === 'SIGINT' ? 130 : 143);
+      };
+      parentSignalHandlers.set(signal, handler);
+      process.once(signal, handler);
+    }
     const rejectOnce = (error) => {
       if (settled) return;
       settled = true;
       clearTimeout(timer);
       clearTimeout(forceKillTimer);
+      cleanupParentSignalHandlers();
       reject(error);
     };
     const resolveOnce = (value) => {
@@ -3479,23 +3648,16 @@ function _spawnOpencodeRun(args, { command = 'opencode', cwd, env, timeoutMs = 3
       settled = true;
       clearTimeout(timer);
       clearTimeout(forceKillTimer);
+      cleanupParentSignalHandlers();
       resolve(value);
     };
     const rejectAfterChildStops = (error) => {
       if (settled || pendingRejectError) return;
       pendingRejectError = error;
       clearTimeout(timer);
-      try {
-        process.kill(-child.pid, 'SIGTERM');
-      } catch {
-        child.kill('SIGTERM');
-      }
+      terminateChildGroup('SIGTERM');
       forceKillTimer = setTimeout(() => {
-        try {
-          process.kill(-child.pid, 'SIGKILL');
-        } catch {
-          child.kill('SIGKILL');
-        }
+        terminateChildGroup('SIGKILL');
       }, 2000);
     };
     const timer = setTimeout(() => {
@@ -3593,7 +3755,9 @@ export async function runOpenCodeCliQuestion(
       cwd: preparedWorkspace.cwd,
       env: {
         ...process.env,
-        ZAI_API_KEY: resolvedEnv.apiKey,
+        OPENCODE_CONFIG: preparedWorkspace.configPath,
+        ZAI_API_KEY: resolvedEnv.zaiApiKey,
+        OPENAI_API_KEY: resolvedEnv.openaiApiKey,
         BRIGHTDATA_API_TOKEN: resolvedEnv.brightdataToken,
         BRIGHTDATA_MCP_USE_HOSTED: 'false',
         BRIGHTDATA_MCP_HOSTED_URL: '',
@@ -3610,11 +3774,12 @@ export async function runOpenCodeCliQuestion(
       try {
         prefetchEvidence = await evidencePrefetcher(question);
       } catch (error) {
+        const retrievalReason = error instanceof Error ? error.message : String(error);
         prefetchEvidence = {
           leads: [],
           checked_sources: [{
             status: 'retrieval_failed',
-            reason: error instanceof Error ? error.message : String(error),
+            reason: retrievalReason,
           }],
           retrieval_summary: 'Evidence prefetch failed before provider synthesis.',
           diagnostics: {
@@ -3622,7 +3787,7 @@ export async function runOpenCodeCliQuestion(
             accepted_source_count: 0,
             rejected_source_count: 0,
             source_types: [],
-            retrieval_error: error instanceof Error ? error.message : String(error),
+            retrieval_error: retrievalReason,
           },
         };
       }
@@ -3631,15 +3796,28 @@ export async function runOpenCodeCliQuestion(
         ? prefetchEvidence.diagnostics
         : {};
       if (prefetchLeads.length === 0) {
+        const retrievalFailed = Boolean(prefetchDiagnostics.retrieval_error)
+          || (Array.isArray(prefetchEvidence?.checked_sources)
+            && prefetchEvidence.checked_sources.length > 0
+            && prefetchEvidence.checked_sources.every((source) => String(source?.status || '').trim() === 'retrieval_failed'));
+        const baseOutput = retrievalFailed
+          ? _buildStructuredFailureOutput(question, {
+              context: prefetchEvidence?.retrieval_summary || 'Evidence prefetch failed before provider synthesis.',
+              failureClass: 'brightdata_prefetch_failed',
+              checkedSources: prefetchEvidence?.checked_sources,
+            })
+          : _buildStructuredNoSignalOutput(question, {
+              context: prefetchEvidence?.retrieval_summary || 'No accepted source-backed evidence was found in deterministic preflight.',
+              sources: [],
+            });
         const noSignalOutput = {
-          ..._buildStructuredNoSignalOutput(question, {
-            context: prefetchEvidence?.retrieval_summary || 'No accepted source-backed evidence was found in deterministic preflight.',
-            sources: [],
-          }),
+          ...baseOutput,
           checked_sources: Array.isArray(prefetchEvidence?.checked_sources) ? prefetchEvidence.checked_sources : [],
           structured_signal: {
-            status: 'source_prefetch_empty',
+            ...(baseOutput.structured_signal && typeof baseOutput.structured_signal === 'object' ? baseOutput.structured_signal : {}),
+            status: retrievalFailed ? 'source_prefetch_failed' : 'source_prefetch_empty',
             question_id: question?.question_id || '',
+            ...(retrievalFailed ? { failure_class: 'brightdata_prefetch_failed' } : {}),
           },
         };
         return {
@@ -3657,6 +3835,7 @@ export async function runOpenCodeCliQuestion(
             accepted_source_count: Number(prefetchDiagnostics.accepted_source_count || 0),
             source_types: Array.isArray(prefetchDiagnostics.source_types) ? prefetchDiagnostics.source_types : [],
             query_variants_used: Array.isArray(prefetchDiagnostics.query_variants_used) ? prefetchDiagnostics.query_variants_used : [],
+            ...(retrievalFailed ? { failure_class: 'brightdata_prefetch_failed' } : {}),
           },
           messageTrace: [],
           cliResult: { code: 0, stdout: '', stderr: '' },
@@ -3959,8 +4138,9 @@ export async function runOpenCodeCliQuestion(
       cliResult = await runCliPass(prompt);
     } catch (error) {
       const recoveredStructuredOutput = _recoverStructuredOutputFromFailure(question, error?.stdout || '');
-      const fallbackOutput = recoveredStructuredOutput || _buildStructuredNoSignalOutput(question, {
+      const fallbackOutput = recoveredStructuredOutput || _buildStructuredFailureOutput(question, {
         context: `OpenCode run failed (${error?.name || 'Error'}): no text output produced.`,
+        failureClass: error?.name === 'OpenCodeTimeoutError' ? 'opencode_timeout' : 'provider_no_output',
       });
       return {
         structuredOutput: fallbackOutput,
@@ -3973,6 +4153,7 @@ export async function runOpenCodeCliQuestion(
           stage_count: 1,
           recovered_from_failure: true,
           failure_name: error?.name || 'Error',
+          failure_class: error?.name === 'OpenCodeTimeoutError' ? 'opencode_timeout' : 'provider_no_output',
         },
         messageTrace: [
           {

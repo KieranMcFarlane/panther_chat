@@ -964,6 +964,57 @@ def has_provider_infrastructure_failure(value: Any) -> bool:
     return False
 
 
+def has_current_question_provider_infrastructure_failure(value: Any, question_id: Optional[str]) -> bool:
+    """Detect provider failures for the active repair question without inheriting stale dossier failures."""
+    current_question_id = str(question_id or "").strip()
+    if not current_question_id:
+        return has_provider_infrastructure_failure(value)
+    if value is None:
+        return False
+    if isinstance(value, list):
+        return any(has_current_question_provider_infrastructure_failure(item, current_question_id) for item in value)
+    if isinstance(value, dict):
+        own_question_id = str(
+            value.get("question_id")
+            or value.get("current_question_id")
+            or value.get("last_repaired_question_id")
+            or ""
+        ).strip()
+        if own_question_id == current_question_id:
+            return has_provider_infrastructure_failure(value)
+
+        for key in (
+            "answer_records",
+            "answers",
+            "question_answers",
+            "questions",
+            "question_results",
+            "results",
+        ):
+            nested = value.get(key)
+            if isinstance(nested, list) and any(
+                has_current_question_provider_infrastructure_failure(item, current_question_id)
+                for item in nested
+            ):
+                return True
+
+        direct_failure_fields = {
+            key: value.get(key)
+            for key in (
+                "failure_name",
+                "failure_class",
+                "failure_reason",
+                "error_type",
+                "last_error_type",
+                "error_message",
+                "last_error",
+            )
+            if key in value
+        }
+        return bool(direct_failure_fields) and has_provider_infrastructure_failure(direct_failure_fields)
+    return False
+
+
 def clear_provider_infrastructure_failure_metadata(existing_metadata: Optional[Dict[str, Any]]) -> Dict[str, Any]:
     metadata = deepcopy(existing_metadata or {})
     if str(metadata.get("failure_class") or "").strip().lower() == "provider_infrastructure_failure":
@@ -1014,6 +1065,52 @@ def _provider_preflight_ssl_context() -> ssl.SSLContext:
     if certifi is not None:
         return ssl.create_default_context(cafile=certifi.where())
     return ssl.create_default_context()
+
+
+def _question_first_provider() -> str:
+    provider = str(os.getenv("QF_OPENCODE_PROVIDER") or os.getenv("QF_MODEL_PROVIDER") or "").strip().lower()
+    return "openai" if provider == "openai" else "zai"
+
+
+def _resolve_openai_chat_url() -> str:
+    base_url = str(os.getenv("OPENAI_BASE_URL") or "https://api.openai.com/v1").strip().rstrip("/")
+    return f"{base_url}/chat/completions"
+
+
+def _resolve_openai_model() -> str:
+    return (
+        str(os.getenv("QF_MODEL_DEFAULT") or "").strip()
+        or str(os.getenv("OPENAI_MODEL") or "").strip()
+        or "gpt-4.1-mini"
+    )
+
+
+def _resolve_zai_chat_url() -> str:
+    base_url = (
+        str(os.getenv("ZAI_BASE_URL") or "").strip()
+        or str(os.getenv("QF_ZAI_BASE_URL") or "").strip()
+        or "https://api.z.ai/api/coding/paas/v4"
+    ).rstrip("/")
+    if base_url.endswith("/chat/completions"):
+        return base_url
+    return f"{base_url}/chat/completions"
+
+
+def _resolve_zai_model() -> str:
+    return (
+        str(os.getenv("QF_MODEL_DEFAULT") or "").strip()
+        or str(os.getenv("QF_MODEL_PREFETCH") or "").strip()
+        or "GLM-4.7-Flash"
+    )
+
+
+def _resolve_zai_api_key() -> Optional[str]:
+    return (
+        str(os.getenv("ZAI_API_KEY") or "").strip()
+        or str(os.getenv("ANTHROPIC_API_KEY") or "").strip()
+        or str(os.getenv("ANTHROPIC_AUTH_TOKEN") or "").strip()
+        or None
+    )
 
 
 def build_run_provider_infrastructure_failure_metadata(
@@ -1613,27 +1710,54 @@ class EntityPipelineWorker:
             return False, "backend_route_missing"
 
     def _provider_preflight(self) -> tuple[bool, str]:
-        base_url = _resolve_anthropic_compatible_base_url()
-        api_key = _resolve_anthropic_compatible_api_key(base_url)
+        if _question_first_provider() == "openai":
+            api_key = str(os.getenv("OPENAI_API_KEY") or "").strip()
+            if not api_key:
+                return False, "provider_infrastructure_failure"
+            request = Request(
+                _resolve_openai_chat_url(),
+                data=json.dumps(
+                    {
+                        "model": _resolve_openai_model(),
+                        "max_tokens": 16,
+                        "messages": [{"role": "user", "content": "Reply with exactly: OK"}],
+                    }
+                ).encode("utf-8"),
+                headers={
+                    "content-type": "application/json",
+                    "authorization": f"Bearer {api_key}",
+                },
+                method="POST",
+            )
+            try:
+                with urlopen(request, timeout=10) as response:
+                    return (200 <= int(getattr(response, "status", 0) or 0) < 300), ""
+            except HTTPError as error:
+                try:
+                    error_body = error.read().decode("utf-8", errors="replace")
+                except Exception:
+                    error_body = str(error)
+                logger.warning("OpenAI provider preflight failed: %s", error_body)
+                return False, "provider_infrastructure_failure"
+            except Exception as error:
+                logger.warning("OpenAI provider preflight failed: %s", error)
+                return False, "provider_infrastructure_failure"
+
+        api_key = _resolve_zai_api_key()
         if not api_key:
             return False, "provider_infrastructure_failure"
         request = Request(
-            _anthropic_messages_url(base_url),
+            _resolve_zai_chat_url(),
             data=json.dumps(
                 {
-                    "model": (
-                        str(os.getenv("ANTHROPIC_DEFAULT_OPUS_MODEL") or "").strip()
-                        or str(os.getenv("ANTHROPIC_DEFAULT_SONNET_MODEL") or "").strip()
-                        or "GLM-5.1"
-                    ),
+                    "model": _resolve_zai_model(),
                     "max_tokens": 16,
                     "messages": [{"role": "user", "content": "Reply with exactly: OK"}],
                 }
             ).encode("utf-8"),
             headers={
                 "content-type": "application/json",
-                "anthropic-version": "2023-06-01",
-                "x-api-key": api_key,
+                "authorization": f"Bearer {api_key}",
             },
             method="POST",
         )
@@ -1645,10 +1769,10 @@ class EntityPipelineWorker:
                 error_body = error.read().decode("utf-8", errors="replace")
             except Exception:
                 error_body = str(error)
-            logger.warning("Provider preflight failed: %s", error_body)
+            logger.warning("Z.AI provider preflight failed: %s", error_body)
             return False, "provider_infrastructure_failure"
         except Exception as error:
-            logger.warning("Provider preflight failed: %s", error)
+            logger.warning("Z.AI provider preflight failed: %s", error)
             return False, "provider_infrastructure_failure"
 
     def _is_backend_route_missing_error(self, error: Exception) -> bool:
@@ -1752,7 +1876,9 @@ class EntityPipelineWorker:
             context=f"heartbeat refresh for {batch_id}",
         )
         try:
-            active_runs_response = self.supabase.table("entity_pipeline_runs").select("id, metadata").eq("batch_id", batch_id).in_(
+            active_runs_response = self.supabase.table("entity_pipeline_runs").select(
+                "id, batch_id, entity_id, canonical_entity_id, entity_name, phase, started_at, metadata"
+            ).eq("batch_id", batch_id).in_(
                 "status",
                 ["queued", "claiming", "running", "retrying"],
             ).execute()
@@ -1779,6 +1905,38 @@ class EntityPipelineWorker:
                 ).eq("id", run_id).execute(),
                 context=f"heartbeat refresh for run {batch_id}/{run_id}",
             )
+            if str(active_run.get("batch_id") or "").strip() == str(batch_id or "").strip():
+                live_cursor = _project_live_cursor_fields(
+                    batch={
+                        "id": active_run.get("batch_id") or batch_id,
+                        "entity_id": active_run.get("entity_id"),
+                        "canonical_entity_id": active_run.get("canonical_entity_id"),
+                        "entity_name": active_run.get("entity_name"),
+                        "phase": active_run.get("phase"),
+                        "started_at": active_run.get("started_at"),
+                    },
+                    metadata=merged_metadata,
+                    now_iso=now_iso,
+                )
+                _set_supervisor_activity(**live_cursor)
+                self._safe_execute(
+                    lambda live_cursor=live_cursor, now_iso=now_iso: write_pipeline_control_state(
+                        {
+                            **live_cursor,
+                            "cursor_source": "live_heartbeat_projection",
+                            "requested_state": "running",
+                            "observed_state": "running",
+                            "transition_state": "running",
+                            "desired_state": "running",
+                            "is_paused": False,
+                            "pause_reason": None,
+                            "stop_reason": None,
+                            "stop_details": None,
+                            "updated_at": now_iso,
+                        }
+                    ),
+                    context=f"pipeline control heartbeat projection {batch_id}/{run_id}",
+                )
         return heartbeat_metadata
 
     def _start_batch_heartbeat(self, batch_id: str, metadata: Optional[Dict[str, Any]]) -> tuple[threading.Event, threading.Thread]:
@@ -4209,7 +4367,10 @@ class EntityPipelineWorker:
                 for field in ("last_skipped_question_id", "last_skip_reason", "last_skip_note", "last_skip_error_class", "last_skipped_at"):
                     if follow_on_repair_metadata.get(field) is not None:
                         metadata[field] = follow_on_repair_metadata.get(field)
-                fresh_runtime_provider_failure = has_provider_infrastructure_failure(result)
+                fresh_runtime_provider_failure = has_current_question_provider_infrastructure_failure(
+                    result,
+                    metadata.get("question_id") or metadata.get("current_question_id"),
+                )
                 if publication_succeeded and not fresh_runtime_provider_failure:
                     metadata = clear_provider_infrastructure_failure_metadata(metadata)
                 if fresh_runtime_provider_failure:

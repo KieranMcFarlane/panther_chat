@@ -10,8 +10,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 interface EntityEnrichmentSummaryCardProps {
   title?: string
   statusLabel: string
-  lastUpdatedLabel: string
-  recentAdditions: string[]
+  lastUpdatedLabel: unknown
+  recentAdditions: unknown[]
   onRunEnrichment: () => void
   advancedHref: string
   compact?: boolean
@@ -28,7 +28,21 @@ export function EntityEnrichmentSummaryCard({
   compact = false,
   primaryActionLabel = 'Run enrichment',
 }: EntityEnrichmentSummaryCardProps) {
-  const visibleAdditions = recentAdditions.filter(Boolean).slice(0, 3)
+  const formatLabel = (value: unknown, fallback: string) => {
+    if (typeof value === 'string') return value.trim() || fallback
+    if (value instanceof Date) return value.toLocaleString()
+    if (value && typeof value === 'object') {
+      const record = value as Record<string, unknown>
+      const candidate = record.label || record.formatted || record.value || record.updated_at || record.last_updated_at || record.generated_at
+      if (typeof candidate === 'string') return candidate.trim() || fallback
+    }
+    return fallback
+  }
+  const visibleAdditions = recentAdditions
+    .map((item) => formatLabel(item, ''))
+    .filter(Boolean)
+    .slice(0, 3)
+  const safeLastUpdatedLabel = formatLabel(lastUpdatedLabel, 'Not available')
 
   return (
     <Card className={compact ? 'border-emerald-200 bg-emerald-50/60 shadow-sm' : 'border-emerald-200 bg-gradient-to-br from-emerald-50 via-white to-slate-50 shadow-sm'}>
@@ -47,7 +61,7 @@ export function EntityEnrichmentSummaryCard({
         <div className={compact ? 'grid gap-3 sm:grid-cols-2' : 'grid gap-4 md:grid-cols-2'}>
           <div className="rounded-xl border border-emerald-100 bg-white/80 p-3">
             <div className="text-xs uppercase tracking-[0.14em] text-muted-foreground">Last updated</div>
-            <div className="mt-1 text-sm font-semibold text-slate-900">{lastUpdatedLabel}</div>
+            <div className="mt-1 text-sm font-semibold text-slate-900">{safeLastUpdatedLabel}</div>
           </div>
           <div className="rounded-xl border border-emerald-100 bg-white/80 p-3">
             <div className="text-xs uppercase tracking-[0.14em] text-muted-foreground">Recent contact/company additions</div>

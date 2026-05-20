@@ -13,6 +13,7 @@ import json
 import logging
 import os
 import re
+import signal
 import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
@@ -34,6 +35,31 @@ except ImportError:
 
 logger = logging.getLogger(__name__)
 OPENCODE_PROGRESS_EVENT_PREFIX = "__QF_PROGRESS__"
+
+
+def _question_first_batch_timeout_seconds(question_count: int, opencode_timeout_ms: int) -> float:
+    configured = str(os.getenv("PIPELINE_QUESTION_FIRST_BATCH_TIMEOUT_SECONDS") or "").strip()
+    if configured:
+        try:
+            return max(1.0, float(configured))
+        except ValueError:
+            logger.warning("Invalid PIPELINE_QUESTION_FIRST_BATCH_TIMEOUT_SECONDS=%r", configured)
+    per_question_seconds = max(1.0, float(opencode_timeout_ms or 300000) / 1000.0)
+    # Keep the route below the worker's outer timeout while still allowing every
+    # question one bounded OpenCode pass plus a little artifact-write overhead.
+    return min(900.0, max(per_question_seconds + 30.0, (per_question_seconds * max(1, question_count)) + 45.0))
+
+
+def _terminate_process_group(proc: asyncio.subprocess.Process) -> None:
+    pid = getattr(proc, "pid", None)
+    if not pid:
+        return
+    try:
+        os.killpg(pid, signal.SIGTERM)
+    except ProcessLookupError:
+        return
+    except Exception:
+        proc.terminate()
 
 
 def _iso_now() -> str:
@@ -325,6 +351,7 @@ async def _launch_opencode_question_first_batch(
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE,
             env=dict(os.environ),
+            start_new_session=True,
         )
         stdout_lines: List[str] = []
         stderr_lines: List[str] = []
@@ -374,8 +401,26 @@ async def _launch_opencode_question_first_batch(
                     break
                 stderr_lines.append(raw_line.decode("utf-8", errors="replace").rstrip())
 
-        await asyncio.gather(_read_stdout(), _read_stderr())
-        await proc.wait()
+        question_count = len(source_payload.get("questions") or []) if isinstance(source_payload.get("questions"), list) else 1
+        batch_timeout_seconds = _question_first_batch_timeout_seconds(question_count, opencode_timeout_ms)
+        try:
+            await asyncio.wait_for(
+                asyncio.gather(_read_stdout(), _read_stderr(), proc.wait()),
+                timeout=batch_timeout_seconds,
+            )
+        except asyncio.TimeoutError as exc:
+            _terminate_process_group(proc)
+            try:
+                await asyncio.wait_for(proc.wait(), timeout=5)
+            except Exception:
+                try:
+                    os.killpg(proc.pid, signal.SIGKILL)
+                except Exception:
+                    proc.kill()
+            raise TimeoutError(
+                f"OpenCode question-first batch timed out after {batch_timeout_seconds:.0f}s "
+                f"for entity={source_payload.get('entity_id')} preset={source_payload.get('preset')}"
+            ) from exc
         if not stdout_lines:
             logger.warning(
                 "OpenCode question-first batch produced no stdout lines for entity=%s preset=%s",

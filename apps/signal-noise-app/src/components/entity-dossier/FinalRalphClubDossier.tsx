@@ -40,6 +40,29 @@ function valueOrFallback(value: any, fallback: string) {
   return formatted || fallback
 }
 
+function cleanDisplayText(value: any) {
+  const text = valueOrFallback(value, '').trim()
+  if (!text) return ''
+  if (
+    /^\[object object\]$/i.test(text)
+    || /raw_structured_output/i.test(text)
+    || /question execution failed before a safe answer could be produced/i.test(text)
+    || /no completed brightdata leads were recoverable/i.test(text)
+    || /^kind:\s*(summary|signal_set|list|fact)\b/i.test(text)
+    || /^insufficient_signal$/i.test(text)
+  ) {
+    return ''
+  }
+  return text
+}
+
+function cleanDisplayList(items: any[]) {
+  if (!Array.isArray(items)) return []
+  return items
+    .map((item) => cleanDisplayText(item?.answer || item?.summary || item?.value || item?.opportunity || item))
+    .filter(Boolean)
+}
+
 function buildFallbackCoreInfo(entity: Entity) {
   const props = entity.properties || {}
   return {
@@ -91,13 +114,14 @@ function buildFallbackStrategicSummary(dossier: any, questionFirst: any) {
 }
 
 function renderBulletList(items: any[], emptyLabel: string) {
-  if (!Array.isArray(items) || items.length === 0) {
+  const visibleItems = cleanDisplayList(items)
+  if (visibleItems.length === 0) {
     return <p className="text-sm text-slate-500">{emptyLabel}</p>
   }
 
   return (
     <div className="space-y-2">
-      {items.map((item, index) => (
+      {visibleItems.map((item, index) => (
         <div key={`${index}-${String(item)}`} className="flex items-start gap-2 rounded-lg bg-slate-50 px-3 py-2">
           <CheckCircle className="mt-0.5 h-4 w-4 text-emerald-500" />
           <span className="text-sm text-slate-700">{String(item)}</span>
@@ -132,7 +156,7 @@ function getQuestionStatusLabel(item: any) {
   if (state === 'answered' || state === 'validated' || state === 'provisional') return 'Answered'
   if (state === 'blocked') return 'Blocked'
   if (state === 'skipped') return 'Skipped'
-  if (state === 'failed') return 'Failed'
+  if (state === 'failed') return 'Repair needed'
   return 'No signal'
 }
 
@@ -156,7 +180,7 @@ function getQuestionStatusClasses(item: any) {
 function getQuestionAnswerText(item: any) {
   const answer = item?.question_first_answer?.answer || item?.answer || {}
   const rawStructured = answer?.raw_structured_output || {}
-  return valueOrFallback(
+  return cleanDisplayText(
     answer?.summary ||
       answer?.value ||
       rawStructured?.answer ||
