@@ -1031,6 +1031,10 @@ def has_provider_infrastructure_failure(value: Any) -> bool:
             OPENCODE_PROVIDER_INSUFFICIENT_BALANCE_ERROR.lower() in text
             or "providerinsufficientbalance" in text
             or "insufficient balance" in text
+            or "opencodetimeouterror" in text
+            or "opencode_timeout" in text
+            or "brightdata_prefetch_failed" in text
+            or "provider_no_output" in text
         )
     if isinstance(value, (int, float, bool)):
         return False
@@ -1044,6 +1048,10 @@ def has_provider_infrastructure_failure(value: Any) -> bool:
     return (
         OPENCODE_PROVIDER_INSUFFICIENT_BALANCE_ERROR.lower() in failure_name
         or "provider_infrastructure_failure" in error_type
+        or "opencode_timeout" in error_type
+        or "brightdata_prefetch_failed" in error_type
+        or "provider_no_output" in error_type
+        or "opencodetimeouterror" in failure_name
         or OPENCODE_PROVIDER_INSUFFICIENT_BALANCE_ERROR.lower() in message
         or any(has_provider_infrastructure_failure(item) for item in value.values())
     )

@@ -151,6 +151,21 @@ export function buildOperationalStatusHero(input: {
     input.controlState,
   )
   const pipelinePaused = requestedState === 'paused'
+  const providerCooldownUntil = toText(input.controlState?.provider_cooldown_until || stopDetails?.cooldown_until)
+  const providerCooldownMs = providerCooldownUntil ? Date.parse(providerCooldownUntil) : NaN
+  const providerCooldownActive = Number.isFinite(providerCooldownMs) && providerCooldownMs > Date.now()
+  const providerCooldownReason = toText(input.controlState?.provider_cooldown_reason || stopDetails?.error_type || input.controlState?.pause_reason)
+  const providerCooldownLabel = providerCooldownActive
+    ? `Provider cooldown until ${new Date(providerCooldownMs).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}`
+    : null
+  const graphPersistenceOk = backlogHealth?.graph_persistence_ok
+  const graphPersistenceBackend = toText(backlogHealth?.graph_persistence_backend) || 'local FalkorDB'
+  const graphPersistenceLastEntity = toText(backlogHealth?.graph_persistence_last_entity)
+  const graphPersistenceLabel = graphPersistenceOk === true
+    ? `${graphPersistenceBackend} OK${graphPersistenceLastEntity ? ` · ${graphPersistenceLastEntity}` : ''}`
+    : graphPersistenceOk === false
+      ? `${graphPersistenceBackend} degraded`
+      : null
   const workerState = liveState?.worker_process_state
     || input.controlState?.transition_state
     || input.controlState?.observed_state
@@ -223,6 +238,8 @@ export function buildOperationalStatusHero(input: {
     ? 'Stopping intake…'
     : isStarting
       ? 'Starting intake…'
+      : providerCooldownActive
+        ? 'Provider cooldown active'
       : hasPausedResumeCheckpoint
         ? 'Paused — resumable checkpoint ready'
         : pipelinePaused
@@ -239,6 +256,8 @@ export function buildOperationalStatusHero(input: {
     ? 'Pipeline is safely shutting down. No new work is being accepted.'
     : isStarting
       ? 'Pipeline is starting. Claimable work will be queued again as soon as the worker is ready.'
+      : providerCooldownActive
+        ? `Z.ai is throttling or refusing preflight. Intake will retry after cooldown instead of hammering the provider.`
       : hasPausedResumeCheckpoint
         ? `${pausedResumeEntityName} · question rerun ready. Start pipeline to resume from the saved checkpoint.`
         : isSafetyStop
@@ -253,6 +272,8 @@ export function buildOperationalStatusHero(input: {
 
   const issueSummary = hasPausedResumeCheckpoint
     ? null
+    : providerCooldownActive
+      ? `Provider preflight blocked: ${providerCooldownReason.replaceAll('_', ' ') || 'rate limited'}.`
     : isSafetyStop
       ? `Pipeline paused because ${stopReason}.`
     : freshnessState === 'stale'
@@ -315,8 +336,11 @@ export function buildOperationalStatusHero(input: {
   pushDetailRow('Pipeline intake', requestedState)
   pushDetailRow('Worker process', workerState)
   pushDetailRow('Current activity', pipelinePaused
-    ? 'paused'
+    ? (providerCooldownActive ? 'provider cooldown' : 'paused')
     : liveOperationalState || (currentLiveRun && inProgressEntity ? (repairFocus ? 'repairing' : 'running') : isStopped ? 'stopped' : 'waiting'))
+  pushDetailRow('Provider cooldown', providerCooldownLabel)
+  pushDetailRow('Provider reason', providerCooldownActive ? providerCooldownReason.replaceAll('_', ' ') : null)
+  pushDetailRow('Graph persistence', graphPersistenceLabel)
 
   if (activeExecutionCheckpoint && inProgressEntity) {
     pushDetailRow('Current section', currentSectionLabel)
@@ -352,6 +376,8 @@ export function buildOperationalStatusHero(input: {
     : null
   const marqueeLine = hasPausedResumeCheckpoint
     ? headline
+    : providerCooldownActive && providerCooldownLabel
+      ? providerCooldownLabel
     : isSafetyStop && pausedStopMarquee
       ? pausedStopMarquee
     : currentCheckpoint

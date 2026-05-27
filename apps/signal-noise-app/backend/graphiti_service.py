@@ -197,8 +197,14 @@ class GraphitiService:
 
         # FalkorDB configuration (optional - for graph queries)
         self.falkordb_uri = os.getenv("FALKORDB_URI") or os.getenv("NEO4J_URI")
-        self.falkordb_user = os.getenv("FALKORDB_USER") or os.getenv("NEO4J_USER", "neo4j")
-        self.falkordb_password = os.getenv("FALKORDB_PASSWORD") or os.getenv("NEO4J_PASSWORD", "")
+        raw_falkordb_user = os.getenv("FALKORDB_USER")
+        raw_falkordb_password = os.getenv("FALKORDB_PASSWORD")
+        if self.falkordb_uri and self.falkordb_uri.startswith(("redis://", "rediss://")):
+            self.falkordb_user = raw_falkordb_user or None
+            self.falkordb_password = raw_falkordb_password or None
+        else:
+            self.falkordb_user = raw_falkordb_user or os.getenv("NEO4J_USER", "neo4j")
+            self.falkordb_password = raw_falkordb_password or os.getenv("NEO4J_PASSWORD", "")
 
         # Supabase client
         self.supabase_client = None

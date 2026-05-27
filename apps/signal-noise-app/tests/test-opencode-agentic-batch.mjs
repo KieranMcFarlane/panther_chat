@@ -41,7 +41,7 @@ const CANONICAL_PARITY_SMOKE_SOURCE = join(
   'canonical_two_question_parity_smoke.json',
 );
 
-test('buildOpenCodeConfig wires Z.AI coding plan GLM-5.1 and BrightData MCP for OpenCode', async () => {
+test('buildOpenCodeConfig wires Z.AI coding plan quota-conserving models and BrightData MCP for OpenCode', async () => {
   const previousZaiApiKey = process.env.ZAI_API_KEY;
   const previousBrightDataToken = process.env.BRIGHTDATA_API_TOKEN;
   const previousDefaultModel = process.env.QF_MODEL_DEFAULT;
@@ -53,12 +53,13 @@ test('buildOpenCodeConfig wires Z.AI coding plan GLM-5.1 and BrightData MCP for 
   });
 
   assert.equal(config.$schema, 'https://opencode.ai/config.json');
-  assert.equal(config.model, 'zai-coding-plan/glm-5.1');
-  assert.equal(config.provider['zai-coding-plan'].npm, '@ai-sdk/anthropic');
+  assert.equal(config.model, 'zai-coding-plan/glm-4.7');
+  assert.equal(config.provider['zai-coding-plan'].npm, '@ai-sdk/openai-compatible');
   assert.equal(config.provider['zai-coding-plan'].name, 'Z.AI Coding Plan');
-  assert.equal(config.provider['zai-coding-plan'].options.baseURL, 'https://api.z.ai/api/anthropic/v1');
+  assert.equal(config.provider['zai-coding-plan'].options.baseURL, 'https://api.z.ai/api/coding/paas/v4');
   assert.equal(config.provider['zai-coding-plan'].options.apiKey, '{env:ZAI_API_KEY}');
   assert.equal(config.provider['zai-coding-plan'].models['glm-4.7-flash'].id, 'GLM-4.7-Flash');
+  assert.equal(config.provider['zai-coding-plan'].models['glm-4.5-flash'].id, 'GLM-4.5-Flash');
   assert.equal(config.provider['zai-coding-plan'].models['glm-4.5-air'].id, 'GLM-4.5-Air');
   assert.equal(config.provider['zai-coding-plan'].models['glm-5.1'].id, 'GLM-5.1');
   assert.equal(config.provider['zai-coding-plan'].models['glm-5.1'].name, 'GLM-5.1');
@@ -69,7 +70,7 @@ test('buildOpenCodeConfig wires Z.AI coding plan GLM-5.1 and BrightData MCP for 
   assert.equal(config.mcp.brightData.url, 'http://127.0.0.1:8014/mcp/');
   assert.equal(config.mcp.brightData.timeout, 15000);
   assert.equal(config.agent.discovery.steps, 4);
-  assert.equal(config.agent.discovery.model, 'zai-coding-plan/glm-5.1');
+  assert.equal(config.agent.discovery.model, 'zai-coding-plan/glm-4.7');
   assert.deepEqual(config.tools, { 'brightData*': false, 'brightdata*': false });
   assert.deepEqual(config.agent.build.tools, { 'brightData*': true, 'brightdata*': true });
   assert.deepEqual(config.agent.discovery.tools, { 'brightData*': true, 'brightdata*': true });
@@ -90,24 +91,24 @@ test('buildOpenCodeConfig wires Z.AI coding plan GLM-5.1 and BrightData MCP for 
   }
 });
 
-test('resolveQuestionModelRouting defaults all dossier question families to GLM-5.1', () => {
+test('resolveQuestionModelRouting uses temporary quota-conserving defaults by question family', () => {
   const env = {};
 
   assert.deepEqual(
     resolveQuestionModelRouting({ question_id: 'q3_leadership' }, env),
     {
-      model_id: 'glm-5.1',
-      model: 'zai-coding-plan/glm-5.1',
+      model_id: 'glm-4.7',
+      model: 'zai-coding-plan/glm-4.7',
       model_tier: 'prefetch',
-      quota_policy: 'glm_5_1_default',
+      quota_policy: 'temporary_3_day_conserve',
       escalation_allowed: false,
       escalation_model: 'zai-coding-plan/glm-5.1',
       escalation_reason: '',
     },
   );
-  assert.equal(resolveQuestionModelRouting({ question_id: 'q14_yp_fit' }, env).model, 'zai-coding-plan/glm-5.1');
+  assert.equal(resolveQuestionModelRouting({ question_id: 'q14_yp_fit' }, env).model, 'zai-coding-plan/glm-4.7');
   assert.equal(resolveQuestionModelRouting({ question_id: 'q14_yp_fit' }, env).model_tier, 'synthesis');
-  assert.equal(resolveQuestionModelRouting({ question_id: 'q1_foundation' }, env).model, 'zai-coding-plan/glm-5.1');
+  assert.equal(resolveQuestionModelRouting({ question_id: 'q1_foundation' }, env).model, 'zai-coding-plan/glm-4.7');
   assert.equal(resolveQuestionModelRouting({ question_id: 'q1_foundation' }, env).model_tier, 'default');
 });
 
@@ -168,8 +169,8 @@ test('prepareOpenCodeRunWorkspace materializes repo-local OpenCode MCP config', 
     const config = JSON.parse(readFileSync(configPath, 'utf8'));
 
     assert.notEqual(prepared.cwd, workspaceRoot);
-  assert.equal(config.model, 'zai-coding-plan/glm-5.1');
-    assert.equal(config.provider['zai-coding-plan'].options.baseURL, 'https://api.z.ai/api/anthropic/v1');
+    assert.equal(config.model, 'zai-coding-plan/glm-4.7');
+    assert.equal(config.provider['zai-coding-plan'].options.baseURL, 'https://api.z.ai/api/coding/paas/v4');
     assert.equal(config.provider['zai-coding-plan'].options.apiKey, '{env:ZAI_API_KEY}');
     assert.ok(config.mcp.brightData);
     assert.equal(config.mcp.brightData.type, 'remote');
@@ -852,6 +853,62 @@ test('runOpenCodeCliQuestion short-circuits q7 when retrieval times out with no 
   assert.equal(result.promptTrace.synthesis_skipped, true);
 });
 
+test('runOpenCodeCliQuestion marks deterministic OpenCode timeout as failed infrastructure, not no_signal', async () => {
+  const question = {
+    question_id: 'q4_performance',
+    question_text: 'What is the current sporting performance context for England Basketball?',
+    question_type: 'performance',
+    query: '"England Basketball" standings',
+    execution_class: 'deterministic_enrichment',
+  };
+
+  const result = await runOpenCodeCliQuestion(question, {
+    worktreeRoot: mkdtempSync(join(tmpdir(), 'opencode-q4-timeout-')),
+    opencodeTimeoutMs: 300000,
+    standaloneHarness: false,
+    spawnRunner: async () => {
+      const error = new Error('opencode run timed out after 300000ms');
+      error.name = 'OpenCodeTimeoutError';
+      error.code = 124;
+      error.stdout = '';
+      error.stderr = 'OpenCodeTimeoutError: opencode run timed out after 300000ms';
+      throw error;
+    },
+  });
+
+  assert.equal(result.structuredOutput.validation_state, 'failed');
+  assert.equal(result.structuredOutput.structured_signal.failure_class, 'opencode_timeout');
+  assert.equal(result.promptTrace.failure_class, 'opencode_timeout');
+  assert.match(result.structuredOutput.context, /OpenCode run failed/i);
+});
+
+test('runOpenCodeCliQuestion marks q2 BrightData prefetch failure as failed infrastructure, not empty evidence', async () => {
+  const question = {
+    question_id: 'q2_digital_stack',
+    question_text: 'What visible technologies, platforms, or vendors does England Basketball use?',
+    question_type: 'digital_stack',
+    query: '"England Basketball" official website',
+    structured_output_schema: 'digital_stack_v1',
+  };
+
+  const result = await runOpenCodeCliQuestion(question, {
+    worktreeRoot: mkdtempSync(join(tmpdir(), 'opencode-q2-prefetch-failed-')),
+    opencodeTimeoutMs: 300000,
+    evidencePrefetcher: async () => {
+      throw new Error('BrightData prefetch failed with exit code 1');
+    },
+    spawnRunner: async () => {
+      throw new Error('provider should not be called when prefetch fails before evidence');
+    },
+  });
+
+  assert.equal(result.structuredOutput.validation_state, 'failed');
+  assert.equal(result.structuredOutput.structured_signal.status, 'source_prefetch_failed');
+  assert.equal(result.structuredOutput.structured_signal.failure_class, 'brightdata_prefetch_failed');
+  assert.equal(result.promptTrace.failure_class, 'brightdata_prefetch_failed');
+  assert.match(result.structuredOutput.context, /Evidence prefetch failed/i);
+});
+
 test('runOpenCodeCliQuestion routes q2 q3 q6 q9 through evidence-first synthesis', async () => {
   const question = {
     question_id: 'q6_launch_signal',
@@ -928,11 +985,11 @@ test('runOpenCodeCliQuestion routes q2 q3 q6 q9 through evidence-first synthesis
   assert.equal(result.structuredOutput.validation_state, 'validated');
   assert.equal(result.promptTrace.stage_count, 2);
   assert.equal(result.promptTrace.prefetch_used, true);
-  assert.equal(result.promptTrace.model_requested, 'zai-coding-plan/glm-5.1');
-  assert.equal(result.promptTrace.model_used, 'zai-coding-plan/glm-5.1');
+  assert.equal(result.promptTrace.model_requested, 'zai-coding-plan/glm-4.7');
+  assert.equal(result.promptTrace.model_used, 'zai-coding-plan/glm-4.7');
   assert.equal(result.promptTrace.model_tier, 'prefetch');
-  assert.equal(result.promptTrace.quota_policy, 'glm_5_1_default');
-  assert.equal(result.promptTrace.escalation_allowed, false);
+  assert.equal(result.promptTrace.quota_policy, 'temporary_3_day_conserve');
+  assert.equal(result.promptTrace.escalation_allowed, true);
   assert.equal(result.promptTrace.retrieval_lead_count, 1);
   assert.equal(result.promptTrace.accepted_source_count, 1);
   assert.deepEqual(result.promptTrace.source_types, ['official_site']);
@@ -1629,17 +1686,17 @@ test('buildOpenCodeRunArgs selects the build agent so BrightData tools are enabl
   const args = buildOpenCodeRunArgs({ question_id: 'q6_launch_signal' }, prompt);
 
   assert.deepEqual(args.slice(0, 4), ['run', '--format', 'json', '--model']);
-  assert.equal(args[4], 'zai-coding-plan/glm-5.1');
+  assert.equal(args[4], 'zai-coding-plan/glm-4.7');
   assert.equal(args.includes('--agent'), true);
   assert.equal(args[args.indexOf('--agent') + 1], 'build');
   assert.equal(args.includes('--model'), true);
   assert.equal(args.at(-1), prompt);
 });
 
-test('buildOpenCodeRunArgs routes synthesis questions to GLM-5.1 by default', () => {
+test('buildOpenCodeRunArgs routes synthesis questions to GLM-4.7 economy model', () => {
   const args = buildOpenCodeRunArgs({ question_id: 'q14_yp_fit' }, 'Return JSON');
 
-  assert.equal(args[args.indexOf('--model') + 1], 'zai-coding-plan/glm-5.1');
+  assert.equal(args[args.indexOf('--model') + 1], 'zai-coding-plan/glm-4.7');
 });
 
 test('buildOpenCodeRunArgs enables printed INFO logs for standalone harness runs', () => {
@@ -2116,6 +2173,185 @@ test('runOpenCodeQuestionSourceBatch does not persist object-valued q11 answers 
   assert.notEqual(answer.answer.summary, '[object Object]');
   assert.match(answer.answer.summary, /insufficient_signal|provider returned/i);
   assert.doesNotMatch(JSON.stringify(answer), /\\[object Object\\]/);
+});
+
+test('runOpenCodeQuestionSourceBatch serializes object-valued evidence_url to a URL string', async () => {
+  const outputDir = mkdtempSync(join(tmpdir(), 'opencode-object-evidence-url-'));
+  const sourcePath = join(outputDir, 'source.json');
+
+  writeFileSync(
+    sourcePath,
+    JSON.stringify(
+      {
+        entity_id: 'bucks',
+        entity_name: 'Milwaukee Bucks',
+        entity_type: 'CLUB',
+        questions: [
+          {
+            question_id: 'q11_decision_owner',
+            question_type: 'decision_owner',
+            question_text: 'Who is the highest probability named buyer?',
+            query: '"Milwaukee Bucks" president strategy',
+            hop_budget: 1,
+            source_priority: ['official_site', 'news'],
+          },
+        ],
+      },
+      null,
+      2,
+    ),
+  );
+
+  const result = await runOpenCodeQuestionSourceBatch({
+    questionSourcePath: sourcePath,
+    outputDir,
+    questionRunner: async () => ({
+      structuredOutput: {
+        answer: 'insufficient_signal',
+        context: 'No plausible buyer owner could be verified.',
+        evidence_url: { url: 'https://www.nba.com/bucks/news/josh-glessing-named-president' },
+        sources: [{ url: 'https://www.nba.com/bucks/news/josh-glessing-named-president' }],
+        confidence: 0,
+        validation_state: 'no_signal',
+      },
+      promptTrace: { exit_code: 0, has_structured_output: true },
+      messageTrace: [],
+      cliResult: { code: 0, stdout: '{}', stderr: '' },
+    }),
+  });
+
+  const artifact = JSON.parse(readFileSync(result.question_first_run_path, 'utf8'));
+  const answer = artifact.answer_records[0];
+
+  assert.equal(answer.evidence_url, 'https://www.nba.com/bucks/news/josh-glessing-named-president');
+  assert.doesNotMatch(JSON.stringify(answer), /\\[object Object\\]/);
+});
+
+test('runOpenCodeQuestionSourceBatch upgrades q2 checked_no_signal when accepted vendor evidence exists', async () => {
+  const outputDir = mkdtempSync(join(tmpdir(), 'opencode-q2-vendor-upgrade-'));
+  const sourcePath = join(outputDir, 'source.json');
+
+  writeFileSync(
+    sourcePath,
+    JSON.stringify(
+      {
+        entity_id: 'bucks',
+        entity_name: 'Milwaukee Bucks',
+        entity_type: 'CLUB',
+        questions: [
+          {
+            question_id: 'q2_digital_stack',
+            question_type: 'digital_stack',
+            question_text: 'What visible technologies, platforms, or vendors does Milwaukee Bucks use?',
+            query: '"Milwaukee Bucks" digital stack',
+            hop_budget: 1,
+            source_priority: ['official_site', 'vendor_page'],
+          },
+        ],
+      },
+      null,
+      2,
+    ),
+  );
+
+  const result = await runOpenCodeQuestionSourceBatch({
+    questionSourcePath: sourcePath,
+    outputDir,
+    questionRunner: async () => ({
+      structuredOutput: {
+        answer: 'digital_footprint_unknown',
+        context: 'Adobe Experience Cloud and Tradable Bits are visible, but implementation details are thin.',
+        sources: [
+          'https://business.adobe.com/customer-success-stories/milwaukee-bucks-case-study.html',
+          'https://blog.tradablebits.com/how-the-milwaukee-bucks-engaged-8.5k-fans-for-over-34k-minutes-in-their-app',
+        ],
+        confidence: 0,
+        validation_state: 'checked_no_signal',
+        checked_sources: [
+          {
+            url: 'https://business.adobe.com/customer-success-stories/milwaukee-bucks-case-study.html',
+            accepted: true,
+            reason: 'digital_footprint_hint - mentions Adobe Experience Cloud',
+          },
+          {
+            url: 'https://blog.tradablebits.com/how-the-milwaukee-bucks-engaged-8.5k-fans-for-over-34k-minutes-in-their-app',
+            accepted: true,
+            reason: 'digital_footprint_hint - references Tradable Bits platform',
+          },
+        ],
+      },
+      promptTrace: { exit_code: 0, has_structured_output: true },
+      messageTrace: [],
+      cliResult: { code: 0, stdout: '{}', stderr: '' },
+    }),
+  });
+
+  const artifact = JSON.parse(readFileSync(result.question_first_run_path, 'utf8'));
+  const answer = artifact.answer_records[0];
+
+  assert.equal(answer.validation_state, 'provisional');
+  assert.equal(answer.confidence, 0.65);
+  assert.match(answer.answer.raw_structured_output.summary, /Adobe/);
+  assert.match(answer.answer.raw_structured_output.summary, /Tradable Bits/);
+  assert.equal(answer.structured_signal.digital_footprint_unknown, false);
+  assert.equal(answer.structured_signal.vendor_hints.length, 2);
+});
+
+test('runOpenCodeQuestionSourceBatch grounds q1 from canonical entity metadata when provider returns no signal', async () => {
+  const outputDir = mkdtempSync(join(tmpdir(), 'opencode-q1-canonical-grounding-'));
+  const sourcePath = join(outputDir, 'source.json');
+
+  writeFileSync(
+    sourcePath,
+    JSON.stringify(
+      {
+        entity_id: 'houston-rockets',
+        entity_name: 'Houston Rockets',
+        entity_type: 'Club',
+        questions: [
+          {
+            question_id: 'q1_foundation',
+            question_type: 'foundation',
+            question_family: 'foundation',
+            question_text: 'What is the canonical identity and grounding profile for Houston Rockets?',
+            query: '"Houston Rockets" official website founded year',
+            hop_budget: 1,
+            source_priority: ['google_serp', 'official_site', 'wikipedia'],
+          },
+        ],
+      },
+      null,
+      2,
+    ),
+  );
+
+  const result = await runOpenCodeQuestionSourceBatch({
+    questionSourcePath: sourcePath,
+    outputDir,
+    questionRunner: async () => ({
+      structuredOutput: {
+        answer: '',
+        context: 'No supporting evidence was finalized by the model.',
+        sources: [],
+        confidence: 0,
+        validation_state: 'no_signal',
+      },
+      promptTrace: { exit_code: 0, has_structured_output: true },
+      messageTrace: [],
+      cliResult: { code: 0, stdout: '{}', stderr: '' },
+    }),
+  });
+
+  const artifact = JSON.parse(readFileSync(result.question_first_run_path, 'utf8'));
+  const answer = artifact.answer_records[0];
+
+  assert.equal(answer.validation_state, 'provisional');
+  assert.equal(answer.confidence, 0.6);
+  assert.equal(answer.structured_signal.status, 'canonical_entity_grounded');
+  assert.equal(answer.structured_signal.canonical_name, 'Houston Rockets');
+  assert.equal(answer.structured_signal.official_site, null);
+  assert.equal(answer.answer.raw_structured_output.checked_sources[0].source, 'canonical_entities');
+  assert.match(answer.answer.raw_structured_output.summary, /did not return official-site evidence/i);
 });
 
 test('runOpenCodeQuestionSourceBatch rejects source-less q6 positive claims and adds readable display answer', async () => {

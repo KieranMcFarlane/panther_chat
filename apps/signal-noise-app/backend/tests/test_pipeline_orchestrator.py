@@ -50,6 +50,30 @@ class FakeDossierGenerator:
         }
 
 
+def test_provider_infrastructure_failure_detects_question_first_runtime_failures():
+    payload = {
+        "question_first_checkpoint": {
+            "answer_records": [
+                {
+                    "question_id": "q4_performance",
+                    "prompt_trace": {
+                        "failure_name": "OpenCodeTimeoutError",
+                        "failure_class": "opencode_timeout",
+                    },
+                },
+                {
+                    "question_id": "q2_digital_stack",
+                    "structured_signal": {
+                        "failure_class": "brightdata_prefetch_failed",
+                    },
+                },
+            ],
+        },
+    }
+
+    assert PipelineOrchestrator._has_provider_infrastructure_failure(payload) is True
+
+
 class FakeDiscoveryResult:
     def __init__(self):
         self.final_confidence = 0.78
@@ -269,6 +293,126 @@ class DisabledLegacyClaudeClient:
     @staticmethod
     def _get_disabled_reason():
         return "legacy_llm_disabled_for_opencode"
+
+
+def test_question_first_scoring_signals_extracts_commercial_answers_from_checkpoint():
+    orchestrator = PipelineOrchestrator.__new__(PipelineOrchestrator)
+
+    dossier = {
+        "metadata": {
+            "question_first_checkpoint": {
+                "answer_records": [
+                    {
+                        "question_id": "q9_news_signal",
+                        "validation_state": "provisional",
+                        "evidence_grade": "moderate",
+                        "answer": "The league announced a 2026 streaming platform rights partnership with a new digital distributor.",
+                        "sources": [{"url": "https://example.com/news"}],
+                    },
+                    {
+                        "question_id": "q10_hiring_signal",
+                        "validation_state": "provisional",
+                        "evidence_grade": "weak",
+                        "answer": "Possibly hiring for unrelated operations.",
+                        "sources": [{"url": "https://example.com/jobs"}],
+                    },
+                    {
+                        "question_id": "q8_explicit_rfp",
+                        "validation_state": "no_signal",
+                        "answer": "No RFP found.",
+                    },
+                ]
+            }
+        }
+    }
+
+    signals = orchestrator._build_question_first_scoring_signals(entity_id="entity-1", dossier=dossier)
+
+    signal_ids = {signal["id"] for signal in signals}
+    assert "entity-1:question-first:q9_news_signal" in signal_ids
+    assert "entity-1:question-first:q10_hiring_signal" not in signal_ids
+    assert "entity-1:question-first:q8_explicit_rfp" not in signal_ids
+
+    q9 = next(signal for signal in signals if signal["id"].endswith("q9_news_signal"))
+    assert q9["type"] == "COMMERCIAL_NEWS_SIGNAL"
+    assert q9["url"] == "https://example.com/news"
+    assert q9["validation_state"] == "provisional"
+
+
+def test_question_first_scoring_drops_downstream_and_invalid_object_evidence():
+    orchestrator = PipelineOrchestrator.__new__(PipelineOrchestrator)
+
+    dossier = {
+        "question_first_checkpoint": {
+            "answer_records": [
+                {
+                    "question_id": "q13_capability_gap",
+                    "validation_state": "provisional",
+                    "evidence_grade": "moderate",
+                    "answer": "Digital product/platform delivery gap around fan engagement and CRM activation.",
+                    "display_answer": {"evidence": [{"label": "nested object without URL"}]},
+                },
+                {
+                    "question_id": "q9_news_signal",
+                    "validation_state": "provisional",
+                    "evidence_grade": "moderate",
+                    "answer": "A current fan engagement platform partnership was announced.",
+                    "display_answer": {"evidence": [{"url": "[object Object]", "label": "bad"}]},
+                },
+            ]
+        }
+    }
+
+    signals = orchestrator._build_question_first_scoring_signals(entity_id="entity-1", dossier=dossier)
+
+    assert signals == []
+
+
+def test_question_first_no_signal_with_content_does_not_promote():
+    orchestrator = PipelineOrchestrator.__new__(PipelineOrchestrator)
+
+    dossier = {
+        "question_first_checkpoint": {
+            "answer_records": [
+                {
+                    "question_id": "q9_news_signal",
+                    "validation_state": "no_signal",
+                    "answer": "The club announced a new CRM and fan data platform.",
+                    "sources": [{"url": "https://example.com/crm"}],
+                },
+            ]
+        }
+    }
+
+    signals = orchestrator._build_question_first_scoring_signals(entity_id="entity-1", dossier=dossier)
+
+    assert signals == []
+
+
+def test_question_first_explicit_rfp_becomes_validated_rfp_signal():
+    orchestrator = PipelineOrchestrator.__new__(PipelineOrchestrator)
+
+    dossier = {
+        "question_first_checkpoint": {
+            "answer_records": [
+                {
+                    "question_id": "q8_explicit_rfp",
+                    "validation_state": "validated",
+                    "evidence_grade": "strong",
+                    "answer": "A formal RFP for website redesign and ticketing platform implementation is open.",
+                    "evidence_url": "https://example.com/rfp",
+                    "confidence": 0.91,
+                }
+            ]
+        }
+    }
+
+    signals = orchestrator._build_question_first_scoring_signals(entity_id="entity-1", dossier=dossier)
+
+    assert len(signals) == 1
+    assert signals[0]["type"] == "EXPLICIT_RFP_SIGNAL"
+    assert signals[0]["validation_state"] == "validated"
+    assert orchestrator._is_rfp_signal(signals[0]) is True
 
 
 class FakePersistenceCoordinator:
@@ -1861,8 +2005,12 @@ def test_merge_pipeline_run_metadata_persists_self_healing_fields():
         repair_retry_budget=3,
         next_repair_question_id="q11_decision_owner",
         reconciliation_state="pending",
+        persistence_status={"dual_write_ok": False},
     )
 
+    assert metadata["publication_mode"] == "repair_degraded"
+    assert metadata["persistence_status"]["dual_write_ok"] is False
+    assert metadata["persistence"]["dual_write_ok"] is False
     assert metadata["repair_state"] == "queued"
     assert metadata["repair_retry_count"] == 1
     assert metadata["repair_retry_budget"] == 3

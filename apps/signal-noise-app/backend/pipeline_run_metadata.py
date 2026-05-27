@@ -323,6 +323,7 @@ def merge_pipeline_run_metadata(
         metadata["degraded_mode"] = bool(degraded_mode)
     if persistence_status is not None:
         metadata["persistence"] = persistence_status
+        metadata["persistence_status"] = persistence_status
     if publication_status is not None:
         metadata["publication_status"] = publication_status
     if publication_mode is not None:

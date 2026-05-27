@@ -504,9 +504,20 @@ export function HomeQueueDashboard() {
   const didLoadRfpCardsRef = useRef(false)
 
   async function loadDashboardEnrichment() {
-    const response = await fetch('/api/home/queue-dashboard', { cache: 'no-store' })
-    const payload = await response.json()
-    setData((current) => mergeDashboardPayload(current, payload))
+    try {
+      const response = await fetch('/api/home/queue-dashboard', { cache: 'no-store' })
+      const body = await response.text()
+      if (!response.ok) {
+        throw new Error(`Queue dashboard request failed with ${response.status}`)
+      }
+      if (!body.trim()) {
+        throw new Error('Queue dashboard returned an empty response')
+      }
+      const payload = JSON.parse(body)
+      setData((current) => mergeDashboardPayload(current, payload))
+    } catch (error) {
+      console.error('[HomeQueueDashboard] failed to load enrichment', error)
+    }
   }
 
   async function queueEntity(entityId: string) {

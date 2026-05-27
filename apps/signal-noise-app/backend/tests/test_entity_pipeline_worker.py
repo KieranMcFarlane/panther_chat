@@ -72,6 +72,80 @@ def test_should_process_in_process_defaults_to_durable_worker_mode():
     assert should_process_in_process("in_process") is True
 
 
+def test_entity_quality_gate_rejects_generic_geography():
+    worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
+    worker._safe_execute = lambda fn, context=None: fn() or True
+
+    class FakeQuery:
+        def select(self, *_args, **_kwargs):
+            return self
+
+        def eq(self, *_args, **_kwargs):
+            return self
+
+        def limit(self, *_args, **_kwargs):
+            return self
+
+        def execute(self):
+            return SimpleNamespace(
+                data=[
+                    {
+                        "id": "north-america-id",
+                        "name": "North America",
+                        "entity_type": "region",
+                        "sport": "",
+                        "country": "",
+                        "league": "",
+                        "entity_category": "geography",
+                        "properties": {},
+                    }
+                ]
+            )
+
+    worker.supabase = SimpleNamespace(table=lambda _name: FakeQuery())
+
+    reason = worker._entity_quality_rejection_reason(
+        {
+            "entity_id": "north-america-id",
+            "canonical_entity_id": "north-america-id",
+            "entity_name": "North America",
+            "metadata": {},
+        }
+    )
+
+    assert reason == "generic_geography_entity"
+
+
+def test_entity_quality_gate_rejects_ambiguous_person_without_target_flag():
+    worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
+    worker._safe_execute = lambda fn, context=None: True
+
+    reason = worker._entity_quality_rejection_reason(
+        {
+            "entity_id": "tom-flint",
+            "entity_name": "Tom Flint",
+            "metadata": {"entity_type": "person"},
+        }
+    )
+
+    assert reason == "ambiguous_person_entity"
+
+
+def test_entity_quality_gate_allows_approved_person_target():
+    worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
+    worker._safe_execute = lambda fn, context=None: True
+
+    reason = worker._entity_quality_rejection_reason(
+        {
+            "entity_id": "buyer-1",
+            "entity_name": "Jane Buyer",
+            "metadata": {"entity_type": "person", "known_sports_decision_owner": True},
+        }
+    )
+
+    assert reason is None
+
+
 def test_merge_question_repair_result_into_persisted_dossier_preserves_full_questions():
     existing = {
         "entity_id": "exeter-city",
@@ -896,6 +970,75 @@ def test_normalize_pipeline_control_state_for_worker_start_preserves_provider_pa
     assert writes[-1]["updated_at"] == "2026-05-01T20:45:00+01:00"
 
 
+def test_normalize_pipeline_control_state_preserves_provider_cooldown_fields(tmp_path, monkeypatch):
+    cooldown_until = "2026-05-21T07:36:58.278325+00:00"
+    control_path = tmp_path / "pipeline-control-state.json"
+    control_path.write_text(
+        json.dumps(
+            {
+                "is_paused": True,
+                "pause_reason": "provider rate limited",
+                "stop_reason": "provider_infrastructure_failure",
+                "requested_state": "paused",
+                "observed_state": "paused",
+                "transition_state": "paused",
+                "desired_state": "paused",
+                "provider_cooldown_until": cooldown_until,
+                "provider_cooldown_reason": "provider_rate_limited",
+                "provider_last_error": "{\"error\":{\"code\":\"1302\"}}",
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr("entity_pipeline_worker.PIPELINE_CONTROL_STATE_PATH", control_path)
+    monkeypatch.setattr("entity_pipeline_worker.should_use_local_pg", lambda: False)
+
+    state = read_pipeline_control_state()
+
+    assert state["provider_cooldown_until"] == cooldown_until
+    assert state["provider_cooldown_reason"] == "provider_rate_limited"
+    assert state["provider_last_error"] == "{\"error\":{\"code\":\"1302\"}}"
+
+
+def test_claim_next_batch_respects_active_provider_cooldown(monkeypatch):
+    worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
+    worker.worker_id = "worker-1"
+    provider_preflight_calls = []
+    backend_preflight_calls = []
+    writes = []
+    cooldown_until = (datetime.now(timezone.utc) + timedelta(minutes=10)).isoformat()
+
+    monkeypatch.setattr(
+        "entity_pipeline_worker.read_pipeline_control_state",
+        lambda: {
+            "is_paused": True,
+            "pause_reason": "provider rate limited",
+            "stop_reason": "provider_infrastructure_failure",
+            "requested_state": "paused",
+            "observed_state": "paused",
+            "transition_state": "paused",
+            "desired_state": "paused",
+            "provider_cooldown_until": cooldown_until,
+            "provider_cooldown_reason": "provider_rate_limited",
+            "provider_last_error": "rate limit",
+        },
+    )
+    monkeypatch.setattr("entity_pipeline_worker.write_pipeline_control_state", lambda payload: writes.append(payload) or payload)
+    worker._backend_preflight = lambda: backend_preflight_calls.append(True) or (True, "")
+    worker._provider_preflight = lambda: provider_preflight_calls.append(True) or (True, "")
+
+    claimed = worker.claim_next_batch()
+
+    assert claimed is None
+    assert backend_preflight_calls == []
+    assert provider_preflight_calls == []
+    assert writes[-1]["is_paused"] is True
+    assert writes[-1]["requested_state"] == "paused"
+    assert writes[-1]["state"] == "blocked_provider"
+    assert writes[-1]["provider_cooldown_until"] == cooldown_until
+    assert worker._next_idle_sleep_seconds >= 60
+
+
 def test_claim_next_batch_self_heals_provider_pause_when_backend_and_provider_are_healthy(monkeypatch):
     worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
     worker.recover_stale_batches = lambda: None
@@ -997,6 +1140,117 @@ def test_claim_next_batch_keeps_provider_pause_when_provider_preflight_fails(mon
     claimed = worker.claim_next_batch()
 
     assert claimed is None
+
+
+class _ProviderPreflightResponse:
+    status = 200
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *_args):
+        return False
+
+
+class _ProviderPreflightErrorBody:
+    def __init__(self, body: str):
+        self.body = body.encode("utf-8")
+
+    def read(self):
+        return self.body
+
+    def close(self):
+        return None
+
+
+def _request_model(request):
+    return json.loads(request.data.decode("utf-8"))["model"]
+
+
+def test_zai_provider_preflight_uses_coding_plan_url_and_economy_model_first(monkeypatch):
+    worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
+    calls = []
+
+    monkeypatch.setenv("QF_OPENCODE_PROVIDER", "zai")
+    monkeypatch.setenv("ZAI_API_KEY", "test-zai-key")
+    monkeypatch.setenv("ZAI_BASE_URL", "https://api.z.ai/api/coding/paas/v4")
+    monkeypatch.setenv("QF_ZAI_PREFLIGHT_MODELS", "glm-4.7,glm-4.7-flash,glm-4.5-flash,glm-5.1")
+
+    def fake_urlopen(request, timeout):
+        calls.append((request.full_url, _request_model(request), timeout))
+        return _ProviderPreflightResponse()
+
+    monkeypatch.setattr(worker_module, "urlopen", fake_urlopen)
+
+    ready, reason = worker._provider_preflight()
+
+    assert ready is True
+    assert reason == ""
+    assert calls == [
+        ("https://api.z.ai/api/coding/paas/v4/chat/completions", "GLM-4.7", 20),
+    ]
+    assert worker._last_provider_preflight_selected_model == "glm-4.7"
+    assert worker._last_provider_preflight_attempts[0]["cost_tier"] == "economy"
+
+
+def test_zai_provider_preflight_skips_premium_fallback_for_default_queue(monkeypatch):
+    worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
+    calls = []
+
+    monkeypatch.setenv("QF_OPENCODE_PROVIDER", "zai")
+    monkeypatch.setenv("ZAI_API_KEY", "test-zai-key")
+    monkeypatch.setenv("ZAI_BASE_URL", "https://api.z.ai/api/coding/paas/v4")
+    monkeypatch.setenv("QF_ZAI_PREFLIGHT_MODELS", "glm-4.7,glm-4.7-flash,glm-4.5-flash,glm-5.1")
+
+    def fake_urlopen(request, timeout):
+        calls.append(_request_model(request))
+        raise TimeoutError("The read operation timed out")
+
+    monkeypatch.setattr(worker_module, "urlopen", fake_urlopen)
+
+    ready, reason = worker._provider_preflight(allow_premium_fallback=False)
+
+    assert ready is False
+    assert reason == "provider_infrastructure_failure"
+    assert calls == ["GLM-4.7", "GLM-4.7-Flash", "GLM-4.5-Flash"]
+    assert worker._last_provider_preflight_error_class == "provider_timeout"
+    assert worker._last_provider_preflight_attempts[-1]["skipped_premium_models"] == ["glm-5.1"]
+
+
+def test_zai_provider_preflight_allows_glm51_for_quality_fallback(monkeypatch):
+    worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
+    calls = []
+
+    monkeypatch.setenv("QF_OPENCODE_PROVIDER", "zai")
+    monkeypatch.setenv("ZAI_API_KEY", "test-zai-key")
+    monkeypatch.setenv("ZAI_BASE_URL", "https://api.z.ai/api/coding/paas/v4")
+    monkeypatch.setenv("QF_ZAI_PREFLIGHT_MODELS", "glm-4.7,glm-4.7-flash,glm-4.5-flash,glm-5.1")
+
+    def fake_urlopen(request, timeout):
+        model = _request_model(request)
+        calls.append(model)
+        if model != "GLM-5.1":
+            raise TimeoutError("The read operation timed out")
+        return _ProviderPreflightResponse()
+
+    monkeypatch.setattr(worker_module, "urlopen", fake_urlopen)
+
+    ready, reason = worker._provider_preflight(allow_premium_fallback=True)
+
+    assert ready is True
+    assert reason == ""
+    assert calls == ["GLM-4.7", "GLM-4.7-Flash", "GLM-4.5-Flash", "GLM-5.1"]
+    assert worker._last_provider_preflight_selected_model == "glm-5.1"
+    assert worker._last_provider_preflight_attempts[-1]["cost_tier"] == "premium"
+
+
+def test_zai_paid_fallback_policy_only_matches_quality_paths(monkeypatch):
+    monkeypatch.setenv("QF_ZAI_PAID_FALLBACK_PHASES", "repair,reconcile,quality")
+
+    assert worker_module._metadata_allows_zai_paid_fallback({"rerun_mode": "question"}) is False
+    assert worker_module._metadata_allows_zai_paid_fallback({"run_kind": "question_repair"}) is True
+    assert worker_module._metadata_allows_zai_paid_fallback({"reconciliation_state": "reconcile_required"}) is True
+    assert worker_module._metadata_allows_zai_paid_fallback({"run_objective": "dossier_core"}) is False
 
 
 def test_main_clears_saved_safety_stop_before_entering_worker_loop(tmp_path, monkeypatch):
@@ -4058,6 +4312,55 @@ def test_process_batch_queues_question_first_continuation_before_manifest_advanc
     assert continuation_run["metadata"]["source"] == "question_first_timeout_continuation"
     assert continuation_run["metadata"]["question_first_checkpoint"]["questions_answered"] == 7
     assert continuation_run["metadata"]["question_first_resume_from_question_id"] == "q10_hiring_signal"
+
+
+def test_follow_on_repair_batches_are_explicit_question_repair_runs():
+    worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
+    worker._now_iso = lambda: "2026-03-04T12:10:00+00:00"
+    worker._build_follow_on_repair_batch_id = lambda: "repair-batch-1"
+    worker.find_active_repair_run = lambda *args, **kwargs: None
+    inserted_batches = []
+    inserted_runs = []
+
+    class FakeTable:
+        def __init__(self, table_name):
+            self.table_name = table_name
+            self.payload = None
+
+        def insert(self, payload):
+            self.payload = payload
+            return self
+
+        def execute(self):
+            if self.table_name == "entity_import_batches":
+                inserted_batches.append(self.payload)
+            if self.table_name == "entity_pipeline_runs":
+                inserted_runs.append(self.payload)
+            return SimpleNamespace(data=[])
+
+    worker.supabase = SimpleNamespace(table=lambda name: FakeTable(name))
+
+    result = worker._queue_follow_on_repair(
+        run={
+            "id": "batch-1_entity-1",
+            "batch_id": "batch-1",
+            "entity_id": "entity-1",
+            "canonical_entity_id": "canonical-1",
+            "entity_name": "Entity One",
+        },
+        latest_metadata={"queue_mode": "durable_worker", "canonical_entity_id": "canonical-1"},
+        result={},
+        question_id="q7_procurement_signal",
+        repair_retry_count=1,
+        repair_retry_budget=3,
+        reconcile_required=True,
+    )
+
+    assert result["status"] == "queued"
+    assert inserted_batches[-1]["metadata"]["run_kind"] == "question_repair"
+    assert inserted_batches[-1]["metadata"]["run_objective"] == "question_repair"
+    assert inserted_runs[-1][0]["metadata"]["run_kind"] == "question_repair"
+    assert inserted_runs[-1][0]["metadata"]["run_objective"] == "question_repair"
     assert any(
         update.get("metadata", {}).get("question_first_continuation_next_entity_id") == "icf"
         for update in batch_updates
@@ -4623,6 +4926,13 @@ def test_process_batch_marks_run_completed_when_supabase_publishes_but_falkordb_
         "question_id": "q11_decision_owner",
     }
     worker._get_batch_record = lambda batch_id: {"id": batch_id, "status": "running", "metadata": {}}
+    worker._load_persisted_dossier_publication_state = lambda **kwargs: {
+        "answer_count": 6,
+        "quality_state": "partial",
+        "publish_status": "published_partial",
+        "row_id": "dossier-1",
+    }
+    worker._persist_question_repair_result_to_entity_dossier = lambda **kwargs: True
 
     run = {
         "entity_id": "fc-porto-2027",
@@ -4722,6 +5032,9 @@ def test_process_batch_marks_run_completed_when_supabase_publishes_but_falkordb_
     assert updates[-1]["error_message"] is None
     assert updates[-1]["metadata"]["publication_status"] == "published_degraded"
     assert updates[-1]["metadata"]["publication_mode"] == "repair_degraded"
+    assert updates[-1]["metadata"]["repair_outcome"] == "merged"
+    assert updates[-1]["metadata"]["canonical_dossier_updated"] is True
+    assert updates[-1]["metadata"]["canonical_dossier_quality_state"] == "partial"
     assert updates[-1]["metadata"]["reconcile_required"] is True
     assert updates[-1]["metadata"]["reconciliation_state"] == "pending"
     assert updates[-1]["metadata"]["reconciliation_payload"]["idempotency_key"] == "reconcile-me"
@@ -4849,6 +5162,13 @@ def test_process_batch_auto_queues_next_repair_for_blocked_published_run():
         "repair_retry_count": 0,
         "repair_retry_budget": 3,
     }
+    worker._load_persisted_dossier_publication_state = lambda **kwargs: {
+        "answer_count": 6,
+        "quality_state": "partial",
+        "publish_status": "published_partial",
+        "row_id": "dossier-1",
+    }
+    worker._persist_question_repair_result_to_entity_dossier = lambda **kwargs: True
     worker._get_batch_record = lambda batch_id: {"id": batch_id, "status": "running", "metadata": {}}
     worker._safe_execute = lambda operation, context=None: operation() or True
 
@@ -5336,6 +5656,8 @@ def test_process_batch_auto_queues_fc_porto_people_chain_when_persisted_question
 
     assert updates[-1]["metadata"]["next_repair_question_id"] == "q11_decision_owner"
     assert updates[-1]["metadata"]["next_repair_status"] == "queued"
+    assert updates[-1]["metadata"]["repair_outcome"] == "follow_on_queued"
+    assert updates[-1]["metadata"]["canonical_dossier_updated"] is True
     assert inserted_batches
     assert inserted_runs[-1]["metadata"]["question_id"] == "q11_decision_owner"
 
@@ -5802,6 +6124,46 @@ def test_derive_follow_on_repair_metadata_clears_self_referential_next_batch():
     assert metadata["next_repair_status"] is None
     assert metadata["next_repair_batch_id"] is None
     assert metadata["next_repair_batch_status"] is None
+
+
+def test_derive_follow_on_repair_metadata_defers_partial_without_reconcile(monkeypatch):
+    worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
+    monkeypatch.setattr(worker_module, "AUTO_REPAIR_PARTIAL_DOSSIERS", False)
+    worker._queue_follow_on_repair = lambda **kwargs: pytest.fail("partial dossiers should not auto-queue repairs by default")
+
+    metadata = worker._derive_follow_on_repair_metadata(
+        run={
+            "id": "batch-partial_entity-1",
+            "batch_id": "batch-partial",
+            "entity_id": "entity-1",
+            "entity_name": "Entity 1",
+            "canonical_entity_id": "entity-1",
+        },
+        latest_metadata={
+            "repair_retry_count": 0,
+            "repair_retry_budget": 3,
+            "canonical_entity_id": "entity-1",
+        },
+        result={
+            "artifacts": {
+                "dossier": {
+                    "quality_state": "partial",
+                    "questions": [
+                        {"question_id": "q7_procurement_signal", "terminal_state": "answered"},
+                        {"question_id": "q11_decision_owner", "terminal_state": "no_signal"},
+                    ],
+                },
+            },
+        },
+        publication_succeeded=True,
+        reconcile_required=False,
+    )
+
+    assert metadata["repair_state"] == "deferred"
+    assert metadata["next_repair_question_id"] == "q11_decision_owner"
+    assert metadata["next_repair_status"] == "deferred"
+    assert metadata["next_repair_batch_id"] is None
+    assert metadata["repair_queue_source"] == "deferred_partial"
 
 
 def test_derive_follow_on_repair_metadata_exhausts_repeated_same_question():

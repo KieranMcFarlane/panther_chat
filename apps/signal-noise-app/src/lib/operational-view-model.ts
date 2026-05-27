@@ -96,6 +96,9 @@ export type OperationalDrawerEntity = {
   run_phase?: string | null;
   queue_position?: number | null;
   publication_status?: string | null;
+  graph_persistence_ok?: boolean | null;
+  graph_persistence_backend?: string | null;
+  graph_persistence_error_class?: string | null;
   continue_pipeline_on_failure?: boolean;
   next_repair_question_id?: string | null;
   next_repair_status?: string | null;
@@ -159,6 +162,17 @@ export function formatPublicationState(value: string | null | undefined) {
   if (value === "published_degraded") return "Published degraded";
   if (value === "published") return "Published healthy";
   return "Pending publication";
+}
+
+function formatCompletedBadge(entity: OperationalDrawerEntity) {
+  if (entity.continue_pipeline_on_failure) return "Failed, continuing";
+  if (
+    entity.publication_status === "published_degraded" &&
+    entity.graph_persistence_ok === false
+  ) {
+    return "Historical degraded";
+  }
+  return formatPublicationState(entity.publication_status);
 }
 
 export function formatMovementState(value: string | null | undefined) {
@@ -1095,16 +1109,25 @@ export function buildOperationalDrawerViewModel(input: {
     ...blockedItems,
   ];
 
-  const completedItems = asArray(dashboard.queue.processed_entities || dashboard.queue.completed_entities)
+  const completedItems = asArray(
+    dashboard.queue.completed_entities.length > 0
+      ? dashboard.queue.completed_entities
+      : dashboard.queue.processed_entities,
+  )
     .slice(0, 8)
     .map((item) =>
       buildEntityCardBase(item, {
         detail: toText(item.summary) || (item.continue_pipeline_on_failure ? "Entity failed, but the pipeline continued." : "Completed dossier."),
-        badge: item.continue_pipeline_on_failure ? "Failed, continuing" : formatPublicationState(item.publication_status),
+        badge: formatCompletedBadge(item),
         nextAction: item.continue_pipeline_on_failure ? "Inspect the failed entity" : "Open the completed dossier",
         facts: [
           `Current question: ${toText(item.active_question_id) || "completed"}`,
           `Run phase: ${toText(item.run_phase) || (item.continue_pipeline_on_failure ? "failed" : "completed")}`,
+          ...(item.graph_persistence_ok === false
+            ? [`Graph persistence: historical ${toText(item.graph_persistence_error_class) || "degraded write"}`]
+            : item.graph_persistence_ok === true
+              ? [`Graph persistence: ${toText(item.graph_persistence_backend) || "local FalkorDB"} OK`]
+              : []),
           ...(item.continue_pipeline_on_failure
             ? [`Failure mode: ${toText(item.stop_reason) || "non-blocking failure"}`]
             : []),

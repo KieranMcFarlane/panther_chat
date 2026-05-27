@@ -19,6 +19,11 @@ interface ToolCall {
   arguments: Record<string, any>;
 }
 
+const APP_INTERNAL_URL =
+  process.env.INTERNAL_APP_URL ||
+  process.env.NEXT_PUBLIC_APP_URL ||
+  'http://127.0.0.1:3005';
+
 // Tool definitions
 const TOOLS = {
   search_graph: {
@@ -57,7 +62,7 @@ async function executeTool(toolName: string, args: Record<string, any>): Promise
       num_results: String(args.num_results || 5)
     });
 
-    const response = await fetch(`http://localhost:3005/api/graphiti?${params}`);
+    const response = await fetch(`${APP_INTERNAL_URL}/api/graphiti?${params}`);
     const data = await response.json();
 
     console.log(`   ✅ Found ${data.count} results`);
@@ -65,7 +70,7 @@ async function executeTool(toolName: string, args: Record<string, any>): Promise
   }
 
   if (toolName === 'add_episode') {
-    const response = await fetch('http://localhost:3005/api/graphiti', {
+    const response = await fetch(`${APP_INTERNAL_URL}/api/graphiti`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

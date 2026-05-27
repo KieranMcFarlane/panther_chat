@@ -95,6 +95,92 @@ async def test_active_probability():
     print("\n✅ Active Procurement Probability calculated correctly")
 
 
+async def check_generic_recent_episode_does_not_create_monitor_score():
+    """Generic pipeline artifacts should not look like commercial signal."""
+    scorer = DashboardScorer()
+    now = datetime.now(timezone.utc)
+
+    scores = await scorer.calculate_entity_scores(
+        entity_id="generic-entity",
+        entity_name="Generic Entity",
+        episodes=[
+            {
+                "episode_id": "acceptance_gate",
+                "episode_type": "ACCEPTANCE_SCORING",
+                "description": "Pipeline acceptance artifact",
+                "timestamp": now.isoformat(),
+            }
+        ],
+    )
+
+    assert scores["procurement_maturity"] == 0.0
+    assert scores["active_probability"] == 0.05
+    assert scores["sales_readiness"] == SalesReadiness.NOT_READY.value
+
+
+def test_generic_recent_episode_does_not_create_monitor_score():
+    asyncio.run(check_generic_recent_episode_does_not_create_monitor_score())
+
+
+async def check_question_first_downstream_signal_does_not_create_monitor_score():
+    scorer = DashboardScorer()
+
+    scores = await scorer.calculate_entity_scores(
+        entity_id="tom-flint",
+        entity_name="Tom Flint",
+        signals=[
+            {
+                "type": "DIGITAL_CAPABILITY_GAP",
+                "signal_type": "DIGITAL_CAPABILITY_GAP",
+                "summary": "Stakeholder engagement is inferred from weak downstream evidence.",
+                "validation_state": "provisional",
+                "metadata": {
+                    "source": "question_first",
+                    "question_id": "q13_capability_gap",
+                    "evidence_urls": ["https://example.com/old-unrelated-story"],
+                },
+            }
+        ],
+    )
+
+    assert scores["procurement_maturity"] == 0.0
+    assert scores["active_probability"] == 0.05
+    assert scores["sales_readiness"] == SalesReadiness.NOT_READY.value
+
+
+def test_question_first_downstream_signal_does_not_create_monitor_score():
+    asyncio.run(check_question_first_downstream_signal_does_not_create_monitor_score())
+
+
+async def check_question_first_direct_source_backed_signal_can_monitor():
+    scorer = DashboardScorer()
+
+    scores = await scorer.calculate_entity_scores(
+        entity_id="club-1",
+        entity_name="Club 1",
+        signals=[
+            {
+                "type": "COMMERCIAL_NEWS_SIGNAL",
+                "signal_type": "COMMERCIAL_NEWS_SIGNAL",
+                "summary": "The club announced a digital fan platform partnership.",
+                "validation_state": "provisional",
+                "metadata": {
+                    "source": "question_first",
+                    "question_id": "q9_news_signal",
+                    "evidence_urls": ["https://example.com/current-digital-platform"],
+                },
+            }
+        ],
+    )
+
+    assert scores["active_probability"] >= 0.20
+    assert scores["sales_readiness"] == SalesReadiness.MONITOR.value
+
+
+def test_question_first_direct_source_backed_signal_can_monitor():
+    asyncio.run(check_question_first_direct_source_backed_signal_can_monitor())
+
+
 async def test_sales_readiness_levels():
     """Test Sales Readiness Level determination"""
     print("\n" + "=" * 70)
@@ -338,6 +424,7 @@ async def run_all_tests():
     try:
         await test_procurement_maturity()
         await test_active_probability()
+        await check_generic_recent_episode_does_not_create_monitor_score()
         await test_sales_readiness_levels()
         await test_confidence_intervals()
         await test_hypothesis_based_scoring()

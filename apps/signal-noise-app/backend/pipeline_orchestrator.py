@@ -157,6 +157,10 @@ class PipelineOrchestrator:
                 OPENCODE_PROVIDER_INSUFFICIENT_BALANCE_ERROR.lower() in text
                 or "providerinsufficientbalance" in text
                 or "insufficient balance" in text
+                or "opencodetimeouterror" in text
+                or "opencode_timeout" in text
+                or "brightdata_prefetch_failed" in text
+                or "provider_no_output" in text
             )
         if isinstance(value, (int, float, bool)):
             return False
@@ -171,6 +175,10 @@ class PipelineOrchestrator:
         return (
             OPENCODE_PROVIDER_INSUFFICIENT_BALANCE_ERROR.lower() in failure_name
             or "provider_infrastructure_failure" in error_type
+            or "opencode_timeout" in error_type
+            or "brightdata_prefetch_failed" in error_type
+            or "provider_no_output" in error_type
+            or "opencodetimeouterror" in failure_name
             or OPENCODE_PROVIDER_INSUFFICIENT_BALANCE_ERROR.lower() in message
             or any(cls._has_provider_infrastructure_failure(item) for item in value.values())
         )
@@ -919,6 +927,20 @@ class PipelineOrchestrator:
                 ralph_result = self._coerce_ralph_result(raw_ralph_result)
                 validated_signals = self._normalize_validated_signals(ralph_result.get("validated_signals", []))
                 capability_signals = self._normalize_validated_signals(ralph_result.get("capability_signals", []))
+                question_first_scoring_signals = self._build_question_first_scoring_signals(
+                    entity_id=entity_id,
+                    dossier=dossier,
+                )
+                if question_first_scoring_signals:
+                    validated_signals = self._merge_signal_lists(validated_signals, question_first_scoring_signals)
+                    capability_signals = self._merge_signal_lists(
+                        capability_signals,
+                        [
+                            signal
+                            for signal in question_first_scoring_signals
+                            if not self._is_rfp_signal(signal)
+                        ],
+                    )
                 validated_rfps = [signal for signal in validated_signals if self._is_rfp_signal(signal)]
                 phase_results["ralph_validation"] = {
                     "status": "completed",
@@ -1873,11 +1895,263 @@ class PipelineOrchestrator:
 
     @staticmethod
     def _extract_question_first_answers(dossier: Dict[str, Any]) -> List[Dict[str, Any]]:
+        answers: List[Dict[str, Any]] = []
         question_first = dossier.get("question_first") if isinstance(dossier.get("question_first"), dict) else {}
-        answers = question_first.get("answers") if isinstance(question_first.get("answers"), list) else dossier.get("answers")
-        if not isinstance(answers, list):
-            return []
-        return [answer for answer in answers if isinstance(answer, dict)]
+        direct_answers = question_first.get("answers") if isinstance(question_first.get("answers"), list) else dossier.get("answers")
+        if isinstance(direct_answers, list):
+            answers.extend([answer for answer in direct_answers if isinstance(answer, dict)])
+
+        checkpoint_candidates = [
+            dossier.get("question_first_checkpoint"),
+            (dossier.get("metadata") or {}).get("question_first_checkpoint") if isinstance(dossier.get("metadata"), dict) else None,
+        ]
+        for checkpoint in checkpoint_candidates:
+            if not isinstance(checkpoint, dict):
+                continue
+            answer_records = checkpoint.get("answer_records")
+            if isinstance(answer_records, list):
+                answers.extend([answer for answer in answer_records if isinstance(answer, dict)])
+
+        seen: set[str] = set()
+        deduped: List[Dict[str, Any]] = []
+        for answer in answers:
+            key = str(answer.get("question_id") or answer.get("question") or len(deduped))
+            text = str(answer.get("answer") or answer.get("summary") or answer.get("display_answer") or "")
+            dedupe_key = f"{key}:{text[:80]}"
+            if dedupe_key in seen:
+                continue
+            seen.add(dedupe_key)
+            deduped.append(answer)
+        return deduped
+
+    @staticmethod
+    def _question_first_answer_text(answer: Dict[str, Any]) -> str:
+        def text_value(value: Any) -> str:
+            if isinstance(value, str):
+                stripped = value.strip()
+                if stripped and stripped.lower() != "[object object]":
+                    return stripped
+            return ""
+
+        for key in ("answer", "summary", "context", "commercial_implication"):
+            value = text_value(answer.get(key))
+            if value:
+                return value
+        display_answer = answer.get("display_answer")
+        if isinstance(display_answer, dict):
+            for key in ("headline", "summary", "commercial_implication", "verification_needed"):
+                value = text_value(display_answer.get(key))
+                if value:
+                    return value
+        raw_structured_output = answer.get("raw_structured_output")
+        if not isinstance(raw_structured_output, dict) and isinstance(answer.get("answer"), dict):
+            raw_structured_output = answer.get("answer", {}).get("raw_structured_output")
+        if isinstance(raw_structured_output, dict):
+            for key in ("answer", "summary", "context", "commercial_implication", "headline"):
+                value = text_value(raw_structured_output.get(key))
+                if value:
+                    return value
+        structured = answer.get("structured_signal")
+        if isinstance(structured, dict) and structured:
+            return " ".join(str(value) for value in structured.values() if value is not None)[:500].strip()
+        return ""
+
+    @staticmethod
+    def _question_first_evidence_urls(answer: Dict[str, Any]) -> List[str]:
+        urls: List[str] = []
+
+        def add_url(value: Any) -> None:
+            if isinstance(value, str):
+                candidate = value.strip()
+                if not candidate or candidate.lower() == "[object object]":
+                    return
+                if candidate.startswith(("http://", "https://")):
+                    urls.append(candidate)
+            elif isinstance(value, dict):
+                add_url(
+                    value.get("url")
+                    or value.get("source_url")
+                    or value.get("evidence_url")
+                    or value.get("href")
+                    or value.get("link")
+                )
+
+        for key in ("evidence_url", "source_url", "scrape_url", "url"):
+            add_url(answer.get(key))
+        containers = [answer]
+        raw_structured_output = answer.get("raw_structured_output")
+        if isinstance(raw_structured_output, dict):
+            containers.append(raw_structured_output)
+        nested_answer = answer.get("answer")
+        if isinstance(nested_answer, dict):
+            containers.append(nested_answer)
+            nested_raw = nested_answer.get("raw_structured_output")
+            if isinstance(nested_raw, dict):
+                containers.append(nested_raw)
+        for container in containers:
+            for key in ("sources", "evidence", "evidence_refs", "checked_sources"):
+                values = container.get(key)
+                if isinstance(values, list):
+                    for source in values:
+                        add_url(source)
+                else:
+                    add_url(values)
+        display_answer = answer.get("display_answer")
+        if isinstance(display_answer, dict):
+            evidence = display_answer.get("evidence")
+            if isinstance(evidence, list):
+                for item in evidence:
+                    add_url(item)
+            else:
+                add_url(evidence)
+
+        seen: set[str] = set()
+        deduped: List[str] = []
+        for url in urls:
+            if url in seen:
+                continue
+            seen.add(url)
+            deduped.append(url)
+        return deduped
+
+    @staticmethod
+    def _question_first_validation_state(answer: Dict[str, Any]) -> str:
+        state = str(answer.get("validation_state") or answer.get("status") or "").strip().lower()
+        nested_answer = answer.get("answer")
+        if not state and isinstance(nested_answer, dict):
+            state = str(nested_answer.get("validation_state") or nested_answer.get("status") or "").strip().lower()
+        return state
+
+    @staticmethod
+    def _question_first_answer_is_no_signal_contaminated(answer: Dict[str, Any]) -> bool:
+        state = PipelineOrchestrator._question_first_validation_state(answer)
+        if state not in {"no_signal", "no signal", "insufficient_signal"}:
+            return False
+        text = PipelineOrchestrator._question_first_answer_text(answer)
+        if len(text) < 12:
+            return False
+        lowered = text.lower()
+        if any(token in lowered for token in ("no source-backed signal", "no signal", "insufficient_signal", "not found", "failed")):
+            return False
+        return True
+
+    @staticmethod
+    def _question_first_answer_is_usable(answer: Dict[str, Any]) -> bool:
+        if PipelineOrchestrator._question_first_answer_is_no_signal_contaminated(answer):
+            return False
+        state = PipelineOrchestrator._question_first_validation_state(answer)
+        usable_states = {
+            "validated",
+            "valid",
+            "validated_positive_signal",
+            "confirmed",
+            "checked",
+            "checked_sources",
+            "provisional",
+        }
+        if state not in usable_states:
+            return False
+        text = PipelineOrchestrator._question_first_answer_text(answer)
+        if len(text) < 12:
+            return False
+        lowered = text.lower()
+        if lowered in {"no signal", "no source-backed signal found.", "insufficient_signal"}:
+            return False
+        evidence_urls = PipelineOrchestrator._question_first_evidence_urls(answer)
+        if not evidence_urls:
+            return False
+        if state == "provisional":
+            grade = str(answer.get("evidence_grade") or "").strip().lower()
+            if grade in {"weak", "none", "null"}:
+                return False
+        return True
+
+    @staticmethod
+    def _question_first_scoring_signal_type(question_id: str, answer: Dict[str, Any]) -> str:
+        question_id = question_id.strip().lower()
+        if question_id == "q8_explicit_rfp":
+            return "EXPLICIT_RFP_SIGNAL"
+        if question_id == "q6_launch_signal":
+            return "DIGITAL_PLATFORM_LAUNCH"
+        if question_id == "q7_procurement_signal":
+            return "VENDOR_ECOSYSTEM_SIGNAL"
+        if question_id == "q9_news_signal":
+            return "COMMERCIAL_NEWS_SIGNAL"
+        if question_id == "q10_hiring_signal":
+            return "DIGITAL_HIRING_SIGNAL"
+        return PipelineOrchestrator._infer_question_first_signal_type(answer)
+
+    def _build_question_first_scoring_signals(self, *, entity_id: str, dossier: Dict[str, Any]) -> List[Dict[str, Any]]:
+        scoring_question_ids = {
+            "q6_launch_signal",
+            "q7_procurement_signal",
+            "q8_explicit_rfp",
+            "q9_news_signal",
+            "q10_hiring_signal",
+        }
+        signals: List[Dict[str, Any]] = []
+        for answer in self._extract_question_first_answers(dossier):
+            question_id = str(answer.get("question_id") or "").strip()
+            if question_id not in scoring_question_ids:
+                continue
+            if not self._question_first_answer_is_usable(answer):
+                continue
+            text = self._question_first_answer_text(answer)
+            evidence_urls = self._question_first_evidence_urls(answer)
+            signal_type = self._question_first_scoring_signal_type(question_id, answer)
+            state = self._question_first_validation_state(answer) or "provisional"
+            confidence = answer.get("confidence")
+            try:
+                confidence_value = float(confidence) if confidence is not None else (0.72 if state == "validated" else 0.58)
+            except (TypeError, ValueError):
+                confidence_value = 0.72 if state == "validated" else 0.58
+            confidence_value = max(0.0, min(1.0, confidence_value))
+            signals.append(
+                {
+                    "id": f"{entity_id}:question-first:{question_id}",
+                    "type": signal_type,
+                    "signal_type": signal_type,
+                    "confidence": confidence_value,
+                    "statement": text,
+                    "text": text,
+                    "description": text,
+                    "summary": text,
+                    "url": evidence_urls[0] if evidence_urls else None,
+                    "entity_id": entity_id,
+                    "validation_state": "validated" if state in {"validated", "valid", "validated_positive_signal", "confirmed"} else "provisional",
+                    "accept_guard_passed": True,
+                    "evidence_pointer_ids": [f"qf:{question_id}"],
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
+                    "metadata": {
+                        "source": "question_first",
+                        "question_id": question_id,
+                        "question_text": str(answer.get("question_text") or answer.get("question") or "").strip(),
+                        "validation_state": state,
+                        "evidence_grade": answer.get("evidence_grade"),
+                        "evidence_urls": evidence_urls,
+                        "source_backed": bool(evidence_urls),
+                        "direct_scoring_signal": True,
+                    },
+                }
+            )
+        return signals
+
+    @staticmethod
+    def _merge_signal_lists(*signal_lists: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        merged: List[Dict[str, Any]] = []
+        seen: set[str] = set()
+        for signal_list in signal_lists:
+            for signal in signal_list or []:
+                if not isinstance(signal, dict):
+                    continue
+                key = str(signal.get("id") or "")
+                if not key:
+                    key = f"{signal.get('entity_id')}:{signal.get('type')}:{str(signal.get('statement') or signal.get('text') or '')[:80]}"
+                if key in seen:
+                    continue
+                seen.add(key)
+                merged.append(signal)
+        return merged
 
     @staticmethod
     def _infer_question_first_signal_type(answer: Dict[str, Any]) -> str:

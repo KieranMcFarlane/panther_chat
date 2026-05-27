@@ -3,10 +3,14 @@
  * Drop-in replacement for @supabase/supabase-js backed by DATABASE_URL.
  */
 import { Pool, PoolConfig } from 'pg';
+import { createClient } from '@supabase/supabase-js';
 
 // ── Connection ──────────────────────────────────────────────────────────
 
 const LOCAL_SOCKET_DATABASE_URL = 'postgresql:///signal_noise_app?host=/tmp';
+const configuredDatabaseUrl = process.env.DATABASE_URL?.trim() || '';
+const supabaseRestUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseRestKey = process.env.SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
 function isProductionLikeRuntime(): boolean {
   return Boolean(
@@ -17,7 +21,7 @@ function isProductionLikeRuntime(): boolean {
 }
 
 function getDatabaseUrl(): string {
-  const databaseUrl = process.env.DATABASE_URL?.trim();
+  const databaseUrl = configuredDatabaseUrl;
 
   if (databaseUrl) return databaseUrl;
 
@@ -30,12 +34,21 @@ function getDatabaseUrl(): string {
   return LOCAL_SOCKET_DATABASE_URL;
 }
 
+function shouldUseSupabaseRestFallback(): boolean {
+  return !configuredDatabaseUrl && Boolean(supabaseRestUrl && supabaseRestKey) && !isProductionLikeRuntime();
+}
+
 function isLocalDatabaseUrl(databaseUrl: string): boolean {
   if (databaseUrl.includes('host=/tmp')) return true;
+  if (databaseUrl.includes('host=/var/run/postgresql')) return true;
+  if (databaseUrl.includes('host=%2Fvar%2Frun%2Fpostgresql')) return true;
 
   try {
     const parsed = new URL(databaseUrl);
-    return ['localhost', '127.0.0.1', '::1'].includes(parsed.hostname);
+    return (
+      ['localhost', '127.0.0.1', '::1'].includes(parsed.hostname) ||
+      parsed.searchParams.get('host')?.startsWith('/var/run/postgresql') === true
+    );
   } catch {
     return false;
   }
@@ -643,6 +656,12 @@ export interface PgClient {
 }
 
 function createPgClient(): PgClient {
+  if (shouldUseSupabaseRestFallback()) {
+    return createClient(supabaseRestUrl!, supabaseRestKey!, {
+      auth: { persistSession: false },
+    }) as unknown as PgClient;
+  }
+
   return {
     from(table: string) {
       return new PgQueryBuilder(table);

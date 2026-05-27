@@ -1,0 +1,155 @@
+{
+  "nodes": [
+    {
+      "label": "Source",
+      "id": "source:signal-noise",
+      "properties": {
+        "name": "Signal Noise",
+        "description": "Internal relationship intelligence source"
+      }
+    },
+    {
+      "label": "Person",
+      "id": "person:alex-rivera",
+      "properties": {
+        "name": "Alex Rivera",
+        "role": "Partnerships Lead",
+        "description": "Warm contact who discussed local sport sponsorship activity"
+      }
+    },
+    {
+      "label": "Company",
+      "id": "company:northstar-facilities",
+      "properties": {
+        "name": "Northstar Facilities",
+        "domain": "Facilities management",
+        "description": "Regional facilities provider with public sector and sports venue clients"
+      }
+    },
+    {
+      "label": "Club",
+      "id": "club:warwickshire-athletic",
+      "properties": {
+        "name": "Warwickshire Athletic Club",
+        "location": "Warwickshire",
+        "description": "Local club with active sponsor network and venue upgrade needs"
+      }
+    },
+    {
+      "label": "Tender",
+      "id": "tender:clubhouse-energy-upgrade",
+      "properties": {
+        "title": "Clubhouse Energy Upgrade Tender",
+        "status": "open",
+        "description": "Tender activity around energy efficiency, facilities maintenance, and clubhouse improvements"
+      }
+    },
+    {
+      "label": "Interaction",
+      "id": "interaction:alex-2026-02",
+      "properties": {
+        "title": "Introductory sponsorship call",
+        "date": "2026-02-12",
+        "description": "Alex mentioned Northstar's sponsorship work with Warwickshire Athletic and interest in facility-led opportunities"
+      }
+    },
+    {
+      "label": "Opportunity",
+      "id": "opportunity:northstar-clubhouse-upgrade",
+      "properties": {
+        "title": "Northstar clubhouse upgrade follow-up",
+        "status": "warm",
+        "description": "Potential warm opportunity because a known contact works with a company sponsoring a club with open tender activity"
+      }
+    },
+    {
+      "label": "Person",
+      "id": "person:cami-brooks",
+      "properties": {
+        "name": "Cami Brooks",
+        "role": "Operations Manager",
+        "description": "Contact from previous local business conversation"
+      }
+    },
+    {
+      "label": "Company",
+      "id": "company:midlands-printworks",
+      "properties": {
+        "name": "Midlands Printworks",
+        "domain": "Print and signage",
+        "description": "Local print and signage company connected to community sport"
+      }
+    },
+    {
+      "label": "Club",
+      "id": "club:leamington-rugby",
+      "properties": {
+        "name": "Leamington Rugby Club",
+        "location": "Leamington Spa",
+        "description": "Community rugby club with recurring sponsor communications"
+      }
+    }
+  ],
+  "relationships": [
+    {
+      "from": { "label": "Person", "id": "person:alex-rivera" },
+      "type": "WORKS_WITH",
+      "to": { "label": "Company", "id": "company:northstar-facilities" },
+      "properties": { "confidence": "high" }
+    },
+    {
+      "from": { "label": "Company", "id": "company:northstar-facilities" },
+      "type": "SPONSORED",
+      "to": { "label": "Club", "id": "club:warwickshire-athletic" },
+      "properties": { "season": "2025-2026" }
+    },
+    {
+      "from": { "label": "Club", "id": "club:warwickshire-athletic" },
+      "type": "HAS_TENDER",
+      "to": { "label": "Tender", "id": "tender:clubhouse-energy-upgrade" },
+      "properties": { "discoveredAt": "2026-05-21" }
+    },
+    {
+      "from": { "label": "Person", "id": "person:alex-rivera" },
+      "type": "INTERACTED_WITH",
+      "to": { "label": "Source", "id": "source:signal-noise" },
+      "properties": { "date": "2026-02-12", "channel": "call" }
+    },
+    {
+      "from": { "label": "Interaction", "id": "interaction:alex-2026-02" },
+      "type": "MENTIONED_IN",
+      "to": { "label": "Person", "id": "person:alex-rivera" },
+      "properties": {}
+    },
+    {
+      "from": { "label": "Interaction", "id": "interaction:alex-2026-02" },
+      "type": "MENTIONED_IN",
+      "to": { "label": "Company", "id": "company:northstar-facilities" },
+      "properties": {}
+    },
+    {
+      "from": { "label": "Opportunity", "id": "opportunity:northstar-clubhouse-upgrade" },
+      "type": "RELATED_TO",
+      "to": { "label": "Tender", "id": "tender:clubhouse-energy-upgrade" },
+      "properties": { "reason": "open tender activity" }
+    },
+    {
+      "from": { "label": "Opportunity", "id": "opportunity:northstar-clubhouse-upgrade" },
+      "type": "RELATED_TO",
+      "to": { "label": "Person", "id": "person:alex-rivera" },
+      "properties": { "reason": "known warm contact" }
+    },
+    {
+      "from": { "label": "Person", "id": "person:cami-brooks" },
+      "type": "WORKS_WITH",
+      "to": { "label": "Company", "id": "company:midlands-printworks" },
+      "properties": { "confidence": "medium" }
+    },
+    {
+      "from": { "label": "Company", "id": "company:midlands-printworks" },
+      "type": "SPONSORED",
+      "to": { "label": "Club", "id": "club:leamington-rugby" },
+      "properties": { "season": "2025-2026" }
+    }
+  ]
+}

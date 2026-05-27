@@ -52,12 +52,19 @@ export type PipelineRuntimeRunRecord = {
   heartbeat_at: string | null
   heartbeat_age_seconds: number | null
   publication_status: string | null
+  publication_mode: string | null
+  run_kind: string | null
+  repair_state: string | null
+  repair_outcome: string | null
+  canonical_dossier_updated: boolean
+  canonical_dossier_quality_state: string | null
+  canonical_dossier_publish_status: string | null
   retry_state: string | null
   stop_reason: string | null
   continue_pipeline_on_failure: boolean
   error_type: string | null
   error_message: string | null
-  queue_state: 'queued' | 'running' | 'completed' | 'partial_persisted' | 'retrying' | 'reconciling' | 'published_degraded' | 'failed_terminal' | 'worker_stale'
+  queue_state: 'queued' | 'running' | 'completed' | 'repair_completed' | 'repair_exhausted' | 'partial_persisted' | 'retrying' | 'reconciling' | 'published_degraded' | 'failed_terminal' | 'worker_stale'
 }
 
 export type PipelineRuntimeSnapshot = {
@@ -131,6 +138,13 @@ export const RUNTIME_RUN_METADATA_SELECT_SQL = `
     'questions_answered', limited_runs.metadata->'questions_answered',
     'questions_total', limited_runs.metadata->'questions_total',
     'publication_status', limited_runs.metadata->'publication_status',
+    'publication_mode', limited_runs.metadata->'publication_mode',
+    'persistence', limited_runs.metadata->'persistence',
+    'run_kind', limited_runs.metadata->'run_kind',
+    'repair_outcome', limited_runs.metadata->'repair_outcome',
+    'canonical_dossier_updated', limited_runs.metadata->'canonical_dossier_updated',
+    'canonical_dossier_quality_state', limited_runs.metadata->'canonical_dossier_quality_state',
+    'canonical_dossier_publish_status', limited_runs.metadata->'canonical_dossier_publish_status',
     'quality_state', limited_runs.metadata->'quality_state',
     'reconciliation_state', limited_runs.metadata->'reconciliation_state',
     'retry_state', limited_runs.metadata->'retry_state',
@@ -154,6 +168,14 @@ export const RUNTIME_RUN_METADATA_SELECT_SQL = `
 export const RUNTIME_RECENT_RUN_METADATA_SELECT_SQL = `
   jsonb_strip_nulls(jsonb_build_object(
     'publication_status', limited_runs.metadata->'publication_status',
+    'publication_mode', limited_runs.metadata->'publication_mode',
+    'persistence', limited_runs.metadata->'persistence',
+    'run_kind', limited_runs.metadata->'run_kind',
+    'repair_state', limited_runs.metadata->'repair_state',
+    'repair_outcome', limited_runs.metadata->'repair_outcome',
+    'canonical_dossier_updated', limited_runs.metadata->'canonical_dossier_updated',
+    'canonical_dossier_quality_state', limited_runs.metadata->'canonical_dossier_quality_state',
+    'canonical_dossier_publish_status', limited_runs.metadata->'canonical_dossier_publish_status',
     'quality_state', limited_runs.metadata->'quality_state',
     'reconciliation_state', limited_runs.metadata->'reconciliation_state',
     'retry_state', limited_runs.metadata->'retry_state',
@@ -484,6 +506,8 @@ function classifyQueueState(row: PipelineRunRow, workerRunning: boolean): Pipeli
   const status = toText(row.status).toLowerCase()
   const metadata = row.metadata && typeof row.metadata === 'object' ? row.metadata : {}
   const publicationStatus = toText(metadata.publication_status).toLowerCase()
+  const runKind = toText(metadata.run_kind || metadata.rerun_mode).toLowerCase()
+  const repairOutcome = toText(metadata.repair_outcome || metadata.next_repair_status || metadata.repair_state).toLowerCase()
   const reconciliationState = toText(metadata.reconciliation_state).toLowerCase()
   const retryState = toText(metadata.retry_state).toLowerCase()
   const activeStatus = status === 'running' || status === 'retrying' || status === 'reconciling'
@@ -492,6 +516,10 @@ function classifyQueueState(row: PipelineRunRow, workerRunning: boolean): Pipeli
   }
   if (activeStatus && !hasFreshExecutionHeartbeat(row)) {
     return 'worker_stale'
+  }
+  if (status === 'completed' && (runKind === 'question_repair' || runKind === 'question')) {
+    if (repairOutcome === 'exhausted' || repairOutcome === 'not_merged') return 'repair_exhausted'
+    return 'repair_completed'
   }
   if (publicationStatus === 'published_partial' || toText(metadata.quality_state).toLowerCase() === 'partial') {
     return 'partial_persisted'
@@ -613,6 +641,13 @@ export function buildPipelineRuntimeRunRecord(
     heartbeat_at: heartbeat.heartbeat_at,
     heartbeat_age_seconds: heartbeat.heartbeat_age_seconds,
     publication_status: toText(metadata.publication_status) || null,
+    publication_mode: toText(metadata.publication_mode) || null,
+    run_kind: toText(metadata.run_kind) || null,
+    repair_state: toText(metadata.repair_state) || null,
+    repair_outcome: toText(metadata.repair_outcome) || null,
+    canonical_dossier_updated: metadata.canonical_dossier_updated === true,
+    canonical_dossier_quality_state: toText(metadata.canonical_dossier_quality_state) || null,
+    canonical_dossier_publish_status: toText(metadata.canonical_dossier_publish_status) || null,
     retry_state: toText(metadata.retry_state) || null,
     stop_reason: toText(metadata.stop_reason) || null,
     continue_pipeline_on_failure: metadata.continue_pipeline_on_failure === true,
@@ -761,6 +796,8 @@ function buildFailureBuckets(records: PipelineRuntimeRunRecord[]) {
     queued: 0,
     running: 0,
     completed: 0,
+    repair_completed: 0,
+    repair_exhausted: 0,
     partial_persisted: 0,
     retrying: 0,
     reconciling: 0,
@@ -779,6 +816,8 @@ function sortMostRelevant(left: PipelineRuntimeRunRecord, right: PipelineRuntime
     left.queue_state === 'worker_stale' ? 4
       : left.queue_state === 'failed_terminal' ? 3
         : left.queue_state === 'published_degraded' ? 2
+          : left.queue_state === 'repair_exhausted' ? 1.8
+            : left.queue_state === 'repair_completed' ? 1.6
           : left.queue_state === 'partial_persisted' ? 1.5
             : left.queue_state === 'reconciling' ? 1
               : 0
@@ -787,6 +826,8 @@ function sortMostRelevant(left: PipelineRuntimeRunRecord, right: PipelineRuntime
     right.queue_state === 'worker_stale' ? 4
       : right.queue_state === 'failed_terminal' ? 3
         : right.queue_state === 'published_degraded' ? 2
+          : right.queue_state === 'repair_exhausted' ? 1.8
+            : right.queue_state === 'repair_completed' ? 1.6
           : right.queue_state === 'partial_persisted' ? 1.5
             : right.queue_state === 'reconciling' ? 1
               : 0
@@ -888,6 +929,8 @@ function rankNoteworthyRun(record: PipelineRuntimeRunRecord) {
     record.queue_state === 'worker_stale' ? 7
       : record.queue_state === 'failed_terminal' ? 6
         : record.queue_state === 'published_degraded' ? 5
+          : record.queue_state === 'repair_exhausted' ? 4.8
+            : record.queue_state === 'repair_completed' ? 4.6
           : record.queue_state === 'partial_persisted' ? 4.5
             : record.queue_state === 'completed' ? 4
               : record.queue_state === 'reconciling' ? 3

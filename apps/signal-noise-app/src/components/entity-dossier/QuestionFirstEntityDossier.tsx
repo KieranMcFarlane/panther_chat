@@ -352,6 +352,7 @@ function getQuestionStatusLabel(item: QuestionRecord) {
   if (terminalState === "answered") return "Answered"
   if (terminalState === "blocked") return "Blocked"
   if (terminalState === "skipped") return "Skipped"
+  if (terminalState === "failed") return "Repair needed"
   return "No signal"
 }
 
@@ -365,6 +366,9 @@ function getQuestionStatusClasses(item: QuestionRecord) {
   }
   if (terminalState === "skipped") {
     return "border-slate-400/40 bg-slate-500/10 text-slate-200"
+  }
+  if (terminalState === "failed") {
+    return "border-rose-400/30 bg-rose-500/10 text-rose-200"
   }
   return "border-white/10 bg-white/5 text-slate-200"
 }

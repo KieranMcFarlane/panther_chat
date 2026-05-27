@@ -41,11 +41,20 @@ export type PipelineControlState = {
   last_self_heal_action?: string | null
   last_self_heal_reason?: string | null
   last_self_heal_at?: string | null
+
   supervised_drain_enabled?: boolean
   supervised_drain_allowed_batch_ids?: string[]
   supervised_drain_disable_manifest_auto_advance?: boolean
   supervised_drain_pause_when_exhausted?: boolean
   supervised_drain_reason?: string | null
+
+  provider_cooldown_until?: string | null
+  provider_cooldown_reason?: string | null
+  provider_last_error?: string | null
+  provider_preflight_endpoint?: string | null
+  provider_preflight_selected_model?: string | null
+  provider_preflight_attempts?: unknown[] | null
+
 }
 
 const DEFAULT_CONTROL_STATE: PipelineControlState = {
@@ -75,11 +84,20 @@ const DEFAULT_CONTROL_STATE: PipelineControlState = {
   last_self_heal_action: null,
   last_self_heal_reason: null,
   last_self_heal_at: null,
+
   supervised_drain_enabled: false,
   supervised_drain_allowed_batch_ids: [],
   supervised_drain_disable_manifest_auto_advance: false,
   supervised_drain_pause_when_exhausted: false,
   supervised_drain_reason: null,
+
+  provider_cooldown_until: null,
+  provider_cooldown_reason: null,
+  provider_last_error: null,
+  provider_preflight_endpoint: null,
+  provider_preflight_selected_model: null,
+  provider_preflight_attempts: null,
+
 }
 
 const PIPELINE_CONTROL_STATE_TABLE = 'pipeline_control_state'
@@ -210,6 +228,7 @@ function normalizePipelineControlState(parsed: Partial<PipelineControlState>): P
     last_self_heal_at: typeof parsed.last_self_heal_at === 'string' && parsed.last_self_heal_at.trim().length > 0
       ? parsed.last_self_heal_at.trim()
       : null,
+
     supervised_drain_enabled: parsed.supervised_drain_enabled === true,
     supervised_drain_allowed_batch_ids: Array.isArray(parsed.supervised_drain_allowed_batch_ids)
       ? parsed.supervised_drain_allowed_batch_ids.map((value) => String(value).trim()).filter(Boolean)
@@ -218,6 +237,25 @@ function normalizePipelineControlState(parsed: Partial<PipelineControlState>): P
     supervised_drain_pause_when_exhausted: parsed.supervised_drain_pause_when_exhausted === true,
     supervised_drain_reason: typeof parsed.supervised_drain_reason === 'string' && parsed.supervised_drain_reason.trim().length > 0
       ? parsed.supervised_drain_reason.trim()
+
+    provider_cooldown_until: typeof parsed.provider_cooldown_until === 'string' && parsed.provider_cooldown_until.trim().length > 0
+      ? parsed.provider_cooldown_until.trim()
+      : null,
+    provider_cooldown_reason: typeof parsed.provider_cooldown_reason === 'string' && parsed.provider_cooldown_reason.trim().length > 0
+      ? parsed.provider_cooldown_reason.trim()
+      : null,
+    provider_last_error: typeof parsed.provider_last_error === 'string' && parsed.provider_last_error.trim().length > 0
+      ? parsed.provider_last_error.trim()
+      : null,
+    provider_preflight_endpoint: typeof parsed.provider_preflight_endpoint === 'string' && parsed.provider_preflight_endpoint.trim().length > 0
+      ? parsed.provider_preflight_endpoint.trim()
+      : null,
+    provider_preflight_selected_model: typeof parsed.provider_preflight_selected_model === 'string' && parsed.provider_preflight_selected_model.trim().length > 0
+      ? parsed.provider_preflight_selected_model.trim()
+      : null,
+    provider_preflight_attempts: Array.isArray(parsed.provider_preflight_attempts)
+      ? parsed.provider_preflight_attempts
+
       : null,
   }
 }

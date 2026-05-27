@@ -217,6 +217,16 @@ const trustedOrigins = Array.from(new Set([
   authBaseUrl,
 ].filter(Boolean))) as string[];
 
+const dashPluginOptions = {
+  apiKey: process.env.BETTER_AUTH_API_KEY,
+  ...(normalizeBaseUrl(process.env.BETTER_AUTH_API_URL)
+    ? { apiUrl: normalizeBaseUrl(process.env.BETTER_AUTH_API_URL) }
+    : {}),
+  ...(normalizeBaseUrl(process.env.BETTER_AUTH_KV_URL)
+    ? { kvUrl: normalizeBaseUrl(process.env.BETTER_AUTH_KV_URL) }
+    : {}),
+};
+
 export const auth = betterAuth({
   database: databaseConfig.database,
   emailAndPassword: {
@@ -261,11 +271,7 @@ export const auth = betterAuth({
   baseURL: authBaseUrl,
   trustedOrigins,
   plugins: [
-    dash({
-      apiKey: process.env.BETTER_AUTH_API_KEY,
-      apiUrl: normalizeBaseUrl(process.env.BETTER_AUTH_API_URL),
-      kvUrl: normalizeBaseUrl(process.env.BETTER_AUTH_KV_URL),
-    }),
+    dash(dashPluginOptions),
   ],
 });
 

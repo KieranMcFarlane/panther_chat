@@ -60,6 +60,63 @@ RECOVERABLE_PIPELINE_PAUSE_REASONS = {
     "provider_infrastructure_failure",
 }
 OPENCODE_PROVIDER_INSUFFICIENT_BALANCE_ERROR = "OpenCodeProviderInsufficientBalanceError"
+PROVIDER_PREFLIGHT_COOLDOWN_SECONDS = int(os.getenv("ENTITY_PIPELINE_PROVIDER_COOLDOWN_SECONDS", "900"))
+ZAI_CODING_PLAN_BASE_URL = "https://api.z.ai/api/coding/paas/v4"
+ZAI_ECONOMY_MODEL_IDS = {"glm-4.7", "glm-4.7-flash", "glm-4.5-flash"}
+ZAI_MODEL_API_IDS = {
+    "glm-5.1": "GLM-5.1",
+    "glm-5": "GLM-5",
+    "glm-5-turbo": "GLM-5-Turbo",
+    "glm-4.7": "GLM-4.7",
+    "glm-4.7-flashx": "GLM-4.7-FlashX",
+    "glm-4.6": "GLM-4.6",
+    "glm-4.5": "GLM-4.5",
+    "glm-4.5-x": "GLM-4.5-X",
+    "glm-4.5-air": "GLM-4.5-Air",
+    "glm-4.5-airx": "GLM-4.5-AirX",
+    "glm-4-32b-0414-128k": "GLM-4-32B-0414-128K",
+    "glm-4.7-flash": "GLM-4.7-Flash",
+    "glm-4.5-flash": "GLM-4.5-Flash",
+}
+ENTITY_QUALITY_REJECTION_NAMES = {
+    "africa",
+    "asia",
+    "europe",
+    "north america",
+    "south america",
+    "oceania",
+    "antarctica",
+    "middle east",
+    "central america",
+    "latin america",
+    "caribbean",
+    "global",
+    "international",
+    "world",
+}
+ENTITY_QUALITY_REJECTION_TYPES = {
+    "unknown",
+    "region",
+    "continent",
+    "geography",
+    "location",
+}
+PERSON_LIKE_ENTITY_TYPES = {
+    "person",
+    "people",
+    "player",
+    "athlete",
+    "coach",
+    "official",
+    "staff",
+}
+TARGET_ORGANISATION_FLAGS = {
+    "target_organisation",
+    "target_organization",
+    "pipeline_target",
+    "dossier_target",
+    "yellow_panther_target",
+}
 
 
 def load_worker_environment(env_path: Optional[Path] = None) -> None:
@@ -86,6 +143,12 @@ STALE_MINUTES = int(os.getenv("ENTITY_PIPELINE_STALE_MINUTES", "5"))
 LEASE_SECONDS = int(os.getenv("ENTITY_PIPELINE_LEASE_SECONDS", "90"))
 MAX_RUN_ATTEMPTS = int(os.getenv("ENTITY_PIPELINE_MAX_RUN_ATTEMPTS", "3"))
 DEFAULT_REPAIR_RETRY_BUDGET = int(os.getenv("ENTITY_PIPELINE_REPAIR_RETRY_BUDGET", "3"))
+AUTO_REPAIR_PARTIAL_DOSSIERS = os.getenv("ENTITY_PIPELINE_AUTO_REPAIR_PARTIAL", "").strip().lower() in {
+    "1",
+    "true",
+    "yes",
+    "on",
+}
 MAX_QUESTION_FIRST_CONTINUATION_ATTEMPTS = int(os.getenv("ENTITY_PIPELINE_MAX_QF_CONTINUATION_ATTEMPTS", "2"))
 TERMINAL_BATCH_STATUSES = {"completed", "failed"}
 WORKER_PID_PATH = Path(__file__).resolve().parents[1] / "tmp" / "entity-pipeline-worker.pid"
@@ -158,11 +221,20 @@ def _default_pipeline_control_state() -> Dict[str, Any]:
         "last_self_heal_action": None,
         "last_self_heal_reason": None,
         "last_self_heal_at": None,
+
         "supervised_drain_enabled": False,
         "supervised_drain_allowed_batch_ids": [],
         "supervised_drain_disable_manifest_auto_advance": False,
         "supervised_drain_pause_when_exhausted": False,
         "supervised_drain_reason": None,
+
+        "provider_cooldown_until": None,
+        "provider_cooldown_reason": None,
+        "provider_last_error": None,
+        "provider_preflight_endpoint": None,
+        "provider_preflight_selected_model": None,
+        "provider_preflight_attempts": None,
+
     }
 
 
@@ -311,6 +383,7 @@ def _normalize_pipeline_control_state_payload(
             "last_self_heal_action": str(payload.get("last_self_heal_action") or "").strip() or None,
             "last_self_heal_reason": str(payload.get("last_self_heal_reason") or "").strip() or None,
             "last_self_heal_at": str(payload.get("last_self_heal_at") or "").strip() or None,
+
             "supervised_drain_enabled": payload.get("supervised_drain_enabled") is True,
             "supervised_drain_allowed_batch_ids": [
                 str(batch_id).strip()
@@ -324,6 +397,16 @@ def _normalize_pipeline_control_state_payload(
             "supervised_drain_disable_manifest_auto_advance": payload.get("supervised_drain_disable_manifest_auto_advance") is True,
             "supervised_drain_pause_when_exhausted": payload.get("supervised_drain_pause_when_exhausted") is True,
             "supervised_drain_reason": str(payload.get("supervised_drain_reason") or "").strip() or None,
+
+            "provider_cooldown_until": str(payload.get("provider_cooldown_until") or "").strip() or None,
+            "provider_cooldown_reason": str(payload.get("provider_cooldown_reason") or "").strip() or None,
+            "provider_last_error": str(payload.get("provider_last_error") or "").strip() or None,
+            "provider_preflight_endpoint": str(payload.get("provider_preflight_endpoint") or "").strip() or None,
+            "provider_preflight_selected_model": str(payload.get("provider_preflight_selected_model") or "").strip() or None,
+            "provider_preflight_attempts": payload.get("provider_preflight_attempts")
+            if isinstance(payload.get("provider_preflight_attempts"), list)
+            else None,
+
         }
     )
     if normalized["state"] not in PIPELINE_RECOVERY_STATE_VALUES:
@@ -471,6 +554,7 @@ def write_pipeline_control_state(payload: Dict[str, Any]) -> Dict[str, Any]:
         "last_self_heal_action": str(merged_payload.get("last_self_heal_action") or "").strip() or None,
         "last_self_heal_reason": str(merged_payload.get("last_self_heal_reason") or "").strip() or None,
         "last_self_heal_at": str(merged_payload.get("last_self_heal_at") or "").strip() or None,
+
         "supervised_drain_enabled": merged_payload.get("supervised_drain_enabled") is True,
         "supervised_drain_allowed_batch_ids": [
             str(batch_id).strip()
@@ -484,6 +568,16 @@ def write_pipeline_control_state(payload: Dict[str, Any]) -> Dict[str, Any]:
         "supervised_drain_disable_manifest_auto_advance": merged_payload.get("supervised_drain_disable_manifest_auto_advance") is True,
         "supervised_drain_pause_when_exhausted": merged_payload.get("supervised_drain_pause_when_exhausted") is True,
         "supervised_drain_reason": str(merged_payload.get("supervised_drain_reason") or "").strip() or None,
+
+        "provider_cooldown_until": str(merged_payload.get("provider_cooldown_until") or "").strip() or None,
+        "provider_cooldown_reason": str(merged_payload.get("provider_cooldown_reason") or "").strip() or None,
+        "provider_last_error": str(merged_payload.get("provider_last_error") or "").strip() or None,
+        "provider_preflight_endpoint": str(merged_payload.get("provider_preflight_endpoint") or "").strip() or None,
+        "provider_preflight_selected_model": str(merged_payload.get("provider_preflight_selected_model") or "").strip() or None,
+        "provider_preflight_attempts": merged_payload.get("provider_preflight_attempts")
+        if isinstance(merged_payload.get("provider_preflight_attempts"), list)
+        else None,
+
     }
     try:
         _write_pipeline_control_state_to_store(next_state)
@@ -663,6 +757,62 @@ def build_post_batch_idle_control_state(
         "observed_state": "running",
         "transition_state": "running",
         "updated_at": now_iso,
+        "provider_cooldown_until": None,
+        "provider_cooldown_reason": None,
+        "provider_last_error": None,
+    }
+
+
+def build_live_pipeline_control_projection(
+    current_control_state: Dict[str, Any],
+    live_cursor: Dict[str, Optional[str]],
+    *,
+    cursor_source: str,
+    now_iso: str,
+) -> Dict[str, Any]:
+    """Project live cursor fields without erasing an operator pause/cooldown."""
+    pause_requested = (
+        current_control_state.get("is_paused") is True
+        or str(current_control_state.get("requested_state") or "").strip().lower() == "paused"
+        or str(current_control_state.get("observed_state") or "").strip().lower() == "paused"
+        or _provider_cooldown_active(current_control_state)
+    )
+    if pause_requested:
+        return {
+            **live_cursor,
+            "cursor_source": cursor_source,
+            "requested_state": "paused",
+            "observed_state": str(current_control_state.get("observed_state") or "running").strip().lower()
+            if str(current_control_state.get("observed_state") or "").strip().lower() != "paused"
+            else "paused",
+            "transition_state": "stopping"
+            if str(current_control_state.get("observed_state") or "").strip().lower() != "paused"
+            else "paused",
+            "desired_state": "paused",
+            "is_paused": True,
+            "pause_reason": current_control_state.get("pause_reason") or "pipeline pause requested",
+            "stop_reason": current_control_state.get("stop_reason"),
+            "stop_details": current_control_state.get("stop_details"),
+            "provider_cooldown_until": current_control_state.get("provider_cooldown_until"),
+            "provider_cooldown_reason": current_control_state.get("provider_cooldown_reason"),
+            "provider_last_error": current_control_state.get("provider_last_error"),
+            "updated_at": now_iso,
+        }
+    return {
+        **live_cursor,
+        "cursor_source": cursor_source,
+        "requested_state": "running",
+        "observed_state": "running",
+        "transition_state": "running",
+        "desired_state": "running",
+        "is_paused": False,
+        "pause_reason": None,
+        "stop_reason": None,
+        "stop_details": None,
+        "provider_cooldown_until": None,
+        "provider_cooldown_reason": None,
+        "provider_last_error": None,
+        "updated_at": now_iso,
     }
 
 
@@ -727,15 +877,67 @@ def _should_auto_resume_from_pause(control_state: Dict[str, Any]) -> bool:
     return reason in RECOVERABLE_PIPELINE_PAUSE_REASONS
 
 
+def _provider_cooldown_until(control_state: Dict[str, Any]) -> Optional[datetime]:
+    return _parse_iso_datetime(control_state.get("provider_cooldown_until"))
+
+
+def _provider_cooldown_active(control_state: Dict[str, Any], now: Optional[datetime] = None) -> bool:
+    cooldown_until = _provider_cooldown_until(control_state)
+    if cooldown_until is None:
+        return False
+    return cooldown_until > (now or datetime.now(timezone.utc))
+
+
+def _provider_cooldown_sleep_seconds(control_state: Dict[str, Any], now: Optional[datetime] = None) -> int:
+    cooldown_until = _provider_cooldown_until(control_state)
+    if cooldown_until is None:
+        return POLL_INTERVAL_SECONDS
+    remaining_seconds = int((cooldown_until - (now or datetime.now(timezone.utc))).total_seconds())
+    return max(POLL_INTERVAL_SECONDS, min(remaining_seconds, PROVIDER_PREFLIGHT_COOLDOWN_SECONDS))
+
+
+def _classify_provider_preflight_error(message: str) -> str:
+    normalized = str(message or "").lower()
+    if "rate limit" in normalized or '"1302"' in normalized or "code\":\"1302" in normalized:
+        return "provider_rate_limited"
+    if "timed out" in normalized or "timeout" in normalized:
+        return "provider_timeout"
+    if "connection reset" in normalized or "errno 104" in normalized:
+        return "provider_connection_reset"
+    if "insufficient" in normalized or "balance" in normalized:
+        return "provider_insufficient_balance"
+    return "provider_preflight_failed"
+
+
 def normalize_pipeline_control_state_for_worker_start(now_iso: Optional[str] = None) -> Dict[str, Any]:
     control_state = read_pipeline_control_state()
     if (
         control_state.get("is_paused") is True
-        and (
-            not _should_auto_resume_from_pause(control_state)
-            or str(control_state.get("stop_reason") or "").strip().lower() == "provider_infrastructure_failure"
-        )
+
+        and str(control_state.get("stop_reason") or "").strip().lower() == "provider_infrastructure_failure"
     ):
+        now_value = now_iso or datetime.now(timezone.utc).isoformat()
+        return write_pipeline_control_state(
+            _mark_recovery_state(
+                {
+                    **control_state,
+                    "requested_state": "paused",
+                    "observed_state": "paused",
+                    "transition_state": "paused",
+                    "desired_state": "paused",
+                    "is_paused": True,
+                    "updated_at": now_value,
+                },
+                state="blocked_provider",
+                health_class="blocked_provider",
+                recovery_source="provider_cooldown",
+                last_self_heal_action="provider_cooldown",
+                last_self_heal_reason=str(control_state.get("provider_cooldown_reason") or "provider cooldown active").strip(),
+                last_self_heal_at=now_value,
+            )
+        )
+    if control_state.get("is_paused") is True and not _should_auto_resume_from_pause(control_state):
+
         return write_pipeline_control_state(
             _mark_recovery_state({
                 **control_state,
@@ -1089,18 +1291,84 @@ def _resolve_zai_chat_url() -> str:
     base_url = (
         str(os.getenv("ZAI_BASE_URL") or "").strip()
         or str(os.getenv("QF_ZAI_BASE_URL") or "").strip()
-        or "https://api.z.ai/api/coding/paas/v4"
+        or ZAI_CODING_PLAN_BASE_URL
     ).rstrip("/")
     if base_url.endswith("/chat/completions"):
         return base_url
     return f"{base_url}/chat/completions"
 
 
+def _normalize_zai_model_id(value: str) -> str:
+    raw = str(value or "").strip()
+    if not raw:
+        return ""
+    without_provider = raw.split("/")[-1]
+    normalized = without_provider.lower()
+    return normalized if normalized in ZAI_MODEL_API_IDS else normalized
+
+
+def _zai_api_model_name(model_id: str) -> str:
+    normalized = _normalize_zai_model_id(model_id)
+    return ZAI_MODEL_API_IDS.get(normalized, str(model_id or "").strip() or "GLM-4.7-Flash")
+
+
+def _split_env_csv(value: str) -> list[str]:
+    return [item.strip() for item in str(value or "").split(",") if item.strip()]
+
+
+def _resolve_zai_preflight_model_ids() -> list[str]:
+    configured = _split_env_csv(os.getenv("QF_ZAI_PREFLIGHT_MODELS") or "")
+    candidates = configured or [
+        os.getenv("QF_MODEL_PREFETCH") or "glm-4.7",
+        os.getenv("QF_MODEL_SYNTHESIS") or "glm-4.7",
+        os.getenv("QF_MODEL_ESCALATION") or "glm-5.1",
+    ]
+    seen: set[str] = set()
+    models: list[str] = []
+    for candidate in candidates:
+        model_id = _normalize_zai_model_id(candidate)
+        if not model_id or model_id in seen:
+            continue
+        seen.add(model_id)
+        models.append(model_id)
+    return models or ["glm-4.7", "glm-4.7-flash", "glm-4.5-flash"]
+
+
+def _is_zai_premium_model(model_id: str) -> bool:
+    return _normalize_zai_model_id(model_id) not in ZAI_ECONOMY_MODEL_IDS
+
+
+def _resolve_zai_paid_fallback_phases() -> set[str]:
+    configured = _split_env_csv(os.getenv("QF_ZAI_PAID_FALLBACK_PHASES") or "")
+    return {item.lower() for item in configured} or {"repair", "reconcile", "quality"}
+
+
+def _metadata_allows_zai_paid_fallback(metadata: Optional[Dict[str, Any]]) -> bool:
+    payload = metadata if isinstance(metadata, dict) else {}
+    phases = _resolve_zai_paid_fallback_phases()
+    values = [
+        payload.get("rerun_mode"),
+        payload.get("run_kind"),
+        payload.get("run_objective"),
+        payload.get("repair_state"),
+        payload.get("next_repair_status"),
+        payload.get("reconciliation_state"),
+        payload.get("source"),
+        payload.get("queue_source"),
+    ]
+    joined = " ".join(str(value or "").strip().lower() for value in values)
+    return any(phase and phase in joined for phase in phases)
+
+
+def _metadata_allows_zai_premium_fallback(metadata: Optional[Dict[str, Any]]) -> bool:
+    return _metadata_allows_zai_paid_fallback(metadata)
+
+
 def _resolve_zai_model() -> str:
-    return (
+    return _zai_api_model_name(
         str(os.getenv("QF_MODEL_DEFAULT") or "").strip()
         or str(os.getenv("QF_MODEL_PREFETCH") or "").strip()
-        or "GLM-4.7-Flash"
+        or "glm-4.7"
     )
 
 
@@ -1416,6 +1684,54 @@ def _question_repair_answer_count(dossier: Any) -> int:
     return max(answer_count, shell_count)
 
 
+def _question_repair_dossier_state(dossier: Any) -> Dict[str, Any]:
+    if not isinstance(dossier, dict):
+        return {"answer_count": 0, "quality_state": None, "publish_status": None}
+    metadata = dossier.get("metadata") if isinstance(dossier.get("metadata"), dict) else {}
+    question_first = dossier.get("question_first") if isinstance(dossier.get("question_first"), dict) else {}
+    metadata_question_first = (
+        metadata.get("question_first")
+        if isinstance(metadata.get("question_first"), dict)
+        else {}
+    )
+    return {
+        "answer_count": _question_repair_answer_count(dossier),
+        "quality_state": str(
+            dossier.get("quality_state")
+            or question_first.get("quality_state")
+            or metadata_question_first.get("quality_state")
+            or metadata.get("quality_state")
+            or ""
+        ).strip() or None,
+        "publish_status": str(
+            dossier.get("publish_status")
+            or dossier.get("publication_status")
+            or question_first.get("publish_status")
+            or metadata_question_first.get("publish_status")
+            or metadata.get("publish_status")
+            or metadata.get("publication_status")
+            or ""
+        ).strip() or None,
+    }
+
+
+def _normalize_question_repair_outcome(
+    next_repair_status: Any,
+    *,
+    persisted_repair: bool,
+) -> str:
+    status = str(next_repair_status or "").strip().lower()
+    if status == "running":
+        return "follow_on_running"
+    if status == "queued":
+        return "follow_on_queued"
+    if status == "exhausted":
+        return "exhausted"
+    if status in {"planned", "skipped"}:
+        return status
+    return "merged" if persisted_repair else "not_merged"
+
+
 def _unwrap_dossier_payload(payload: Any) -> Dict[str, Any]:
     if not isinstance(payload, dict):
         return {}
@@ -1709,10 +2025,36 @@ class EntityPipelineWorker:
         except Exception:
             return False, "backend_route_missing"
 
-    def _provider_preflight(self) -> tuple[bool, str]:
+    def _has_pending_premium_fallback_work(self) -> bool:
+        try:
+            response = (
+                self.supabase.table("entity_import_batches")
+                .select("metadata")
+                .in_("status", ["queued", "claiming", "running", "retrying"])
+                .limit(25)
+                .execute()
+            )
+        except Exception:
+            return False
+        for row in response.data or []:
+            metadata = row.get("metadata") if isinstance(row, dict) and isinstance(row.get("metadata"), dict) else {}
+            if _metadata_allows_zai_premium_fallback(metadata):
+                return True
+        return False
+
+    def _provider_preflight(self, *, allow_premium_fallback: bool = False, allow_paid_fallback: Optional[bool] = None) -> tuple[bool, str]:
+        if allow_paid_fallback is not None:
+            allow_premium_fallback = allow_paid_fallback
+        self._last_provider_preflight_error = None
+        self._last_provider_preflight_error_class = None
+        self._last_provider_preflight_attempts = []
+        self._last_provider_preflight_selected_model = None
+        self._last_provider_preflight_endpoint = None
         if _question_first_provider() == "openai":
             api_key = str(os.getenv("OPENAI_API_KEY") or "").strip()
             if not api_key:
+                self._last_provider_preflight_error = "OPENAI_API_KEY is not configured"
+                self._last_provider_preflight_error_class = "provider_missing_api_key"
                 return False, "provider_infrastructure_failure"
             request = Request(
                 _resolve_openai_chat_url(),
@@ -1738,42 +2080,181 @@ class EntityPipelineWorker:
                 except Exception:
                     error_body = str(error)
                 logger.warning("OpenAI provider preflight failed: %s", error_body)
+                self._last_provider_preflight_error = error_body
+                self._last_provider_preflight_error_class = _classify_provider_preflight_error(error_body)
                 return False, "provider_infrastructure_failure"
             except Exception as error:
                 logger.warning("OpenAI provider preflight failed: %s", error)
+                self._last_provider_preflight_error = str(error)
+                self._last_provider_preflight_error_class = _classify_provider_preflight_error(str(error))
                 return False, "provider_infrastructure_failure"
 
         api_key = _resolve_zai_api_key()
         if not api_key:
+            self._last_provider_preflight_error = "Z.AI API key is not configured"
+            self._last_provider_preflight_error_class = "provider_missing_api_key"
             return False, "provider_infrastructure_failure"
-        request = Request(
-            _resolve_zai_chat_url(),
-            data=json.dumps(
-                {
-                    "model": _resolve_zai_model(),
-                    "max_tokens": 16,
-                    "messages": [{"role": "user", "content": "Reply with exactly: OK"}],
-                }
-            ).encode("utf-8"),
-            headers={
-                "content-type": "application/json",
-                "authorization": f"Bearer {api_key}",
-            },
-            method="POST",
-        )
-        try:
-            with urlopen(request, timeout=10, context=_provider_preflight_ssl_context()) as response:
-                return (200 <= int(getattr(response, "status", 0) or 0) < 300), ""
-        except HTTPError as error:
+
+        endpoint = _resolve_zai_chat_url()
+        timeout_seconds = int(os.getenv("QF_ZAI_PREFLIGHT_TIMEOUT_SECONDS") or "20")
+        attempted_models: list[str] = []
+        paid_models_skipped: list[str] = []
+        last_error_message = ""
+        last_error_class = "provider_preflight_failed"
+        for model_id in _resolve_zai_preflight_model_ids():
+            if _is_zai_premium_model(model_id) and not allow_premium_fallback:
+                paid_models_skipped.append(model_id)
+                continue
+            api_model = _zai_api_model_name(model_id)
+            attempted_models.append(model_id)
+            request = Request(
+                endpoint,
+                data=json.dumps(
+                    {
+                        "model": api_model,
+                        "max_tokens": 16,
+                        "messages": [{"role": "user", "content": "Reply with exactly: OK"}],
+                    }
+                ).encode("utf-8"),
+                headers={
+                    "content-type": "application/json",
+                    "authorization": f"Bearer {api_key}",
+                },
+                method="POST",
+            )
+
             try:
-                error_body = error.read().decode("utf-8", errors="replace")
-            except Exception:
-                error_body = str(error)
-            logger.warning("Z.AI provider preflight failed: %s", error_body)
-            return False, "provider_infrastructure_failure"
-        except Exception as error:
-            logger.warning("Z.AI provider preflight failed: %s", error)
-            return False, "provider_infrastructure_failure"
+                with urlopen(request, timeout=timeout_seconds) as response:
+                    status_code = int(getattr(response, "status", 0) or 0)
+                    attempt = {
+                        "provider": "zai",
+                        "endpoint": endpoint,
+                        "model": model_id,
+                        "api_model": api_model,
+                        "status_code": status_code,
+                        "cost_tier": "premium" if _is_zai_premium_model(model_id) else "economy",
+                        "ok": 200 <= status_code < 300,
+                    }
+                    self._last_provider_preflight_attempts.append(attempt)
+                    if attempt["ok"]:
+                        self._last_provider_preflight_selected_model = model_id
+                        self._last_provider_preflight_endpoint = endpoint
+                        return True, ""
+                    last_error_message = f"Z.AI preflight returned HTTP {status_code}"
+                    last_error_class = _classify_provider_preflight_error(last_error_message)
+            except HTTPError as error:
+                try:
+                    error_body = error.read().decode("utf-8", errors="replace")
+                except Exception:
+                    error_body = str(error)
+                last_error_message = error_body
+                last_error_class = _classify_provider_preflight_error(error_body)
+                self._last_provider_preflight_attempts.append({
+                    "provider": "zai",
+                    "endpoint": endpoint,
+                    "model": model_id,
+                    "api_model": api_model,
+                    "status_code": error.code,
+                    "cost_tier": "premium" if _is_zai_premium_model(model_id) else "economy",
+                    "ok": False,
+                    "error_type": last_error_class,
+                    "error_message": error_body,
+                })
+                logger.warning("Z.AI provider preflight failed model=%s: %s", model_id, error_body)
+            except Exception as error:
+                last_error_message = str(error)
+                last_error_class = _classify_provider_preflight_error(str(error))
+                self._last_provider_preflight_attempts.append({
+                    "provider": "zai",
+                    "endpoint": endpoint,
+                    "model": model_id,
+                    "api_model": api_model,
+                    "cost_tier": "premium" if _is_zai_premium_model(model_id) else "economy",
+                    "ok": False,
+                    "error_type": last_error_class,
+                    "error_message": str(error),
+                })
+                logger.warning("Z.AI provider preflight failed model=%s: %s", model_id, error)
+        if not attempted_models and paid_models_skipped:
+            last_error_message = f"Z.AI premium fallback model(s) skipped for default queue: {', '.join(paid_models_skipped)}"
+            last_error_class = "provider_premium_fallback_unavailable"
+        elif paid_models_skipped:
+            self._last_provider_preflight_attempts.append({
+                "provider": "zai",
+                "endpoint": endpoint,
+                "skipped_premium_models": paid_models_skipped,
+                "reason": "premium fallback reserved for repair/reconcile/quality paths",
+            })
+        self._last_provider_preflight_error = last_error_message or "Z.AI provider preflight failed"
+        self._last_provider_preflight_error_class = last_error_class
+        self._last_provider_preflight_endpoint = endpoint
+        return False, "provider_infrastructure_failure"
+
+    def _write_provider_cooldown_state(self, control_state: Dict[str, Any]) -> Dict[str, Any]:
+        now = datetime.now(timezone.utc)
+        now_iso = now.isoformat()
+        cooldown_until = now + timedelta(seconds=PROVIDER_PREFLIGHT_COOLDOWN_SECONDS)
+        error_message = str(getattr(self, "_last_provider_preflight_error", "") or "provider preflight failed").strip()
+        error_class = str(getattr(self, "_last_provider_preflight_error_class", "") or "provider_preflight_failed").strip()
+        attempts = getattr(self, "_last_provider_preflight_attempts", []) or []
+        selected_model = getattr(self, "_last_provider_preflight_selected_model", None)
+        endpoint = getattr(self, "_last_provider_preflight_endpoint", None)
+        if error_class == "provider_rate_limited":
+            pause_reason = "provider rate limited"
+        elif error_class == "provider_timeout":
+            pause_reason = "provider preflight timed out"
+        elif error_class == "provider_connection_reset":
+            pause_reason = "provider connection reset"
+        elif error_class in {"provider_paid_fallback_unavailable", "provider_premium_fallback_unavailable"}:
+            pause_reason = "provider premium fallback unavailable"
+        else:
+            pause_reason = "provider infrastructure failure"
+        return write_pipeline_control_state(
+            _mark_recovery_state(
+                {
+                    **_clear_pipeline_runtime_state_fields(control_state),
+                    "requested_state": "paused",
+                    "observed_state": "paused",
+                    "transition_state": "paused",
+                    "desired_state": "paused",
+                    "is_paused": True,
+                    "pause_reason": pause_reason,
+                    "stop_reason": "provider_infrastructure_failure",
+                    "stop_details": {
+                        "reason": "provider_infrastructure_failure",
+                        "error_type": error_class,
+                        "error_message": error_message,
+                        "cooldown_until": cooldown_until.isoformat(),
+                        "cooldown_seconds": PROVIDER_PREFLIGHT_COOLDOWN_SECONDS,
+                        "provider": "zai" if _question_first_provider() == "zai" else "openai",
+                        "endpoint": endpoint,
+                        "selected_model": selected_model,
+                        "attempts": attempts,
+                    },
+                    "provider_cooldown_until": cooldown_until.isoformat(),
+                    "provider_cooldown_reason": error_class,
+                    "provider_last_error": error_message,
+                    "provider_preflight_endpoint": endpoint,
+                    "provider_preflight_selected_model": selected_model,
+                    "provider_preflight_attempts": attempts,
+                    "updated_at": now_iso,
+                },
+                state="blocked_provider",
+                health_class="blocked_provider",
+                recovery_source="provider_cooldown",
+                last_self_heal_action="provider_cooldown",
+                last_self_heal_reason=error_class,
+                last_self_heal_at=now_iso,
+            )
+        )
+
+    def _provider_preflight_state_fields(self) -> Dict[str, Any]:
+        attempts = getattr(self, "_last_provider_preflight_attempts", []) or []
+        return {
+            "provider_preflight_endpoint": getattr(self, "_last_provider_preflight_endpoint", None),
+            "provider_preflight_selected_model": getattr(self, "_last_provider_preflight_selected_model", None),
+            "provider_preflight_attempts": attempts if isinstance(attempts, list) else None,
+        }
 
     def _is_backend_route_missing_error(self, error: Exception) -> bool:
         if not isinstance(error, HTTPError):
@@ -1919,21 +2400,15 @@ class EntityPipelineWorker:
                     now_iso=now_iso,
                 )
                 _set_supervisor_activity(**live_cursor)
+                current_control_state = read_pipeline_control_state()
                 self._safe_execute(
-                    lambda live_cursor=live_cursor, now_iso=now_iso: write_pipeline_control_state(
-                        {
-                            **live_cursor,
-                            "cursor_source": "live_heartbeat_projection",
-                            "requested_state": "running",
-                            "observed_state": "running",
-                            "transition_state": "running",
-                            "desired_state": "running",
-                            "is_paused": False,
-                            "pause_reason": None,
-                            "stop_reason": None,
-                            "stop_details": None,
-                            "updated_at": now_iso,
-                        }
+                    lambda live_cursor=live_cursor, now_iso=now_iso, current_control_state=current_control_state: write_pipeline_control_state(
+                        build_live_pipeline_control_projection(
+                            current_control_state,
+                            live_cursor,
+                            cursor_source="live_heartbeat_projection",
+                            now_iso=now_iso,
+                        )
                     ),
                     context=f"pipeline control heartbeat projection {batch_id}/{run_id}",
                 )
@@ -2082,11 +2557,46 @@ class EntityPipelineWorker:
         backend_stop_reason = None
         provider_ready = False
         provider_stop_reason = None
+        if _provider_cooldown_active(control_state):
+            cooldown_until = str(control_state.get("provider_cooldown_until") or "").strip()
+            self._next_idle_sleep_seconds = _provider_cooldown_sleep_seconds(control_state)
+            write_pipeline_control_state(
+                _mark_recovery_state(
+                    {
+                        **control_state,
+                        "requested_state": "paused",
+                        "observed_state": "paused",
+                        "transition_state": "paused",
+                        "desired_state": "paused",
+                        "is_paused": True,
+                        "pause_reason": control_state.get("pause_reason") or "provider cooldown active",
+                        "stop_reason": control_state.get("stop_reason") or "provider_infrastructure_failure",
+                        "updated_at": self._now_iso(),
+                    },
+                    state="blocked_provider",
+                    health_class="blocked_provider",
+                    recovery_source="provider_cooldown",
+                    last_self_heal_action="provider_cooldown",
+                    last_self_heal_reason=str(control_state.get("provider_cooldown_reason") or "provider cooldown active").strip(),
+                    last_self_heal_at=self._now_iso(),
+                )
+            )
+            logger.info("Pipeline intake remains paused; provider cooldown active until %s", cooldown_until)
+            log_worker_transition(
+                "claim_auto_resume_cooldown",
+                worker_id=getattr(self, "worker_id", "worker-test"),
+                status="paused",
+                stop_reason="provider_infrastructure_failure",
+                message=f"provider cooldown active until {cooldown_until}" if cooldown_until else "provider cooldown active",
+            )
+            return None
         if control_state.get("is_paused") is True:
             if _should_auto_resume_from_pause(control_state):
                 backend_ready, backend_stop_reason = self._backend_preflight()
                 if backend_ready:
-                    provider_ready, provider_stop_reason = self._provider_preflight()
+                    provider_ready, provider_stop_reason = self._provider_preflight(
+                        allow_premium_fallback=self._has_pending_premium_fallback_work()
+                    )
                 if backend_ready and provider_ready:
                     control_state = write_pipeline_control_state(
                         _mark_recovery_state(
@@ -2100,6 +2610,10 @@ class EntityPipelineWorker:
                                     "pause_reason": None,
                                     "stop_reason": None,
                                     "stop_details": None,
+                                    "provider_cooldown_until": None,
+                                    "provider_cooldown_reason": None,
+                                    "provider_last_error": None,
+                                    **self._provider_preflight_state_fields(),
                                     "updated_at": self._now_iso(),
                                 }
                             ),
@@ -2123,13 +2637,17 @@ class EntityPipelineWorker:
                         message=control_state.get("pause_reason") or "auto-resumed",
                     )
                 elif backend_ready and provider_stop_reason == "provider_infrastructure_failure":
-                    logger.info("Pipeline intake remains paused; provider preflight failed")
+                    control_state = self._write_provider_cooldown_state(control_state)
+                    logger.info(
+                        "Pipeline intake remains paused; provider preflight failed; cooldown_until=%s",
+                        control_state.get("provider_cooldown_until"),
+                    )
                     log_worker_transition(
                         "claim_auto_resume_blocked",
                         worker_id=getattr(self, "worker_id", "worker-test"),
                         status="paused",
                         stop_reason="provider_infrastructure_failure",
-                        message="provider preflight failed",
+                        message=str(control_state.get("provider_cooldown_reason") or "provider preflight failed"),
                     )
                     return None
                 else:
@@ -2602,6 +3120,138 @@ class EntityPipelineWorker:
             "current_canonical_entity_id": current_canonical_entity_id,
             "current_entity_name": current_entity_name,
         }
+
+    @staticmethod
+    def _truthy_metadata_flag(metadata: Dict[str, Any], keys: set[str]) -> bool:
+        for key in keys:
+            value = metadata.get(key)
+            if value is True:
+                return True
+            if isinstance(value, str) and value.strip().lower() in {"1", "true", "yes", "target", "approved"}:
+                return True
+        return False
+
+    def _canonical_entity_quality_context(self, run: Dict[str, Any]) -> Dict[str, Any]:
+        run_metadata = run.get("metadata") if isinstance(run.get("metadata"), dict) else {}
+        context: Dict[str, Any] = {
+            "id": run.get("canonical_entity_id") or run_metadata.get("canonical_entity_id") or run.get("entity_id"),
+            "name": run.get("entity_name"),
+            "entity_type": run_metadata.get("entity_type"),
+            "sport": run_metadata.get("sport"),
+            "country": run_metadata.get("country"),
+            "league": run_metadata.get("league"),
+            "entity_category": run_metadata.get("entity_category"),
+            "quality_score": run_metadata.get("quality_score"),
+            "priority_score": run_metadata.get("priority_score"),
+            "properties": run_metadata,
+        }
+        canonical_id = str(context.get("id") or "").strip()
+        if not canonical_id or not hasattr(self, "supabase"):
+            return context
+        row_holder: Dict[str, Any] = {}
+
+        def _lookup() -> None:
+            response = (
+                self.supabase.table("canonical_entities")
+                .select("id, name, entity_type, sport, country, league, entity_category, quality_score, priority_score, properties")
+                .eq("id", canonical_id)
+                .limit(1)
+                .execute()
+            )
+            rows = getattr(response, "data", None) or []
+            if isinstance(rows, list) and rows and isinstance(rows[0], dict):
+                row_holder.update(rows[0])
+
+        self._safe_execute(_lookup, context=f"load canonical entity quality context {canonical_id}")
+        if row_holder:
+            properties = row_holder.get("properties") if isinstance(row_holder.get("properties"), dict) else {}
+            context.update(
+                {
+                    "id": row_holder.get("id") or context.get("id"),
+                    "name": row_holder.get("name") or context.get("name"),
+                    "entity_type": row_holder.get("entity_type") or context.get("entity_type"),
+                    "sport": row_holder.get("sport") or context.get("sport"),
+                    "country": row_holder.get("country") or context.get("country"),
+                    "league": row_holder.get("league") or context.get("league"),
+                    "entity_category": row_holder.get("entity_category") or context.get("entity_category"),
+                    "quality_score": row_holder.get("quality_score") if row_holder.get("quality_score") is not None else context.get("quality_score"),
+                    "priority_score": row_holder.get("priority_score") if row_holder.get("priority_score") is not None else context.get("priority_score"),
+                    "properties": {**properties, **run_metadata},
+                }
+            )
+        return context
+
+    def _entity_quality_rejection_reason(self, run: Dict[str, Any]) -> Optional[str]:
+        context = self._canonical_entity_quality_context(run)
+        properties = context.get("properties") if isinstance(context.get("properties"), dict) else {}
+        if self._truthy_metadata_flag(properties, TARGET_ORGANISATION_FLAGS):
+            return None
+
+        name = str(context.get("name") or run.get("entity_name") or "").strip()
+        normalized_name = " ".join(name.lower().split())
+        entity_type = str(context.get("entity_type") or "").strip().lower()
+        entity_category = str(context.get("entity_category") or "").strip().lower()
+        sport = str(context.get("sport") or "").strip()
+        league = str(context.get("league") or "").strip()
+
+        if not name or normalized_name in {"n/a", "unknown", "none", "null"}:
+            return "missing_usable_entity_name"
+        if normalized_name in ENTITY_QUALITY_REJECTION_NAMES and entity_type not in {"federation", "league", "club", "team", "organisation", "organization"}:
+            return "generic_geography_entity"
+        if entity_type in ENTITY_QUALITY_REJECTION_TYPES or entity_category in ENTITY_QUALITY_REJECTION_TYPES:
+            return "non_organisation_entity_type"
+        if entity_type in PERSON_LIKE_ENTITY_TYPES and not self._truthy_metadata_flag(properties, {"known_sports_decision_owner", "approved_person_target"}):
+            return "ambiguous_person_entity"
+        if entity_type in {"category", "tag", "topic"} and not (sport or league):
+            return "generic_category_entity"
+        return None
+
+    def _fail_run_for_entity_quality_rejection(
+        self,
+        *,
+        batch_id: str,
+        run: Dict[str, Any],
+        reason: str,
+        now_iso: str,
+    ) -> None:
+        metadata = run.get("metadata") if isinstance(run.get("metadata"), dict) else {}
+        next_metadata = {
+            **metadata,
+            "failure_class": "entity_quality_rejected",
+            "entity_quality_rejected": True,
+            "entity_quality_rejection_reason": reason,
+            "retry_state": "failed",
+            "retryable": False,
+            "stop_reason": "entity_quality_rejected",
+            "reconcile_required": True,
+            "publication_status": "rejected",
+            "publication_mode": "quality_gate",
+            "completed_at": now_iso,
+        }
+        self.sync_cached_entity(batch_id, run, None, "failed")
+        self.update_run(
+            batch_id,
+            run["entity_id"],
+            {
+                "status": "failed",
+                "phase": run.get("phase") or "entity_registration",
+                "error_message": f"entity_quality_rejected:{reason}",
+                "completed_at": now_iso,
+                "metadata": next_metadata,
+            },
+        )
+        log_worker_transition(
+            "run_entity_quality_rejected",
+            worker_id=getattr(self, "worker_id", "worker-test"),
+            batch_id=batch_id,
+            entity_id=run.get("entity_id"),
+            entity_name=run.get("entity_name"),
+            phase=run.get("phase"),
+            status="failed",
+            stop_reason="entity_quality_rejected",
+            error_type="entity_quality_rejected",
+            message=reason,
+        )
 
     def get_batch_runs(self, batch_id: str) -> list[Dict[str, Any]]:
         response = (
@@ -3087,6 +3737,7 @@ class EntityPipelineWorker:
             or ""
         ).strip() or None
         rerun_mode = "question" if candidate_kind == "resume_repair" and question_id else "full"
+        run_objective = "question_repair" if rerun_mode == "question" else "dossier_core"
         cascade_dependents = False if rerun_mode == "question" else True
 
         batch_row = {
@@ -3107,6 +3758,8 @@ class EntityPipelineWorker:
                 "entity_name": entity_name,
                 "entity_type": entity_type,
                 "rerun_mode": rerun_mode,
+                "run_kind": "question_repair" if rerun_mode == "question" else "full_dossier",
+                "run_objective": run_objective,
                 "question_id": question_id,
                 "cascade_dependents": cascade_dependents,
                 "current_question_id": str(candidate.get("current_question_id") or "").strip() or None,
@@ -3134,6 +3787,8 @@ class EntityPipelineWorker:
                 "canonical_entity_id": canonical_entity_id,
                 "entity_type": entity_type,
                 "rerun_mode": rerun_mode,
+                "run_kind": "question_repair" if rerun_mode == "question" else "full_dossier",
+                "run_objective": run_objective,
                 "question_id": question_id,
                 "cascade_dependents": cascade_dependents,
                 "current_question_id": str(candidate.get("current_question_id") or "").strip() or None,
@@ -3625,6 +4280,25 @@ class EntityPipelineWorker:
             context=f"persist question repair result {entity_id}/{question_id}",
         )
 
+    def _load_persisted_dossier_publication_state(
+        self,
+        *,
+        entity_id: str,
+        canonical_entity_id: Optional[str],
+    ) -> Dict[str, Any]:
+        try:
+            row_id, dossier = self._load_persisted_dossier(entity_id, canonical_entity_id)
+        except Exception as error:
+            logger.warning(
+                "Failed to load persisted dossier publication state for %s: %s",
+                canonical_entity_id or entity_id,
+                error,
+            )
+            row_id, dossier = None, None
+        state = _question_repair_dossier_state(dossier)
+        state["row_id"] = row_id
+        return state
+
     def _build_skip_metadata(
         self,
         *,
@@ -3840,6 +4514,8 @@ class EntityPipelineWorker:
                 "source": "self_healing_repair",
                 "queue_mode": queue_mode,
                 "canonical_entity_id": canonical_entity_id,
+                "run_kind": "question_repair",
+                "run_objective": "question_repair",
                 "rerun_mode": "question",
                 "question_id": question_id,
                 "cascade_dependents": True,
@@ -3880,6 +4556,8 @@ class EntityPipelineWorker:
                 "league": latest_metadata.get("league"),
                 "queue_mode": queue_mode,
                 "canonical_entity_id": canonical_entity_id,
+                "run_kind": "question_repair",
+                "run_objective": "question_repair",
                 "rerun_mode": "question",
                 "question_id": question_id,
                 "cascade_dependents": True,
@@ -3979,6 +4657,17 @@ class EntityPipelineWorker:
                 **base_metadata,
                 "repair_state": "exhausted",
                 "next_repair_status": "exhausted",
+            }
+
+        if quality_state == "partial" and not reconcile_required and not AUTO_REPAIR_PARTIAL_DOSSIERS:
+            return {
+                **base_metadata,
+                "repair_state": "deferred",
+                "next_repair_question_id": next_repair_question_id,
+                "next_repair_status": "deferred",
+                "next_repair_batch_id": None,
+                "next_repair_batch_status": None,
+                "repair_queue_source": "deferred_partial",
             }
 
         current_repair_question_id = str(
@@ -4199,6 +4888,15 @@ class EntityPipelineWorker:
             if attempt_count >= max_run_attempts and run.get("status") == "failed":
                 continue
             now_iso = self._now_iso()
+            rejection_reason = self._entity_quality_rejection_reason(run)
+            if rejection_reason:
+                self._fail_run_for_entity_quality_rejection(
+                    batch_id=batch_id,
+                    run=run,
+                    reason=rejection_reason,
+                    now_iso=now_iso,
+                )
+                continue
             log_worker_transition(
                 "run_start",
                 worker_id=worker_id,
@@ -4273,21 +4971,33 @@ class EntityPipelineWorker:
                 last_phase = completed_phases[-1] if completed_phases else "dashboard_scoring"
                 latest_metadata = self._get_run_metadata(batch_id, run["entity_id"])
                 effective_metadata = latest_metadata if isinstance(latest_metadata, dict) else run_metadata
+                run_kind = (
+                    "question_repair"
+                    if str(effective_metadata.get("rerun_mode") or "").strip().lower() == "question"
+                    else str(effective_metadata.get("run_kind") or "full_dossier").strip().lower()
+                )
+                persisted_repair = False
+                persisted_repair_state: Dict[str, Any] = {}
                 if str(effective_metadata.get("rerun_mode") or "").strip().lower() == "question":
                     repaired_question_id = str(
                         effective_metadata.get("question_id")
                         or effective_metadata.get("current_question_id")
                         or ""
                     ).strip()
+                    repair_canonical_entity_id = str(
+                        run.get("canonical_entity_id")
+                        or effective_metadata.get("canonical_entity_id")
+                        or ""
+                    ).strip() or None
+                    before_repair_state = self._load_persisted_dossier_publication_state(
+                        entity_id=str(run.get("entity_id") or ""),
+                        canonical_entity_id=repair_canonical_entity_id,
+                    )
                     repair_dossier = ((result.get("artifacts") or {}).get("dossier") or {})
                     if repaired_question_id and isinstance(repair_dossier, dict):
                         persisted_repair = self._persist_question_repair_result_to_entity_dossier(
                             entity_id=str(run.get("entity_id") or ""),
-                            canonical_entity_id=str(
-                                run.get("canonical_entity_id")
-                                or effective_metadata.get("canonical_entity_id")
-                                or ""
-                            ).strip() or None,
+                            canonical_entity_id=repair_canonical_entity_id,
                             question_id=repaired_question_id,
                             repair_dossier=repair_dossier,
                             repair_source_dossier_path=str(
@@ -4296,12 +5006,26 @@ class EntityPipelineWorker:
                                 or ""
                             ).strip() or None,
                         )
-                        if persisted_repair:
-                            effective_metadata = {
-                                **effective_metadata,
-                                "question_repair_persisted_to_entity_dossier": True,
-                                "last_repaired_question_id": repaired_question_id,
-                            }
+                    after_repair_state = self._load_persisted_dossier_publication_state(
+                        entity_id=str(run.get("entity_id") or ""),
+                        canonical_entity_id=repair_canonical_entity_id,
+                    )
+                    persisted_repair_state = {
+                        "question_repair_persisted_to_entity_dossier": bool(persisted_repair),
+                        "last_repaired_question_id": repaired_question_id or None,
+                        "canonical_dossier_updated": bool(persisted_repair),
+                        "canonical_dossier_answer_count_before": before_repair_state.get("answer_count"),
+                        "canonical_dossier_answer_count_after": after_repair_state.get("answer_count"),
+                        "canonical_dossier_quality_state": after_repair_state.get("quality_state"),
+                        "canonical_dossier_publish_status": after_repair_state.get("publish_status"),
+                        "dossier_outcome": after_repair_state.get("quality_state") or "unknown",
+                    }
+                    effective_metadata = {
+                        **effective_metadata,
+                        "run_kind": "question_repair",
+                        "run_objective": "question_repair",
+                        **persisted_repair_state,
+                    }
                 publication_status = str(result.get("publication_status") or "").strip().lower()
                 dual_write_ok = bool(result.get("dual_write_ok", True))
                 publication_succeeded = publication_status in {"published", "published_degraded"} or dual_write_ok
@@ -4367,6 +5091,20 @@ class EntityPipelineWorker:
                 for field in ("last_skipped_question_id", "last_skip_reason", "last_skip_note", "last_skip_error_class", "last_skipped_at"):
                     if follow_on_repair_metadata.get(field) is not None:
                         metadata[field] = follow_on_repair_metadata.get(field)
+                if run_kind:
+                    metadata["run_kind"] = run_kind
+                if run_kind == "question_repair":
+                    metadata["run_objective"] = "question_repair"
+                    metadata["publication_mode"] = (
+                        "repair_degraded"
+                        if str(metadata.get("publication_status") or "").strip().lower() == "published_degraded"
+                        else "repair"
+                    )
+                    metadata["repair_outcome"] = _normalize_question_repair_outcome(
+                        metadata.get("next_repair_status"),
+                        persisted_repair=persisted_repair,
+                    )
+                    metadata.update(persisted_repair_state)
                 fresh_runtime_provider_failure = has_current_question_provider_infrastructure_failure(
                     result,
                     metadata.get("question_id") or metadata.get("current_question_id"),
@@ -4408,12 +5146,15 @@ class EntityPipelineWorker:
                 ).strip() or live_cursor.get("current_canonical_entity_id")
                 live_cursor["current_entity_name"] = str(run.get("entity_name") or "").strip() or live_cursor.get("current_entity_name")
                 _set_supervisor_activity(**live_cursor)
+                current_control_state = read_pipeline_control_state()
+                now_iso = self._now_iso()
                 write_pipeline_control_state(
-                    {
-                        **live_cursor,
-                        "cursor_source": "live_runtime_projection",
-                        "updated_at": self._now_iso(),
-                    }
+                    build_live_pipeline_control_projection(
+                        current_control_state,
+                        live_cursor,
+                        cursor_source="live_runtime_projection",
+                        now_iso=now_iso,
+                    )
                 )
                 if final_status == "completed":
                     self.persist_monitoring_outputs(batch_id, run, result)
@@ -5034,7 +5775,9 @@ class EntityPipelineWorker:
                 time.sleep(POLL_INTERVAL_SECONDS)
                 continue
             if not batch:
-                time.sleep(POLL_INTERVAL_SECONDS)
+                idle_sleep_seconds = int(getattr(self, "_next_idle_sleep_seconds", POLL_INTERVAL_SECONDS) or POLL_INTERVAL_SECONDS)
+                self._next_idle_sleep_seconds = POLL_INTERVAL_SECONDS
+                time.sleep(max(1, idle_sleep_seconds))
                 continue
             logger.info("Worker claimed batch %s", batch.get("id"))
             try:

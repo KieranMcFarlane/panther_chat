@@ -37,6 +37,7 @@ export default function AppNavigation({ children, authMenu }: AppNavigationProps
   const pathname = usePathname();
   const router = useRouter();
   const isFullScreenAuthRoute = pathname === '/sign-in' || pathname === '/login';
+  const isFocusedReviewRoute = pathname === '/rfps';
 
   useEffect(() => {
     setPendingHref(null);
@@ -243,15 +244,19 @@ export default function AppNavigation({ children, authMenu }: AppNavigationProps
               >
                 <Menu className="h-5 w-5" />
               </Button>
-              <div className="min-w-0 flex-1">
-                <OperationalStatusStrip
-                  drawerOpen={drawerOpen}
-                  activeSection={activeOpsSection}
-                  onToggleDrawer={() => setDrawerOpen((current) => !current)}
-                />
-              </div>
+              {isFocusedReviewRoute ? (
+                <div className="min-w-0 flex-1 text-sm font-medium text-slate-200">RFP Intelligence</div>
+              ) : (
+                <div className="min-w-0 flex-1">
+                  <OperationalStatusStrip
+                    drawerOpen={drawerOpen}
+                    activeSection={activeOpsSection}
+                    onToggleDrawer={() => setDrawerOpen((current) => !current)}
+                  />
+                </div>
+              )}
             </div>
-            {drawerOpen ? (
+            {drawerOpen && !isFocusedReviewRoute ? (
               <div className="px-4 pb-6 sm:px-6 lg:px-8">
                 <OperationalDrawer open={drawerOpen} activeSection={activeOpsSection} onSelectSection={setActiveOpsSection} />
               </div>

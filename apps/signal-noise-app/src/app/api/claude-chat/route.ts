@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-// EC2 Backend configuration
-const CLAUDE_WEBHOOK_URL = "http://13.60.60.50:8001/webhook/chat/no-stream";
+// Backend configuration
+const CLAUDE_WEBHOOK_URL =
+  process.env.CLAUDE_WEBHOOK_URL ||
+  "http://127.0.0.1:8001/webhook/chat/no-stream";
 
 // Simple communication function with EC2 backend
 async function communicateWithBackend(message: string, sessionId?: string, context: any = {}) {

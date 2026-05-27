@@ -5,6 +5,7 @@ import {
   readLatestWideRfpResearchArtifact,
   writeWideRfpResearchArtifact,
 } from '@/lib/rfp-wide-research.mjs'
+import { normalizeRfpOpportunityForCategory } from '@/lib/rfp-opportunity-category-taxonomy.mjs'
 import {
   LEGACY_MERGED_WIDE_RFP_RUN_ID,
   resolveLatestWideRfpResearchRecord,
@@ -335,7 +336,7 @@ export async function loadWideRfpResearchOpportunities(input: LoadWideRfpResearc
     const rows = result.rows || []
     const total = Number(rows[0]?.total || 0)
     const opportunities = rows.map((row: any) => ({
-      ...(row.opportunity || {}),
+      ...normalizeRfpOpportunityForCategory(row.opportunity || {}, 'wide_research_read_taxonomy_20260518'),
       source_run_id: row.run_id,
       source_batch_generated_at: row.generated_at,
     }))
@@ -354,7 +355,9 @@ export async function loadWideRfpResearchOpportunities(input: LoadWideRfpResearc
     }
   } catch {
     const latest = await loadLatestWideRfpResearchBatch({})
-    const opportunities = latest?.batch?.opportunities || []
+    const opportunities = (latest?.batch?.opportunities || []).map((opportunity) =>
+      normalizeRfpOpportunityForCategory(opportunity, 'wide_research_read_taxonomy_20260518')
+    )
     const total = opportunities.length
     const totalPages = Math.max(1, Math.ceil(total / pageSize))
     return {

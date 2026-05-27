@@ -20,9 +20,9 @@ const APP_VENV_PYTHON = path.join(APP_ROOT, '.venv', 'bin', 'python');
 const DEFAULT_PROVIDER_ID = 'zai-coding-plan';
 const OPENAI_PROVIDER_ID = 'openai';
 const TEMPORARY_QUOTA_POLICY = 'temporary_3_day_conserve';
-const FALLBACK_PREFETCH_MODEL_ID = 'glm-4.7-flash';
-const FALLBACK_SYNTHESIS_MODEL_ID = 'glm-4.5-flash';
-const FALLBACK_ESCALATION_MODEL_ID = 'glm-4.5-flash';
+const FALLBACK_PREFETCH_MODEL_ID = 'glm-4.7';
+const FALLBACK_SYNTHESIS_MODEL_ID = 'glm-4.7';
+const FALLBACK_ESCALATION_MODEL_ID = 'glm-5.1';
 const FALLBACK_OPENAI_MODEL_ID = 'gpt-4.1-mini';
 const ZAI_MODEL_CATALOG = {
   'glm-5.1': { id: 'GLM-5.1', name: 'GLM-5.1', context: 128000, output: 16384 },
@@ -821,6 +821,18 @@ function _clampNumber(value, min = 0, max = 1) {
   return Math.max(min, Math.min(max, number));
 }
 
+function _extractUrlString(value) {
+  if (!value) return '';
+  if (typeof value === 'string') {
+    const text = value.trim();
+    if (!text || text === '[object Object]') return '';
+    const match = text.match(/https?:\/\/[^\s"')\]}]+/);
+    return (match ? match[0] : text).replace(/[:;,.]+$/g, '');
+  }
+  if (typeof value !== 'object') return '';
+  return _extractUrlString(value.url || value.evidence_url || value.href || value.source_url || value.link || '');
+}
+
 function _normalizeCommercialSignalItem(item, fallbackUrl = '') {
   if (!item) return null;
   if (typeof item === 'string') {
@@ -834,7 +846,7 @@ function _normalizeCommercialSignalItem(item, fallbackUrl = '') {
   if (!name) return null;
   return {
     name,
-    evidence_url: String(item.evidence_url || item.url || fallbackUrl || '').trim(),
+    evidence_url: _extractUrlString(item.evidence_url || item.url || fallbackUrl),
     evidence_kind: String(item.evidence_kind || item.source_type || item.type || item.kind || 'web_signal').trim(),
     summary: String(item.summary || item.description || item.note || '').trim(),
   };
@@ -896,22 +908,26 @@ function _collectUniqueSourceUrls(structuredOutput = {}) {
   const urls = new Set();
   const directSources = Array.isArray(structuredOutput.sources) ? structuredOutput.sources : [];
   directSources.forEach((item) => {
-    const url = typeof item === 'string' ? item : item?.url;
+    const url = _extractUrlString(item);
     if (url) urls.add(String(url).trim());
   });
-  if (structuredOutput.evidence_url) urls.add(String(structuredOutput.evidence_url).trim());
+  if (structuredOutput.evidence_url) {
+    const url = _extractUrlString(structuredOutput.evidence_url);
+    if (url) urls.add(url);
+  }
   const nestedAnswer = structuredOutput.answer && typeof structuredOutput.answer === 'object'
     ? structuredOutput.answer
     : {};
   if (Array.isArray(nestedAnswer.sources)) {
     nestedAnswer.sources.forEach((item) => {
-      const url = typeof item === 'string' ? item : item?.url;
+      const url = _extractUrlString(item);
       if (url) urls.add(String(url).trim());
     });
   }
   const nestedPeople = Array.isArray(nestedAnswer.people) ? nestedAnswer.people : [];
   nestedPeople.forEach((person) => {
-    if (person?.evidence_url) urls.add(String(person.evidence_url).trim());
+    const url = _extractUrlString(person?.evidence_url);
+    if (url) urls.add(url);
   });
   return Array.from(urls).filter(Boolean);
 }
@@ -1605,11 +1621,11 @@ function _augmentCommercialStructuredOutput(question, structuredOutput, validati
 function _normalizeDisplayEvidenceItem(item) {
   if (!item) return null;
   if (typeof item === 'string') {
-    const url = item.trim();
+    const url = _extractUrlString(item);
     return url ? { url, label: '' } : null;
   }
   if (typeof item !== 'object') return null;
-  const url = String(item.url || item.evidence_url || item.href || '').trim();
+  const url = _extractUrlString(item);
   const label = String(item.label || item.title || item.source || item.evidence_kind || '').trim();
   const snippet = String(item.snippet || item.summary || item.evidence_basis || '').trim();
   if (!url && !label && !snippet) return null;
@@ -1863,6 +1879,128 @@ function _hasSourceBackedEvidence(structuredOutput) {
   return _collectUniqueSourceUrls(structuredOutput).length > 0;
 }
 
+function _inferDigitalStackSignals(structuredOutput) {
+  const checkedSources = Array.isArray(structuredOutput?.checked_sources) ? structuredOutput.checked_sources : [];
+  const sourceUrls = _collectUniqueSourceUrls(structuredOutput);
+  const haystack = [
+    structuredOutput?.answer,
+    structuredOutput?.summary,
+    structuredOutput?.context,
+    structuredOutput?.commercial_implication,
+    ...(Array.isArray(structuredOutput?.sources) ? structuredOutput.sources : []),
+    ...checkedSources.flatMap((source) => [
+      source?.url,
+      source?.title,
+      source?.reason,
+      source?.source_type,
+      source?.query,
+    ]),
+  ].map(_toDisplayText).join(' ');
+  const signals = [];
+  const addSignal = (name, summary) => {
+    const pattern = new RegExp(`\\b${name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
+    if (!pattern.test(haystack)) return;
+    const matchedSource = checkedSources.find((source) => pattern.test(_toDisplayText([source?.url, source?.reason, source?.title, source?.query])));
+    signals.push({
+      name,
+      evidence_url: _extractUrlString(matchedSource) || sourceUrls[0] || '',
+      evidence_kind: 'digital_stack_hint',
+      summary,
+    });
+  };
+  addSignal('Adobe', 'Accepted source references Adobe Experience Cloud / Adobe digital experience tooling.');
+  addSignal('Tradable Bits', 'Accepted source references Tradable Bits fan engagement platform usage.');
+  addSignal('NBA.com', 'Official NBA-hosted club web/app surface is visible.');
+  return signals.filter((item, index, allItems) => allItems.findIndex((other) => other.name === item.name) === index);
+}
+
+function _upgradeQ2DigitalStackNoSignal(question, structuredOutput, validationState) {
+  if (String(question?.question_id || '').trim() !== 'q2_digital_stack') return null;
+  const normalizedState = String(validationState || '').trim().toLowerCase();
+  if (!['no_signal', 'checked_no_signal'].includes(normalizedState)) return null;
+  const signals = _inferDigitalStackSignals(structuredOutput);
+  if (signals.length === 0) return null;
+  const evidenceUrls = Array.from(new Set(signals.map((signal) => _extractUrlString(signal.evidence_url)).filter(Boolean)));
+  return {
+    ...structuredOutput,
+    answer: 'Source-backed digital stack hints found.',
+    summary: signals.map((signal) => `${signal.name}: ${signal.summary}`).join(' '),
+    sources: evidenceUrls,
+    confidence: Math.max(Number(structuredOutput?.confidence || 0), 0.65),
+    validation_state: 'provisional',
+    structured_signal: {
+      ...(structuredOutput?.structured_signal && typeof structuredOutput.structured_signal === 'object' ? structuredOutput.structured_signal : {}),
+      digital_footprint_unknown: false,
+      vendor_hints: signals.filter((signal) => /adobe|tradable/i.test(signal.name)),
+      platform_hints: signals.filter((signal) => !/adobe|tradable/i.test(signal.name)),
+    },
+    display_answer: {
+      ...(structuredOutput?.display_answer && typeof structuredOutput.display_answer === 'object' ? structuredOutput.display_answer : {}),
+      headline: 'Source-backed digital stack hints found',
+      bullets: signals.map((signal) => signal.summary).slice(0, 4),
+      evidence: evidenceUrls,
+      commercial_implication: 'Named digital platform/vendor evidence suggests existing fan engagement and digital experience infrastructure.',
+      verification_needed: 'Verify current contract ownership and implementation status before treating this as a live opportunity.',
+      status_label: 'provisional',
+    },
+  };
+}
+
+function _isCanonicalOrganisationEntityType(value) {
+  const normalized = String(value || '').trim().toLowerCase().replace(/[-\s]+/g, '_');
+  return ['club', 'team', 'league', 'federation', 'governing_body', 'organisation', 'organization', 'venue'].includes(normalized);
+}
+
+function _buildCanonicalFoundationFallback(question, structuredOutput, validationState) {
+  if (String(question?.question_id || '').trim() !== 'q1_foundation') return null;
+  const normalizedState = String(validationState || '').trim().toLowerCase();
+  if (!['no_signal', 'checked_no_signal', ''].includes(normalizedState)) return null;
+  const entityName = String(question?.entity_name || '').trim();
+  const entityType = String(question?.entity_type || '').trim();
+  if (!entityName || !_isCanonicalOrganisationEntityType(entityType)) return null;
+  const answer = `${entityName} is a canonical ${entityType} record in the local sports entity universe. Provider retrieval did not return official-site evidence in this run, so identity is grounded provisionally from the canonical entity record and should be source-verified on repair.`;
+  const checkedSource = {
+    source: 'canonical_entities',
+    source_type: 'local_canonical_entity',
+    rationale: `Local canonical entity record provides usable name/type grounding for ${entityName}; official-site evidence was not recovered by the provider run.`,
+  };
+  return {
+    ...structuredOutput,
+    question: question.question_text || question.question || '',
+    answer,
+    summary: answer,
+    context: answer,
+    sources: Array.isArray(structuredOutput?.sources) ? structuredOutput.sources.filter(Boolean) : [],
+    checked_sources: Array.isArray(structuredOutput?.checked_sources) && structuredOutput.checked_sources.length > 0
+      ? structuredOutput.checked_sources
+      : [checkedSource],
+    confidence: Math.max(Number(structuredOutput?.confidence || 0), 0.6),
+    validation_state: 'provisional',
+    structured_signal: {
+      ...(structuredOutput?.structured_signal && typeof structuredOutput.structured_signal === 'object' ? structuredOutput.structured_signal : {}),
+      entity_classification: 'organisation',
+      canonical_name: entityName,
+      entity_type: entityType,
+      official_site: null,
+      ambiguity_notes: 'Provider retrieval did not recover official-site evidence; identity is provisionally grounded from local canonical entity metadata.',
+      grounding_source: 'canonical_entities',
+      status: 'canonical_entity_grounded',
+    },
+    commercial_implication: structuredOutput?.commercial_implication || 'Identity is usable for downstream dossier questions, but official-site evidence should be refreshed before client-facing publication.',
+    display_answer: {
+      headline: `${entityName} is provisionally grounded as a ${entityType}`,
+      bullets: [
+        'Grounded from the local canonical sports entity record.',
+        'Official-site evidence was not recovered in this provider run.',
+      ],
+      evidence: [],
+      commercial_implication: 'Usable as an internal identity anchor while the source-backed repair queue refreshes official evidence.',
+      verification_needed: 'Repair q1_foundation to attach official-site evidence before treating the dossier as fully healthy.',
+      status_label: 'provisional',
+    },
+  };
+}
+
 function _hasCheckedNoSignalRationale(structuredOutput) {
   if (!structuredOutput || typeof structuredOutput !== 'object') return false;
   if (_isExplicitNoSignalOutput(structuredOutput)) return true;
@@ -2087,7 +2225,7 @@ function _buildRunStateFromQuestionFirstCheckpoint(questions, checkpoint, { pres
       return questionState;
     }
     const answerText = _toDisplayText(answer?.answer) || _toDisplayText(answer?.summary) || _toDisplayText(answer?.value);
-    const evidenceUrl = String(answer?.evidence_url || (Array.isArray(answer?.sources) ? answer.sources[0] : '') || '').trim();
+    const evidenceUrl = _extractUrlString(answer?.evidence_url) || _extractUrlString(answer?.sources);
     return {
       ...questionState,
       status: _isTerminalQuestionState(terminalState) ? terminalState : 'provisional',
@@ -2098,12 +2236,25 @@ function _buildRunStateFromQuestionFirstCheckpoint(questions, checkpoint, { pres
         ? answer.sources.filter(Boolean).map((url) => ({ url, source_kind: _sourceKindFromUrl(url), score: 1, decision: 'accept' }))
         : questionState.accepted_links,
       notes: answer?.notes || answer?.context || answer?.commercial_interpretation?.summary || questionState.notes || '',
-      prompt_trace: answer?.prompt_trace || questionState.prompt_trace || null,
-      message_trace: answer?.message_trace || questionState.message_trace || [],
+      prompt_trace: answer?.prompt_trace
+        ? {
+          provider: answer.prompt_trace.provider || null,
+          source: answer.prompt_trace.source || null,
+          model_used: answer.prompt_trace.model_used || null,
+        }
+        : null,
+      message_trace: [],
       last_completed_at: checkpoint?.updated_at || timestamp,
     };
   });
-  runState.question_first_checkpoint = checkpoint;
+  runState.question_first_checkpoint = {
+    schema_version: checkpoint?.schema_version || 'question_first_checkpoint_v1',
+    terminal_states: terminalStates,
+    next_question_id: checkpoint?.next_question_id || null,
+    last_completed_question_id: checkpoint?.last_completed_question_id || null,
+    questions_answered: Number(checkpoint?.questions_answered || answerRecords.length || 0),
+    updated_at: checkpoint?.updated_at || timestamp,
+  };
   return runState;
 }
 
@@ -2394,6 +2545,114 @@ function _mergeQuestionState(questionState, questionPayload, timestamp) {
   return nextState;
 }
 
+function _compactPromptTraceForState(promptTrace) {
+  if (!promptTrace || typeof promptTrace !== 'object' || Array.isArray(promptTrace)) return null;
+  return {
+    provider: promptTrace.provider || null,
+    source: promptTrace.source || null,
+    model_used: promptTrace.model_used || null,
+    model_requested: promptTrace.model_requested || null,
+    model_tier: promptTrace.model_tier || null,
+    exit_code: promptTrace.exit_code ?? null,
+    failure_class: promptTrace.failure_class || null,
+    failure_name: promptTrace.failure_name || null,
+    has_structured_output: promptTrace.has_structured_output ?? null,
+    deterministic_prefetch_fallback: promptTrace.deterministic_prefetch_fallback ?? null,
+  };
+}
+
+function _compactLinkRecordsForState(records, limit = 32) {
+  const seen = new Set();
+  return (Array.isArray(records) ? records : [])
+    .map((record) => {
+      const url = _extractUrlString(record);
+      if (!url || seen.has(url)) return null;
+      seen.add(url);
+      return {
+        url,
+        source_kind: record?.source_kind || _sourceKindFromUrl(url),
+        score: Number.isFinite(Number(record?.score)) ? Number(record.score) : undefined,
+        decision: record?.decision || undefined,
+        title: _toDisplayText(record?.title).slice(0, 180) || undefined,
+        last_scraped_at: record?.last_scraped_at || undefined,
+        last_validated_at: record?.last_validated_at || undefined,
+      };
+    })
+    .filter(Boolean)
+    .slice(0, limit);
+}
+
+function _compactFrontierRecordsForState(records, limit = 64) {
+  const seen = new Set();
+  return (Array.isArray(records) ? records : [])
+    .map((record) => {
+      if (!record || typeof record !== 'object') return null;
+      const url = _extractUrlString(record.url || record.source_url || record);
+      const query = _toDisplayText(record.query).slice(0, 240);
+      const key = `${query}::${url}`;
+      if ((!query && !url) || seen.has(key)) return null;
+      seen.add(key);
+      return {
+        query,
+        url,
+        status: record.status || 'pending',
+        score: Number.isFinite(Number(record.score)) ? Number(record.score) : undefined,
+        source_kind: record.source_kind || (url ? _sourceKindFromUrl(url) : undefined),
+        last_seen_at: record.last_seen_at || undefined,
+      };
+    })
+    .filter(Boolean)
+    .slice(0, limit);
+}
+
+function _compactQuestionStateForPersistence(questionState) {
+  if (!questionState || typeof questionState !== 'object') return questionState;
+  return {
+    ...questionState,
+    best_answer: _toDisplayText(questionState.best_answer).slice(0, 2000),
+    best_evidence_url: _extractUrlString(questionState.best_evidence_url),
+    notes: _toDisplayText(questionState.notes).slice(0, 2000),
+    prompt_trace: _compactPromptTraceForState(questionState.prompt_trace),
+    message_trace: [],
+    frontier: _compactFrontierRecordsForState(questionState.frontier),
+    accepted_links: _compactLinkRecordsForState(questionState.accepted_links),
+    rejected_links: _compactLinkRecordsForState(questionState.rejected_links),
+    seen_queries: Array.from(new Set((Array.isArray(questionState.seen_queries) ? questionState.seen_queries : [])
+      .map((query) => _toDisplayText(query).slice(0, 240))
+      .filter(Boolean)))
+      .slice(-32),
+    run_history: (Array.isArray(questionState.run_history) ? questionState.run_history : [])
+      .slice(-6)
+      .map((entry) => ({
+        executed_query: _toDisplayText(entry?.executed_query).slice(0, 240),
+        answer: _toDisplayText(entry?.answer).slice(0, 1000),
+        confidence: Number.isFinite(Number(entry?.confidence)) ? Number(entry.confidence) : 0,
+        validation_state: entry?.validation_state || 'no_signal',
+        evidence_url: _extractUrlString(entry?.evidence_url),
+        timestamp: entry?.timestamp || undefined,
+      })),
+  };
+}
+
+function _compactRunStateForPersistence(value) {
+  if (!value || typeof value !== 'object' || !Array.isArray(value.questions)) return value;
+  const checkpoint = value.question_first_checkpoint && typeof value.question_first_checkpoint === 'object'
+    ? {
+      schema_version: value.question_first_checkpoint.schema_version || 'question_first_checkpoint_v1',
+      terminal_states: value.question_first_checkpoint.terminal_states || {},
+      next_question_id: value.question_first_checkpoint.next_question_id || null,
+      last_completed_question_id: value.question_first_checkpoint.last_completed_question_id || null,
+      questions_answered: Number(value.question_first_checkpoint.questions_answered || 0),
+      updated_at: value.question_first_checkpoint.updated_at || null,
+    }
+    : undefined;
+  return {
+    ...value,
+    questions: value.questions.map(_compactQuestionStateForPersistence),
+    ...(checkpoint ? { question_first_checkpoint: checkpoint } : {}),
+  };
+}
+
 async function _loadJsonFile(filePath) {
   try {
     const raw = await fs.readFile(filePath, 'utf8');
@@ -2407,7 +2666,10 @@ async function _loadJsonFile(filePath) {
 }
 
 async function _writeJsonFile(filePath, value) {
-  await fs.writeFile(filePath, JSON.stringify(value, null, 2), 'utf8');
+  const nextValue = String(filePath || '').endsWith('_state.json')
+    ? _compactRunStateForPersistence(value)
+    : value;
+  await fs.writeFile(filePath, JSON.stringify(nextValue, null, 2), 'utf8');
 }
 
 function _coerceNumber(value) {
@@ -4201,14 +4463,26 @@ function _buildQuestionPayload(
   sessionId,
   { promptTrace = null, messageTrace = [], executionQuery = '', cliResult = null } = {},
 ) {
-  const sanitizedStructuredOutput = _sanitizeProviderStructuredOutput(question, structuredOutput, cliResult);
+  let sanitizedStructuredOutput = _sanitizeProviderStructuredOutput(question, structuredOutput, cliResult);
   const normalizedPromptTrace = _decoratePromptTrace(question, sanitizedStructuredOutput, cliResult, promptTrace);
   const initialValidationState = _classifyValidationState(question, sanitizedStructuredOutput, cliResult);
+  sanitizedStructuredOutput = _buildCanonicalFoundationFallback(question, sanitizedStructuredOutput, initialValidationState)
+    || _upgradeQ2DigitalStackNoSignal(question, sanitizedStructuredOutput, initialValidationState)
+    || sanitizedStructuredOutput;
   const { structuredOutput: enhancedStructuredOutput, commercialFields, confidence } =
-    _augmentCommercialStructuredOutput(question, sanitizedStructuredOutput, initialValidationState);
+    _augmentCommercialStructuredOutput(
+      question,
+      sanitizedStructuredOutput,
+      sanitizedStructuredOutput.validation_state || initialValidationState,
+    );
   let finalStructuredOutput = enhancedStructuredOutput;
   let finalConfidence = confidence;
-  let validationState = _capCommercialValidationState(question, initialValidationState, commercialFields, confidence);
+  let validationState = _capCommercialValidationState(
+    question,
+    sanitizedStructuredOutput.validation_state || initialValidationState,
+    commercialFields,
+    confidence,
+  );
   if (question.question_id === 'q11_decision_owner' && !_hasPlausibleDecisionOwnerStructuredOutput(enhancedStructuredOutput)) {
     finalStructuredOutput = {
       ...enhancedStructuredOutput,
@@ -4224,7 +4498,10 @@ function _buildQuestionPayload(
     validationState = 'no_signal';
   }
   const sources = Array.isArray(finalStructuredOutput.sources) ? finalStructuredOutput.sources : [];
-  const evidenceUrl = finalStructuredOutput.evidence_url || sources[0] || '';
+  const evidenceUrl = _extractUrlString(finalStructuredOutput.evidence_url)
+    || _extractUrlString(sources[0])
+    || _collectUniqueSourceUrls(finalStructuredOutput)[0]
+    || '';
   const notes = finalStructuredOutput.notes || finalStructuredOutput.context || '';
   const inferredSignalType = finalStructuredOutput.signal_type || (question.question_type ? question.question_type.toUpperCase() : 'NO_SIGNAL');
   const displayAnswer = _buildDisplayAnswer(question, finalStructuredOutput, validationState, commercialFields, evidenceUrl);

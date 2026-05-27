@@ -1,4 +1,4 @@
-import { readFile } from 'node:fs/promises'
+import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { NextResponse } from 'next/server'
@@ -30,6 +30,7 @@ const RECENT_ACTIVE_GRACE_MS = 8_000
 const FRESH_ACTIVITY_WINDOW_SECONDS = 300
 const ROUTE_DIR = path.dirname(fileURLToPath(import.meta.url))
 const DEFAULT_WORKER_STATE_PATH = path.resolve(ROUTE_DIR, '../../../../../tmp/entity-pipeline-worker-state.json')
+const CANONICAL_SEQUENCE_PATH = path.resolve(process.cwd(), 'backend', 'data', 'question_first_canonical_sequence.json')
 
 let cachedQueueDrilldownPayload: Record<string, unknown> | null = null
 let cachedQueueDrilldownFetchedAt = 0
@@ -84,6 +85,16 @@ type QueueEntityRecord = {
   current_stage?: string | null
   queue_position?: number | null
   publication_status?: string | null
+  publication_mode?: string | null
+  graph_persistence_ok?: boolean | null
+  graph_persistence_backend?: string | null
+  graph_persistence_error_class?: string | null
+  run_kind?: string | null
+  repair_state?: string | null
+  repair_outcome?: string | null
+  canonical_dossier_updated?: boolean
+  canonical_dossier_quality_state?: string | null
+  canonical_dossier_publish_status?: string | null
   next_repair_question_id?: string | null
   next_repair_question_text?: string | null
   next_repair_status?: string | null
@@ -106,6 +117,11 @@ type ProcessedDossierRow = {
   entity_type: string
   generated_at: string | null
   dossier_data?: Record<string, unknown> | null
+}
+
+type ProcessedDossierSequenceRow = {
+  entity_id: string
+  first_processed_at: string | null
 }
 
 type OperationalState = 'starting' | 'running' | 'retrying' | 'skipping' | 'stopping' | 'paused' | 'stopped' | 'waiting'
@@ -227,19 +243,75 @@ function dedupeByEntityId<T extends { entity_id: string }>(items: T[]) {
   return deduped
 }
 
+async function loadCanonicalSequenceEntityIds(): Promise<string[]> {
+  try {
+    const raw = await readFile(CANONICAL_SEQUENCE_PATH, 'utf8')
+    const parsed = JSON.parse(raw) as Record<string, unknown>
+    const entityIds = Array.isArray(parsed.entity_ids) ? parsed.entity_ids : []
+    return entityIds.map(toText).filter(Boolean)
+  } catch {
+    return []
+  }
+}
+
+async function saveCanonicalSequenceEntityIds(entityIds: string[]) {
+  try {
+    await mkdir(path.dirname(CANONICAL_SEQUENCE_PATH), { recursive: true })
+    await writeFile(
+      CANONICAL_SEQUENCE_PATH,
+      `${JSON.stringify({
+        schema_version: 1,
+        generated_at: new Date().toISOString(),
+        entity_ids: entityIds,
+      }, null, 2)}\n`,
+      'utf8',
+    )
+  } catch {
+    // This file stabilizes display order; the live dashboard can still render without it.
+  }
+}
+
 function applyCanonicalQueuePositions<T extends { entity_id: string; queue_position?: number | null }>(
   items: T[],
   canonicalQueuePositionByEntityId: Map<string, number>,
 ) {
   return items.map((item) => {
-    if (typeof item.queue_position === 'number') {
-      return item
-    }
     const queuePosition = canonicalQueuePositionByEntityId.get(item.entity_id)
     return typeof queuePosition === 'number'
       ? { ...item, queue_position: queuePosition }
       : item
   })
+}
+
+async function buildCanonicalSequencePositionMap(input: {
+  processedRows: ProcessedDossierSequenceRow[]
+  activeEntities: QueueEntityRecord[]
+  queuedEntities: QueueEntityRecord[]
+  manifestEntities: QueueEntityRecord[]
+  canonicalEntities: Array<{ id: string; properties?: Record<string, unknown> }>
+}) {
+  const existingSequence = await loadCanonicalSequenceEntityIds()
+  const orderedEntityIds: string[] = []
+  const seen = new Set<string>()
+  const appendEntityId = (entityId: unknown) => {
+    const normalizedId = toText(entityId)
+    if (!normalizedId || seen.has(normalizedId)) return
+    seen.add(normalizedId)
+    orderedEntityIds.push(normalizedId)
+  }
+
+  for (const entityId of existingSequence) appendEntityId(entityId)
+  for (const row of input.processedRows) appendEntityId(row.entity_id)
+  for (const entity of input.activeEntities) appendEntityId(entity.entity_id)
+  for (const entity of input.queuedEntities) appendEntityId(entity.entity_id)
+  for (const entity of input.manifestEntities) appendEntityId(entity.entity_id)
+  for (const entity of input.canonicalEntities) appendEntityId(entity.id)
+
+  if (orderedEntityIds.length !== existingSequence.length) {
+    await saveCanonicalSequenceEntityIds(orderedEntityIds)
+  }
+
+  return new Map(orderedEntityIds.map((entityId, index) => [entityId, index + 1] as const))
 }
 
 function toText(value: unknown): string {
@@ -452,6 +524,12 @@ function toQueueRecord(row: Record<string, unknown>): QueueEntityRecord {
   const metadata = row.metadata && typeof row.metadata === 'object'
     ? row.metadata as Record<string, unknown>
     : {}
+  const persistence = metadata.persistence && typeof metadata.persistence === 'object'
+    ? metadata.persistence as Record<string, unknown>
+    : {}
+  const falkordbPersistence = persistence.falkordb && typeof persistence.falkordb === 'object'
+    ? persistence.falkordb as Record<string, unknown>
+    : {}
   const queueIdentity = normalizeQueueIdentity({ ...row, metadata })
   const runtimeRecord = buildPipelineRuntimeRunRecord(
     {
@@ -525,6 +603,18 @@ function toQueueRecord(row: Record<string, unknown>): QueueEntityRecord {
     run_phase: runtimeRecord.phase || null,
     current_stage: runtimeRecord.current_stage || null,
     publication_status: toText(metadata.publication_status) || null,
+    publication_mode: toText(metadata.publication_mode) || null,
+    graph_persistence_ok: typeof falkordbPersistence.ok === 'boolean'
+      ? falkordbPersistence.ok
+      : null,
+    graph_persistence_backend: toText(falkordbPersistence.backend) || null,
+    graph_persistence_error_class: toText(falkordbPersistence.error_class) || null,
+    run_kind: toText(metadata.run_kind) || null,
+    repair_state: toText(metadata.repair_state) || null,
+    repair_outcome: toText(metadata.repair_outcome) || null,
+    canonical_dossier_updated: metadata.canonical_dossier_updated === true,
+    canonical_dossier_quality_state: toText(metadata.canonical_dossier_quality_state) || null,
+    canonical_dossier_publish_status: toText(metadata.canonical_dossier_publish_status) || null,
     next_repair_question_id: toText(metadata.next_repair_question_id) || null,
     next_repair_status: toText(metadata.next_repair_status) || null,
     next_repair_batch_id: toText(metadata.next_repair_batch_id) || null,
@@ -681,6 +771,16 @@ function buildQueueEntityFromRuntimeRun(
     run_phase: runtimeRun.phase || null,
     current_stage: runtimeRun.current_stage || runtimeRun.phase || null,
     publication_status: runtimeRun.publication_status || null,
+    publication_mode: runtimeRun.publication_mode || null,
+    graph_persistence_ok: null,
+    graph_persistence_backend: null,
+    graph_persistence_error_class: null,
+    run_kind: runtimeRun.run_kind || null,
+    repair_state: runtimeRun.repair_state || null,
+    repair_outcome: runtimeRun.repair_outcome || null,
+    canonical_dossier_updated: runtimeRun.canonical_dossier_updated === true,
+    canonical_dossier_quality_state: runtimeRun.canonical_dossier_quality_state || null,
+    canonical_dossier_publish_status: runtimeRun.canonical_dossier_publish_status || null,
     next_repair_question_id: null,
     next_repair_question_text: null,
     next_repair_status: null,
@@ -741,6 +841,13 @@ function buildSyntheticLiveRunFromWorker(runtime: PipelineRuntimeSnapshot['worke
     heartbeat_at: heartbeatAt,
     heartbeat_age_seconds: heartbeat.heartbeat_age_seconds ?? null,
     publication_status: null,
+    publication_mode: null,
+    run_kind: null,
+    repair_state: null,
+    repair_outcome: null,
+    canonical_dossier_updated: false,
+    canonical_dossier_quality_state: null,
+    canonical_dossier_publish_status: null,
     retry_state: null,
     stop_reason: null,
     continue_pipeline_on_failure: false,
@@ -785,9 +892,16 @@ async function loadWorkerActivityOverlay(workerStatePath: unknown) {
   return null
 }
 
-function buildBacklogHealth(runtime: PipelineRuntimeSnapshot, staleActiveRows: QueueEntityRecord[]) {
+function buildBacklogHealth(
+  runtime: PipelineRuntimeSnapshot,
+  staleActiveRows: QueueEntityRecord[],
+  completedEntities: QueueEntityRecord[],
+) {
   const failureBuckets = runtime.failure_buckets
   const hasFreshLiveRun = Boolean(runtime.current_live_run)
+  const latestGraphPersistenceRecord = completedEntities.find((item) => (
+    item.graph_persistence_ok !== null && item.graph_persistence_ok !== undefined
+  ))
   return {
     stale_active_count: staleActiveRows.length,
     worker_stale_count: failureBuckets.worker_stale ?? 0,
@@ -795,6 +909,10 @@ function buildBacklogHealth(runtime: PipelineRuntimeSnapshot, staleActiveRows: Q
     reconciling_count: failureBuckets.reconciling ?? 0,
     published_degraded_count: failureBuckets.published_degraded ?? 0,
     failed_terminal_count: failureBuckets.failed_terminal ?? 0,
+    graph_persistence_ok: latestGraphPersistenceRecord?.graph_persistence_ok ?? null,
+    graph_persistence_backend: latestGraphPersistenceRecord?.graph_persistence_backend ?? null,
+    graph_persistence_last_entity: latestGraphPersistenceRecord?.entity_name ?? null,
+    graph_persistence_last_at: latestGraphPersistenceRecord?.generated_at ?? null,
     healthy: hasFreshLiveRun
       ? (failureBuckets.retrying ?? 0) === 0
         && (failureBuckets.reconciling ?? 0) === 0
@@ -819,6 +937,28 @@ async function loadProcessedDossierCount(): Promise<number> {
     return Number.isFinite(processedDossiers) ? processedDossiers : 0
   } catch {
     return 0
+  }
+}
+
+async function loadProcessedDossierSequenceRows(): Promise<ProcessedDossierSequenceRow[]> {
+  try {
+    const result = await queryPostgres(`
+      select
+        canonical_entity_id::text as entity_id,
+        min(coalesce(generated_at, created_at, updated_at)) as first_processed_at
+      from entity_dossiers
+      where canonical_entity_id is not null
+      group by canonical_entity_id
+      order by first_processed_at asc nulls last, canonical_entity_id::text asc
+    `)
+    return Array.isArray(result.rows)
+      ? result.rows.map((row) => ({
+        entity_id: toText(row.entity_id),
+        first_processed_at: toText(row.first_processed_at) || null,
+      })).filter((row) => row.entity_id)
+      : []
+  } catch {
+    return []
   }
 }
 
@@ -942,6 +1082,7 @@ async function buildQueueDrilldownPayload() {
   const orderedManifestEntities = sortQuestionFirstManifestEntities(manifestEntities, canonicalEntities)
   const universeCount = normalizedUniverseCount ?? orderedManifestEntities.length
   const processedDossierCount = await loadProcessedDossierCount()
+  const processedSequenceRows = await loadProcessedDossierSequenceRows()
   const processedEntities = mapProcessedDossierRowsToQueueEntities(await loadProcessedDossierRows(200))
 
   const runtimeReadSet = await loadPipelineRuntimeReadSet()
@@ -1056,11 +1197,21 @@ async function buildQueueDrilldownPayload() {
     source_entity_name: entity.entity_name,
     source_entity_type: entity.entity_type,
   }))
-  const canonicalQueuePositionByEntityId = new Map(
-    canonicalManifestEntities.map((entity, index) => [entity.entity_id, index + 1] as const),
-  )
+  const canonicalQueuePositionByEntityId = await buildCanonicalSequencePositionMap({
+    processedRows: processedSequenceRows,
+    activeEntities,
+    queuedEntities,
+    manifestEntities: canonicalManifestEntities,
+    canonicalEntities,
+  })
+  const effectiveUniverseCount = Math.max(universeCount, canonicalQueuePositionByEntityId.size)
   const positionedCompletedEntities = applyCanonicalQueuePositions(completedEntities, canonicalQueuePositionByEntityId)
   const positionedResumeNeededEntities = applyCanonicalQueuePositions(resumeNeededEntities, canonicalQueuePositionByEntityId)
+  const positionedRunningEntities = applyCanonicalQueuePositions(runningEntities, canonicalQueuePositionByEntityId)
+  const positionedStaleActiveRows = applyCanonicalQueuePositions(visibleStaleActiveRows, canonicalQueuePositionByEntityId)
+  const positionedInProgressEntity = inProgressEntity
+    ? applyCanonicalQueuePositions([inProgressEntity], canonicalQueuePositionByEntityId)[0] ?? inProgressEntity
+    : null
   const manifestUpcomingEntities = canonicalManifestEntities
     .filter((entity) => !seenEntityIds.has(entity.entity_id))
     .map((entity) => ({
@@ -1145,12 +1296,12 @@ async function buildQueueDrilldownPayload() {
     canonicalQueuePositionByEntityId,
   )
     .slice(0, 8)
-  const backlogHealth = buildBacklogHealth(runtimeSnapshot, staleActiveRows)
+  const backlogHealth = buildBacklogHealth(runtimeSnapshot, staleActiveRows, positionedCompletedEntities)
   const liveState = deriveLiveState(runtimeSnapshot, control)
   const runtimeCurrentLiveRun = runtimeSnapshot.current_live_run ?? buildSyntheticLiveRunFromWorker(effectiveWorker)
   const runtimeLatestNoteworthyRun = runtimeSnapshot.latest_noteworthy_run
   const liveEntityFromActiveRuns = runtimeCurrentLiveRun
-    ? activeEntities.find((item) => (
+    ? positionedRunningEntities.find((item) => (
       (runtimeCurrentLiveRun.batch_id && toText(item.batch_id) === toText(runtimeCurrentLiveRun.batch_id))
       || toText(item.entity_id) === toText(runtimeCurrentLiveRun.canonical_entity_id || runtimeCurrentLiveRun.entity_id)
     )) || null
@@ -1178,6 +1329,9 @@ async function buildQueueDrilldownPayload() {
         current_substep_label: runtimeCurrentLiveRun.current_substep_label || liveEntityFromActiveRuns?.current_substep_label || null,
         current_substep_progress: runtimeCurrentLiveRun.current_substep_progress || liveEntityFromActiveRuns?.current_substep_progress || null,
         current_action: runtimeCurrentLiveRun.current_execution_state || runtimeCurrentLiveRun.current_substep_label || runtimeCurrentLiveRun.current_action || liveEntityFromActiveRuns?.current_action || null,
+        queue_position: canonicalQueuePositionByEntityId.get(toText(runtimeCurrentLiveRun.canonical_entity_id || runtimeCurrentLiveRun.entity_id))
+          ?? liveEntityFromActiveRuns?.queue_position
+          ?? null,
         freshness_state: 'fresh' as const,
       }
     : null
@@ -1225,27 +1379,27 @@ async function buildQueueDrilldownPayload() {
     hasStaleOnlyActiveRows && operationalState === 'stopped' && !hasActiveProcessingEvidence
       ? {
           reason: 'worker_heartbeat_stale',
-          entity_id: visibleStaleActiveRows[0]?.entity_id ?? null,
-          entity_name: visibleStaleActiveRows[0]?.entity_name ?? null,
-          question_id: visibleStaleActiveRows[0]?.active_question_id ?? null,
-          current_action: visibleStaleActiveRows[0]?.current_action ?? visibleStaleActiveRows[0]?.run_phase ?? null,
-          phase: visibleStaleActiveRows[0]?.run_phase ?? null,
-          batch_id: visibleStaleActiveRows[0]?.batch_id ?? null,
+          entity_id: positionedStaleActiveRows[0]?.entity_id ?? null,
+          entity_name: positionedStaleActiveRows[0]?.entity_name ?? null,
+          question_id: positionedStaleActiveRows[0]?.active_question_id ?? null,
+          current_action: positionedStaleActiveRows[0]?.current_action ?? positionedStaleActiveRows[0]?.run_phase ?? null,
+          phase: positionedStaleActiveRows[0]?.run_phase ?? null,
+          batch_id: positionedStaleActiveRows[0]?.batch_id ?? null,
         }
       : null
   )
   const visibleRunningEntities = liveInProgressEntity
     ? [liveInProgressEntity]
     : hasFreshRunningEntities
-      ? runningEntities
+      ? positionedRunningEntities
       : []
   const visibleRetryingEntity = hasFreshRunningEntities ? retryingEntity : null
-  const visibleInProgressEntity = liveInProgressEntity || (hasFreshRunningEntities ? inProgressEntity : null)
+  const visibleInProgressEntity = liveInProgressEntity || (hasFreshRunningEntities ? positionedInProgressEntity : null)
   const latestNoteworthyEntityFromCompleted = runtimeLatestNoteworthyRun
     ? positionedCompletedEntities.find((item) => (
       (runtimeLatestNoteworthyRun.batch_id && toText(item.batch_id) === toText(runtimeLatestNoteworthyRun.batch_id))
       || toText(item.entity_id) === toText(runtimeLatestNoteworthyRun.canonical_entity_id || runtimeLatestNoteworthyRun.entity_id)
-    )) || visibleStaleActiveRows.find((item) => (
+    )) || positionedStaleActiveRows.find((item) => (
       (runtimeLatestNoteworthyRun.batch_id && toText(item.batch_id) === toText(runtimeLatestNoteworthyRun.batch_id))
       || toText(item.entity_id) === toText(runtimeLatestNoteworthyRun.canonical_entity_id || runtimeLatestNoteworthyRun.entity_id)
     )) || null
@@ -1279,7 +1433,7 @@ async function buildQueueDrilldownPayload() {
     freshnessThresholdSeconds,
     currentRun: visibleInProgressEntity,
     runningEntities: visibleRunningEntities,
-    staleActiveRows: latestNoteworthyEntity ? [latestNoteworthyEntity, ...visibleStaleActiveRows] : visibleStaleActiveRows,
+    staleActiveRows: latestNoteworthyEntity ? [latestNoteworthyEntity, ...positionedStaleActiveRows] : positionedStaleActiveRows,
     completedEntities: positionedCompletedEntities,
   })
 
@@ -1315,7 +1469,7 @@ async function buildQueueDrilldownPayload() {
     freshness_threshold_seconds: freshnessThresholdSeconds,
     playlist_sort_key: describeQuestionFirstQueueOrder(),
     loop_status: {
-      universe_count: universeCount,
+      universe_count: effectiveUniverseCount,
       total_scheduled: orderedManifestEntities.length,
       completed: positionedCompletedEntities.filter((item) => toText(item.status).toLowerCase() === 'completed').length,
       processed_dossiers: processedDossierCount,
@@ -1329,7 +1483,7 @@ async function buildQueueDrilldownPayload() {
       },
       runtime_counts: {
         running: visibleRunningEntities.length,
-        stalled: visibleStaleActiveRows.length,
+        stalled: positionedStaleActiveRows.length,
         retryable: visibleRetryingEntity ? 1 : 0,
         resume_needed: positionedResumeNeededEntities.length,
       },
@@ -1337,7 +1491,7 @@ async function buildQueueDrilldownPayload() {
     queue: {
       in_progress_entity: visibleInProgressEntity,
       running_entities: visibleRunningEntities,
-      stale_active_rows: visibleStaleActiveRows,
+      stale_active_rows: positionedStaleActiveRows,
       latest_noteworthy_entity: latestNoteworthyEntity,
       completed_entities: positionedCompletedEntities,
       processed_entities: processedEntities,

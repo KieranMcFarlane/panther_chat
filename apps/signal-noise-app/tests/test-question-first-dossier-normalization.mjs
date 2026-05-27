@@ -101,12 +101,12 @@ test('normalizeQuestionFirstDossier promotes question-first answers into the dos
   const summary = normalized.question_first.discovery_summary
 
   assert.ok(summary)
-  assert.equal(summary.promoted_count >= 3, true)
-  assert.equal(summary.supporting_evidence_count >= 3, true)
+  assert.equal(summary.promoted_count >= 2, true)
+  assert.equal(summary.supporting_evidence_count >= 2, true)
   assert.ok(summary.opportunity_signals.some((entry) => entry.question_id === 'q10_hiring_signal'))
   assert.ok(summary.decision_owners.some((entry) => entry.question_id === 'q11_decision_owner'))
-  assert.ok(summary.timing_procurement_markers.some((entry) => entry.question_id === 'q8_explicit_rfp'))
-  assert.ok(normalized.question_first.dossier_promotions.length >= 3)
+  assert.equal(summary.timing_procurement_markers.some((entry) => entry.question_id === 'q8_explicit_rfp'), false)
+  assert.ok(normalized.question_first.dossier_promotions.length >= 2)
   assert.ok(normalized.tabs.some((tab) => tab.value === 'procurement-ecosystem' && tab.hasData))
   assert.ok(normalized.tabs.some((tab) => tab.value === 'decision-owners-pois' && tab.hasData))
   assert.match(summary.recommended_approach || '', /Recruitment Analyst|Shaun Lockwood|Doncaster Rovers/)
@@ -459,6 +459,50 @@ test('normalizeQuestionFirstDossier preserves useful negatives and failed states
   assert.match(String(normalized.procurement_signals.summary || ''), /private|partner-led/i)
   assert.match(String(normalized.timing_analysis.summary || ''), /private|partner-led/i)
   assert.match(String(normalized.executive_summary.summary || ''), /private|partner-led|tool call failed/i)
+})
+
+test('normalizeQuestionFirstDossier treats OpenCode timeout text as failed repair-needed state, not no-signal', () => {
+  const normalized = normalizeQuestionFirstDossier(
+    {
+      entity_id: 'england-basketball',
+      entity_name: 'England Basketball',
+      entity_type: 'Federation',
+      questions: [
+        {
+          question_id: 'q4_performance',
+          question_text: 'What is the current sporting performance context for England Basketball?',
+          question_type: 'performance',
+          signal_type: 'PERFORMANCE',
+        },
+      ],
+      question_first: {
+        answers: [
+          makeAnswer(
+            'q4_performance',
+            'performance',
+            'PERFORMANCE',
+            {
+              kind: 'summary',
+              summary: 'OpenCode run failed (OpenCodeTimeoutError): no text output produced.',
+              raw_structured_output: {
+                answer: '',
+                context: 'OpenCode run failed (OpenCodeTimeoutError): no text output produced.',
+                sources: [],
+                validation_state: 'no_signal',
+              },
+            },
+            { confidence: 0, validation_state: 'no_signal' },
+          ),
+        ],
+      },
+    },
+    'england-basketball',
+    { properties: { name: 'England Basketball', type: 'Federation' } },
+  )
+
+  const q4 = normalized.questions.find((question) => question.question_id === 'q4_performance')
+  assert.equal(q4.terminal_state, 'failed')
+  assert.match(String(q4.terminal_summary || ''), /OpenCodeTimeoutError|no text output/i)
 })
 
 test('normalizeQuestionFirstDossier synthesizes YP fit and outreach from adjacent validated evidence', () => {

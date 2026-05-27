@@ -60,6 +60,13 @@ type SnapshotItem = Record<string, unknown> & {
   current_stage?: string | null
   queue_position?: number | null
   publication_status?: string | null
+  publication_mode?: string | null
+  run_kind?: string | null
+  repair_state?: string | null
+  repair_outcome?: string | null
+  canonical_dossier_updated?: boolean
+  canonical_dossier_quality_state?: string | null
+  canonical_dossier_publish_status?: string | null
   next_repair_status?: string | null
   next_repair_batch_id?: string | null
   quality_state?: string | null
@@ -120,15 +127,31 @@ function normalizeSnapshotItem(item: SnapshotItem, kind: SnapshotKind) {
   const heartbeatSource = item.started_at || item.generated_at || item.completed_at || null
   const updatedSource = item.completed_at || item.generated_at || item.started_at || null
 
+  const runKind = toText(item.run_kind).toLowerCase()
+  const repairOutcome = toText(item.repair_outcome || item.repair_state || item.next_repair_status).toLowerCase()
+  const isRepairRun = runKind === 'question_repair' || toText(item.publication_mode).toLowerCase().startsWith('repair')
+  const repairStatusLabel = repairOutcome === 'exhausted' || repairOutcome === 'not_merged'
+    ? 'Repair exhausted'
+    : repairOutcome === 'follow_on_running'
+      ? 'Repair handed off'
+      : repairOutcome === 'follow_on_queued'
+        ? 'Repair queued next'
+        : 'Repair completed'
   const statusLabel = kind === 'queue'
     ? 'Waiting'
     : kind === 'running'
       ? (toText(item.next_repair_status).toLowerCase() === 'running' ? 'Repairing' : 'Running')
       : kind === 'blocked'
         ? (toText(item.quality_state).toLowerCase() === 'blocked' ? 'Blocked' : 'Stale')
-        : toText(item.publication_status).toLowerCase() === 'published'
-          ? 'Published healthy'
-          : 'Published degraded'
+        : isRepairRun
+          ? repairStatusLabel
+          : toText(item.publication_status).toLowerCase() === 'published'
+            ? 'Published healthy'
+            : 'Published degraded'
+  const dossierState = toText(item.canonical_dossier_quality_state || item.quality_state)
+  const repairFact = isRepairRun
+    ? `Dossier outcome: ${dossierState || 'unchanged'}${item.canonical_dossier_updated ? ' · updated' : ' · not updated'}`
+    : null
 
   return {
     entityName,
@@ -144,6 +167,7 @@ function normalizeSnapshotItem(item: SnapshotItem, kind: SnapshotKind) {
     facts: [
       `Current question: ${currentQuestion}`,
       `Run phase: ${runPhase}`,
+      ...(repairFact ? [repairFact] : []),
       `Heartbeat: ${heartbeatSource ? formatRelativeTimestamp(heartbeatSource, 'Heartbeat') : 'No active worker'}`,
       `Updated: ${updatedSource ? formatRelativeTimestamp(updatedSource, 'Updated') : 'Updated unavailable'}`,
     ],
@@ -357,6 +381,18 @@ export function OperationalStatusStrip({
   const lastActivityAt = drilldown?.last_activity_at ?? snapshotAt
   const freshnessState = drilldown?.freshness_state ?? 'fresh'
   const loopStatus = drilldown?.loop_status
+  const liveOperationalState = liveState?.operational_state ?? drilldown?.operational_state
+  const providerCooldownUntil = toText(controlState?.provider_cooldown_until || stopDetails?.cooldown_until)
+  const providerCooldownReason = toText(controlState?.provider_cooldown_reason || stopDetails?.error_type || controlState?.pause_reason)
+  const providerLastError = toText(controlState?.provider_last_error || stopDetails?.error_message)
+  const providerCooldownMs = providerCooldownUntil ? Date.parse(providerCooldownUntil) : NaN
+  const providerCooldownActive = Number.isFinite(providerCooldownMs) && providerCooldownMs > Date.now()
+  const providerCooldownTimeLabel = providerCooldownActive
+    ? new Date(providerCooldownMs).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    : null
+  const providerCooldownLabel = providerCooldownActive
+    ? `Provider cooldown until ${providerCooldownTimeLabel}`
+    : null
 
   const pipelinePaused = controlState?.requested_state === 'paused' || controlState?.is_paused === true
   const repairFocus = Boolean(
@@ -377,10 +413,6 @@ export function OperationalStatusStrip({
   const currentTargetLabel = startTarget
     ? `${toText(startTargetEntity?.entity_name) || startTarget.entityId} · ${startTarget.mode === 'full' ? 'full rerun' : 'question rerun'}`
     : null
-  const totalUniverseCountValue = Number(loopStatus?.universe_count ?? loopStatus?.total_scheduled ?? NaN)
-  const totalUniverseCount = Number.isFinite(totalUniverseCountValue) ? totalUniverseCountValue : null
-  const processedUniverseCountValue = Number(loopStatus?.processed_dossiers ?? loopStatus?.completed ?? completedEntities.length ?? NaN)
-  const processedUniverseCount = Number.isFinite(processedUniverseCountValue) ? processedUniverseCountValue : null
   const activeUniverseEntity = inProgressEntity || runningEntities[0] || null
   const universeFocusEntity = activeUniverseEntity
     || staleActiveRows[0]
@@ -389,22 +421,37 @@ export function OperationalStatusStrip({
     || completedEntities[0]
     || upcomingEntities[0]
     || null
-  const currentUniversePosition = typeof activeUniverseEntity?.queue_position === 'number'
+  const universeTotalValue = Number(loopStatus?.universe_count ?? loopStatus?.total_scheduled ?? NaN)
+  const universeTotal = Number.isFinite(universeTotalValue) ? universeTotalValue : null
+  const processedUniverseValue = Number(loopStatus?.processed_dossiers ?? loopStatus?.completed ?? NaN)
+  const processedUniversePosition = Number.isFinite(processedUniverseValue) ? processedUniverseValue : null
+  const activeUniversePosition = typeof activeUniverseEntity?.queue_position === 'number'
     ? activeUniverseEntity.queue_position
     : null
-  const processedUniversePosition = processedUniverseCount !== null ? processedUniverseCount : null
-  const currentUniverseProgressLabel = currentUniversePosition !== null && totalUniverseCount !== null
-    ? `${currentUniversePosition}/${totalUniverseCount}`
-    : currentUniversePosition !== null
-      ? String(currentUniversePosition)
-      : processedUniversePosition !== null && totalUniverseCount !== null
-        ? `${processedUniversePosition}/${totalUniverseCount}`
-        : String(totalUniverseCount ?? '…')
-  const universeTileTitle = currentUniversePosition !== null
-    ? `${activeUniverseEntity?.entity_name ? `${activeUniverseEntity.entity_name} · ` : ''}canonical entity ${currentUniverseProgressLabel}${totalUniverseCount !== null ? ` of ${totalUniverseCount}` : ''}`
-    : processedUniversePosition !== null && totalUniverseCount !== null
-      ? `${processedUniversePosition} processed canonical entities of ${totalUniverseCount}`
-      : String(totalUniverseCount ?? '…')
+  const universePosition = activeUniversePosition ?? processedUniversePosition
+  const universePositionLabel = universePosition !== null && universeTotal !== null
+    ? `${universePosition}/${universeTotal}`
+    : universePosition !== null
+      ? String(universePosition)
+      : universeTotal !== null
+        ? `…/${universeTotal}`
+        : '…'
+  const currentWorkLabel = activeUniverseEntity?.entity_name
+    || currentRun?.entity_name
+    || (providerCooldownActive ? 'Provider cooldown' : '')
+    || universeFocusEntity?.entity_name
+    || 'No active entity'
+  const currentWorkDetail = toText(
+    (providerCooldownActive ? providerCooldownReason.replaceAll('_', ' ') : '')
+    || activeUniverseEntity?.current_action
+    || activeUniverseEntity?.run_phase
+    || currentRun?.current_action
+    || currentRun?.phase
+    || liveOperationalState
+  )
+  const currentWorkTitle = activeUniverseEntity
+    ? `${currentWorkLabel}${currentWorkDetail ? ` · ${currentWorkDetail.replaceAll('_', ' ')}` : ''}`
+    : universePositionLabel
 
   const statusHero = buildOperationalStatusHero({
     drilldown,
@@ -413,17 +460,19 @@ export function OperationalStatusStrip({
   })
   const compactTicker = statusHero.marqueeLine || statusHero.headline
   const marqueeSegments = [
-    compactTicker,
+    providerCooldownLabel || compactTicker,
     `Fast MCP ${fastmcpHealth}`,
     `Worker ${workerState}`,
-    `Canonical entity ${currentUniverseProgressLabel}`,
+    activeUniverseEntity ? `Current entity ${currentWorkLabel}` : `Position ${universePositionLabel}`,
+    `Position ${universePositionLabel}`,
   ].filter(Boolean) as string[]
 
-  const liveOperationalState = liveState?.operational_state ?? drilldown?.operational_state
   const statusBadgeLabel = workerState === 'stopping'
     ? 'Stopping'
     : workerState === 'starting'
       ? 'Starting'
+      : providerCooldownActive
+        ? 'Cooldown'
       : liveOperationalState === 'retrying'
         ? 'Retrying'
         : liveOperationalState === 'skipping'
@@ -453,14 +502,21 @@ export function OperationalStatusStrip({
       tone: fastmcpHealth === 'reachable' ? 'text-emerald-300' : fastmcpHealth === 'unreachable' ? 'text-rose-300' : 'text-slate-300',
     },
     {
-      label: 'Canonical entity',
-      value: currentUniverseProgressLabel,
-      detail: universeFocusEntity?.entity_name || universeFocusEntity?.entity_id || null,
+      label: 'Current entity',
+      value: currentWorkLabel,
+      detail: currentWorkDetail ? currentWorkDetail.replaceAll('_', ' ') : universePositionLabel,
       tone: 'text-white',
-      title: universeTileTitle,
+      title: currentWorkTitle,
+    },
+    {
+      label: 'Position',
+      value: universePositionLabel,
+      tone: 'text-sky-300',
+      title: `Canonical universe position ${universePositionLabel}`,
     },
   ] as const
-  const runtimeRows = buildRuntimeLabelValuePairs({
+  const runtimeRows = [
+    ...buildRuntimeLabelValuePairs({
     isSafetyStop,
     runtimeCheckpointFailed,
     currentRun,
@@ -471,7 +527,13 @@ export function OperationalStatusStrip({
     lastActivityAt,
     stopReason,
     stopDetails,
-  })
+    }),
+    ...(providerCooldownActive ? [
+      ['Provider cooldown', providerCooldownTimeLabel || providerCooldownUntil] as [string, string],
+      ['Provider reason', providerCooldownReason.replaceAll('_', ' ') || 'provider preflight failed'] as [string, string],
+      ...(providerLastError ? [['Provider error', providerLastError] as [string, string]] : []),
+    ] : []),
+  ]
   const visibleCompletedEntities = completedEntities.slice(0, completedVisibleCount)
   const hasMoreCompletedEntities = completedVisibleCount < completedEntities.length
 
@@ -481,7 +543,7 @@ export function OperationalStatusStrip({
       style={{ maxHeight: isExpanded ? '40rem' : '7rem', padding: '0.7rem' }}
     >
       <div className="flex flex-col gap-3">
-        <div className="sr-only">Running now. Blocked / partial. Canonical entity. Stale / blocked.</div>
+        <div className="sr-only">Running now. Blocked / partial. Current entity. Stale / blocked.</div>
         <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
           <div className="flex shrink-0 flex-col gap-2">
             <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-4 xl:justify-items-start">
@@ -624,7 +686,7 @@ export function OperationalStatusStrip({
                   title="Queue"
                   icon={<AlertCircle className="h-4 w-4 text-sky-300" />}
                   items={upcomingEntities}
-                  emptyLabel="Waiting for claimable work."
+                  emptyLabel={providerCooldownActive ? 'Provider cooldown active; intake will retry after cooldown.' : 'Waiting for claimable work.'}
                   kind="queue"
                 />
                 <SnapshotLane

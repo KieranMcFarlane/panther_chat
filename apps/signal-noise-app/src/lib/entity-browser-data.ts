@@ -3,6 +3,8 @@ import { resolveLocalBadgeUrl } from '@/lib/badge-resolver'
 import { getCanonicalEntityRole } from '@/lib/entity-role-taxonomy'
 import { resolveEntityUuid } from '@/lib/entity-public-id'
 import { buildEntitiesTaxonomy } from '@/lib/entities-taxonomy'
+import { readFile } from 'node:fs/promises'
+import path from 'node:path'
 
 export type EntityBrowserFilters = {
   entityType: string
@@ -86,6 +88,9 @@ function buildLightweightDossierIndexFromEntityState(entity: any): LightweightDo
 }
 
 const CANONICAL_ENTITY_COLUMNS = 'id, name, entity_type, sport, league, country, canonical_key, badge_path, badge_s3_url, labels, properties, source_neo4j_ids, source_graph_ids, source_entity_ids'
+const FILE_ENTITY_SNAPSHOT_PATH = path.join(process.cwd(), 'data', 'all_entities_flat.json')
+
+let fileEntitySnapshotCache: any[] | null = null
 
 function mapDbRowToCanonicalEntity(row: any) {
   const properties = row.properties || {}
@@ -113,6 +118,99 @@ function mapDbRowToCanonicalEntity(row: any) {
       country: row.country || properties.country || '',
       canonical_key: row.canonical_key || properties.canonical_key || '',
     },
+  }
+}
+
+async function loadFileBackedCanonicalRows() {
+  if (!fileEntitySnapshotCache) {
+    const raw = await readFile(FILE_ENTITY_SNAPSHOT_PATH, 'utf8')
+    const parsed = JSON.parse(raw)
+    fileEntitySnapshotCache = Array.isArray(parsed) ? parsed : []
+  }
+
+  return fileEntitySnapshotCache.map((entity) => {
+    const id = toText(entity.entity_id || entity.id || entity.name).toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '')
+    const entityType = toText(entity.org_type || entity.entity_type || entity.type || 'organization')
+    return {
+      id,
+      name: toText(entity.name || entity.entity_name || id),
+      entity_type: entityType,
+      sport: toText(entity.sport),
+      league: toText(entity.league || entity.league_or_competition),
+      country: toText(entity.country),
+      canonical_key: id,
+      badge_path: null,
+      badge_s3_url: null,
+      labels: [entityType || 'ENTITY'],
+      properties: {
+        ...entity,
+        type: entityType || 'ENTITY',
+        league: toText(entity.league || entity.league_or_competition),
+      },
+      source_neo4j_ids: [id],
+      source_graph_ids: [],
+      source_entity_ids: [id],
+    }
+  })
+}
+
+async function getFileBackedEntityBrowserPageData(options: {
+  page: number
+  limit: number
+  entityType: string
+  sport: string
+  league: string
+  country: string
+  entityClass: string
+  search: string
+  sortBy: string
+  sortOrder: 'asc' | 'desc'
+  originalFilters: EntityBrowserFilters
+}): Promise<EntityBrowserResponse> {
+  const rows = await loadFileBackedCanonicalRows()
+  const search = options.search.trim().toLowerCase()
+  const canonicalEntities = rows
+    .map(mapDbRowToCanonicalEntity)
+    .filter((entity) => {
+      const properties = entity.properties
+      if (options.entityType && !toText(properties.type).toLowerCase().includes(options.entityType)) return false
+      if (options.sport && !toText(properties.sport).toLowerCase().includes(options.sport)) return false
+      if (options.country && !toText(properties.country).toLowerCase().includes(options.country)) return false
+      if (options.league && !toText(properties.league).toLowerCase().includes(options.league)) return false
+      if (options.entityClass && !matchesEntityClassFilter(entity, options.entityClass)) return false
+      if (!search) return true
+      return [properties.name, properties.type, properties.sport, properties.country, properties.league]
+        .some((value) => toText(value).toLowerCase().includes(search))
+    })
+    .sort((a, b) => {
+      const left = toText(a.properties.name).localeCompare(toText(b.properties.name))
+      return options.sortOrder === 'desc' ? -left : left
+    })
+
+  const start = (options.page - 1) * options.limit
+  const paginatedEntities = canonicalEntities.slice(start, start + options.limit)
+  const total = canonicalEntities.length
+
+  return {
+    entities: paginatedEntities.map(mapCanonicalEntityToResponse),
+    pagination: {
+      page: options.page,
+      limit: options.limit,
+      total,
+      totalPages: Math.ceil(total / options.limit),
+      hasNext: start + options.limit < total,
+      hasPrev: options.page > 1,
+    },
+    filters: {
+      entityType: options.entityType || options.originalFilters.entityType,
+      sport: options.sport || undefined,
+      league: options.league || undefined,
+      country: options.country || undefined,
+      entityClass: options.entityClass || undefined,
+      sortBy: options.sortBy,
+      sortOrder: options.sortOrder,
+    },
+    source: 'file_snapshot',
   }
 }
 
@@ -214,12 +312,25 @@ export async function getEntityBrowserPageData(options: {
   query = query.order('name', { ascending })
 
   const start = (page - 1) * limit
+  const fallbackOptions = {
+    page,
+    limit,
+    entityType,
+    sport,
+    league,
+    country,
+    entityClass,
+    search,
+    sortBy,
+    sortOrder,
+    originalFilters: filters,
+  }
 
   // entityClass requires in-memory role matching (complex pattern detection)
   // When active, fetch all DB-filtered rows and filter/paginate in memory
   if (entityClass) {
     const { data, error } = await query
-    if (error) throw error
+    if (error) return getFileBackedEntityBrowserPageData(fallbackOptions)
 
     const allFiltered = (data || [])
       .map(mapDbRowToCanonicalEntity)
@@ -254,7 +365,7 @@ export async function getEntityBrowserPageData(options: {
   // Pure DB pagination (no entityClass filter)
   query = query.range(start, start + limit - 1)
   const { data, error, count } = await query
-  if (error) throw error
+  if (error) return getFileBackedEntityBrowserPageData(fallbackOptions)
 
   const total = count || 0
 
@@ -289,7 +400,14 @@ export async function getEntitiesTaxonomyData() {
     .from('canonical_entities')
     .select('name, entity_type, sport, country, league, labels, properties')
 
-  if (error) throw error
+  if (error) {
+    const mappedEntities = (await loadFileBackedCanonicalRows()).map(mapDbRowToCanonicalEntity)
+
+    return buildEntitiesTaxonomy(mappedEntities, {
+      source: 'file_snapshot',
+      latencyMs: Date.now() - startedAt,
+    })
+  }
 
   const mappedEntities = (data || []).map(mapDbRowToCanonicalEntity)
 

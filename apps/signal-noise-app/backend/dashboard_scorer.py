@@ -115,6 +115,113 @@ class DashboardScorer:
         self.config = config or ScoringConfig()
         logger.info("📊 DashboardScorer initialized")
 
+    _CAPABILITY_KEYWORDS = (
+        "CRM",
+        "ANALYTICS",
+        "DIGITAL",
+        "TECHNOLOGY",
+        "PLATFORM",
+        "APP",
+        "DATA",
+        "CMS",
+        "TICKETING",
+        "STREAMING",
+        "ECOMMERCE",
+        "VENDOR",
+        "CLOUD",
+    )
+    _INITIATIVE_KEYWORDS = (
+        "TRANSFORMATION",
+        "MODERNIZATION",
+        "MODERNISATION",
+        "REBUILD",
+        "REDESIGN",
+        "LAUNCH",
+        "IMPLEMENTATION",
+        "MIGRATION",
+    )
+    _PARTNERSHIP_KEYWORDS = (
+        "PARTNERSHIP",
+        "PARTNER",
+        "INTEGRATION",
+        "VENDOR",
+        "SUPPLIER",
+        "CONTRACT",
+    )
+    _EXECUTIVE_KEYWORDS = (
+        "C_SUITE",
+        "C-SUITE",
+        "HIRING",
+        "APPOINTMENT",
+        "EXECUTIVE",
+        "DIRECTOR",
+        "CTO",
+        "CIO",
+        "CMO",
+        "HEAD OF",
+    )
+    _PROCUREMENT_KEYWORDS = (
+        "RFP",
+        "PROCUREMENT",
+        "TENDER",
+        "BID",
+        "SOLICITATION",
+        "CONTRACT",
+        "VENDOR",
+        "SUPPLIER",
+        "REQUEST FOR PROPOSAL",
+    )
+
+    @classmethod
+    def _signal_text(cls, item: Optional[Dict[str, Any]]) -> str:
+        if not isinstance(item, dict):
+            return ""
+        parts: List[str] = []
+        for key in (
+            "type",
+            "signal_type",
+            "episode_type",
+            "category",
+            "title",
+            "description",
+            "summary",
+            "commercial_implication",
+            "reason_code",
+        ):
+            value = item.get(key)
+            if value is not None:
+                parts.append(str(value))
+        return " ".join(parts).upper()
+
+    @classmethod
+    def _contains_any(cls, item: Optional[Dict[str, Any]], keywords: tuple[str, ...]) -> bool:
+        text = cls._signal_text(item)
+        return any(keyword in text for keyword in keywords)
+
+    @staticmethod
+    def _is_scoreable_signal(item: Optional[Dict[str, Any]]) -> bool:
+        if not isinstance(item, dict):
+            return False
+        metadata = item.get("metadata") if isinstance(item.get("metadata"), dict) else {}
+        validation_state = str(item.get("validation_state") or metadata.get("validation_state") or "").strip().lower()
+        if validation_state in {"no_signal", "no signal", "failed", "blocked", "skipped", "reconcile_required"}:
+            return False
+        if metadata.get("source") == "question_first":
+            question_id = str(metadata.get("question_id") or item.get("question_id") or "").strip().lower()
+            if question_id not in {"q6_launch_signal", "q7_procurement_signal", "q8_explicit_rfp", "q9_news_signal", "q10_hiring_signal"}:
+                return False
+            evidence_urls = metadata.get("evidence_urls")
+            has_evidence = (
+                isinstance(evidence_urls, list)
+                and any(isinstance(url, str) and url.startswith(("http://", "https://")) for url in evidence_urls)
+            ) or any(
+                isinstance(item.get(key), str) and item.get(key, "").startswith(("http://", "https://"))
+                for key in ("url", "source_url", "evidence_url")
+            )
+            if not has_evidence:
+                return False
+        return True
+
     async def calculate_entity_scores(
         self,
         entity_id: str,
@@ -250,27 +357,27 @@ class DashboardScorer:
     ) -> float:
         """Score capability signals (0-40 points)"""
         if not signals and not episodes:
-            return 10.0  # Baseline
+            return 0.0
 
         # Count capability-related items
         capability_count = 0
 
         if signals:
             for signal in signals:
-                signal_type = signal.get("type", "").upper()
-                if "CRM" in signal_type or "ANALYTICS" in signal_type or "DIGITAL" in signal_type:
+                if not self._is_scoreable_signal(signal):
+                    continue
+                if self._contains_any(signal, self._CAPABILITY_KEYWORDS):
                     capability_count += 1
 
         if episodes:
             for episode in episodes:
-                ep_type = episode.get("episode_type", "").upper()
-                if "TECHNOLOGY" in ep_type or "CRM" in ep_type:
+                if self._contains_any(episode, self._CAPABILITY_KEYWORDS):
                     capability_count += 1
 
         # Cap at 10 capability signals for full points
         score = min(40.0, capability_count * 4.0)
 
-        return max(10.0, score)
+        return score
 
     async def _score_digital_initiatives(
         self,
@@ -279,23 +386,25 @@ class DashboardScorer:
     ) -> float:
         """Score digital initiatives (0-30 points)"""
         if not signals and not episodes:
-            return 5.0
+            return 0.0
 
         initiative_count = 0
 
         if signals:
             for signal in signals:
-                if "transformation" in signal.get("description", "").lower():
+                if not self._is_scoreable_signal(signal):
+                    continue
+                if self._contains_any(signal, self._INITIATIVE_KEYWORDS):
                     initiative_count += 1
 
         if episodes:
             for episode in episodes:
-                if "DIGITAL_TRANSFORMATION" in episode.get("episode_type", ""):
+                if self._contains_any(episode, self._INITIATIVE_KEYWORDS):
                     initiative_count += 1
 
         score = min(30.0, initiative_count * 10.0)
 
-        return max(5.0, score)
+        return score
 
     async def _score_partnership_activity(
         self,
@@ -304,18 +413,25 @@ class DashboardScorer:
     ) -> float:
         """Score partnership activity (0-20 points)"""
         if not signals and not episodes:
-            return 2.5
+            return 0.0
 
         partnership_count = 0
 
         if episodes:
             for episode in episodes:
-                if "PARTNERSHIP" in episode.get("episode_type", ""):
+                if self._contains_any(episode, self._PARTNERSHIP_KEYWORDS):
+                    partnership_count += 1
+
+        if signals:
+            for signal in signals:
+                if not self._is_scoreable_signal(signal):
+                    continue
+                if self._contains_any(signal, self._PARTNERSHIP_KEYWORDS):
                     partnership_count += 1
 
         score = min(20.0, partnership_count * 5.0)
 
-        return max(2.5, score)
+        return score
 
     async def _score_executive_changes(
         self,
@@ -324,18 +440,25 @@ class DashboardScorer:
     ) -> float:
         """Score executive changes (0-10 points)"""
         if not signals and not episodes:
-            return 2.5
+            return 0.0
 
         executive_count = 0
 
         if episodes:
             for episode in episodes:
-                if "C_SUITE" in episode.get("episode_type", "") or "HIRING" in episode.get("episode_type", ""):
+                if self._contains_any(episode, self._EXECUTIVE_KEYWORDS):
+                    executive_count += 1
+
+        if signals:
+            for signal in signals:
+                if not self._is_scoreable_signal(signal):
+                    continue
+                if self._contains_any(signal, self._EXECUTIVE_KEYWORDS):
                     executive_count += 1
 
         score = min(10.0, executive_count * 3.0)
 
-        return max(2.5, score)
+        return score
 
     async def _calculate_active_probability(
         self,
@@ -353,7 +476,7 @@ class DashboardScorer:
         - Temporal recency (0-20%)
         - EIG confidence (0-10%)
         """
-        probability = 0.10  # Baseline 10%
+        probability = 0.05  # Conservative baseline for unknown/low-signal entities
 
         # 1. Validated RFP bonus
         if validated_rfps and len(validated_rfps) > 0:
@@ -397,11 +520,17 @@ class DashboardScorer:
                     timestamp = datetime.fromisoformat(timestamp_str)
 
                     if timestamp >= window_start:
-                        ep_type = episode.get("episode_type", "").upper()
-                        if "RFP" in ep_type or "PROCUREMENT" in ep_type:
+                        if self._contains_any(episode, self._PROCUREMENT_KEYWORDS):
                             count += 1
                 except:
                     pass
+
+        if signals:
+            for signal in signals:
+                if not self._is_scoreable_signal(signal):
+                    continue
+                if self._contains_any(signal, self._PROCUREMENT_KEYWORDS):
+                    count += 1
 
         # Normalize: 3+ signals in 6 months = max density
         return min(1.0, count / 3.0)
@@ -418,11 +547,19 @@ class DashboardScorer:
         now = datetime.now(timezone.utc)
         window_start = now - timedelta(days=self.config.recent_window_days)
 
-        # Find most recent signal
+        # Find most recent procurement/digital signal. Generic pipeline artifacts
+        # should not inflate active-procurement probability.
         most_recent_days = float('inf')
 
         if episodes:
             for episode in episodes:
+                if not (
+                    self._contains_any(episode, self._PROCUREMENT_KEYWORDS)
+                    or self._contains_any(episode, self._CAPABILITY_KEYWORDS)
+                    or self._contains_any(episode, self._INITIATIVE_KEYWORDS)
+                    or self._contains_any(episode, self._PARTNERSHIP_KEYWORDS)
+                ):
+                    continue
                 timestamp_str = episode.get("timestamp", "")
                 try:
                     if timestamp_str.endswith("Z"):
@@ -434,6 +571,31 @@ class DashboardScorer:
                         most_recent_days = age_days
                 except:
                     pass
+
+        if signals:
+            for signal in signals:
+                if not self._is_scoreable_signal(signal):
+                    continue
+                if not (
+                    self._contains_any(signal, self._PROCUREMENT_KEYWORDS)
+                    or self._contains_any(signal, self._CAPABILITY_KEYWORDS)
+                    or self._contains_any(signal, self._INITIATIVE_KEYWORDS)
+                    or self._contains_any(signal, self._PARTNERSHIP_KEYWORDS)
+                ):
+                    continue
+                timestamp_str = str(signal.get("timestamp") or signal.get("created_at") or signal.get("date") or "")
+                if not timestamp_str:
+                    most_recent_days = min(most_recent_days, 0.0)
+                    continue
+                try:
+                    if timestamp_str.endswith("Z"):
+                        timestamp_str = timestamp_str[:-1] + "+00:00"
+                    timestamp = datetime.fromisoformat(timestamp_str)
+                    age_days = (now - timestamp).total_seconds() / 86400
+                    if age_days < most_recent_days:
+                        most_recent_days = age_days
+                except:
+                    most_recent_days = min(most_recent_days, 0.0)
 
         if most_recent_days == float('inf'):
             return 0.0

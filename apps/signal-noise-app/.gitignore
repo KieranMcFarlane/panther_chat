@@ -2,6 +2,7 @@
 .env.backup
 .env.bak
 .env.ralph
+.env.vps
 .data/
 .next/
 tsconfig.tsbuildinfo
@@ -32,3 +33,7 @@ coventry_city_fc_dossier.md
 tmp/
 backend/data/question_first_live_runs/
 backend/data/question_first_dossiers/
+backend/data/question_first_canonical_sequence.json
+services/**/.venv/
+services/**/__pycache__/
+services/**/*.pyc

@@ -147,6 +147,22 @@ async function loadActiveRepairFocusRuns() {
   return Array.isArray(response.data) ? (response.data as PipelineRunRow[]) : []
 }
 
+async function loadRecentPipelineRuns(limit = 250) {
+  const supabase = getSupabaseAdmin()
+  const response = await supabase
+    .from('entity_pipeline_runs')
+    .select('batch_id, entity_id, canonical_entity_id, entity_name, status, phase, completed_at, started_at, metadata')
+    .order('completed_at', { ascending: false, nullsFirst: false })
+    .order('started_at', { ascending: false, nullsFirst: false })
+    .limit(limit)
+
+  if (response.error) {
+    throw response.error
+  }
+
+  return Array.isArray(response.data) ? (response.data as PipelineRunRow[]) : []
+}
+
 async function loadRunsForEntities(entityIds: string[]) {
   const supabase = getSupabaseAdmin()
   const dedupedIds = Array.from(new Set(entityIds.map((value) => toText(value)).filter(Boolean)))
@@ -212,11 +228,6 @@ export async function loadCanonicalPipelineStatus(limit = 100): Promise<Canonica
     .map((entity) => toText(entity.entity_id))
     .filter(Boolean)
 
-  if (entityIds.length === 0) {
-    warnings.push('No manifest entities were available for the canonical pipeline status view.')
-    return buildEmptyResponse(warnings)
-  }
-
   let activeRepairRuns: PipelineRunRow[] = []
   try {
     activeRepairRuns = await loadActiveRepairFocusRuns()
@@ -224,7 +235,7 @@ export async function loadCanonicalPipelineStatus(limit = 100): Promise<Canonica
     warnings.push(`Active repair focus query failed: ${error instanceof Error ? error.message : String(error)}`)
   }
 
-  const runIds = Array.from(
+  let runIds = Array.from(
     new Set([
       ...entityIds,
       ...activeRepairRuns.map((run) => run.entity_id),
@@ -232,11 +243,31 @@ export async function loadCanonicalPipelineStatus(limit = 100): Promise<Canonica
   )
 
   let runs: PipelineRunRow[] = []
-  try {
-    runs = await loadRunsForEntities(runIds)
-  } catch (error) {
-    warnings.push(`Pipeline runs query failed: ${error instanceof Error ? error.message : String(error)}`)
-    return buildEmptyResponse(warnings, 'degraded')
+  if (runIds.length > 0) {
+    try {
+      runs = await loadRunsForEntities(runIds)
+    } catch (error) {
+      warnings.push(`Pipeline runs query failed: ${error instanceof Error ? error.message : String(error)}`)
+      return buildEmptyResponse(warnings, 'degraded')
+    }
+  } else {
+    warnings.push('No manifest entities were available for the canonical pipeline status view; using recent pipeline runs.')
+  }
+
+  if (runs.length === 0) {
+    try {
+      const recentRuns = await loadRecentPipelineRuns(Math.max(limit * 3, 250))
+      if (recentRuns.length > 0) {
+        runs = recentRuns
+        runIds = Array.from(new Set(recentRuns.map((run) => run.entity_id)))
+        if (entityIds.length > 0) {
+          warnings.push('No manifest-matched runs were found; using recent pipeline runs.')
+        }
+      }
+    } catch (error) {
+      warnings.push(`Recent pipeline runs query failed: ${error instanceof Error ? error.message : String(error)}`)
+      return buildEmptyResponse(warnings, 'degraded')
+    }
   }
 
   const latestByEntity = new Map<string, PipelineRunRow>()

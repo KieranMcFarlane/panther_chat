@@ -37,10 +37,10 @@ def main() -> None:
     _load_repo_env(Path(__file__))
     os.environ["BRIGHTDATA_MCP_USE_HOSTED"] = "false"
     os.environ.setdefault("BRIGHTDATA_MCP_HOSTED_URL", "")
-    os.environ.setdefault("BRIGHTDATA_SERP_ZONE", "mcp_unlocker")
-    os.environ.setdefault("BRIGHTDATA_UNLOCKER_ZONE", "mcp_unlocker")
+    os.environ.setdefault("BRIGHTDATA_SERP_ZONE", "sdk_serp")
+    os.environ.setdefault("BRIGHTDATA_UNLOCKER_ZONE", "sdk_unlocker")
     os.environ.setdefault("BRIGHTDATA_BROWSER_ZONE", "mcp_browser")
-    os.environ.setdefault("BRIGHTDATA_USE_SDK_ZONE_DEFAULTS", "false")
+    os.environ.setdefault("BRIGHTDATA_USE_SDK_ZONE_DEFAULTS", "true")
     from backend.brightdata_fastmcp_service import main as service_main
 
     service_main()

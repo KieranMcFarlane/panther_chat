@@ -8,6 +8,7 @@ import {
   normalizeWideRfpExclusionNames,
   normalizeWideRfpResearchBatch,
 } from './rfp-wide-research.mjs'
+import { normalizeRfpOpportunityForCategory } from './rfp-opportunity-category-taxonomy.mjs'
 
 export const MERGED_WIDE_RFP_RUN_ID = 'manus-rfp-wide-research-merged'
 
@@ -47,13 +48,13 @@ export function normalizeImportedWideResearchBatch(rawBatch) {
   const targetYear = normalizeTargetYear(metadata.target_year)
   const seedQuery = toText(metadata.seed_query) || getDefaultWideRfpSeedQuery()
   const excludeTitles = normalizeWideRfpExclusionNames(metadata.excluded_known_organizations || [])
-  const opportunities = (rawBatch?.opportunities || []).map((opportunity, index) => ({
+  const opportunities = (rawBatch?.opportunities || []).map((opportunity, index) => normalizeRfpOpportunityForCategory({
     ...opportunity,
     metadata: {
       ...(opportunity?.metadata || {}),
       id: toText(opportunity?.metadata?.id) || stableOpportunityId(opportunity, index),
     },
-  }))
+  }, 'manus_import_taxonomy_20260518'))
   const entityActions = (rawBatch?.entity_actions || []).map((action) => ({
     ...action,
     organization: toText(action?.organization) || toText(action?.entity_name) || 'Unknown organization',
@@ -97,7 +98,7 @@ export function buildUnifiedRowsFromBatch(batch) {
       organization: toText(opportunity?.organization) || toText(opportunity?.entity_name) || 'Unknown organization',
       description: toText(opportunity?.description) || null,
       yellow_panther_fit: fit,
-      category: toText(opportunity?.category) || 'RFP',
+      category: normalizeRfpOpportunityForCategory(opportunity, 'unified_row_taxonomy_20260518').category,
       deadline: toText(opportunity?.deadline) || null,
       source_url: sourceUrl,
       entity_id: toText(opportunity?.canonical_entity_id || opportunity?.entity_id) || null,

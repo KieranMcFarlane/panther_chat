@@ -1,4 +1,4 @@
-type RuntimeRunState = 'queued' | 'running' | 'completed' | 'retrying' | 'reconciling' | 'published_degraded' | 'failed_terminal' | 'worker_stale'
+type RuntimeRunState = 'queued' | 'running' | 'completed' | 'repair_completed' | 'repair_exhausted' | 'partial_persisted' | 'retrying' | 'reconciling' | 'published_degraded' | 'failed_terminal' | 'worker_stale'
 
 type RuntimeRunSnapshot = {
   batch_id?: string | null
@@ -30,6 +30,16 @@ type RuntimeRunSnapshot = {
   heartbeat_at?: string | null
   heartbeat_age_seconds?: number | null
   publication_status?: string | null
+  publication_mode?: string | null
+  graph_persistence_ok?: boolean | null
+  graph_persistence_backend?: string | null
+  graph_persistence_error_class?: string | null
+  run_kind?: string | null
+  repair_state?: string | null
+  repair_outcome?: string | null
+  canonical_dossier_updated?: boolean
+  canonical_dossier_quality_state?: string | null
+  canonical_dossier_publish_status?: string | null
   retry_state?: string | null
   stop_reason?: string | null
   continue_pipeline_on_failure?: boolean
@@ -79,6 +89,13 @@ export type OperationalQueueEntity = {
   current_stage?: string | null
   queue_position?: number | null
   publication_status?: string | null
+  publication_mode?: string | null
+  run_kind?: string | null
+  repair_state?: string | null
+  repair_outcome?: string | null
+  canonical_dossier_updated?: boolean
+  canonical_dossier_quality_state?: string | null
+  canonical_dossier_publish_status?: string | null
   next_repair_question_id?: string | null
   next_repair_question_text?: string | null
   next_repair_status?: string | null
@@ -103,6 +120,9 @@ export type OperationalDrilldownPayload = {
     requested_state?: 'running' | 'paused'
     observed_state?: 'starting' | 'running' | 'stopping' | 'paused'
     transition_state?: 'starting' | 'running' | 'stopping' | 'paused'
+    provider_cooldown_until?: string | null
+    provider_cooldown_reason?: string | null
+    provider_last_error?: string | null
   }
   runtime?: {
     snapshot_at?: string | null
@@ -153,6 +173,10 @@ export type OperationalDrilldownPayload = {
     reconciling_count?: number
     published_degraded_count?: number
     failed_terminal_count?: number
+    graph_persistence_ok?: boolean | null
+    graph_persistence_backend?: string | null
+    graph_persistence_last_entity?: string | null
+    graph_persistence_last_at?: string | null
     healthy?: boolean
   }
   loop_status: {

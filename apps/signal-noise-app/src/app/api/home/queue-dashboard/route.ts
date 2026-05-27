@@ -18,27 +18,8 @@ function deriveOperationalState(payload: Awaited<ReturnType<typeof buildHomeQueu
   return 'waiting'
 }
 
-export async function GET(_request: NextRequest) {
-  const payload = await buildHomeQueueDashboardPayload({
-    includeRfpCards: true,
-    opportunitiesFetcher: async () => {
-      const response = await loadGraphitiOpportunitiesFromDb(6)
-      return response.opportunities.map((opportunity) => ({
-        id: opportunity.id,
-        title: opportunity.title,
-        organization: opportunity.organization,
-        description: opportunity.description,
-        yellow_panther_fit: opportunity.yellow_panther_fit,
-        category: opportunity.category,
-        deadline: opportunity.deadline,
-        source_url: opportunity.source_url,
-        entity_id: opportunity.entity_id,
-        entity_name: opportunity.entity_name,
-      }))
-    },
-  })
-
-  return NextResponse.json({
+function buildQueueDashboardResponse(payload: Awaited<ReturnType<typeof buildHomeQueueDashboardPayload>>) {
+  return {
     control: payload.control,
     live_operational: {
       control: payload.control,
@@ -79,5 +60,109 @@ export async function GET(_request: NextRequest) {
     sales_summary: payload.sales_summary,
     dossier_quality: payload.dossier_quality,
     rollout_proof_set: payload.rollout_proof_set,
-  })
+  }
+}
+
+function buildFallbackQueueDashboardResponse(error: unknown) {
+  console.error('[home/queue-dashboard] failed to build payload', error)
+  const now = new Date().toISOString()
+  const control = {
+    is_paused: false,
+    pause_reason: null,
+    updated_at: now,
+    desired_state: 'running' as const,
+    requested_state: 'running' as const,
+    observed_state: 'paused' as const,
+    transition_state: 'paused' as const,
+  }
+  const loopStatus = {
+    universe_count: 0,
+    total_scheduled: 0,
+    completed: 0,
+    processed_dossiers: 0,
+    failed: 0,
+    retryable_failures: 0,
+    client_ready_dossiers: 0,
+    promoted_dossiers: 0,
+    last_successful_canonical_run_at: null,
+    health: 'idle' as const,
+    source: 'snapshot' as const,
+    last_activity_at: null,
+    quality_counts: {
+      partial: 0,
+      blocked: 0,
+      complete: 0,
+      client_ready: 0,
+    },
+    runtime_counts: {
+      running: 0,
+      queued: 0,
+      stalled: 0,
+      retryable: 0,
+      resume_needed: 0,
+    },
+  }
+  const queue = {
+    completed_entities: [],
+    in_progress_entity: null,
+    running_entities: [],
+    stale_active_rows: [],
+    processed_entities: [],
+    resume_needed_entities: [],
+    upcoming_entities: [],
+  }
+
+  return {
+    error: 'queue_dashboard_unavailable',
+    control,
+    live_operational: {
+      control,
+      loop_status: loopStatus,
+      queue,
+      operational_state: 'waiting' as const,
+      freshness_state: 'stale' as const,
+      last_activity_at: null,
+    },
+    playlist_sort_key: [],
+    loop_status: loopStatus,
+    queue,
+    client_ready_dossiers: [],
+    rfp_cards: [],
+    sales_summary: {
+      status: 'empty' as const,
+      highlights: [],
+    },
+    dossier_quality: {
+      counts: loopStatus.quality_counts,
+      incomplete_entities: [],
+    },
+    rollout_proof_set: [],
+  }
+}
+
+export async function GET(_request: NextRequest) {
+  try {
+    const payload = await buildHomeQueueDashboardPayload({
+      includeRfpCards: true,
+      opportunitiesFetcher: async () => {
+        const response = await loadGraphitiOpportunitiesFromDb(6)
+        return response.opportunities.map((opportunity) => ({
+          id: opportunity.id,
+          title: opportunity.title,
+          organization: opportunity.organization,
+          description: opportunity.description,
+          yellow_panther_fit: opportunity.yellow_panther_fit,
+          category: opportunity.category,
+          deadline: opportunity.deadline,
+          source_url: opportunity.source_url,
+          entity_id: opportunity.entity_id,
+          entity_name: opportunity.entity_name,
+        }))
+      },
+    })
+
+    return NextResponse.json(buildQueueDashboardResponse(payload))
+  } catch (error) {
+    return NextResponse.json(buildFallbackQueueDashboardResponse(error), { status: 200 })
+  }
 }

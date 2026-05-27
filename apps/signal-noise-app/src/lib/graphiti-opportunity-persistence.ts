@@ -368,7 +368,18 @@ function buildDossierOpportunitySourceFromLedgerEpisode(
     : []
   const usefulFact = questionFacts.find((fact) => {
     const summary = toReadableEpisodeText(fact.summary)
-    return summary && !isFailedOnlyText(summary) && !isEmptyStructuredText(summary)
+    const status = toText(fact.status).toLowerCase()
+    const confidence = Number(fact.confidence || 0)
+    const factEvidenceUrls = Array.isArray(fact.evidence_urls)
+      ? fact.evidence_urls.map(toText).filter(Boolean)
+      : []
+    return summary
+      && !['failed', 'no_signal', 'insufficient_signal', 'unverified'].includes(status)
+      && Number.isFinite(confidence)
+      && confidence > 0
+      && factEvidenceUrls.length > 0
+      && !isFailedOnlyText(summary)
+      && !isEmptyStructuredText(summary)
   })
   const commercialText = [
     graphiti.outreach_angle,
@@ -383,7 +394,7 @@ function buildDossierOpportunitySourceFromLedgerEpisode(
     usefulFact?.summary,
   ].map(toReadableEpisodeText).filter(Boolean)
   const failedOnly = commercialText.length > 0 && commercialText.every(isFailedOnlyText)
-  if (failedOnly || (commercialText.length === 0 && evidenceUrls.length === 0)) return null
+  if (failedOnly || commercialText.length === 0) return null
 
   const entityRecord = asRecord(episodeBody.entity)
   const entityId = toText(row.canonical_entity_id || entityRecord.canonical_entity_id || fallbackEntityId)
@@ -401,13 +412,15 @@ function buildDossierOpportunitySourceFromLedgerEpisode(
     ? Math.max(0, Math.min(1, probability > 1 ? probability / 100 : probability))
     : 0.45
   const detectedAt = toIso(row.reference_time || row.generated_at || row.created_at || new Date().toISOString())
+  const usefulFactSummary = toReadableEpisodeText(usefulFact?.summary)
   const title = toReadableEpisodeText(graphiti.outreach_angle)
     || toReadableEpisodeText(episodeBody.promoted_summary)
+    || usefulFactSummary
     || `${entityName} has a dossier-backed opportunity signal`
   const summary = toReadableEpisodeText(graphiti.outreach_angle)
     || toReadableEpisodeText(graphiti.capability_gap)
     || toReadableEpisodeText(episodeBody.promoted_summary)
-    || toReadableEpisodeText(usefulFact?.summary)
+    || usefulFactSummary
     || `${entityName} has ingested dossier facts available for commercial review.`
   const whyItMatters = toReadableEpisodeText(graphiti.capability_gap)
     || toReadableEpisodeText(yellowPanther.competitive_advantage)
@@ -599,6 +612,40 @@ function toPersistedOpportunityRow(
     raw_payload: stampTrustedGraphitiQualityEpoch(persisted.raw_payload || {}, nowIso),
     updated_at: nowIso,
   } as PersistedGraphitiOpportunityRow & { updated_at: string }
+}
+
+function toPersistedInsightRow(
+  row: ReturnType<typeof materializeGraphitiOpportunity>,
+  nowIso: string,
+) {
+  return {
+    insight_id: row.insight_id,
+    entity_id: row.entity_id,
+    entity_name: row.entity_name,
+    entity_type: row.entity_type,
+    title: row.title,
+    summary: row.summary,
+    why_it_matters: row.why_it_matters,
+    suggested_action: row.suggested_action,
+    confidence: row.confidence_score,
+    freshness: row.freshness || 'recent',
+    insight_type: 'opportunity',
+    priority: row.priority,
+    destination_url: row.source_url || '/entity-browser',
+    evidence: row.evidence || [],
+    relationships: row.relationships || [],
+    source_run_id: row.source_run_id || null,
+    source_signal_id: row.source_signal_id || null,
+    source_episode_id: row.source_episode_id || null,
+    source_objective: row.source_objective || null,
+    detected_at: row.detected_at,
+    materialized_at: nowIso,
+    last_seen_at: nowIso,
+    state_hash: row.state_hash,
+    is_active: row.is_active,
+    raw_payload: row.raw_payload || {},
+    updated_at: nowIso,
+  }
 }
 
 function preserveExistingStrategyPayload(
@@ -800,18 +847,28 @@ async function loadPersistedDossierOpportunitySources(
 
     const fallbackEntityId = String(row.canonical_entity_id || row.entity_id || '').trim()
     const normalized = normalizeQuestionFirstDossier(row.dossier_data, fallbackEntityId || String(row.entity_id || ''))
-    const sourceRow = buildDossierOpportunitySource(normalized, {
+    const primarySourceRow = buildDossierOpportunitySource(normalized, {
       source: 'entity_dossiers',
       fallbackEntityId,
       fallbackEntityName: row.entity_name || null,
       canonicalEntityId: row.canonical_entity_id || null,
       createdAt: row.created_at || null,
       generatedAt: row.generated_at || null,
-    }) || buildDossierOpportunitySourceFromLedgerEpisode(row, normalized, fallbackEntityId)
+    })
+    const ledgerSourceRow = () => buildDossierOpportunitySourceFromLedgerEpisode(row, normalized, fallbackEntityId)
+    let sourceRow = primarySourceRow || ledgerSourceRow()
 
     if (!sourceRow) continue
-    if (shouldRejectContaminatedDossierSource(row, sourceRow)) continue
-    if (shouldSkipSparseDossierLedger(row, sourceRow)) continue
+    if (shouldRejectContaminatedDossierSource(row, sourceRow) || shouldSkipSparseDossierLedger(row, sourceRow)) {
+      if (primarySourceRow) {
+        sourceRow = ledgerSourceRow()
+        if (!sourceRow) continue
+        if (shouldRejectContaminatedDossierSource(row, sourceRow)) continue
+        if (shouldSkipSparseDossierLedger(row, sourceRow)) continue
+      } else {
+        continue
+      }
+    }
     const dataQualityBlockers = dataQualityBlockersForDossierSource(row, sourceRow)
     const forceContextOnly = dataQualityBlockers.includes('generic_context_only') || !hasTriggerLikeLanguage(sourceRow)
     sourceRow.raw_payload = {
@@ -978,6 +1035,18 @@ export async function materializeGraphitiOpportunities(options: number | {
   const persistableOpportunityRows = opportunityRows.filter((row) => !isFailedOnlyText(row.title))
   const sourceIds: string[] = shortlistOpportunityRows.map((row) => row.opportunity_id)
   const persistedSourceIds: string[] = persistableOpportunityRows.map((row) => row.opportunity_id)
+  const persistedInsightRows = persistableOpportunityRows.map((row) => toPersistedInsightRow(row, nowIso))
+
+  if (persistedInsightRows.length > 0) {
+    const insightResponse = await supabase
+      .from('graphiti_materialized_insights')
+      .upsert(persistedInsightRows, { onConflict: 'insight_id' })
+
+    if (insightResponse.error) {
+      throw new Error(`Failed to upsert Graphiti insight parents: ${insightResponse.error.message}`)
+    }
+  }
+
   const existingResponse = persistedSourceIds.length > 0
     ? await supabase
       .from('graphiti_materialized_opportunities')

@@ -266,6 +266,12 @@ const EMPTY_RUNTIME_COUNTS: Record<RuntimeState, number> = {
   resume_needed: 0,
 }
 
+function queueItems(
+  items: QueueEntityRecord[] | null | undefined,
+): QueueEntityRecord[] {
+  return Array.isArray(items) ? items : []
+}
+
 async function loadProcessedDossierCount(): Promise<number> {
   try {
     const result = await queryPostgres(`
@@ -365,7 +371,9 @@ function mapProcessedDossierRowsToQueueEntities(rows: ProcessedDossierRow[]): Qu
 
 function toText(value: unknown): string {
   if (value === null || value === undefined) return ''
-  return String(value).trim()
+  if (typeof value === 'object') return ''
+  const text = String(value).trim()
+  return text === '[object Object]' ? '' : text
 }
 
 function parseTimestamp(value: unknown): number | null {
@@ -1045,18 +1053,22 @@ function buildRuntimeCounts(
   blockedCount: number,
   base: Partial<Record<RuntimeState, number>> = {},
 ): Record<RuntimeState, number> {
-  const stalledFromQueue = queue.resume_needed_entities.filter((item) => item.run_phase === 'stalled').length
-  const retryableFromQueue = queue.resume_needed_entities.filter((item) => item.run_phase === 'retryable_failure').length
-  const resumeFromQueue = queue.resume_needed_entities.filter((item) => item.run_phase === 'resume_needed').length
-  const runningFromQueue = queue.running_entities.length > 0
-    ? queue.running_entities.length
+  const completedEntities = queueItems(queue.completed_entities)
+  const runningEntities = queueItems(queue.running_entities)
+  const resumeNeededEntities = queueItems(queue.resume_needed_entities)
+  const upcomingEntities = queueItems(queue.upcoming_entities)
+  const stalledFromQueue = resumeNeededEntities.filter((item) => item.run_phase === 'stalled').length
+  const retryableFromQueue = resumeNeededEntities.filter((item) => item.run_phase === 'retryable_failure').length
+  const resumeFromQueue = resumeNeededEntities.filter((item) => item.run_phase === 'resume_needed').length
+  const runningFromQueue = runningEntities.length > 0
+    ? runningEntities.length
     : (queue.in_progress_entity ? 1 : 0)
-  const completedCount = queue.completed_entities.length
+  const completedCount = completedEntities.length
   const queuedFromBase = base.queued ?? 0
   const queuedFloor = Math.max(0, universeCount - completedCount - runningFromQueue - blockedCount)
   return {
     running: Math.max(base.running ?? 0, runningFromQueue),
-    queued: Math.max(queuedFromBase, queue.upcoming_entities.length, queuedFloor),
+    queued: Math.max(queuedFromBase, upcomingEntities.length, queuedFloor),
     stalled: Math.max(base.stalled ?? 0, stalledFromQueue),
     retryable: Math.max(base.retryable ?? 0, retryableFromQueue),
     resume_needed: Math.max(base.resume_needed ?? 0, resumeFromQueue),
@@ -1070,7 +1082,11 @@ function computeLoopHealth(
   const lastActivityTs = parseTimestamp(lastActivityAt)
   if (lastActivityTs === null) return 'idle'
   if (Date.now() - lastActivityTs <= LOOP_ACTIVE_WINDOW_MS) return 'active'
-  if (queue.in_progress_entity || queue.upcoming_entities.length > 0 || queue.completed_entities.length > 0) return 'stale'
+  if (
+    queue.in_progress_entity
+    || queueItems(queue.upcoming_entities).length > 0
+    || queueItems(queue.completed_entities).length > 0
+  ) return 'stale'
   return 'idle'
 }
 
@@ -1168,7 +1184,7 @@ function applyRuntimeOverride(
   if (!runtimeCurrentLiveRun) return selectedSource
 
   const liveQueueRecord = toRuntimeQueueRecord(runtimeCurrentLiveRun, manifestEntities, canonicalEntities)
-  const runningEntities = [liveQueueRecord, ...selectedSource.queue.running_entities]
+  const runningEntities = [liveQueueRecord, ...queueItems(selectedSource.queue.running_entities)]
     .filter((item, index, items) => items.findIndex((candidate) => candidate.entity_id === item.entity_id) === index)
 
   const nextQueue: HomeQueueDashboardPayload['queue'] = {

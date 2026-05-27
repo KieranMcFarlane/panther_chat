@@ -127,6 +127,46 @@ function toText(value) {
   return ''
 }
 
+function extractUrlString(value) {
+  if (value == null) return ''
+  if (typeof value === 'string') {
+    const text = value.trim()
+    if (!text || /^\[object object\]$/i.test(text)) return ''
+    const match = text.match(/https?:\/\/[^\s"'<>),;]+|www\.[^\s"'<>),;]+/i)
+    if (!match) return ''
+    return match[0].startsWith('www.') ? `https://${match[0]}` : match[0]
+  }
+  if (Array.isArray(value)) {
+    for (const item of value) {
+      const url = extractUrlString(item)
+      if (url) return url
+    }
+    return ''
+  }
+  if (typeof value === 'object') {
+    for (const key of ['url', 'evidence_url', 'source_url', 'href', 'link', 'source']) {
+      const url = extractUrlString(value[key])
+      if (url) return url
+    }
+  }
+  return ''
+}
+
+function normalizeCheckedSources(value) {
+  return asArray(value)
+    .map((source) => {
+      const url = extractUrlString(source)
+      if (source && typeof source === 'object' && !Array.isArray(source)) {
+        return {
+          ...source,
+          ...(url ? { source: url, url } : {}),
+        }
+      }
+      return url ? { source: url, url } : null
+    })
+    .filter(Boolean)
+}
+
 function hasMeaningfulCommercialText(value) {
   const text = toText(value)
   return Boolean(text)
@@ -155,8 +195,13 @@ function normalizedEntityType(value) {
 }
 
 function checkedSource(record, rationale) {
+  const raw = answerRaw(record)
   return {
-    source: toText(record?.evidence_url) || 'bounded_question_retrieval',
+    source: extractUrlString(record?.evidence_url)
+      || extractUrlString(record?.checked_sources)
+      || extractUrlString(raw.sources)
+      || extractUrlString(raw.evidence_url)
+      || 'bounded_question_retrieval',
     rationale,
   }
 }
@@ -178,14 +223,13 @@ function containsObjectString(value) {
 
 function hasSourceUrl(record) {
   const raw = answerRaw(record)
-  const sourceText = toText([
+  return Boolean(extractUrlString([
     record?.evidence_url,
     record?.checked_sources,
     raw.sources,
     raw.evidence_url,
     raw.source_url,
-  ])
-  return /https?:\/\/|www\./i.test(sourceText)
+  ]))
 }
 
 function providerNoAnswerReason(record) {
@@ -299,6 +343,49 @@ function sourceLessZeroConfidenceReason(record) {
   return ''
 }
 
+function inferDigitalStackSignals(record) {
+  const raw = answerRaw(record)
+  const haystack = toText([
+    record.answer,
+    record.summary,
+    record.commercial_implication,
+    record.checked_sources,
+    record.sources,
+    raw.answer,
+    raw.summary,
+    raw.context,
+    raw.notes,
+    raw.sources,
+    raw.checked_sources,
+    raw.platform_hints,
+    raw.vendor_hints,
+  ]).toLowerCase()
+  const urls = [
+    extractUrlString(record.evidence_url),
+    extractUrlString(record.checked_sources),
+    extractUrlString(raw.sources),
+    extractUrlString(raw.evidence_url),
+    extractUrlString(raw.source_url),
+  ].filter(Boolean)
+  const vendorHints = []
+  const platformHints = []
+  if (/\badobe\b/.test(haystack)) {
+    vendorHints.push({ name: 'Adobe', category: 'experience_platform', evidence_url: urls[0] || '' })
+  }
+  if (/\btradable\s*bits\b/.test(haystack)) {
+    vendorHints.push({ name: 'Tradable Bits', category: 'fan_engagement', evidence_url: urls[0] || '' })
+  }
+  if (/\bnba\.com\b|https?:\/\/(?:www\.)?nba\.com/i.test(haystack)) {
+    platformHints.push({ name: 'NBA.com', category: 'official_digital_platform', evidence_url: urls[0] || '' })
+  }
+  return {
+    urls,
+    vendorHints,
+    platformHints,
+    hasSignal: vendorHints.length > 0 || platformHints.length > 0,
+  }
+}
+
 function isEmptyTypedAnswerShell(value) {
   if (!value || typeof value !== 'object' || Array.isArray(value)) return false
   const kind = String(value.kind || '').trim().toLowerCase()
@@ -339,6 +426,38 @@ function sanitizeObjectStringDeep(value) {
   if (typeof value === 'object') {
     return Object.fromEntries(
       Object.entries(value).map(([key, item]) => [key, sanitizeObjectStringDeep(item)]),
+    )
+  }
+  return value
+}
+
+function sanitizeEvidenceArtifactsDeep(value, key = '') {
+  if (value == null) return value
+  const normalizedKey = String(key || '').toLowerCase()
+  const isUrlLikeKey = /(^url$|evidence_url|evidence_urls|source_url|source_urls|href|link|sources?$)/.test(normalizedKey)
+  if (typeof value === 'string') {
+    if (isObjectString(value)) return isUrlLikeKey ? '' : null
+    return value
+  }
+  if (Array.isArray(value)) {
+    return value
+      .map((item) => {
+        if (isUrlLikeKey) {
+          const url = extractUrlString(item)
+          if (url) return url
+          if (typeof item === 'string' && isObjectString(item)) return null
+        }
+        return sanitizeEvidenceArtifactsDeep(item, key)
+      })
+      .filter((item) => item !== null && item !== undefined && item !== '')
+  }
+  if (typeof value === 'object') {
+    if (isUrlLikeKey) {
+      const url = extractUrlString(value)
+      if (url) return url
+    }
+    return Object.fromEntries(
+      Object.entries(value).map(([nestedKey, item]) => [nestedKey, sanitizeEvidenceArtifactsDeep(item, nestedKey)]),
     )
   }
   return value
@@ -420,12 +539,19 @@ export function normalizeUpstreamAnswer(record, adjacentAnswers = {}, entityInfo
   if (!PROVIDER_FAILURE_NORMALIZATION_QUESTION_IDS.has(questionId)) return null
   const entityType = normalizedEntityType(record.entity_type || entityInfo.entity_type)
   const currentStructuredSignal = asRecord(record.structured_signal || answerRaw(record).structured_signal)
+  const raw = answerRaw(record)
+  const evidenceUrl = extractUrlString(record.evidence_url)
   const normalized = {
     ...record,
-    checked_sources: asArray(record.checked_sources),
+    evidence_url: evidenceUrl,
+    checked_sources: normalizeCheckedSources(record.checked_sources),
     applicability: asRecord(record.applicability).status ? record.applicability : { status: 'applicable' },
     structured_signal: currentStructuredSignal,
     commercial_implication: toText(record.commercial_implication),
+  }
+  const rawEvidenceUrl = extractUrlString(raw.evidence_url)
+  if (!normalized.evidence_url && rawEvidenceUrl) {
+    normalized.evidence_url = rawEvidenceUrl
   }
 
   const malformedReason = malformedUpstreamAnswerReason(record)
@@ -485,6 +611,49 @@ export function normalizeUpstreamAnswer(record, adjacentAnswers = {}, entityInfo
   }
 
   if (questionId === 'q2_digital_stack') {
+    const digitalStackSignals = inferDigitalStackSignals(record)
+    const state = String(record.validation_state || '').trim().toLowerCase()
+    if (digitalStackSignals.hasSignal && ['no_signal', 'checked_no_signal', 'failed', ''].includes(state)) {
+      const vendorNames = digitalStackSignals.vendorHints.map((item) => item.name)
+      const platformNames = digitalStackSignals.platformHints.map((item) => item.name)
+      const summaryParts = [
+        vendorNames.length ? `Vendor hints: ${vendorNames.join(', ')}` : '',
+        platformNames.length ? `Platform hints: ${platformNames.join(', ')}` : '',
+      ].filter(Boolean)
+      const summary = summaryParts.join('; ') || 'Source-backed digital platform evidence was found.'
+      return {
+        ...normalized,
+        validation_state: 'provisional',
+        confidence: Math.max(0.65, Number(record.confidence || 0)),
+        evidence_url: normalized.evidence_url || digitalStackSignals.urls[0] || '',
+        checked_sources: normalized.checked_sources.length > 0
+          ? normalized.checked_sources
+          : digitalStackSignals.urls.map((url) => ({ source: url, url, rationale: 'Source-backed digital stack evidence.' })),
+        answer: {
+          kind: 'signal_set',
+          summary,
+          raw_structured_output: {
+            ...raw,
+            answer: summary,
+            summary,
+            vendor_hints: digitalStackSignals.vendorHints,
+            platform_hints: digitalStackSignals.platformHints,
+            digital_footprint_unknown: false,
+            sources: digitalStackSignals.urls,
+            validation_state: 'provisional',
+          },
+        },
+        structured_signal: {
+          ...currentStructuredSignal,
+          digital_footprint_unknown: false,
+          vendor_hints: digitalStackSignals.vendorHints,
+          platform_hints: digitalStackSignals.platformHints,
+          status: 'source_backed_digital_stack',
+        },
+        commercial_implication: normalized.commercial_implication || 'Source-backed platform/vendor evidence indicates a visible digital stack worth qualifying.',
+        force: true,
+      }
+    }
     const q6 = adjacentAnswers.q6_launch_signal
     const q6Evidence = recordCommercialEvidence(q6)
     if (hasMeaningfulCommercialText(q6Evidence)) {
@@ -496,7 +665,7 @@ export function normalizeUpstreamAnswer(record, adjacentAnswers = {}, entityInfo
           adjacent_digital_hints: [{
             source_question_id: 'q6_launch_signal',
             summary: q6Evidence,
-            evidence_url: toText(q6?.evidence_url),
+            evidence_url: extractUrlString(q6?.evidence_url),
           }],
         },
         commercial_implication: normalized.commercial_implication || 'Adjacent launch evidence suggests digital footprint worth verifying.',
@@ -1163,6 +1332,7 @@ export function shouldRepairDossier(dossierData) {
   const answers = answerRecords(dossier)
   const hasMalformedUpstreamAnswer = answers.some((record) => normalizeUpstreamAnswer(record))
   return hasMalformedUpstreamAnswer
+    || containsObjectString(dossier)
     || answers.length >= 15
     && (
       publishStatus.startsWith('published')
@@ -1191,7 +1361,7 @@ export function repairDossierPayload(dossierData, canonicalEntityId, entityInfo 
   const normalizedInput = insufficientSignalRecord(questionAnswerMap(repairedAnswers).q11_decision_owner)
     ? clearStaleBuyerArtifacts(repairedAnswers)
     : repairedAnswers
-  const normalized = normalizeQuestionFirstDossier(normalizedInput, entityId, entity)
+  const normalized = sanitizeEvidenceArtifactsDeep(normalizeQuestionFirstDossier(normalizedInput, entityId, entity))
   return {
     changed: contentHash(dossier) !== contentHash(normalized),
     before_publish_status: dossier.publish_status || dossier.publication_status || null,

@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const EC2_HOST = '13.60.60.50';
-const EC2_USER = 'ec2-user';
+const EC2_HOST = process.env.TERMINAL_SSH_HOST || process.env.VPS_PUBLIC_HOST || '127.0.0.1';
+const EC2_USER = process.env.TERMINAL_SSH_USER || 'ubuntu';
 const KEY_PATH = process.env.NODE_ENV === 'production' 
-  ? '/home/ec2-user/yellowpanther.pem' 
+  ? process.env.TERMINAL_SSH_KEY_PATH || '/home/ubuntu/.ssh/id_rsa'
   : '/Users/kieranmcfarlane/Downloads/panther_chat/yellowpanther.pem';
 
 export async function POST(request: NextRequest) {
@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({
         success: true,
         message: 'Terminal started successfully',
-        url: `http://localhost:7681`,
+        url: `${process.env.TTYD_PUBLIC_URL || 'http://127.0.0.1:7681'}`,
         command: `ttyd -p 7681 ssh -i ${KEY_PATH} ${EC2_USER}@${EC2_HOST}`
       });
     }
@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({
         success: true,
         running: false, // Would check actual process
-        url: `http://localhost:7681`
+        url: `${process.env.TTYD_PUBLIC_URL || 'http://127.0.0.1:7681'}`
       });
     }
 

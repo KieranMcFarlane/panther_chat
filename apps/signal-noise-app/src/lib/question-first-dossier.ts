@@ -64,6 +64,18 @@ function uniqueStrings(values: Array<string | null | undefined>): string[] {
   return Array.from(new Set(values.map((value) => toText(value)).filter(Boolean)))
 }
 
+function toEvidenceUrl(value: unknown): string {
+  if (typeof value === 'string') {
+    const normalized = value.trim()
+    return normalized.startsWith('http://') || normalized.startsWith('https://') ? normalized : ''
+  }
+  if (value && typeof value === 'object' && !Array.isArray(value)) {
+    const record = value as Record<string, unknown>
+    return toEvidenceUrl(record.url || record.source_url || record.evidence_url || record.href || record.link)
+  }
+  return ''
+}
+
 function getEntityType(entity: EntityLike | null | undefined, dossier?: Record<string, any> | null): string {
   return (
     toText(dossier?.entity_type) ||
@@ -284,7 +296,7 @@ function collectQuestionAnswerSources(answer: Record<string, any>, timeoutSalvag
   const salvageSources = Array.isArray(timeoutSalvage.candidate_evidence_urls) ? timeoutSalvage.candidate_evidence_urls : []
   return uniqueStrings(
     [...structuredSources, ...salvageSources]
-      .map((value) => toDisplayText(value))
+      .map((value) => toEvidenceUrl(value))
       .filter(Boolean),
   )
 }
@@ -310,6 +322,18 @@ function isNonBlockingQuestion(question: Record<string, any>): boolean {
   return summary.includes('entity type') && summary.includes('is outside')
 }
 
+function isToolExecutionFailureText(value: unknown): boolean {
+  const text = toDisplayText(value).toLowerCase()
+  if (!text) return false
+  return (
+    text.includes('opencode run failed')
+    || text.includes('opencodetimeouterror')
+    || text.includes('no text output produced')
+    || text.includes('tool call failed')
+    || text.includes('question execution failed')
+  )
+}
+
 function deriveQuestionTerminalState(input: {
   questionSpec?: Record<string, any>
   answerRecord: Record<string, any>
@@ -325,12 +349,25 @@ function deriveQuestionTerminalState(input: {
     || hasReadableValue(input.rawAnswerValue)
   const blockedNote = toText(input.answerRecord.notes || input.rawStructuredOutput.notes || input.rawStructuredOutput.context).toLowerCase()
   const dependsOn = Array.isArray(input.questionSpec?.depends_on) ? input.questionSpec?.depends_on : []
+  const failureCandidates = [
+    input.answerRecord.failure_reason,
+    input.answerRecord.notes,
+    input.answer.summary,
+    input.answer.value,
+    input.rawStructuredOutput.context,
+    input.rawStructuredOutput.notes,
+    input.rawStructuredOutput.answer,
+    input.rawAnswerValue,
+  ]
 
   if (validationState === 'skipped' || toText(input.answerRecord.skip_reason)) {
     return 'skipped'
   }
 
-  if (['failed', 'exhausted', 'tool_call_missing'].includes(validationState)) {
+  if (
+    ['failed', 'exhausted', 'tool_call_missing'].includes(validationState)
+    || failureCandidates.some(isToolExecutionFailureText)
+  ) {
     return 'failed'
   }
 
@@ -624,7 +661,7 @@ function getQuestionEvidenceUrls(question: Record<string, any>): string[] {
 
   return uniqueStrings(
     [...displayEvidence, ...sources, ...evidenceRefs]
-      .map((value) => toDisplayText(value))
+      .map((value) => toEvidenceUrl(value))
       .filter(Boolean),
   )
 }
@@ -635,8 +672,18 @@ function buildQuestionFirstPromotionEntry(question: Record<string, any>, promoti
   const rawStructuredOutput = ensureObject(answer.raw_structured_output)
   const answerText = getQuestionAnswerText(question)
   const evidenceUrls = getQuestionEvidenceUrls(question)
+  const validationState = toText(question.validation_state || answerRecord.validation_state || '').toLowerCase()
+  const questionId = toText(question.question_id)
 
-  if ((!answerText || !isMeaningfulCommercialText(answerText)) && evidenceUrls.length === 0) {
+  if (['no_signal', 'no signal', 'failed', 'blocked', 'skipped', 'reconcile_required'].includes(validationState)) {
+    return null
+  }
+
+  if ((!answerText || !isMeaningfulCommercialText(answerText)) || evidenceUrls.length === 0) {
+    return null
+  }
+
+  if (['q13_capability_gap', 'q14_yp_fit', 'q15_outreach_strategy'].includes(questionId) && evidenceUrls.length === 0) {
     return null
   }
 

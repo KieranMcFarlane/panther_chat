@@ -92,6 +92,18 @@ type ManusV2Message = {
   type?: string
   assistant_message?: {
     content?: string
+    attachments?: Array<{
+      content_type?: string
+      filename?: string
+      fileName?: string
+      file_name?: string
+      mimeType?: string
+      mime_type?: string
+      type?: string
+      url?: string
+      fileUrl?: string
+      file_url?: string
+    }>
   }
   error_message?: {
     error_type?: string
@@ -235,13 +247,49 @@ function collectV2MessageText(messages: ManusV2Message[]): string {
     .trim()
 }
 
-function extractV2StructuredOutput(messages: ManusV2Message[]): ManusResearchResponse | null {
+async function extractV2StructuredOutput(messages: ManusV2Message[]): Promise<ManusResearchResponse | null> {
   const structuredMessage = messages.find((message) => (
     message?.type === 'structured_output_result' &&
     isRecord(message.structured_output_result.value)
   ))
 
-  return structuredMessage?.structured_output_result?.value as ManusResearchResponse | null
+  if (structuredMessage?.structured_output_result?.value) {
+    return structuredMessage.structured_output_result.value as ManusResearchResponse
+  }
+
+  for (const message of messages) {
+    for (const attachment of message?.assistant_message?.attachments || []) {
+      const fileUrl = toText(attachment.url || attachment.fileUrl || attachment.file_url)
+      const fileName = toText(attachment.filename || attachment.fileName || attachment.file_name)
+      const mimeType = toText(attachment.content_type || attachment.mimeType || attachment.mime_type || attachment.type)
+      const isJsonFile = fileUrl && (
+        fileName.toLowerCase().endsWith('.json') ||
+        mimeType.toLowerCase().includes('json')
+      )
+      if (!isJsonFile) continue
+
+      try {
+        const response = await fetch(fileUrl, { cache: 'no-store' })
+        const raw = await response.text()
+        if (!response.ok) continue
+        const parsed = normalizeParsedTaskPayload(parseTaskPayload(raw))
+        if (parsed) {
+          return {
+            ...parsed,
+            prompt_execution_metadata: {
+              ...(isRecord(parsed.prompt_execution_metadata) ? parsed.prompt_execution_metadata : {}),
+              manus_attachment_filename: fileName || null,
+              manus_attachment_content_type: mimeType || null,
+            },
+          }
+        }
+      } catch {
+        // Try the next attached file if Manus returned a stale signed URL.
+      }
+    }
+  }
+
+  return null
 }
 
 function parseTaskPayload(raw: string): ParsedManusPayload {
@@ -575,7 +623,7 @@ async function waitForManusTask(
       throw new Error(errorMessage.error_message.content)
     }
 
-    const structuredNow = extractV2StructuredOutput(messages)
+    const structuredNow = await extractV2StructuredOutput(messages)
     if (structuredNow) {
       return {
         id: taskId,
@@ -605,7 +653,7 @@ async function waitForManusTask(
 
     const status = toText(messages.find((message) => message?.type === 'status_update')?.status_update?.agent_status).toLowerCase()
     if (status === 'stopped') {
-      const structured = extractV2StructuredOutput(messages)
+      const structured = await extractV2StructuredOutput(messages)
       const rawText = structured ? JSON.stringify(structured) : collectV2MessageText(messages)
       return {
         id: taskId,
@@ -637,7 +685,7 @@ async function waitForManusTask(
       }
     } else if (finalizationRequested && creditLimitReached) {
       await stopManusTask(taskId, manusApi)
-      const structured = extractV2StructuredOutput(latestMessages)
+      const structured = await extractV2StructuredOutput(latestMessages)
       const rawText = structured ? JSON.stringify(structured) : collectV2MessageText(latestMessages)
       return {
         id: taskId,
@@ -658,11 +706,12 @@ async function waitForManusTask(
   }
 
   await stopManusTask(taskId, manusApi)
+  const structured = await extractV2StructuredOutput(latestMessages)
   return {
     id: taskId,
     task_id: taskId,
     status: 'stopped',
-    result_text: collectV2MessageText(latestMessages),
+    result_text: structured ? JSON.stringify(structured) : collectV2MessageText(latestMessages),
     prompt_execution_metadata: {
       ...latestMetadata,
       manus_stopped_by_route: true,
@@ -963,6 +1012,23 @@ async function recoverCompletedManusTask(taskId: string): Promise<ManusResearchR
   const manusApi = toText(process.env.MANUS_API)
   if (!manusApi) {
     throw new Error('MANUS_API is not configured. Set MANUS_API in .env before recovering Manus research.')
+  }
+
+  try {
+    const v2Recovered = await waitForManusTask(taskId, manusApi, 1, 0)
+    const manuscript = await normalizeTaskResponse({
+      ...v2Recovered,
+      prompt_execution_metadata: {
+        ...(isRecord(v2Recovered.prompt_execution_metadata) ? v2Recovered.prompt_execution_metadata : {}),
+        manus_api_version: 'v2_recovery',
+        manus_completion_state: 'recovered_completed_task',
+      },
+    })
+    if (manuscript?.opportunities?.length || manuscript?.entity_actions?.length) {
+      return manuscript
+    }
+  } catch {
+    // Fall back to the older v1 task payload below.
   }
 
   const response = await fetch(`https://api.manus.ai/v1/tasks/${encodeURIComponent(taskId)}`, {

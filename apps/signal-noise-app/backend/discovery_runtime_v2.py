@@ -1865,9 +1865,10 @@ class DiscoveryRuntimeV2:
             evidence_pointer_id = None
             if content_hash:
                 evidence_pointer_id = f"ev:{content_hash[:16]}"
+            candidate_hash_seed = f"{url}|{content_hash or ''}"
             candidate_eval = {
                 "step_type": "discovery_candidate_eval",
-                "step_id": f"{lane}:{hashlib.md5(f'{url}|{content_hash or ''}'.encode('utf-8')).hexdigest()[:12]}",
+                "step_id": f"{lane}:{hashlib.md5(candidate_hash_seed.encode('utf-8')).hexdigest()[:12]}",
                 "status": (
                     "completed"
                     if validation_state == "validated"
